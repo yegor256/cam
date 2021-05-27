@@ -26,5 +26,5 @@ clean:
 	rm -rf repos
 
 discover-repos:
-	ruby discover-repos.rb 100 ./repos
+	ruby discover-repos.rb --total=100 --home=repos --list=summary/repos.csv
 
