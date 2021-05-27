@@ -28,9 +28,10 @@ all: discover-repos clone
 
 clean:
 	rm -rf repos
+	rm -rf summary
 
 discover-repos:
-	ruby discover-repos.rb --total=100 --home=repos --list=summary/repos.csv
+	ruby discover-repos.rb --total=500 --home=repos --list=summary/repos.csv
 
 clone:
 	list=$$(find repos -depth 2 -print)
