@@ -20,7 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-all: discover-repos
+.SHELLFLAGS = -e -c
+
+.ONESHELL:
+
+all: discover-repos clone
 
 clean:
 	rm -rf repos
@@ -28,3 +32,14 @@ clean:
 discover-repos:
 	ruby discover-repos.rb --total=100 --home=repos --list=summary/repos.csv
 
+clone:
+	list=$$(find repos -depth 2 -print)
+	for i in $$list; do
+	  git=$$(echo $$i | gsed -e "s|repos/|https://github.com/|")
+	  if [ -e $$i/.git ]; then
+	    echo "$${i}: Git repo is already here"
+	  else
+	    echo "$${i}: trying to clone it..."
+	    git clone $$git $$i
+	  fi
+	done
