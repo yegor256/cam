@@ -38,6 +38,8 @@ opts = Slop.parse do |o|
   end
 end
 
+raise '--total must be larger or equal to --page' if opts[:total] < opts[:page]
+
 github = Octokit::Client.new
 names = []
 pages = (opts[:total] + 1) / opts[:page]

@@ -31,7 +31,7 @@ clean:
 	rm -rf summary
 
 discover-repos:
-	ruby discover-repos.rb --total=500 --home=repos --list=summary/repos.csv
+	ruby discover-repos.rb --total=10 --home=repos --page=10 --list=summary/repos.csv
 
 clone:
 	list=$$(find repos -depth 2 -print)
