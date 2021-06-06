@@ -142,7 +142,7 @@ aggregate: $(HOME)/measurements $(HOME)/data
 			done
 			printf "\n" >> "$${csv}"
 		done
-		echo "#{d} aggregated"
+		echo "$${d} aggregated"
 	done
 	rm -rf $(HOME)/data/*.csv
 	for d in $$(find $(HOME)/data -maxdepth 2 -mindepth 2 -type d -print); do
