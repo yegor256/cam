@@ -27,4 +27,6 @@ RUN gem install bundler
 RUN bundle install
 RUN python3 -m pip install -r requirements.txt
 
+WORK /w
+
 ENTRYPOINT ["make"]

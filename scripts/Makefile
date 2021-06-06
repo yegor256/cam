@@ -57,24 +57,6 @@ cleanup: $(HOME)/repositories.csv $(HOME)/github
 		fi
 	done
 
-# Make directories for further cloning into them.
-cleanup: $(HOME)/repositories.csv $(HOME)/github
-	for d in $$(find $(HOME)/github -depth 2 -print); do
-		repo=$$(echo $${d} | gsed "s|$(HOME)/github/||")
-		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
-			echo "Directory $${d} is here and is needed (for $${repo})"
-		else
-			rm -rf "$${d}"
-			echo "Directory $${d} is obsolete and was deleted (for $${repo})"
-		fi
-	done
-	for d in $$(find $(HOME)/github -depth 1 -print); do
-		if [ "$$(ls $${d} | wc -l)" == '0' ]; then
-			rm -rf "$${d}"
-			echo "Directory $${d} is empty and was deleted"
-		fi
-	done
-
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
 clone: $(HOME)/repositories.csv $(HOME)/github
