@@ -26,16 +26,21 @@
 
 HOME=dataset
 
-all: $(HOME)/repositories.csv clone filter
+all: $(HOME)/repositories.csv cleanup clone filter
+
+# Delete everything, in order to start from scratch.
+clean:
+	rm -rf $(HOME)
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(HOME)/repositories.csv:
-	ruby discover-repos.rb --total=1 --page=1 --path=$(HOME)/repositories.csv
+	ruby discover-repos.rb --total=4 --page=4 "--path=$(HOME)/repositories.csv"
+	cat "$(HOME)/repositories.csv"
 
 # Delete directories that don't exist in the list of
 # required repositories.
-cleanup: $(HOME)/repositories.csv
+cleanup: $(HOME)/repositories.csv $(HOME)/github
 	for d in $$(find $(HOME)/github -depth 2 -print); do
 		repo=$$(echo $${d} | gsed "s|$(HOME)/github/||")
 		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
@@ -53,7 +58,7 @@ cleanup: $(HOME)/repositories.csv
 	done
 
 # Make directories for further cloning into them.
-cleanup: $(HOME)/repositories.csv
+cleanup: $(HOME)/repositories.csv $(HOME)/github
 	for d in $$(find $(HOME)/github -depth 2 -print); do
 		repo=$$(echo $${d} | gsed "s|$(HOME)/github/||")
 		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
@@ -72,7 +77,7 @@ cleanup: $(HOME)/repositories.csv
 
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
-clone: $(HOME)/repositories.csv
+clone: $(HOME)/repositories.csv $(HOME)/github
 	while IFS= read -r r; do
 	  	if [ -e "$(HOME)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
@@ -82,12 +87,15 @@ clone: $(HOME)/repositories.csv
 	  	fi
 	done < "$(HOME)/repositories.csv"
 
-filter:
+filter: $(HOME)/github
 	mkdir -p $(HOME)/temp
+	mkdir -p $(HOME)/summary
 	for f in $$(ls filters/); do
-		"filters/$${f}" $(HOME)/github $(HOME)/summary $(HOME)/temp
+		"filters/$${f}" $(HOME)/github "$(HOME)/summary/$${f}.tex" $(HOME)/temp
 	done
 # 	find repos -type file -name '*Test.java' -exec rm "{}" \;
 # 	find repos -type file -name 'package-info.java' -exec rm "{}" \;
 
+$(HOME)/github:
+	mkdir -p $(HOME)/github
 

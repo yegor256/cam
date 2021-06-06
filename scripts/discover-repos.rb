@@ -45,7 +45,7 @@ pages = opts[:total] / opts[:page]
 puts "Will fetch #{pages} GitHub pages"
 (0..pages - 1).each do |p|
   json = github.search_repositories(
-    'stars:>=1000 size:>200 language:java is:public mirror:false archived:false',
+    'stars:>=1000 stars:<=10000 size:>200 size:<1000000 language:java is:public mirror:false archived:false',
     per_page: opts[:page],
     page: p
   )
