@@ -36,11 +36,8 @@ clean:
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
-	env
 	ruby -v
 	python --version
-	gem install octokit
-
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
