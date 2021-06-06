@@ -121,6 +121,7 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(HOME)/measurements $(HOME)/data
+	all=$$(find $(HOME)/measurements -name '*.m.*' -print | gsed "s|^.\+\.\(.\+\)$$|\1|" | sort | uniq)
 	for d in $$(find $(HOME)/measurements -depth 2 -print); do
 		ddir=$$(echo "$${d}" | gsed "s|$(HOME)/measurements|$(HOME)/data|")
 		if [ -e "$${ddir}" ]; then
@@ -133,8 +134,16 @@ aggregate: $(HOME)/measurements $(HOME)/data
 				metric=$$(echo "$${v}" | gsed "s|$${d}$${java}.m.||")
 				csv="$${ddir}/$${metric}.csv"
 				mkdir -p $$(dirname "$${csv}")
-				echo "$${java},$$(cat "$${v}")" >> "$${ddir}/$${metric}.csv"
+				echo "$${java},$$(cat "$${v}")" >> "$${csv}"
 			done
+			csv="$${ddir}/all.csv"
+			mkdir -p $$(dirname "$${csv}")
+			java=$$(echo "$${m}" | gsed "s|$${d}||" | gsed "s|\.m$$||")
+			printf "$${java}" >> "$${csv}"
+			for a in $${all}; do
+				printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
+			done
+			printf "\n" >> "$${csv}"
 		done
 	done
 	rm -rf $(HOME)/data/*.csv
