@@ -27,18 +27,22 @@ SHELL := /bin/bash
 
 HOME=dataset
 
-all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate
+all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate zip
+
+# Zip the entire dataset into an archive.
+zip:
+	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(HOME)"
 
 # Delete calculations.
 clean:
-	rm -rf $(HOME)/measurements
-	rm -rf $(HOME)/data
-	rm -rf $(HOME)/reports
-	rm -rf $(HOME)/temp
+	rm -rf "$(HOME)/measurements"
+	rm -rf "$(HOME)/data"
+	rm -rf "$(HOME)/reports"
+	rm -rf "$(HOME)/temp"
 
 # Delete everything, in order to start from scratch.
 wipe:
-	rm -rf $(HOME)
+	rm -rf "$(HOME)"
 
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
@@ -157,16 +161,16 @@ aggregate: $(HOME)/measurements $(HOME)/data
 	done
 
 $(HOME)/github:
-	mkdir -p $(HOME)/github
+	mkdir -p "$(HOME)/github"
 
 $(HOME)/data:
-	mkdir -p $(HOME)/data
+	mkdir -p "$(HOME)/data"
 
 $(HOME)/measurements:
-	mkdir -p $(HOME)/measurements
+	mkdir -p "$(HOME)/measurements"
 
 $(HOME)/reports:
-	mkdir -p $(HOME)/reports
+	mkdir -p "$(HOME)/reports"
 
 $(HOME)/temp:
-	mkdir -p $(HOME)/temp
+	mkdir -p "$(HOME)/temp"
