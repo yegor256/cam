@@ -1,4 +1,5 @@
-# MIT License
+#!/bin/bash
+# The MIT License (MIT)
 #
 # Copyright (c) 2021 Yegor Bugayenko
 #
@@ -9,24 +10,27 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM yegor256/rultor-image:1.5.2
+set -e
+set -o pipefail
 
-RUN apt -y update && apt install -y cloc
-RUN gem install --no-user-install octokit -v 4.21.0
-RUN gem install --no-user-install slop -v 4.9.1
-RUN python3 -m pip install javalang==0.12.0
+java=$1
+output=$2
 
-WORKDIR /w
-
-ENTRYPOINT ["make", "-C", "/w"]
+out=$(cloc --quiet --csv "${java}")
+IFS=',' read -ra M <<< "${out}"
+cat <<EOT> "${output}"
+blanks ${M[0]}
+comments ${M[1]}
+loc ${M[2]}
+EOT

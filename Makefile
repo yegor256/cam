@@ -29,8 +29,15 @@ HOME=dataset
 
 all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate
 
-# Delete everything, in order to start from scratch.
+# Delete calculations.
 clean:
+	rm -rf $(HOME)/measurements
+	rm -rf $(HOME)/data
+	rm -rf $(HOME)/reports
+	rm -rf $(HOME)/temp
+
+# Delete everything, in order to start from scratch.
+wipe:
 	rm -rf $(HOME)
 
 # Show some details about the environment we are running it
