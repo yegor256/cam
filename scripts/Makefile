@@ -88,9 +88,7 @@ clone: $(HOME)/repositories.csv $(HOME)/github
 	done < "$(HOME)/repositories.csv"
 
 # Apply filters to all found repositories at once.
-filter: $(HOME)/github
-	mkdir -p $(HOME)/temp
-	mkdir -p $(HOME)/summary
+filter: $(HOME)/github $(HOME)/temp $(HOME)/summary
 	for f in $$(ls filters/); do
 		"filters/$${f}" $(HOME)/github "$(HOME)/summary/$${f}.tex" $(HOME)/temp
 		echo "Filter $${f} published its results to $(HOME)/summary/$${f}.tex"
@@ -101,15 +99,16 @@ filter: $(HOME)/github
 		echo ""
 	done
 
-measure:
-	mkdir -p $(HOME)/temp
+# Calculate metrics for each file.
+measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 	for f in $$(find $(HOME)/github -name '*.java'); do
 		java="$${f}"
-		javam="$${f}.m"
+		javam=$$(echo "$${java}" | gsed "s|$(HOME)/github|$(HOME)/measurements|")
 		if [ -e "$${javam}" ]; then
 			echo "Metrics already exist for $${java}"
 			continue
 		fi
+		mkdir -p $$(dirname "$${javam}")
 		for m in $$(ls metrics/); do
 			"metrics/$${m}" "$${java}" "$${javam}"
 			while IFS= read -r t; do
@@ -123,3 +122,11 @@ measure:
 $(HOME)/github:
 	mkdir -p $(HOME)/github
 
+$(HOME)/measurements:
+	mkdir -p $(HOME)/measurements
+
+$(HOME)/summary:
+	mkdir -p $(HOME)/summary
+
+$(HOME)/temp:
+	mkdir -p $(HOME)/temp
