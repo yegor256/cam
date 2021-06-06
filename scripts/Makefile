@@ -92,9 +92,13 @@ filter: $(HOME)/github
 	mkdir -p $(HOME)/summary
 	for f in $$(ls filters/); do
 		"filters/$${f}" $(HOME)/github "$(HOME)/summary/$${f}.tex" $(HOME)/temp
+		echo "Filter $${f} published its results to $(HOME)/summary/$${f}.tex"
 	done
-# 	find repos -type file -name '*Test.java' -exec rm "{}" \;
-# 	find repos -type file -name 'package-info.java' -exec rm "{}" \;
+	for f in $$(ls "$(HOME)/summary/"); do
+		echo "$${f}:"
+		cat "$(HOME)/summary/$${f}"
+		echo ""
+	done
 
 $(HOME)/github:
 	mkdir -p $(HOME)/github
