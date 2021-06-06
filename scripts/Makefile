@@ -88,14 +88,14 @@ clone: $(HOME)/repositories.csv $(HOME)/github
 	done < "$(HOME)/repositories.csv"
 
 # Apply filters to all found repositories at once.
-filter: $(HOME)/github $(HOME)/temp $(HOME)/summary
+filter: $(HOME)/github $(HOME)/temp $(HOME)/reports
 	for f in $$(ls filters/); do
-		"filters/$${f}" $(HOME)/github "$(HOME)/summary/$${f}.tex" $(HOME)/temp
-		echo "Filter $${f} published its results to $(HOME)/summary/$${f}.tex"
+		"filters/$${f}" $(HOME)/github "$(HOME)/reports/$${f}.tex" $(HOME)/temp
+		echo "Filter $${f} published its results to $(HOME)/reports/$${f}.tex"
 	done
-	for f in $$(ls "$(HOME)/summary/"); do
+	for f in $$(ls "$(HOME)/reports/"); do
 		echo "$${f}:"
-		cat "$(HOME)/summary/$${f}"
+		cat "$(HOME)/reports/$${f}"
 		echo ""
 	done
 
@@ -103,7 +103,7 @@ filter: $(HOME)/github $(HOME)/temp $(HOME)/summary
 measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 	for f in $$(find $(HOME)/github -name '*.java'); do
 		java="$${f}"
-		javam=$$(echo "$${java}" | gsed "s|$(HOME)/github|$(HOME)/measurements|")
+		javam="$$(echo "$${java}" | gsed "s|$(HOME)/github|$(HOME)/measurements|").m"
 		if [ -e "$${javam}" ]; then
 			echo "Metrics already exist for $${java}"
 			continue
@@ -113,20 +113,53 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 			"metrics/$${m}" "$${java}" "$${javam}"
 			while IFS= read -r t; do
 				IFS=' ' read -ra M <<< "$${t}"
-				echo "$${M[1]}" > "$${java}.$${M[0]}"
+				echo "$${M[1]}" > "$${javam}.$${M[0]}"
 			done < "$${javam}"
 		done
 		echo "Metrics collected for $${java}"
 	done
 
+# Aggregate all metrics in summary CSV files.
+aggregate: $(HOME)/measurements $(HOME)/data
+	for d in $$(find $(HOME)/measurements -depth 2 -print); do
+		ddir=$$(echo "$${d}" | gsed "s|$(HOME)/measurements|$(HOME)/data|")
+		if [ -e "$${ddir}" ]; then
+			echo "Already aggregated: $${ddir}"
+			continue
+		fi
+		for m in $$(find "$${d}" -name '*.m' -print); do
+			for v in $$(ls $${m}.*); do
+				java=$$(echo "$${v}" | gsed "s|$${d}||" | gsed "s|\.m\..\+$$||")
+				metric=$$(echo "$${v}" | gsed "s|$${d}$${java}.m.||")
+				csv="$${ddir}/$${metric}.csv"
+				mkdir -p $$(dirname "$${csv}")
+				echo "$${java},$$(cat "$${v}")" >> "$${ddir}/$${metric}.csv"
+			done
+		done
+	done
+	rm -rf $(HOME)/data/*.csv
+	for d in $$(find $(HOME)/data -depth 2 -print); do
+		r=$$(echo "$${d}" | gsed "s|$(HOME)/data/||")
+		for csv in $$(find "$${d}" -name '*.csv' -print); do
+			a=$$(echo "$${csv}" | gsed "s|$${d}||")
+			while IFS= read -r t; do
+				echo "$${r}$${t}" >> "$(HOME)/data/$${a}"
+			done < "$${csv}"
+		done
+		echo $${r}
+	done
+
 $(HOME)/github:
 	mkdir -p $(HOME)/github
+
+$(HOME)/data:
+	mkdir -p $(HOME)/data
 
 $(HOME)/measurements:
 	mkdir -p $(HOME)/measurements
 
-$(HOME)/summary:
-	mkdir -p $(HOME)/summary
+$(HOME)/reports:
+	mkdir -p $(HOME)/reports
 
 $(HOME)/temp:
 	mkdir -p $(HOME)/temp
