@@ -29,7 +29,6 @@ require 'octokit'
 
 opts = Slop.parse do |o|
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
-  o.integer '--page', 'Page size in GitHub request', default: 50
   o.string '--path', 'The file name to save the list to', required: true
   o.on '--help' do
     puts o
@@ -37,16 +36,16 @@ opts = Slop.parse do |o|
   end
 end
 
-raise '--total must be larger or equal to --page' if opts[:total] < opts[:page]
+size = [100, opts[:total]].min
 
 github = Octokit::Client.new
 names = []
-pages = opts[:total] / opts[:page]
+pages = opts[:total] / size
 puts "Will fetch #{pages} GitHub pages"
 (0..pages - 1).each do |p|
   json = github.search_repositories(
     'stars:>=1000 stars:<=10000 size:>200 size:<1000000 language:java is:public mirror:false archived:false',
-    per_page: opts[:page],
+    per_page: size,
     page: p
   )
   json[:items].each do |i|

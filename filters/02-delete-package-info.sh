@@ -22,6 +22,7 @@
 # SOFTWARE.
 
 set -e
+set -o pipefail
 
 home=$1
 summary=$2

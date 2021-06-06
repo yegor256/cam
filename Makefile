@@ -22,12 +22,12 @@
 
 SHELL := /bin/bash
 
-.SHELLFLAGS = -e -c
+.SHELLFLAGS = -e -o pipefail -c
 .ONESHELL:
 
 HOME=dataset
 
-all: env $(HOME)/repositories.csv cleanup clone filter measure
+all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate
 
 # Delete everything, in order to start from scratch.
 clean:
@@ -42,7 +42,7 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(HOME)/repositories.csv:
-	ruby discover-repos.rb --total=4 --page=4 "--path=$(HOME)/repositories.csv"
+	ruby discover-repos.rb --total=4 "--path=$(HOME)/repositories.csv"
 	cat "$(HOME)/repositories.csv"
 
 # Delete directories that don't exist in the list of
@@ -110,7 +110,8 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(HOME)/measurements $(HOME)/data
-	all=$$(find $(HOME)/measurements -name '*.m.*' -print | sed "s|^.\+\.\(.\+\)$$|\1|" | sort | uniq)
+	all=$$(find $(HOME)/measurements -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
+	echo "All metrics: $${all}"
 	for d in $$(find $(HOME)/measurements -maxdepth 2 -mindepth 2 -type d -print); do
 		ddir=$$(echo "$${d}" | sed "s|$(HOME)/measurements|$(HOME)/data|")
 		if [ -e "$${ddir}" ]; then
@@ -119,7 +120,7 @@ aggregate: $(HOME)/measurements $(HOME)/data
 		fi
 		for m in $$(find "$${d}" -name '*.m' -print); do
 			for v in $$(ls $${m}.*); do
-				java=$$(echo "$${v}" | sed "s|$${d}||" | sed "s|\.m\..\+$$||")
+				java=$$(echo "$${v}" | sed "s|$${d}||" | sed "s|\.m\..*$$||")
 				metric=$$(echo "$${v}" | sed "s|$${d}$${java}.m.||")
 				csv="$${ddir}/$${metric}.csv"
 				mkdir -p $$(dirname "$${csv}")
@@ -138,13 +139,13 @@ aggregate: $(HOME)/measurements $(HOME)/data
 	rm -rf $(HOME)/data/*.csv
 	for d in $$(find $(HOME)/data -maxdepth 2 -mindepth 2 -type d -print); do
 		r=$$(echo "$${d}" | sed "s|$(HOME)/data/||")
-		for csv in $$(find "$${d}" -name '*.csv' -print); do
+		for csv in $$(find "$${d}" -name '*.csv' -maxdepth 1 -print); do
 			a=$$(echo "$${csv}" | sed "s|$${d}||")
 			while IFS= read -r t; do
 				echo "$${r}$${t}" >> "$(HOME)/data/$${a}"
 			done < "$${csv}"
 		done
-		echo $${r}
+		echo "$${r} metrics added to the CSV aggregate"
 	done
 
 $(HOME)/github:
