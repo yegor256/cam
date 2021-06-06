@@ -20,8 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-.SHELLFLAGS = -e -c
+SHELL := /bin/bash
 
+.SHELLFLAGS = -e -c
 .ONESHELL:
 
 HOME=dataset
@@ -38,6 +39,7 @@ env:
 	env
 	ruby -v
 	python --version
+	gem install octokit
 
 
 # Get the list of repos from GitHub and then create directories
@@ -49,8 +51,8 @@ $(HOME)/repositories.csv:
 # Delete directories that don't exist in the list of
 # required repositories.
 cleanup: $(HOME)/repositories.csv $(HOME)/github
-	for d in $$(find $(HOME)/github -depth 2 -print); do
-		repo=$$(echo $${d} | gsed "s|$(HOME)/github/||")
+	for d in $$(find "$(HOME)/github" -depth 2 -print); do
+		repo=$$(echo $${d} | sed "s|$(HOME)/github/||")
 		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
 			echo "Directory $${d} is here and is needed (for $${repo})"
 		else
@@ -58,7 +60,7 @@ cleanup: $(HOME)/repositories.csv $(HOME)/github
 			echo "Directory $${d} is obsolete and was deleted (for $${repo})"
 		fi
 	done
-	for d in $$(find $(HOME)/github -depth 1 -print); do
+	for d in $$(find "$(HOME)/github" -depth 1 -print); do
 		if [ "$$(ls $${d} | wc -l)" == '0' ]; then
 			rm -rf "$${d}"
 			echo "Directory $${d} is empty and was deleted"
@@ -93,7 +95,7 @@ filter: $(HOME)/github $(HOME)/temp $(HOME)/reports
 measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 	for f in $$(find $(HOME)/github -name '*.java'); do
 		java="$${f}"
-		javam="$$(echo "$${java}" | gsed "s|$(HOME)/github|$(HOME)/measurements|").m"
+		javam="$$(echo "$${java}" | sed "s|$(HOME)/github|$(HOME)/measurements|").m"
 		if [ -e "$${javam}" ]; then
 			echo "Metrics already exist for $${java}"
 			continue
@@ -111,24 +113,24 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(HOME)/measurements $(HOME)/data
-	all=$$(find $(HOME)/measurements -name '*.m.*' -print | gsed "s|^.\+\.\(.\+\)$$|\1|" | sort | uniq)
+	all=$$(find $(HOME)/measurements -name '*.m.*' -print | sed "s|^.\+\.\(.\+\)$$|\1|" | sort | uniq)
 	for d in $$(find $(HOME)/measurements -depth 2 -print); do
-		ddir=$$(echo "$${d}" | gsed "s|$(HOME)/measurements|$(HOME)/data|")
+		ddir=$$(echo "$${d}" | sed "s|$(HOME)/measurements|$(HOME)/data|")
 		if [ -e "$${ddir}" ]; then
 			echo "Already aggregated: $${ddir}"
 			continue
 		fi
 		for m in $$(find "$${d}" -name '*.m' -print); do
 			for v in $$(ls $${m}.*); do
-				java=$$(echo "$${v}" | gsed "s|$${d}||" | gsed "s|\.m\..\+$$||")
-				metric=$$(echo "$${v}" | gsed "s|$${d}$${java}.m.||")
+				java=$$(echo "$${v}" | sed "s|$${d}||" | sed "s|\.m\..\+$$||")
+				metric=$$(echo "$${v}" | sed "s|$${d}$${java}.m.||")
 				csv="$${ddir}/$${metric}.csv"
 				mkdir -p $$(dirname "$${csv}")
 				echo "$${java},$$(cat "$${v}")" >> "$${csv}"
 			done
 			csv="$${ddir}/all.csv"
 			mkdir -p $$(dirname "$${csv}")
-			java=$$(echo "$${m}" | gsed "s|$${d}||" | gsed "s|\.m$$||")
+			java=$$(echo "$${m}" | sed "s|$${d}||" | sed "s|\.m$$||")
 			printf "$${java}" >> "$${csv}"
 			for a in $${all}; do
 				printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
@@ -138,9 +140,9 @@ aggregate: $(HOME)/measurements $(HOME)/data
 	done
 	rm -rf $(HOME)/data/*.csv
 	for d in $$(find $(HOME)/data -depth 2 -print); do
-		r=$$(echo "$${d}" | gsed "s|$(HOME)/data/||")
+		r=$$(echo "$${d}" | sed "s|$(HOME)/data/||")
 		for csv in $$(find "$${d}" -name '*.csv' -print); do
-			a=$$(echo "$${csv}" | gsed "s|$${d}||")
+			a=$$(echo "$${csv}" | sed "s|$${d}||")
 			while IFS= read -r t; do
 				echo "$${r}$${t}" >> "$(HOME)/data/$${a}"
 			done < "$${csv}"

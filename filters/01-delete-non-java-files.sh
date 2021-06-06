@@ -21,17 +21,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+set -e
+
 home=$1
 summary=$2
 temp=$3
 
-list="${temp}/package-info-files.txt"
-find "${home}" -type file -name 'package-info.java' -print > "${list}"
+total=$(find "${home}" -type f | wc -l)
+java=$(find "${home}" -type f -a -name '*.java' | wc -l)
+
+list="${temp}/non-java-files.txt"
+find "${home}" -type f -not -name '*.java' -print > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
 cat <<EOT > "${summary}"
-There were $(cat ${list} | wc -l) files named as \ff{package-info.java},
-all of them were deleted.
+There are ${total} files total.
+${java} of them are \ff{.java} files.
+All other files, which are not \ff{.java}, have been deleted:
+$(cat ${list} | wc -l) total.
 EOT

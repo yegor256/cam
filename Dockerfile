@@ -29,4 +29,4 @@ RUN python3 -m pip install -r requirements.txt
 
 WORKDIR /w
 
-ENTRYPOINT ["make -C /w"]
+ENTRYPOINT ["make", "-C", "/w"]

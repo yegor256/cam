@@ -12,7 +12,7 @@ The dataset will be created in the `./dataset` directory.
 You can also run it without Docker:
 
 ```bash
-$ make -C scripts
+$ make
 ```
 
 Should work.

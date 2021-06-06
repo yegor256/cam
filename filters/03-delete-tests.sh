@@ -21,14 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+set -e
+
 home=$1
 summary=$2
 temp=$3
 
-total=$(find "${home}" -type file | wc -l)
+total=$(find "${home}" -type f | wc -l)
 
 list="${temp}/test-files.txt"
-find "${home}" -type file -name '*Test.java' -o -name '*ITCase.java' -print > "${list}"
+find "${home}" -type f -name '*Test.java' -o -name '*ITCase.java' -print > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
