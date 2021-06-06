@@ -27,7 +27,8 @@ set -o pipefail
 java=$1
 output=$2
 
-out=$(cloc --quiet --csv "${java}")
+out=$(cloc --quiet --csv "${java}" | tail -1)
+echo $out
 IFS=',' read -ra M <<< "${out}"
 cat <<EOT> "${output}"
 blanks ${M[0]}
