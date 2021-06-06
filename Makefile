@@ -51,7 +51,7 @@ $(HOME)/repositories.csv:
 # Delete directories that don't exist in the list of
 # required repositories.
 cleanup: $(HOME)/repositories.csv $(HOME)/github
-	for d in $$(find "$(HOME)/github" -maxdepth 2 -print); do
+	for d in $$(find "$(HOME)/github" -maxdepth 2 -mindepth 2 -type d -print); do
 		repo=$$(echo $${d} | sed "s|$(HOME)/github/||")
 		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
 			echo "Directory $${d} is here and is needed (for $${repo})"
@@ -60,7 +60,7 @@ cleanup: $(HOME)/repositories.csv $(HOME)/github
 			echo "Directory $${d} is obsolete and was deleted (for $${repo})"
 		fi
 	done
-	for d in $$(find "$(HOME)/github" -maxdepth 1 -print); do
+	for d in $$(find "$(HOME)/github" -maxdepth 1 -mindepth 1 -type d -print); do
 		if [ "$$(ls $${d} | wc -l)" == '0' ]; then
 			rm -rf "$${d}"
 			echo "Directory $${d} is empty and was deleted"
@@ -114,7 +114,7 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 # Aggregate all metrics in summary CSV files.
 aggregate: $(HOME)/measurements $(HOME)/data
 	all=$$(find $(HOME)/measurements -name '*.m.*' -print | sed "s|^.\+\.\(.\+\)$$|\1|" | sort | uniq)
-	for d in $$(find $(HOME)/measurements -maxdepth 2 -print); do
+	for d in $$(find $(HOME)/measurements -maxdepth 2 -mindepth 2 -type d -print); do
 		ddir=$$(echo "$${d}" | sed "s|$(HOME)/measurements|$(HOME)/data|")
 		if [ -e "$${ddir}" ]; then
 			echo "Already aggregated: $${ddir}"
@@ -139,7 +139,7 @@ aggregate: $(HOME)/measurements $(HOME)/data
 		done
 	done
 	rm -rf $(HOME)/data/*.csv
-	for d in $$(find $(HOME)/data -maxdepth 2 -print); do
+	for d in $$(find $(HOME)/data -maxdepth 2 -mindepth 2 -type d -print); do
 		r=$$(echo "$${d}" | sed "s|$(HOME)/data/||")
 		for csv in $$(find "$${d}" -name '*.csv' -print); do
 			a=$$(echo "$${csv}" | sed "s|$${d}||")
