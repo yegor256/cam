@@ -26,7 +26,7 @@
 
 HOME=dataset
 
-all: $(HOME)/repositories.csv cleanup clone filter
+all: $(HOME)/repositories.csv cleanup clone filter measure
 
 # Delete everything, in order to start from scratch.
 clean:
@@ -87,6 +87,7 @@ clone: $(HOME)/repositories.csv $(HOME)/github
 	  	fi
 	done < "$(HOME)/repositories.csv"
 
+# Apply filters to all found repositories at once.
 filter: $(HOME)/github
 	mkdir -p $(HOME)/temp
 	mkdir -p $(HOME)/summary
@@ -98,6 +99,25 @@ filter: $(HOME)/github
 		echo "$${f}:"
 		cat "$(HOME)/summary/$${f}"
 		echo ""
+	done
+
+measure:
+	mkdir -p $(HOME)/temp
+	for f in $$(find $(HOME)/github -name '*.java'); do
+		java="$${f}"
+		javam="$${f}.m"
+		if [ -e "$${javam}" ]; then
+			echo "Metrics already exist for $${java}"
+			continue
+		fi
+		for m in $$(ls metrics/); do
+			"metrics/$${m}" "$${java}" "$${javam}"
+			while IFS= read -r t; do
+				IFS=' ' read -ra M <<< "$${t}"
+				echo "$${M[1]}" > "$${java}.$${M[0]}"
+			done < "$${javam}"
+		done
+		echo "Metrics collected for $${java}"
 	done
 
 $(HOME)/github:

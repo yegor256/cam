@@ -25,5 +25,6 @@ FROM yegor256/rultor-image:1.5.2
 COPY scripts .
 RUN gem install bundler
 RUN bundle install
+RUN python3 -m pip install -r requirements.txt
 
 ENTRYPOINT ["make"]
