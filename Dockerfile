@@ -20,6 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM yegor256/rultor-image:1.5
+FROM yegor256/rultor-image:1.5.2
 
+COPY scripts .
+RUN gem install bundler
 RUN bundle install
+
+ENTRYPOINT ["make"]

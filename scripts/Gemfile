@@ -1,4 +1,4 @@
-# The MIT License (MIT)
+# MIT License
 #
 # Copyright (c) 2021 Yegor Bugayenko
 #
@@ -9,38 +9,18 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-.SHELLFLAGS = -e -c
+source 'https://rubygems.org'
 
-.ONESHELL:
-
-all: discover-repos clone
-
-clean:
-	rm -rf repos
-	rm -rf summary
-
-discover-repos:
-	ruby discover-repos.rb --total=10 --home=repos --page=10 --list=summary/repos.csv
-
-clone:
-	list=$$(find repos -depth 2 -print)
-	for i in $$list; do
-	  git=$$(echo $$i | gsed -e "s|repos/|https://github.com/|")
-	  if [ -e $$i/.git ]; then
-	    echo "$${i}: Git repo is already here"
-	  else
-	    echo "$${i}: trying to clone it..."
-	    git clone $$git $$i
-	  fi
-	done
+gem 'octokit', '4.14.0'
+gem 'slop'
