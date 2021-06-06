@@ -73,19 +73,19 @@ cleanup: $(HOME)/repositories.csv
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
 clone: $(HOME)/repositories.csv
-	for r in $$(cat "$(HOME)/repositories.csv"); do
+	while IFS= read -r r; do
 	  	if [ -e "$(HOME)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
 	  	else
 	    	echo "$${r}: trying to clone it..."
 	    	git clone "https://github.com/$${r}" "$(HOME)/github/$${r}"
 	  	fi
-	done
+	done < "$(HOME)/repositories.csv"
 
-filters:
+filter:
 	mkdir -p $(HOME)/temp
 	for f in $$(ls filters/); do
-		"$${f}" $(HOME)/github $(HOME)/summary $(HOME)/temp
+		"filters/$${f}" $(HOME)/github $(HOME)/summary $(HOME)/temp
 	done
 # 	find repos -type file -name '*Test.java' -exec rm "{}" \;
 # 	find repos -type file -name 'package-info.java' -exec rm "{}" \;
