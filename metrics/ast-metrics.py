@@ -75,7 +75,7 @@ with open(java, encoding='utf-8', errors='ignore') as f:
     raw = javalang.parse.parse(f.read())
     tree = raw.filter(javalang.tree.ClassDeclaration)
     with open(metrics, 'a') as m:
-      m.write('attrs ' + str(attrs(raw)) + '\n')
+      m.write('attributes ' + str(attrs(raw)) + '\n')
       m.write('ctors ' + str(ctors(raw)) + '\n')
       m.write('methods ' + str(methods(raw)) + '\n')
       m.write('ncss ' + str(ncss(raw)) + '\n')
