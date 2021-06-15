@@ -9,7 +9,7 @@ $ docker run --rm -v "$(pwd):/w" yegor256/cam
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
-maybe a few hours!).
+maybe a few hours!), and a `.zip` archive in the current directory.
 
 You can also run it without Docker (100 is the number of repositories to fetch from GitHub):
 

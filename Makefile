@@ -37,6 +37,7 @@ zip: $(HOME)/report.pdf
 
 # Delete calculations.
 clean:
+	rm -rf "$(HOME)/report.pdf"
 	rm -rf "$(HOME)/measurements"
 	rm -rf "$(HOME)/data"
 	rm -rf "$(HOME)/reports"
