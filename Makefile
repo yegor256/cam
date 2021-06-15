@@ -89,7 +89,7 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 	    	echo "$${r}: Git repo is already here"
 	  	else
 	    	echo "$${r}: trying to clone it..."
-	    	git clone "https://github.com/$${r}" "$(TARGET)/github/$${r}"
+	    	git clone -–depth=1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
 	  	fi
 	done < "$(TARGET)/repositories.csv"
 
