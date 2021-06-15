@@ -100,9 +100,9 @@ filter: $(TARGET)/github $(TARGET)/temp
 		"filters/$${f}" $(TARGET)/github "$(TARGET)/temp/reports/$${f}.tex" $(TARGET)/temp
 		echo "Filter $${f} published its results to $(TARGET)/temp/reports/$${f}.tex"
 	done
-	for f in $$(ls "$(TARGET)/reports/"); do
+	for f in $$(ls "$(TARGET)/temp/reports/"); do
 		echo "$${f}:"
-		cat "$(TARGET)/reports/$${f}"
+		cat "$(TARGET)/temp/reports/$${f}"
 		echo ""
 	done
 

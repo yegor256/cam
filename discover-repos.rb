@@ -54,8 +54,12 @@ puts "Will fetch #{pages} GitHub pages"
   puts "Found #{json[:items].count} repositories in page #{p}"
 end
 puts "Found #{names.count} total repositories in GitHub"
+if (names.count > opts[:total])
+  names = names.first(opts[:total])
+  puts "We will use only the first #{opts[:total]} repositories"
+end
 
 path = File.expand_path(opts[:path])
 FileUtils.mkdir_p(File.dirname(path))
 File.write(path, names.join("\n") + "\n")
-puts "The list of repos saved into #{path}"
+puts "The list of #{names.count} repos saved into #{path}"

@@ -29,6 +29,11 @@ summary=$2
 temp=$3
 
 list="${temp}/package-info-files.txt"
+if [ -e "${list}" ]; then
+    echo "package-info.java files have already been deleted"
+    exit
+fi
+
 find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"

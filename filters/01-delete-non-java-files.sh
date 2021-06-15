@@ -32,6 +32,11 @@ total=$(find "${home}" -type f | wc -l)
 java=$(find "${home}" -type f -a -name '*.java' | wc -l)
 
 list="${temp}/non-java-files.txt"
+if [ -e "${list}" ]; then
+    echo "Non-java files have already been deleted"
+    exit
+fi
+
 find "${home}" -type f -not -name '*.java' -print > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"

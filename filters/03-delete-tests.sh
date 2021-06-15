@@ -31,7 +31,13 @@ temp=$3
 total=$(find "${home}" -type f | wc -l)
 
 list="${temp}/test-files.txt"
-find "${home}" -type f -name '*Test.java' -o -name '*ITCase.java' -print > "${list}"
+if [ -e "${list}" ]; then
+    echo "Tests have already been deleted"
+    exit
+fi
+
+find "${home}" -type f -name '*Test.java' -print > "${list}"
+find "${home}" -type f -name '*ITCase.java' -print > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
