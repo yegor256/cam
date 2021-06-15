@@ -44,7 +44,7 @@ clean:
 	rm -rf "$(TARGET)/temp"
 
 # Delete everything, in order to start from scratch.
-wipe:
+wipe: clean
 	rm -rf "$(TARGET)"
 
 # Show some details about the environment we are running it
