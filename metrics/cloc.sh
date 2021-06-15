@@ -30,7 +30,7 @@ output=$2
 out=$(cloc --quiet --csv "${java}" | tail -1)
 IFS=',' read -ra M <<< "${out}"
 cat <<EOT> "${output}"
-blanks ${M[0]}
-comments ${M[1]}
-loc ${M[2]}
+blanks ${M[2]}
+comments ${M[3]}
+loc ${M[4]}
 EOT
