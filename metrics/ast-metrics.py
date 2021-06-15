@@ -80,4 +80,4 @@ with open(java, encoding='utf-8', errors='ignore') as f:
       m.write('methods ' + str(methods(raw)) + '\n')
       m.write('ncss ' + str(ncss(raw)) + '\n')
   except Exception as e:
-    sys.exit(str(e) + ': ' + java)
+    sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)

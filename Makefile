@@ -117,11 +117,14 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 		fi
 		mkdir -p $$(dirname "$${javam}")
 		for m in $$(ls metrics/); do
-			"metrics/$${m}" "$${java}" "$${javam}"
-			while IFS= read -r t; do
-				IFS=' ' read -ra M <<< "$${t}"
-				echo "$${M[1]}" > "$${javam}.$${M[0]}"
-			done < "$${javam}"
+			if "metrics/$${m}" "$${java}" "$${javam}"; then
+				while IFS= read -r t; do
+					IFS=' ' read -ra M <<< "$${t}"
+					echo "$${M[1]}" > "$${javam}.$${M[0]}"
+				done < "$${javam}"
+			else
+				echo "Failed to collect $${m} for $${java}"
+			fi
 		done
 		echo "Metrics collected for $${java}"
 	done

@@ -35,35 +35,35 @@ are taken into account.
 :returns: number
 """
 def branches(node):
-    count = 0
-    if (isinstance(node, tree.BinaryOperation)):
-        if (node.operator == '&&' or node.operator == '||'):
-            count = 1
-    elif(isinstance(node, (
-        tree.ForStatement,
-        tree.IfStatement,
-        tree.WhileStatement,
-        tree.DoStatement,
-        tree.TernaryExpression
-    ))):
-        count = 1
-    elif (isinstance(node, tree.SwitchStatementCase)):
-        count = 1
-        # count = len(node.case)
-    elif (isinstance(node, tree.TryStatement)):
-        count = 1
-        # count = len(node.catches)
-    return count
+  count = 0
+  if (isinstance(node, tree.BinaryOperation)):
+    if (node.operator == '&&' or node.operator == '||'):
+      count = 1
+  elif(isinstance(node, (
+    tree.ForStatement,
+    tree.IfStatement,
+    tree.WhileStatement,
+    tree.DoStatement,
+    tree.TernaryExpression
+  ))):
+    count = 1
+  elif (isinstance(node, tree.SwitchStatementCase)):
+    count = 1
+    # count = len(node.case)
+  elif (isinstance(node, tree.TryStatement)):
+    count = 1
+    # count = len(node.catches)
+  return count
 
 java = sys.argv[1]
 metrics = sys.argv[2]
 with open(java, encoding='utf-8', errors='ignore') as f:
-    try:
-        cc = 1
-        ast = parse.parse(f.read())
-        for path, node in ast:
-            cc += branches(node)
-        with open(metrics, 'a') as m:
-            m.write('cc ' + str(cc) + '\n')
-    except Exception as e:
-        sys.exit(str(e) + ': ' + java)
+  try:
+    cc = 1
+    ast = parse.parse(f.read())
+    for path, node in ast:
+      cc += branches(node)
+    with open(metrics, 'a') as m:
+      m.write('cc ' + str(cc) + '\n')
+  except Exception as e:
+    sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
