@@ -149,12 +149,17 @@ aggregate: $(HOME)/measurements $(HOME)/data
 		echo "$${d} aggregated"
 	done
 	rm -rf $(HOME)/data/*.csv
+	printf "repository,file" >> $(HOME)/data/all.csv
+	for a in $${all}; do
+		printf ",$${a}" >> $(HOME)/data/all.csv
+	done
+	printf "\n" >> $(HOME)/data/all.csv
 	for d in $$(find $(HOME)/data -maxdepth 2 -mindepth 2 -type d -print); do
 		r=$$(echo "$${d}" | sed "s|$(HOME)/data/||")
 		for csv in $$(find "$${d}" -name '*.csv' -maxdepth 1 -print); do
 			a=$$(echo "$${csv}" | sed "s|$${d}||")
 			while IFS= read -r t; do
-				echo "$${r}$${t}" >> "$(HOME)/data/$${a}"
+				echo "$${r},$${t}" >> "$(HOME)/data/$${a}"
 			done < "$${csv}"
 		done
 		echo "$${r} metrics added to the CSV aggregate"
