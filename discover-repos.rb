@@ -40,7 +40,7 @@ size = [100, opts[:total]].min
 
 github = Octokit::Client.new
 names = []
-pages = opts[:total] / size
+pages = (opts[:total] + size - 1) / size
 puts "Will fetch #{pages} GitHub pages"
 (0..pages - 1).each do |p|
   json = github.search_repositories(
