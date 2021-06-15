@@ -25,7 +25,10 @@ SHELL := /bin/bash
 .SHELLFLAGS = -e -o pipefail -c
 .ONESHELL:
 
+# The place where all the data will be stored and managed.
 TARGET=dataset
+
+# Total number of repositories to fetch from GitHub.
 TOTAL=4
 
 all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
