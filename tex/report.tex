@@ -1,0 +1,69 @@
+% The MIT License (MIT)
+%
+% Copyright (c) 2021 Yegor Bugayenko
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included
+% in all copies or substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+
+\documentclass[nobrand,anonymous,nosecurity]{huawei}
+\renewcommand*\theauthor{\today{}}
+\renewcommand*\thetitle{CaM: Classes and Metrics}
+\usepackage[utf8]{inputenc}
+\usepackage{href-ul}
+\usepackage{ffcode}
+\usepackage{tabularx} % for special tables
+\usepackage{shellesc}
+  \makeatletter\newcommand{\exec}[1]{%
+    \begingroup
+    \let\%\@percentchar
+    \let\{\@charlb
+    \let\}\@charrb
+    \ShellEscape{#1 > exec.tex}%
+    \endgroup%
+    \input{exec.tex}
+  }%
+
+\begin{document}
+
+\maketitle
+
+This report is generated automatically by the script, which you can find in
+the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
+
+We found and retrieved \exec{cat ../dataset/repositories.csv | wc -l}
+repositories from GitHub.
+The full list of them is in the \ff{repositories.csv} file.
+
+\exec{cat ../dataset/temp/reports/*.tex}
+
+The structure of the archive:
+
+\begin{itemize}
+  \item \ff{data/} is the collection of \ff{.csv} files with the data
+  you are looking for (\exec{find ../dataset/data -name '*.csv' | wc -l} total);
+
+  \item \ff{github/} is the entire collection of source files ``as is''
+  (\exec{du -sh ../dataset/github | cut -f1} total);
+
+  \item \ff{measurements/} is where we keep individual metrics calculated
+  per file, which you may use to verify our algorithms;
+\end{itemize}
+
+If any questions or suggestions, just \href{mailto:yegor256@gmail.com}{email me}.
+
+\end{document}

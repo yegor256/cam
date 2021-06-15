@@ -30,7 +30,8 @@ HOME=dataset
 all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Zip the entire dataset into an archive.
-zip:
+zip: $(HOME)/report.pdf
+	rm -r $(HOME)/temp
 	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(HOME)"
 
 # Delete calculations.
@@ -88,10 +89,11 @@ clone: $(HOME)/repositories.csv $(HOME)/github
 	done < "$(HOME)/repositories.csv"
 
 # Apply filters to all found repositories at once.
-filter: $(HOME)/github $(HOME)/temp $(HOME)/reports
+filter: $(HOME)/github $(HOME)/temp
+	mkdir -p $(HOME)/temp/reports
 	for f in $$(ls filters/); do
-		"filters/$${f}" $(HOME)/github "$(HOME)/reports/$${f}.tex" $(HOME)/temp
-		echo "Filter $${f} published its results to $(HOME)/reports/$${f}.tex"
+		"filters/$${f}" $(HOME)/github "$(HOME)/temp/reports/$${f}.tex" $(HOME)/temp
+		echo "Filter $${f} published its results to $(HOME)/temp/reports/$${f}.tex"
 	done
 	for f in $$(ls "$(HOME)/reports/"); do
 		echo "$${f}:"
@@ -165,6 +167,12 @@ aggregate: $(HOME)/measurements $(HOME)/data
 		echo "$${r} metrics added to the CSV aggregate"
 	done
 
+$(HOME)/report.pdf:
+	cd tex
+	make
+	cd ..
+	cp tex/report.pdf $(HOME)/report.pdf
+
 $(HOME)/github:
 	mkdir -p "$(HOME)/github"
 
@@ -173,9 +181,6 @@ $(HOME)/data:
 
 $(HOME)/measurements:
 	mkdir -p "$(HOME)/measurements"
-
-$(HOME)/reports:
-	mkdir -p "$(HOME)/reports"
 
 $(HOME)/temp:
 	mkdir -p "$(HOME)/temp"

@@ -37,4 +37,5 @@ done < "${list}"
 cat <<EOT > "${summary}"
 There were $(cat ${list} | wc -l) files named as \ff{package-info.java},
 all of them were deleted.
+
 EOT

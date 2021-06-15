@@ -1,4 +1,3 @@
-#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021 Yegor Bugayenko
@@ -21,25 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
-set -o pipefail
+SHELL := /bin/bash
 
-home=$1
-summary=$2
-temp=$3
+.SHELLFLAGS = -e -o pipefail -c
+.ONESHELL:
 
-total=$(find "${home}" -type f | wc -l)
+all: report.pdf
 
-list="${temp}/test-files.txt"
-find "${home}" -type f -name '*Test.java' -o -name '*ITCase.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
+clean:
+	rm -rf .DS_Store *.aux *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.pdf *.out
+	rm -rf _minted-*
 
-cat <<EOT > "${summary}"
-There were ${total} files total.
-$(cat ${list} | wc -l) of them were test files
-with \ff{Test} or \ff{ITCase} suffixes
-and that's why were deleted.
-
-EOT
+%.pdf: %.tex
+	latexmk -pdf $<
+	texqc $<
+	texsc $<

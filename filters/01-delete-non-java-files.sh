@@ -38,8 +38,9 @@ while IFS= read -r f; do
 done < "${list}"
 
 cat <<EOT > "${summary}"
-There are ${total} files total.
-${java} of them are \ff{.java} files.
-All other files, which are not \ff{.java}, have been deleted:
+There were ${total} files total,
+${java} of them were \ff{.java} files.
+All other files, which were not \ff{.java}, have been deleted:
 $(cat ${list} | wc -l) total.
+
 EOT
