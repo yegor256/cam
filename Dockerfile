@@ -29,4 +29,4 @@ RUN python3 -m pip install javalang==0.12.0
 
 WORKDIR /w
 
-ENTRYPOINT ["make", "-C", "/w"]
+ENTRYPOINT ["make", "-C", "/w", "-e"]

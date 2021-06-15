@@ -25,27 +25,27 @@ SHELL := /bin/bash
 .SHELLFLAGS = -e -o pipefail -c
 .ONESHELL:
 
-HOME=dataset
+TARGET=dataset
 TOTAL=4
 
-all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate zip
+all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Zip the entire dataset into an archive.
-zip: $(HOME)/report.pdf
-	rm -r $(HOME)/temp
-	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(HOME)"
+zip: $(TARGET)/report.pdf
+	rm -r $(TARGET)/temp
+	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 
 # Delete calculations.
 clean:
-	rm -rf "$(HOME)/report.pdf"
-	rm -rf "$(HOME)/measurements"
-	rm -rf "$(HOME)/data"
-	rm -rf "$(HOME)/reports"
-	rm -rf "$(HOME)/temp"
+	rm -rf "$(TARGET)/report.pdf"
+	rm -rf "$(TARGET)/measurements"
+	rm -rf "$(TARGET)/data"
+	rm -rf "$(TARGET)/reports"
+	rm -rf "$(TARGET)/temp"
 
 # Delete everything, in order to start from scratch.
 wipe:
-	rm -rf "$(HOME)"
+	rm -rf "$(TARGET)"
 
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
@@ -55,23 +55,23 @@ env:
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
-$(HOME)/repositories.csv:
-	ruby discover-repos.rb --total=$(TOTAL) "--path=$(HOME)/repositories.csv"
-	cat "$(HOME)/repositories.csv"
+$(TARGET)/repositories.csv:
+	ruby discover-repos.rb --total=$(TOTAL) "--path=$(TARGET)/repositories.csv"
+	cat "$(TARGET)/repositories.csv"
 
 # Delete directories that don't exist in the list of
 # required repositories.
-cleanup: $(HOME)/repositories.csv $(HOME)/github
-	for d in $$(find "$(HOME)/github" -maxdepth 2 -mindepth 2 -type d -print); do
-		repo=$$(echo $${d} | sed "s|$(HOME)/github/||")
-		if grep -Fxq "$${repo}" $(HOME)/repositories.csv; then
+cleanup: $(TARGET)/repositories.csv $(TARGET)/github
+	for d in $$(find "$(TARGET)/github" -maxdepth 2 -mindepth 2 -type d -print); do
+		repo=$$(echo $${d} | sed "s|$(TARGET)/github/||")
+		if grep -Fxq "$${repo}" $(TARGET)/repositories.csv; then
 			echo "Directory $${d} is here and is needed (for $${repo})"
 		else
 			rm -rf "$${d}"
 			echo "Directory $${d} is obsolete and was deleted (for $${repo})"
 		fi
 	done
-	for d in $$(find "$(HOME)/github" -maxdepth 1 -mindepth 1 -type d -print); do
+	for d in $$(find "$(TARGET)/github" -maxdepth 1 -mindepth 1 -type d -print); do
 		if [ "$$(ls $${d} | wc -l)" == '0' ]; then
 			rm -rf "$${d}"
 			echo "Directory $${d} is empty and was deleted"
@@ -80,34 +80,34 @@ cleanup: $(HOME)/repositories.csv $(HOME)/github
 
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
-clone: $(HOME)/repositories.csv $(HOME)/github
+clone: $(TARGET)/repositories.csv $(TARGET)/github
 	while IFS= read -r r; do
-	  	if [ -e "$(HOME)/github/$${r}/.git" ]; then
+	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
 	  	else
 	    	echo "$${r}: trying to clone it..."
-	    	git clone "https://github.com/$${r}" "$(HOME)/github/$${r}"
+	    	git clone "https://github.com/$${r}" "$(TARGET)/github/$${r}"
 	  	fi
-	done < "$(HOME)/repositories.csv"
+	done < "$(TARGET)/repositories.csv"
 
 # Apply filters to all found repositories at once.
-filter: $(HOME)/github $(HOME)/temp
-	mkdir -p $(HOME)/temp/reports
+filter: $(TARGET)/github $(TARGET)/temp
+	mkdir -p $(TARGET)/temp/reports
 	for f in $$(ls filters/); do
-		"filters/$${f}" $(HOME)/github "$(HOME)/temp/reports/$${f}.tex" $(HOME)/temp
-		echo "Filter $${f} published its results to $(HOME)/temp/reports/$${f}.tex"
+		"filters/$${f}" $(TARGET)/github "$(TARGET)/temp/reports/$${f}.tex" $(TARGET)/temp
+		echo "Filter $${f} published its results to $(TARGET)/temp/reports/$${f}.tex"
 	done
-	for f in $$(ls "$(HOME)/reports/"); do
+	for f in $$(ls "$(TARGET)/reports/"); do
 		echo "$${f}:"
-		cat "$(HOME)/reports/$${f}"
+		cat "$(TARGET)/reports/$${f}"
 		echo ""
 	done
 
 # Calculate metrics for each file.
-measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
-	for f in $$(find $(HOME)/github -name '*.java'); do
+measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
+	for f in $$(find $(TARGET)/github -name '*.java'); do
 		java="$${f}"
-		javam="$$(echo "$${java}" | sed "s|$(HOME)/github|$(HOME)/measurements|").m"
+		javam="$$(echo "$${java}" | sed "s|$(TARGET)/github|$(TARGET)/measurements|").m"
 		if [ -e "$${javam}" ]; then
 			echo "Metrics already exist for $${java}"
 			continue
@@ -124,11 +124,11 @@ measure: $(HOME)/github $(HOME)/temp $(HOME)/measurements
 	done
 
 # Aggregate all metrics in summary CSV files.
-aggregate: $(HOME)/measurements $(HOME)/data
-	all=$$(find $(HOME)/measurements -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
+aggregate: $(TARGET)/measurements $(TARGET)/data
+	all=$$(find $(TARGET)/measurements -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
 	echo "All metrics: $${all}"
-	for d in $$(find $(HOME)/measurements -maxdepth 2 -mindepth 2 -type d -print); do
-		ddir=$$(echo "$${d}" | sed "s|$(HOME)/measurements|$(HOME)/data|")
+	for d in $$(find $(TARGET)/measurements -maxdepth 2 -mindepth 2 -type d -print); do
+		ddir=$$(echo "$${d}" | sed "s|$(TARGET)/measurements|$(TARGET)/data|")
 		if [ -e "$${ddir}" ]; then
 			echo "Already aggregated: $${ddir}"
 			continue
@@ -152,38 +152,38 @@ aggregate: $(HOME)/measurements $(HOME)/data
 		done
 		echo "$${d} aggregated"
 	done
-	rm -rf $(HOME)/data/*.csv
-	printf "repository,file" >> $(HOME)/data/all.csv
+	rm -rf $(TARGET)/data/*.csv
+	printf "repository,file" >> $(TARGET)/data/all.csv
 	for a in $${all}; do
-		printf ",$${a}" >> $(HOME)/data/all.csv
+		printf ",$${a}" >> $(TARGET)/data/all.csv
 	done
-	printf "\n" >> $(HOME)/data/all.csv
-	for d in $$(find $(HOME)/data -maxdepth 2 -mindepth 2 -type d -print); do
-		r=$$(echo "$${d}" | sed "s|$(HOME)/data/||")
+	printf "\n" >> $(TARGET)/data/all.csv
+	for d in $$(find $(TARGET)/data -maxdepth 2 -mindepth 2 -type d -print); do
+		r=$$(echo "$${d}" | sed "s|$(TARGET)/data/||")
 		for csv in $$(find "$${d}" -name '*.csv' -maxdepth 1 -print); do
 			a=$$(echo "$${csv}" | sed "s|$${d}||")
 			while IFS= read -r t; do
-				echo "$${r},$${t}" >> "$(HOME)/data/$${a}"
+				echo "$${r},$${t}" >> "$(TARGET)/data/$${a}"
 			done < "$${csv}"
 		done
 		echo "$${r} metrics added to the CSV aggregate"
 	done
 
-$(HOME)/report.pdf:
+$(TARGET)/report.pdf:
 	cd tex
 	make clean
 	make
 	cd ..
-	cp tex/report.pdf $(HOME)/report.pdf
+	cp tex/report.pdf $(TARGET)/report.pdf
 
-$(HOME)/github:
-	mkdir -p "$(HOME)/github"
+$(TARGET)/github:
+	mkdir -p "$(TARGET)/github"
 
-$(HOME)/data:
-	mkdir -p "$(HOME)/data"
+$(TARGET)/data:
+	mkdir -p "$(TARGET)/data"
 
-$(HOME)/measurements:
-	mkdir -p "$(HOME)/measurements"
+$(TARGET)/measurements:
+	mkdir -p "$(TARGET)/measurements"
 
-$(HOME)/temp:
-	mkdir -p "$(HOME)/temp"
+$(TARGET)/temp:
+	mkdir -p "$(TARGET)/temp"
