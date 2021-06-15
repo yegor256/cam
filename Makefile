@@ -26,6 +26,7 @@ SHELL := /bin/bash
 .ONESHELL:
 
 HOME=dataset
+TOTAL=4
 
 all: env $(HOME)/repositories.csv cleanup clone filter measure aggregate zip
 
@@ -54,7 +55,7 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(HOME)/repositories.csv:
-	ruby discover-repos.rb --total=4 "--path=$(HOME)/repositories.csv"
+	ruby discover-repos.rb --total=$(TOTAL) "--path=$(HOME)/repositories.csv"
 	cat "$(HOME)/repositories.csv"
 
 # Delete directories that don't exist in the list of
@@ -169,6 +170,7 @@ aggregate: $(HOME)/measurements $(HOME)/data
 
 $(HOME)/report.pdf:
 	cd tex
+	make clean
 	make
 	cd ..
 	cp tex/report.pdf $(HOME)/report.pdf

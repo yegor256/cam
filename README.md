@@ -11,10 +11,10 @@ $ docker run --rm -v "$(pwd):/w" yegor256/cam
 The dataset will be created in the `./dataset` directory (may take some time,
 maybe a few hours!).
 
-You can also run it without Docker:
+You can also run it without Docker (100 is the number of repositories to fetch from GitHub):
 
 ```bash
-$ make
+$ make TOTAL=100
 ```
 
 Should work.
