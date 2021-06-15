@@ -37,7 +37,7 @@ if [ -e "${list}" ]; then
 fi
 
 find "${home}" -type f -name '*Test.java' -print > "${list}"
-find "${home}" -type f -name '*ITCase.java' -print > "${list}"
+find "${home}" -type f -name '*ITCase.java' -print >> "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
