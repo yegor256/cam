@@ -48,6 +48,7 @@ the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 We found and retrieved \exec{cat ../dataset/repositories.csv | wc -l}
 repositories from GitHub.
 The full list of them is in the \ff{repositories.csv} file.
+The \ff{hashes.csv} file has a list of Git hashes of their latest commits.
 
 \exec{cat ../dataset/temp/reports/*.tex}
 
@@ -57,7 +58,9 @@ The structure of the archive:
   \item \ff{data/} is the collection of \ff{.csv} files with the data
   you are looking for (\exec{find ../dataset/data -name '*.csv' | wc -l} total);
 
-  \item \ff{github/} is the entire collection of source files ``as is''
+  \item \ff{github/} is the entire collection of
+  \exec{find ../dataset/github -name '*.java' | wc -l}
+  source files ``as is''
   (\exec{du -sh ../dataset/github | cut -f1} total);
 
   \item \ff{measurements/} is where we keep individual metrics calculated
