@@ -29,5 +29,7 @@ RUN python3 -m pip install javalang==0.12.0
 
 COPY Makefile .
 COPY discover-repos.rb .
+COPY metrics/ .
+COPY filters/ .
 
 ENTRYPOINT ["make", "-e"]
