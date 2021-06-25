@@ -27,6 +27,6 @@ RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
 RUN python3 -m pip install javalang==0.12.0
 
-WORKDIR /w
+COPY Makefile .
 
-ENTRYPOINT ["make", "-C", "/w", "-e"]
+ENTRYPOINT ["make", "-e"]

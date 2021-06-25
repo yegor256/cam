@@ -6,7 +6,7 @@ Just run this and the entire dataset will be built
 where `100` is the number of repositories to fetch from GitHub:
 
 ```bash
-$ docker run --rm -v "$(pwd):/w" -e "TOTAL=100" yegor256/cam
+$ docker run --rm -v "$(pwd):/w" -e "TOTAL=100" -e "TARGET=/w" yegor256/cam
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
