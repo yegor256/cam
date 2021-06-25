@@ -22,7 +22,7 @@
 
 FROM yegor256/rultor-image:1.5.2
 
-RUN apt -y update && apt install -y cloc
+RUN apt -y update && apt install -y cloc latexmk
 RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
 RUN python3 -m pip install javalang==0.12.0
