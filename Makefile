@@ -109,7 +109,8 @@ filter: $(TARGET)/github $(TARGET)/temp
 
 # Calculate metrics for each file.
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
-	for f in $$(find $(TARGET)/github -name '*.java'); do
+	echo "Searching for all .java files in $(TARGET)/github (may take some time, stay calm...)"
+	find $(TARGET)/github -name '*.java' | while IFS= read -r f; do
 		java="$${f}"
 		javam="$$(echo "$${java}" | sed "s|$(TARGET)/github|$(TARGET)/measurements|").m"
 		if [ -e "$${javam}" ]; then
@@ -140,7 +141,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 			echo "Already aggregated: $${ddir}"
 			continue
 		fi
-		for m in $$(find "$${d}" -name '*.m' -print); do
+		find "$${d}" -name '*.m' | while IFS= read -r m; do
 			for v in $$(ls $${m}.*); do
 				java=$$(echo "$${v}" | sed "s|$${d}||" | sed "s|\.m\..*$$||")
 				metric=$$(echo "$${v}" | sed "s|$${d}$${java}.m.||")
