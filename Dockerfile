@@ -28,5 +28,6 @@ RUN gem install --no-user-install slop -v 4.9.1
 RUN python3 -m pip install javalang==0.12.0
 
 COPY Makefile .
+COPY discover-repos.rb .
 
 ENTRYPOINT ["make", "-e"]
