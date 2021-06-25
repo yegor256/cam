@@ -27,10 +27,11 @@ RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
 RUN python3 -m pip install javalang==0.12.0
 
-COPY Makefile .
-COPY discover-repos.rb .
-COPY metrics/ .
-COPY filters/ .
-COPY tex/ .
+RUN mkdir /usr/local/cam
+COPY Makefile /usr/local/cam
+COPY discover-repos.rb /usr/local/cam
+COPY metrics /usr/local/cam/metrics
+COPY filters /usr/local/cam/filters
+COPY tex /usr/local/cam/tex
 
-ENTRYPOINT ["make", "-e"]
+ENTRYPOINT ["make", "-e", "-C", "/usr/local/cam"]
