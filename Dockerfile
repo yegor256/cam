@@ -31,5 +31,6 @@ COPY Makefile .
 COPY discover-repos.rb .
 COPY metrics/ .
 COPY filters/ .
+COPY tex/ .
 
 ENTRYPOINT ["make", "-e"]
