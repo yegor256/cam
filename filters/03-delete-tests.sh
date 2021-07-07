@@ -38,6 +38,8 @@ fi
 
 find "${home}" -type f -name '*Test.java' -print > "${list}"
 find "${home}" -type f -name '*ITCase.java' -print >> "${list}"
+find "${home}" -type f -name '*Tests.java' -print >> "${list}"
+find "${home}" -type f -path '**/src/test/java/**/*.java' -print >> "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"

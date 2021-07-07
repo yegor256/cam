@@ -22,9 +22,18 @@
 
 FROM yegor256/rultor-image:1.5.2
 
-RUN apt -y update && apt install -y cloc latexmk
+RUN apt -y update && apt install -y cloc
+
+RUN tlmgr --verify-repo=none update --self
+RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ
+RUN tlmgr --verify-repo=none install biber
+
+RUN apt install -y python3-pygments
+RUN pip3 install pygments
+
 RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
+
 RUN python3 -m pip install javalang==0.12.0
 
 RUN mkdir /usr/local/cam
