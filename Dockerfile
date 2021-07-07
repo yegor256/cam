@@ -24,6 +24,10 @@ FROM yegor256/rultor-image:1.5.2
 
 RUN apt -y update && apt install -y cloc
 
+RUN gem install texsc
+RUN gem install texqc
+RUN apt install -y aspell
+
 RUN tlmgr --verify-repo=none update --self
 RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ
 RUN tlmgr --verify-repo=none install biber
