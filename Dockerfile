@@ -40,6 +40,10 @@ RUN gem install --no-user-install slop -v 4.9.1
 
 RUN python3 -m pip install javalang==0.12.0
 
+RUN add-apt-repository ppa:inkscape.dev/stable && \
+  apt update -y && \
+  apt install -y inkscape
+
 RUN mkdir /usr/local/cam
 COPY Makefile /usr/local/cam
 COPY discover-repos.rb /usr/local/cam

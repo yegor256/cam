@@ -12,7 +12,7 @@ $ docker run --rm -v "$(pwd):/w" -e "TOTAL=1000" -e "TARGET=/w/dataset" yegor256
 The dataset will be created in the `./dataset` directory (may take some time,
 maybe a few days!), and a `.zip` archive will also be there.
 
-You can also run it without Docker too:
+You can also run it without Docker:
 
 ```bash
 $ make TOTAL=100

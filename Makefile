@@ -37,6 +37,7 @@ all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 zip: $(TARGET)/report.pdf
 	rm -r $(TARGET)/temp
 	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
+	mv "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 
 # Delete calculations.
 clean:
