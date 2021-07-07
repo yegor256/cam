@@ -53,7 +53,7 @@ puts "Will fetch #{pages} GitHub pages"
       "stars:<=#{opts['max-stars']}",
       "size:>=#{opts['min-size']}",
       "size:<=#{opts['max-size']}",
-      'language:java'.
+      'language:java',
       'is:public',
       'mirror:false',
       'archived:false'
