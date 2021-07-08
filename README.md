@@ -14,7 +14,8 @@ number of attributes,
 number of constructors,
 number of methods.
 
-Just run this and the entire dataset will be built
+If you want to create a new dataset, 
+just run this and the entire dataset will be built
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
 where `1000` is the number of repositories to fetch from GitHub:
 
