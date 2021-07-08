@@ -1,6 +1,19 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 
+The latest ZIP archive with the dataset is here: 
+[cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip).
+It is the result of the analysis of 1000 Java classes against
+eight metrics: 
+lines of code,
+lines of comments,
+blank lines,
+NCSS,
+cyclomatic complexity,
+number of attributes,
+number of constructors,
+number of methods.
+
 Just run this and the entire dataset will be built
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
 where `1000` is the number of repositories to fetch from GitHub:
