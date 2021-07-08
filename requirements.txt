@@ -1,0 +1,2 @@
+javalang~=0.13.0
+pygments~=2.9.0
