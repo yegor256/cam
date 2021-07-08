@@ -2,7 +2,7 @@
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 
 The latest ZIP archive with the dataset is here: 
-[cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip).
+[cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) (387Mb).
 It is the result of the analysis of 1000 Java classes against
 eight metrics: 
 lines of code,
