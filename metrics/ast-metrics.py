@@ -24,60 +24,66 @@
 import sys
 import javalang
 
+
 def attrs(tree):
-  tlist = [v for v in tree]
-  if not tlist:
-    raise Exception('This is not a class')
-  fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
-  flist = [v for v in fields]
-  found = 0
-  for path, node in flist:
-    if 'static' in node.modifiers:
-      continue
-    found += 1
-  return found
+    tlist = [v for v in tree]
+    if not tlist:
+        raise Exception('This is not a class')
+    fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    flist = [v for v in fields]
+    found = 0
+    for path, node in flist:
+        if 'static' in node.modifiers:
+            continue
+        found += 1
+    return found
+
 
 def ctors(tree):
-  tlist = [v for v in tree]
-  methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
-  clist = [v for v in methods]
-  return len(clist)
+    tlist = [v for v in tree]
+    methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
+    clist = [v for v in methods]
+    return len(clist)
+
 
 def methods(tree):
-  tlist = [v for v in tree]
-  methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
-  mlist = [v for v in methods]
-  found = 0
-  for path, node in mlist:
-    if 'static' in node.modifiers:
-      continue
-    found += 1
-  return found
+    tlist = [v for v in tree]
+    methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = [v for v in methods]
+    found = 0
+    for path, node in mlist:
+        if 'static' in node.modifiers:
+            continue
+        found += 1
+    return found
+
 
 def ncss(tree):
-  metric = 0
-  for path, node in tree:
-    node_type = str(type(node))
-    if 'Statement' in node_type:
-      metric += 1
-    elif 'VariableDeclarator' == node_type:
-      metric += 1
-    elif 'Assignment' == node_type:
-      metric += 1
-    elif 'Declaration' in node_type and 'LocalVariableDeclaration' not in node_type and 'PackageDeclaration' not in node_type:
-      metric += 1
-  return metric
+    metric = 0
+    for path, node in tree:
+        node_type = str(type(node))
+        if 'Statement' in node_type:
+            metric += 1
+        elif 'VariableDeclarator' == node_type:
+            metric += 1
+        elif 'Assignment' == node_type:
+            metric += 1
+        elif 'Declaration' in node_type and 'LocalVariableDeclaration' not in node_type and 'PackageDeclaration' not in node_type:
+            metric += 1
+    return metric
 
-java = sys.argv[1]
-metrics = sys.argv[2]
-with open(java, encoding='utf-8', errors='ignore') as f:
-  try:
-    raw = javalang.parse.parse(f.read())
-    tree = raw.filter(javalang.tree.ClassDeclaration)
-    with open(metrics, 'a') as m:
-      m.write('attributes ' + str(attrs(raw)) + '\n')
-      m.write('ctors ' + str(ctors(raw)) + '\n')
-      m.write('methods ' + str(methods(raw)) + '\n')
-      m.write('ncss ' + str(ncss(raw)) + '\n')
-  except Exception as e:
-    sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
+
+if __name__ == '__main__':
+    java = sys.argv[1]
+    metrics = sys.argv[2]
+    with open(java, encoding='utf-8', errors='ignore') as f:
+        try:
+            raw = javalang.parse.parse(f.read())
+            tree = raw.filter(javalang.tree.ClassDeclaration)
+            with open(metrics, 'a') as m:
+                m.write(f'attributes {attrs(raw)}\n')
+                m.write(f'ctors {ctors(raw)}\n')
+                m.write(f'methods {methods(raw)}\n')
+                m.write(f'ncss {ncss(raw)}\n')
+        except Exception as e:
+            sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
