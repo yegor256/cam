@@ -2,3 +2,4 @@
 *.zip
 dataset/
 .idea/
+venv/
