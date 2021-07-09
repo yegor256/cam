@@ -64,6 +64,6 @@ with open(java, encoding='utf-8', errors='ignore') as f:
     for path, node in ast:
       cc += branches(node)
     with open(metrics, 'a') as m:
-      m.write('cc ' + str(cc) + '\n')
+      m.write('cc ' + str(cc) + ' Cyclomatic Complexity\n')
   except Exception as e:
     sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
