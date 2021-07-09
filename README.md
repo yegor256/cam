@@ -1,6 +1,12 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 
+This is a dataset of open source Java classes and some metrics on them.
+Every now and then I make a new version of it using the scripts
+in this repository. You are welcome to use it in your researches.
+Each release has a fixed version. By referring to it in your research
+you avoid ambiguity and guarantees repeatability of your experiments.
+
 The latest ZIP archive with the dataset is here: 
 [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) (387Mb).
 It is the result of the analysis of 1000 Java classes against
