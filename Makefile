@@ -29,7 +29,7 @@ SHELL := /bin/bash
 TARGET=dataset
 
 # Total number of repositories to fetch from GitHub.
-TOTAL=4
+TOTAL=2
 
 all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
