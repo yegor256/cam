@@ -37,6 +37,19 @@ def attrs(tree):
     found += 1
   return found
 
+def sattrs(tree):
+  tlist = [v for v in tree]
+  if not tlist:
+    raise Exception('This is not a class')
+  fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+  flist = [v for v in fields]
+  found = 0
+  for path, node in flist:
+    if not ('static' in node.modifiers):
+      continue
+    found += 1
+  return found
+
 def ctors(tree):
   tlist = [v for v in tree]
   methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
@@ -50,6 +63,17 @@ def methods(tree):
   found = 0
   for path, node in mlist:
     if 'static' in node.modifiers:
+      continue
+    found += 1
+  return found
+
+def smethods(tree):
+  tlist = [v for v in tree]
+  methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+  mlist = [v for v in methods]
+  found = 0
+  for path, node in mlist:
+    if not ('static' in node.modifiers):
       continue
     found += 1
   return found
@@ -76,8 +100,10 @@ with open(java, encoding='utf-8', errors='ignore') as f:
     tree = raw.filter(javalang.tree.ClassDeclaration)
     with open(metrics, 'a') as m:
       m.write('attributes ' + str(attrs(raw)) + '\n')
+      m.write('sattributes ' + str(sattrs(raw)) + '\n')
       m.write('ctors ' + str(ctors(raw)) + '\n')
       m.write('methods ' + str(methods(raw)) + '\n')
+      m.write('smethods ' + str(smethods(raw)) + '\n')
       m.write('ncss ' + str(ncss(raw)) + '\n')
   except Exception as e:
     sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
