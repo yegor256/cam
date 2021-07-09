@@ -18,8 +18,10 @@ blank lines,
 NCSS,
 cyclomatic complexity,
 number of attributes,
+number of static attributes,
 number of constructors,
-number of methods.
+number of methods,
+number of static methods.
 
 If you want to create a new dataset, 
 just run this and the entire dataset will be built
