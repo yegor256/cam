@@ -24,10 +24,7 @@
 import sys
 import javalang
 
-def attrs(tree):
-  tlist = [v for v in tree]
-  if not tlist:
-    raise Exception('This is not a class')
+def attrs(tlist):
   fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
   flist = [v for v in fields]
   found = 0
@@ -37,10 +34,7 @@ def attrs(tree):
     found += 1
   return found
 
-def sattrs(tree):
-  tlist = [v for v in tree]
-  if not tlist:
-    raise Exception('This is not a class')
+def sattrs(tlist):
   fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
   flist = [v for v in fields]
   found = 0
@@ -50,14 +44,12 @@ def sattrs(tree):
     found += 1
   return found
 
-def ctors(tree):
-  tlist = [v for v in tree]
+def ctors(tlist):
   methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
   clist = [v for v in methods]
   return len(clist)
 
-def methods(tree):
-  tlist = [v for v in tree]
+def methods(tlist):
   methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
   mlist = [v for v in methods]
   found = 0
@@ -67,8 +59,7 @@ def methods(tree):
     found += 1
   return found
 
-def smethods(tree):
-  tlist = [v for v in tree]
+def smethods(tlist):
   methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
   mlist = [v for v in methods]
   found = 0
@@ -98,12 +89,15 @@ with open(java, encoding='utf-8', errors='ignore') as f:
   try:
     raw = javalang.parse.parse(f.read())
     tree = raw.filter(javalang.tree.ClassDeclaration)
+    tlist = [v for v in tree]
+    if not tlist:
+      raise Exception('This is not a class')
     with open(metrics, 'a') as m:
-      m.write('attributes ' + str(attrs(raw)) + '\n')
-      m.write('sattributes ' + str(sattrs(raw)) + '\n')
-      m.write('ctors ' + str(ctors(raw)) + '\n')
-      m.write('methods ' + str(methods(raw)) + '\n')
-      m.write('smethods ' + str(smethods(raw)) + '\n')
+      m.write('attributes ' + str(attrs(tlist)) + '\n')
+      m.write('sattributes ' + str(sattrs(tlist)) + '\n')
+      m.write('ctors ' + str(ctors(tlist)) + '\n')
+      m.write('methods ' + str(methods(tlist)) + '\n')
+      m.write('smethods ' + str(smethods(tlist)) + '\n')
       m.write('ncss ' + str(ncss(raw)) + '\n')
   except Exception as e:
     sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
