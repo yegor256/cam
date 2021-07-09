@@ -94,7 +94,7 @@ with open(java, encoding='utf-8', errors='ignore') as f:
       raise Exception('This is not a class')
     with open(metrics, 'a') as m:
       m.write('attributes ' + str(attrs(tlist)) + ' Number of Non-Static Attributes\n')
-      m.write('sattributes ' + str(sattrs(tlist)) + 'Number of Static Attributes\n')
+      m.write('sattributes ' + str(sattrs(tlist)) + ' Number of Static Attributes\n')
       m.write('ctors ' + str(ctors(tlist)) + ' Number of Constructors\n')
       m.write('methods ' + str(methods(tlist)) + ' Number of Non-Static Methods\n')
       m.write('smethods ' + str(smethods(tlist)) + ' Number of Static Methods\n')

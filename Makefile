@@ -178,7 +178,13 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 		echo "$${r} metrics added to the CSV aggregate"
 	done
 
-$(TARGET)/report.pdf:
+$(TARGET)/report.pdf: $(TARGET)/temp
+	rm -f $(TARGET)/temp/names.tex
+	for m in $$(ls metrics/); do
+		echo "class Foo {}" > $(TARGET)/temp/foo.java
+		"metrics/$${m}" $(TARGET)/temp/foo.java $(TARGET)/temp/foo.m
+		awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < $(TARGET)/temp/foo.m >> $(TARGET)/temp/list-of-metrics.tex
+	done
 	cd tex
 	make clean
 	make
