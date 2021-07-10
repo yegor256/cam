@@ -68,7 +68,9 @@ def ncss(tree):
             metric += 1
         elif 'Assignment' == node_type:
             metric += 1
-        elif 'Declaration' in node_type and 'LocalVariableDeclaration' not in node_type and 'PackageDeclaration' not in node_type:
+        elif 'Declaration' in node_type \
+                and 'LocalVariableDeclaration' not in node_type \
+                and 'PackageDeclaration' not in node_type:
             metric += 1
     return metric
 
