@@ -25,10 +25,7 @@ import sys
 import javalang
 
 
-def attrs(tree):
-    tlist = [v for v in tree]
-    if not tlist:
-        raise Exception('This is not a class')
+def attrs(tlist):
     fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
     flist = [v for v in fields]
     found = 0
@@ -39,15 +36,23 @@ def attrs(tree):
     return found
 
 
-def ctors(tree):
-    tlist = [v for v in tree]
+def sattrs(tlist):
+    fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    flist = [v for v in fields]
+    found = 0
+    for path, node in flist:
+        if 'static' in node.modifiers:
+            found += 1
+    return found
+
+
+def ctors(tlist):
     methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
     clist = [v for v in methods]
     return len(clist)
 
 
-def methods(tree):
-    tlist = [v for v in tree]
+def methods(tlist):
     methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
     mlist = [v for v in methods]
     found = 0
@@ -55,6 +60,16 @@ def methods(tree):
         if 'static' in node.modifiers:
             continue
         found += 1
+    return found
+
+
+def smethods(tlist):
+    methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = [v for v in methods]
+    found = 0
+    for path, node in mlist:
+        if 'static' in node.modifiers:
+            found += 1
     return found
 
 
@@ -82,10 +97,21 @@ if __name__ == '__main__':
         try:
             raw = javalang.parse.parse(f.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
+            tlist = [v for v in tree]
+            if not tlist:
+                raise Exception('This is not a class')
             with open(metrics, 'a') as m:
-                m.write(f'attributes {attrs(raw)}\n')
-                m.write(f'ctors {ctors(raw)}\n')
-                m.write(f'methods {methods(raw)}\n')
-                m.write(f'ncss {ncss(raw)}\n')
+                m.write(f'attributes {attrs(tlist)}: '
+                        f'Number of Non-Static Attributes\n')
+                m.write(f'sattributes {sattrs(tlist)}: '
+                        f'Number of Static Attributes\n')
+                m.write(f'ctors {ctors(tlist)}: '
+                        f'Number of Constructors\n')
+                m.write(f'methods {methods(tlist)}: '
+                        f'Number of Non-Static Methods\n')
+                m.write(f'smethods {smethods(tlist)}: '
+                        f'Number of Static Methods\n')
+                m.write(f'ncss {ncss(raw)}: '
+                        f'Non Commenting Source Statements (NCSS)\n')
         except Exception as e:
             sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)

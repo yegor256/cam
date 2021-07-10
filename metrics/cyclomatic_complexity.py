@@ -22,6 +22,7 @@
 # SOFTWARE.
 
 import sys
+
 from javalang import tree, parse
 
 """
@@ -29,7 +30,6 @@ Determines the number of branches for a node
 according to the Extended Cyclomatic Complexity metric.
 Binary operations (&&, ||) and each case statement
 are taken into account.
-
 :param node: class provided by the parser and targeted to Java 8 spec
 :returns: number
 """
@@ -67,6 +67,6 @@ if __name__ == '__main__':
             for path, node in ast:
                 cc += branches(node)
             with open(metrics, 'a') as m:
-                m.write('cc ' + str(cc) + '\n')
+                m.write(f'cc {cc}: Cyclomatic Complexity\n')
         except Exception as e:
             sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
