@@ -22,6 +22,8 @@
 # SOFTWARE.
 
 import sys
+from subprocess import Popen, PIPE
+
 import javalang
 
 
@@ -73,6 +75,30 @@ def smethods(tlist):
     return found
 
 
+def noca(path: str) -> int:
+    """
+    calculate number of Committers/Authors
+    :param path path to java file
+    :rtype: int
+    :return number of Committers/Authors
+    """
+    cd_comm: str = f"cd {'/'.join(path.split('/')[:-1])}"
+    log_comm: str = f"git log --pretty=format:'%an%x09' {path} | sort | uniq"
+
+    with Popen(
+            f"({cd_comm} && {log_comm})",
+            shell=True,
+            stdout=PIPE,
+            stderr=PIPE,
+            universal_newlines=True
+    ) as process:
+        output, errors = process.communicate()
+        del errors
+
+    authors: list[str] = output.split()
+    return len(authors)
+
+
 def ncss(tree):
     metric = 0
     for path, node in tree:
@@ -113,5 +139,7 @@ if __name__ == '__main__':
                         f'Number of Static Methods\n')
                 m.write(f'ncss {ncss(raw)}: '
                         f'Non Commenting Source Statements (NCSS)\n')
+                m.write(f'authors {noca(java)}: '
+                        f'Number of Committers/Authors\n')
         except Exception as e:
             sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
