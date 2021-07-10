@@ -59,8 +59,8 @@ env:
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
-$(TARGET)/repositories.csv:
-	ruby discover-repos.rb --total=$(TOTAL) "--path=$(TARGET)/repositories.csv"
+$(TARGET)/repositories.csv: $(TARGET)/temp
+	ruby discover-repos.rb --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
 	cat "$(TARGET)/repositories.csv"
 
 # Delete directories that don't exist in the list of
