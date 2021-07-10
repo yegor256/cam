@@ -69,6 +69,11 @@ def smethods(tlist):
     found += 1
   return found
 
+def nested(tlist):
+  nested = tlist[0][1].filter(javalang.tree.ClassDeclaration)
+  nlist = [v for v in nested]
+  return len(nlist) - 1
+
 def ncss(tree):
   metric = 0
   for path, node in tree:
@@ -96,8 +101,9 @@ with open(java, encoding='utf-8', errors='ignore') as f:
       m.write('nnsa ' + str(attrs(tlist)) + ' Number of Non-Static Attributes\n')
       m.write('nsa ' + str(sattrs(tlist)) + ' Number of Static Attributes\n')
       m.write('ncts ' + str(ctors(tlist)) + ' Number of Constructors\n')
+      m.write('nnc ' + str(nested(tlist)) + ' Number of Nested Classes\n')
       m.write('nnsm ' + str(methods(tlist)) + ' Number of Non-Static Methods\n')
       m.write('nsm ' + str(smethods(tlist)) + ' Number of Static Methods\n')
-      m.write('ncss ' + str(ncss(raw)) + ' Non Commenting Source Statements (NCSS)\n')
+      m.write('ncss ' + str(ncss(raw)) + ' Non Commenting Source Statements\n')
   except Exception as e:
     sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
