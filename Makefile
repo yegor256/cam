@@ -187,7 +187,6 @@ $(TARGET)/report.pdf: $(TARGET)/temp
 		awk '{ s= "\\item\\ff{" $$1 "}: "; for (i = 3; i <= NF; i++) s = s $$i " "; print s; }' < $(TARGET)/temp/foo.$${m}.m >> $(TARGET)/temp/list-of-metrics.tex
 		echo "$$(cat $(TARGET)/temp/foo.$${m}.m | wc -l) metrics from $${m}"
 	done
-	exit
 	cd tex
 	make clean
 	make
