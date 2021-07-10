@@ -22,7 +22,7 @@
 # SOFTWARE.
 
 import sys
-import re
+
 from javalang import tree, parse
 
 """
@@ -30,40 +30,43 @@ Determines the number of branches for a node
 according to the Extended Cyclomatic Complexity metric.
 Binary operations (&&, ||) and each case statement
 are taken into account.
-
 :param node: class provided by the parser and targeted to Java 8 spec
 :returns: number
 """
-def branches(node):
-  count = 0
-  if (isinstance(node, tree.BinaryOperation)):
-    if (node.operator == '&&' or node.operator == '||'):
-      count = 1
-  elif(isinstance(node, (
-    tree.ForStatement,
-    tree.IfStatement,
-    tree.WhileStatement,
-    tree.DoStatement,
-    tree.TernaryExpression
-  ))):
-    count = 1
-  elif (isinstance(node, tree.SwitchStatementCase)):
-    count = 1
-    # count = len(node.case)
-  elif (isinstance(node, tree.TryStatement)):
-    count = 1
-    # count = len(node.catches)
-  return count
 
-java = sys.argv[1]
-metrics = sys.argv[2]
-with open(java, encoding='utf-8', errors='ignore') as f:
-  try:
-    cc = 1
-    ast = parse.parse(f.read())
-    for path, node in ast:
-      cc += branches(node)
-    with open(metrics, 'a') as m:
-      m.write('cc ' + str(cc) + ' Cyclomatic Complexity\n')
-  except Exception as e:
-    sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
+
+def branches(node):
+    count = 0
+    if isinstance(node, tree.BinaryOperation):
+        if node.operator == '&&' or node.operator == '||':
+            count = 1
+    elif (isinstance(node, (
+            tree.ForStatement,
+            tree.IfStatement,
+            tree.WhileStatement,
+            tree.DoStatement,
+            tree.TernaryExpression
+    ))):
+        count = 1
+    elif isinstance(node, tree.SwitchStatementCase):
+        count = 1
+        # count = len(node.case)
+    elif isinstance(node, tree.TryStatement):
+        count = 1
+        # count = len(node.catches)
+    return count
+
+
+if __name__ == '__main__':
+    java = sys.argv[1]
+    metrics = sys.argv[2]
+    with open(java, encoding='utf-8', errors='ignore') as f:
+        try:
+            cc = 1
+            ast = parse.parse(f.read())
+            for path, node in ast:
+                cc += branches(node)
+            with open(metrics, 'a') as m:
+                m.write(f'cc {cc}: Cyclomatic Complexity\n')
+        except Exception as e:
+            sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
