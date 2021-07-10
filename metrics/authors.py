@@ -21,23 +21,72 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import sys
 from collections import defaultdict
 from typing import Any
 from pydriller import Repository
 
-if __name__ == '__main__':
-    path: str = 'https://github.com/cqfn/eo'
-    raw_files: defaultdict[Any, list] = defaultdict(list)
-    for commit in Repository(path).traverse_commits():
+
+def list_files(repository: str) -> defaultdict:
+    """
+    getting all files and all committers relative to each one
+    :var repository repository link
+    :rtype: defaultdict
+    :return: dictionary from filename and its committers
+    """
+    data: defaultdict[Any, list] = defaultdict(list)
+    for commit in Repository(repository).traverse_commits():
         for file in commit.modified_files:
-            raw_files[file.filename].append(commit.author.name)
+            data[file.filename].append(commit.author.name)
+    return data
 
-    files: defaultdict[Any, set] = defaultdict(set)
-    for name, author in raw_files.items():
-        files[name] = set(author)
 
-    # <editor-fold desc="test for TypeTest.java">
-    type_test = files['TypeTest.java']
-    print(f"List of authors: {type_test}")
-    print(f"Number of authors: {len(type_test)}")
-    # </editor-fold>
+def unique_authors(dict_files: defaultdict, extension: str = ".java") -> dict:
+    """
+    creating a unique list of committers for each file with selected extension
+    :var dict_files dictionary from filename and its committers
+    :var extension filename extension
+    :rtype: dict
+    :return: dictionary from filename and its committers (no repetitions)
+    """
+    data: defaultdict[Any, set] = defaultdict(set)
+    for file, author in dict_files.items():
+        data[file] = set(author)
+
+    data: dict = {
+        file: author for file, author in data.items()
+        if extension in file
+    }
+    return data
+
+
+def metric(dict_files: dict, classname: str) -> str:
+    """
+    calculating number of committers for a file
+    :var dict_files dictionary from filename and its committers
+    :var classname name of class for which metric is calculated
+    :rtype: str
+    :return number of committers for a metric
+    """
+    for name, author in dict_files.items():
+        if classname == name:
+            return f"authors {len(author)} Number of Committers/Authors"
+
+
+if __name__ == '__main__':
+    url: str = "https://github.com/cqfn/eo"
+    java: str = sys.argv[1]
+    metrics: str = sys.argv[2]
+
+    raw_files: defaultdict = list_files(
+        repository=url
+    )
+    files: dict = unique_authors(
+        dict_files=raw_files,
+        extension=".java"
+    )
+    noc: str = metric(
+        dict_files=files,
+        classname=java
+    )
+    print(noc)
