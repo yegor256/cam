@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Module for calculating Number of Committers/Authors"""
+
 import sys
 from collections import defaultdict
 from typing import Any
@@ -30,7 +32,7 @@ from pydriller import Repository
 def list_files(repository: str) -> defaultdict:
     """
     getting all files and all committers relative to each one
-    :var repository repository link
+    :param repository repository link
     :rtype: defaultdict
     :return: dictionary from filename and its committers
     """
@@ -44,8 +46,8 @@ def list_files(repository: str) -> defaultdict:
 def unique_authors(dict_files: defaultdict, extension: str = ".java") -> dict:
     """
     creating a unique list of committers for each file with selected extension
-    :var dict_files dictionary from filename and its committers
-    :var extension filename extension
+    :param dict_files dictionary from filename and its committers
+    :param extension filename extension
     :rtype: dict
     :return: dictionary from filename and its committers (no repetitions)
     """
@@ -63,14 +65,15 @@ def unique_authors(dict_files: defaultdict, extension: str = ".java") -> dict:
 def metric(dict_files: dict, classname: str) -> str:
     """
     calculating number of committers for a file
-    :var dict_files dictionary from filename and its committers
-    :var classname name of class for which metric is calculated
+    :param dict_files dictionary from filename and its committers
+    :param classname name of class for which metric is calculated
     :rtype: str
     :return number of committers for a metric
     """
     for name, author in dict_files.items():
         if classname == name:
             return f"authors {len(author)} Number of Committers/Authors"
+    return ""
 
 
 if __name__ == '__main__':

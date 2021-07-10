@@ -33,7 +33,7 @@ TOTAL=2
 
 lint:
 	flake8 metrics/
-	pylint metrics/
+	pylint metrics/ --disable=W0612
 
 all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
