@@ -29,16 +29,16 @@ RUN gem install texqc
 RUN apt install -y aspell
 
 RUN tlmgr --verify-repo=none update --self
-RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ
+RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec
 RUN tlmgr --verify-repo=none install biber
 
 RUN apt install -y python3-pygments
-RUN pip3 install pygments
+RUN mkdir /opt/app
+COPY requirements.txt /opt/app
+RUN python3 -m pip install -r /opt/app/requirements.txt
 
 RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
-
-RUN python3 -m pip install javalang==0.12.0
 
 RUN add-apt-repository ppa:inkscape.dev/stable && \
   apt update -y && \

@@ -24,20 +24,10 @@
 \renewcommand*\theauthor{\today{}}
 \renewcommand*\thetitle{CaM: Classes and Metrics}
 \usepackage[utf8]{inputenc}
+\usepackage{iexec}
 \usepackage{href-ul}
 \usepackage{ffcode}
 \usepackage{tabularx} % for special tables
-\usepackage{shellesc}
-  \makeatletter\newcommand{\exec}[1]{%
-    \begingroup
-    \let\%\@percentchar
-    \let\{\@charlb
-    \let\}\@charrb
-    \ShellEscape{#1 > exec.tex}%
-    \endgroup%
-    \input{exec.tex}
-  }%
-
 \begin{document}
 
 \maketitle
@@ -47,10 +37,11 @@ the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 
 We found and retrieved \exec{cat ../dataset/repositories.csv | wc -l}
 repositories from GitHub.
+\iexec{cat ../dataset/temp/repo-details.tex}
 The full list of them is in the \ff{repositories.csv} file.
 The \ff{hashes.csv} file has a list of Git hashes of their latest commits.
 
-\exec{cat ../dataset/temp/reports/*.tex}
+\iexec{cat ../dataset/temp/reports/*.tex}
 
 The structure of the archive:
 
@@ -65,6 +56,12 @@ The structure of the archive:
 
   \item \ff{measurements/} is where we keep individual metrics calculated
   per file, which you may use to verify our algorithms;
+\end{itemize}
+
+The metrics we use:
+
+\begin{itemize}
+  \input{../dataset/temp/list-of-metrics.tex}
 \end{itemize}
 
 If any questions or suggestions, just \href{mailto:yegor256@gmail.com}{email me}.

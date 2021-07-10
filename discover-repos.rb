@@ -32,8 +32,9 @@ opts = Slop.parse do |o|
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 10000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 200
-  o.integer '--max-size', 'Maximum size of GitHub repo, in Kb', default: 10000
+  o.integer '--max-size', 'Maximum size of GitHub repo, in Kb', default: 100000
   o.string '--path', 'The file name to save the list to', required: true
+  o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
   o.on '--help' do
     puts o
     exit
@@ -71,6 +72,14 @@ if (names.count > opts[:total])
   names = names.first(opts[:total])
   puts "We will use only the first #{opts[:total]} repositories"
 end
+
+File.write(
+  opts[:tex],
+  'The following search criteria have been used: ' + [
+    "at least #{opts['min-stars']} and at most #{opts['max-stars']} stars",
+    "at least #{opts['min-size']}Kb and at most #{opts['max-size']}Kb size of Git repo"
+  ].join(', ') + ".\n"
+)
 
 path = File.expand_path(opts[:path])
 FileUtils.mkdir_p(File.dirname(path))

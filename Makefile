@@ -31,6 +31,10 @@ TARGET=dataset
 # Total number of repositories to fetch from GitHub.
 TOTAL=2
 
+lint:
+	flake8 metrics/
+	pylint metrics/
+
 all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Zip the entire dataset into an archive.
@@ -59,8 +63,8 @@ env:
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
-$(TARGET)/repositories.csv:
-	ruby discover-repos.rb --total=$(TOTAL) "--path=$(TARGET)/repositories.csv"
+$(TARGET)/repositories.csv: $(TARGET)/temp
+	ruby discover-repos.rb --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
 	cat "$(TARGET)/repositories.csv"
 
 # Delete directories that don't exist in the list of
@@ -178,7 +182,15 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 		echo "$${r} metrics added to the CSV aggregate"
 	done
 
-$(TARGET)/report.pdf:
+$(TARGET)/report.pdf: $(TARGET)/temp
+	rm -f $(TARGET)/temp/list-of-metrics.tex
+	for m in $$(ls metrics/); do
+		echo "class Foo {}" > $(TARGET)/temp/foo.java
+		rm -f $(TARGET)/temp/foo.$${m}.m
+		"metrics/$${m}" $(TARGET)/temp/foo.java $(TARGET)/temp/foo.$${m}.m
+		awk '{ s= "\\item\\ff{" $$1 "}: "; for (i = 3; i <= NF; i++) s = s $$i " "; print s; }' < $(TARGET)/temp/foo.$${m}.m >> $(TARGET)/temp/list-of-metrics.tex
+		echo "$$(cat $(TARGET)/temp/foo.$${m}.m | wc -l) metrics from $${m}"
+	done
 	cd tex
 	make clean
 	make
