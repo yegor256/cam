@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # The MIT License (MIT)
 #
 # Copyright (c) 2021 Yegor Bugayenko
@@ -21,97 +21,127 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""ast_metrics.py"""
+
 import sys
 import javalang
 
 
-def attrs(tlist):
-    fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
-    flist = [v for v in fields]
+def attrs(tlist) -> int:
+    """
+
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    fields = list(field for field in declaration)
     found = 0
-    for path, node in flist:
-        if 'static' in node.modifiers:
-            continue
-        found += 1
+    for path, node in fields:
+        del path
+        if 'static' not in node.modifiers:
+            found += 1
     return found
 
 
-def sattrs(tlist):
-    fields = tlist[0][1].filter(javalang.tree.FieldDeclaration)
-    flist = [v for v in fields]
+def sattrs(tlist) -> int:
+    """
+
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    fields = list(field for field in declaration)
     found = 0
-    for path, node in flist:
+    for path, node in fields:
+        del path
         if 'static' in node.modifiers:
             found += 1
     return found
 
 
-def ctors(tlist):
-    methods = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
-    clist = [v for v in methods]
+def ctors(tlist) -> int:
+    """
+
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
+    clist = list(method for method in declaration)
     return len(clist)
 
 
-def methods(tlist):
-    methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
-    mlist = [v for v in methods]
+def methods(tlist) -> int:
+    """
+
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
     found = 0
     for path, node in mlist:
-        if 'static' in node.modifiers:
-            continue
-        found += 1
+        del path
+        if 'static' not in node.modifiers:
+            found += 1
     return found
 
 
-def smethods(tlist):
-    methods = tlist[0][1].filter(javalang.tree.MethodDeclaration)
-    mlist = [v for v in methods]
+def smethods(tlist) -> int:
+    """
+
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
     found = 0
     for path, node in mlist:
+        del path
         if 'static' in node.modifiers:
             found += 1
     return found
 
 
-def ncss(tree):
-    metric = 0
-    for path, node in tree:
+def ncss(parser_class) -> int:
+    """
+
+    :rtype: int
+    """
+    value = 0
+    for path, node in parser_class:
+        del path
         node_type = str(type(node))
         if 'Statement' in node_type:
-            metric += 1
-        elif 'VariableDeclarator' == node_type:
-            metric += 1
-        elif 'Assignment' == node_type:
-            metric += 1
+            value += 1
+        elif node_type == 'VariableDeclarator':
+            value += 1
+        elif node_type == 'Assignment':
+            value += 1
         elif 'Declaration' in node_type \
                 and 'LocalVariableDeclaration' not in node_type \
                 and 'PackageDeclaration' not in node_type:
-            metric += 1
-    return metric
+            value += 1
+    return value
 
 
 if __name__ == '__main__':
     java = sys.argv[1]
     metrics = sys.argv[2]
-    with open(java, encoding='utf-8', errors='ignore') as f:
+    with open(java, encoding='utf-8', errors='ignore') as file:
         try:
-            raw = javalang.parse.parse(f.read())
+            raw = javalang.parse.parse(file.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
-            tlist = [v for v in tree]
-            if not tlist:
+            tree_class = list(value for value in tree)
+            if not tree_class:
                 raise Exception('This is not a class')
-            with open(metrics, 'a') as m:
-                m.write(f'attributes {attrs(tlist)}: '
-                        f'Number of Non-Static Attributes\n')
-                m.write(f'sattributes {sattrs(tlist)}: '
-                        f'Number of Static Attributes\n')
-                m.write(f'ctors {ctors(tlist)}: '
-                        f'Number of Constructors\n')
-                m.write(f'methods {methods(tlist)}: '
-                        f'Number of Non-Static Methods\n')
-                m.write(f'smethods {smethods(tlist)}: '
-                        f'Number of Static Methods\n')
-                m.write(f'ncss {ncss(raw)}: '
-                        f'Non Commenting Source Statements (NCSS)\n')
-        except Exception as e:
-            sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
+            with open(metrics, 'a') as metric:
+                metric.write(f'attributes {attrs(tree_class)}: '
+                             f'Number of Non-Static Attributes\n')
+                metric.write(f'sattributes {sattrs(tree_class)}: '
+                             f'Number of Static Attributes\n')
+                metric.write(f'ctors {ctors(tree_class)}: '
+                             f'Number of Constructors\n')
+                metric.write(f'methods {methods(tree_class)}: '
+                             f'Number of Non-Static Methods\n')
+                metric.write(f'smethods {smethods(tree_class)}: '
+                             f'Number of Static Methods\n')
+                metric.write(f'ncss {ncss(raw)}: '
+                             f'Non Commenting Source Statements (NCSS)\n')
+        except FileNotFoundError as exception:
+            message = f"{type(exception).__name__} {str(exception)}: {java}"
+            sys.exit(message)
