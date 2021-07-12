@@ -31,11 +31,12 @@ TARGET=dataset
 # Total number of repositories to fetch from GitHub.
 TOTAL=2
 
+all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
+
+# Check the quality of code
 lint:
 	flake8 metrics/
 	pylint metrics/
-
-all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
