@@ -41,4 +41,5 @@ You can also run it without Docker:
 $ make TOTAL=100
 ```
 
-Should work.
+Should work, if you have all dependencies installed, as suggested in the
+[Dockerfile](https://github.com/yegor256/cam/blob/master/Dockerfile).
