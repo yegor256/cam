@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # The MIT License (MIT)
 #
 # Copyright (c) 2021 Yegor Bugayenko
@@ -21,26 +21,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""cyclomatic_complexity.py"""
+
 import sys
 
 from javalang import tree, parse
 
-"""
-Determines the number of branches for a node
-according to the Extended Cyclomatic Complexity metric.
-Binary operations (&&, ||) and each case statement
-are taken into account.
-:param node: class provided by the parser and targeted to Java 8 spec
-:returns: number
-"""
 
-
-def branches(node):
+def branches(parser_class):
+    """
+    Determines the number of branches for a node
+    according to the Extended Cyclomatic Complexity metric.
+    Binary operations (&&, ||) and each case statement
+    are taken into account.
+    :param parser_class: class provided by the parser (targeted to Java 8 spec)
+    :rtype int
+    :returns: number
+    """
     count = 0
-    if isinstance(node, tree.BinaryOperation):
-        if node.operator == '&&' or node.operator == '||':
+    if isinstance(parser_class, tree.BinaryOperation):
+        if parser_class.operator == '&&' or parser_class.operator == '||':
             count = 1
-    elif (isinstance(node, (
+    elif (isinstance(parser_class, (
             tree.ForStatement,
             tree.IfStatement,
             tree.WhileStatement,
@@ -48,10 +50,10 @@ def branches(node):
             tree.TernaryExpression
     ))):
         count = 1
-    elif isinstance(node, tree.SwitchStatementCase):
+    elif isinstance(parser_class, tree.SwitchStatementCase):
         count = 1
         # count = len(node.case)
-    elif isinstance(node, tree.TryStatement):
+    elif isinstance(parser_class, tree.TryStatement):
         count = 1
         # count = len(node.catches)
     return count
@@ -62,11 +64,12 @@ if __name__ == '__main__':
     metrics = sys.argv[2]
     with open(java, encoding='utf-8', errors='ignore') as f:
         try:
-            cc = 1
+            complexity: int = 1
             ast = parse.parse(f.read())
             for path, node in ast:
-                cc += branches(node)
+                complexity += branches(node)
             with open(metrics, 'a') as m:
-                m.write(f'cc {cc}: Cyclomatic Complexity\n')
-        except Exception as e:
-            sys.exit(type(e).__name__ + ' ' + str(e) + ': ' + java)
+                m.write(f'cc {complexity}: Cyclomatic Complexity\n')
+        except FileNotFoundError as exception:
+            message = f"{type(exception).__name__} {str(exception)}: {java}"
+            sys.exit(message)
