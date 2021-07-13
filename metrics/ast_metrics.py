@@ -24,6 +24,7 @@
 """ast_metrics.py"""
 
 import sys
+
 import javalang
 
 
