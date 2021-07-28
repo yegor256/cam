@@ -10,7 +10,7 @@ you avoid ambiguity and guarantees repeatability of your experiments.
 
 The latest ZIP archive with the dataset is here: 
 [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) (387Mb).
-It is the result of the analysis of 1000 Java classes against
+It is the result of the analysis of Java classes in 1000 GitHub repositories against
 eight metrics: 
 lines of code,
 lines of comments,
