@@ -45,7 +45,7 @@ EOT
 
 cp "${java}" "${tmp}/foo.java"
 
-pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml"
+pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml" 2>/dev/null
 
 cat "${tmp}/result.xml" | \
   sed 's/xmlns=".*"//g' | \
