@@ -44,6 +44,13 @@ RUN add-apt-repository ppa:inkscape.dev/stable && \
   apt update -y && \
   apt install -y inkscape
 
+RUN cd /usr/local && \
+  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.37.0/pmd-bin-6.37.0.zip && \
+  unzip pmd-bin-6.37.0.zip && \
+  rm pmd-bin-6.37.0.zip && \
+  mv pmd-bin-6.37.0 pmd && \
+  ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+
 RUN mkdir /usr/local/cam
 COPY Makefile /usr/local/cam
 COPY discover-repos.rb /usr/local/cam
