@@ -49,7 +49,7 @@ pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > 
 
 cat "${tmp}/result.xml" | \
   sed 's/xmlns=".*"//g' | \
-  xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - | \
+  (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
   sed -E "s/.*complexity of ([0-9]+).*/\1/" | \
   sed '/^[[:space:]]*$/d' | \
   ruby -e '
