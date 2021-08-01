@@ -124,17 +124,19 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 			continue
 		fi
 		mkdir -p $$(dirname "$${javam}")
+		((cnt = 0))
 		for m in $$(ls metrics/); do
 			if "metrics/$${m}" "$${java}" "$${javam}"; then
 				while IFS= read -r t; do
 					IFS=' ' read -ra M <<< "$${t}"
 					echo "$${M[1]}" > "$${javam}.$${M[0]}"
 				done < "$${javam}"
+				((cnt = cnt + 1))
 			else
 				echo "Failed to collect $${m} for $${java}"
 			fi
 		done
-		echo "Metrics collected for $${java}"
+		echo "$${cnt} metric scripts ran for $${java}"
 	done
 
 # Aggregate all metrics in summary CSV files.
