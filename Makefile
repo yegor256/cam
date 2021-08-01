@@ -200,8 +200,7 @@ $(TARGET)/report.pdf: $(TARGET)/temp
 		echo "$$(cat $(TARGET)/temp/foo.$${m}.m | wc -l) metrics from $${m}"
 	done
 	cd tex
-	make clean
-	make
+	latexmk -pdf
 	cd ..
 	cp tex/report.pdf $(TARGET)/report.pdf
 
