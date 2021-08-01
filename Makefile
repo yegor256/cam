@@ -59,6 +59,11 @@ wipe: clean
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
+	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
+		$(SHELL) -version
+	  	echo "$(SHELL) version is older than five: $${BASH_VERSINFO:-0}"
+	  	exit -1
+	fi
 	ruby -v
 	python --version
 
@@ -124,14 +129,14 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 			continue
 		fi
 		mkdir -p $$(dirname "$${javam}")
-		((cnt = 0))
+		declare -i cnt=0
 		for m in $$(ls metrics/); do
 			if "metrics/$${m}" "$${java}" "$${javam}"; then
 				while IFS= read -r t; do
 					IFS=' ' read -ra M <<< "$${t}"
 					echo "$${M[1]}" > "$${javam}.$${M[0]}"
 				done < "$${javam}"
-				((cnt = cnt + 1))
+				cnt=cnt+1
 			else
 				echo "Failed to collect $${m} for $${java}"
 			fi
