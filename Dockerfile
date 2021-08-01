@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM yegor256/rultor-image:1.5.2
+FROM yegor256/rultor-image:1.6.0
 
 RUN apt -y update && apt install -y cloc
 

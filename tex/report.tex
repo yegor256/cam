@@ -20,8 +20,8 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
-\documentclass[nobrand,anonymous,nosecurity]{huawei}
-\renewcommand*\theauthor{\today{}}
+\documentclass[nobrand,nosecurity]{huawei}
+\renewcommand*\theauthor{yegor256/cam}
 \renewcommand*\thetitle{CaM: Classes and Metrics}
 \usepackage[utf8]{inputenc}
 \usepackage{iexec}
@@ -58,7 +58,7 @@ The structure of the archive:
   per file, which you may use to verify our algorithms;
 \end{itemize}
 
-The metrics we use:
+There are \iexec{cat ../dataset/temp/list-of-metrics.tex | wc -l} metrics that we use:
 
 \begin{itemize}
   \input{../dataset/temp/list-of-metrics.tex}
