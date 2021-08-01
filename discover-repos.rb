@@ -33,7 +33,7 @@ opts = Slop.parse do |o|
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 10000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 200
-  o.integer '--max-size', 'Maximum size of GitHub repo, in Kb', default: 100000
+  o.integer '--max-size', 'Maximum size of GitHub repo, in Kb', default: 1000000
   o.string '--path', 'The file name to save the list to', required: true
   o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
   o.on '--help' do
