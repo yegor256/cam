@@ -28,6 +28,7 @@ require 'slop'
 require 'octokit'
 
 opts = Slop.parse do |o|
+  o.string '--token', 'GitHub access token', default: ''
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 10000
@@ -44,6 +45,10 @@ end
 size = [100, opts[:total]].min
 
 github = Octokit::Client.new
+unless opts[:token].empty?
+  github = Octokit::Client.new(access_token: opts[:token])
+  puts 'Accessing GitHub with personal access token!'
+end
 names = []
 pages = (opts[:total] + size - 1) / size
 puts "Will fetch #{pages} GitHub pages"

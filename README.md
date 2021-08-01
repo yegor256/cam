@@ -26,10 +26,11 @@ number of static methods.
 If you want to create a new dataset, 
 just run this and the entire dataset will be built
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
-where `1000` is the number of repositories to fetch from GitHub:
+where `1000` is the number of repositories to fetch from GitHub
+and `XXX` is your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```bash
-$ docker run --rm -v "$(pwd):/w" -e "TOTAL=1000" -e "TARGET=/w/dataset" yegor256/cam
+$ docker run --rm -v "$(pwd):/w" -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/w/dataset" yegor256/cam
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
