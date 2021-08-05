@@ -9,19 +9,27 @@ Each release has a fixed version. By referring to it in your research
 you avoid ambiguity and guarantees repeatability of your experiments.
 
 The latest ZIP archive with the dataset is here: 
-[cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) (387Mb).
+[cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip) (692Mb).
 It is the result of the analysis of Java classes in 1000 GitHub repositories against
-eight metrics: 
-lines of code,
+15 metrics: 
+lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
 lines of comments,
 blank lines,
-NCSS,
+[NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for),
 cyclomatic complexity,
 number of attributes,
 number of static attributes,
 number of constructors,
 number of methods,
-number of static methods.
+number of static methods,
+total cognitive complexity (reported by [PMD](https://pmd.github.io/)),
+maximum cognitive complexity,
+minimum cognitive complexity,
+average cognitive complexity.
+
+Previous archives:
+
+  * [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) (387Mb): 1000 repos, 11 metrics
 
 If you want to create a new dataset, 
 just run this and the entire dataset will be built
