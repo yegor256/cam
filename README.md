@@ -25,7 +25,8 @@ number of static methods,
 total cognitive complexity (reported by [PMD](https://pmd.github.io/)),
 maximum cognitive complexity,
 minimum cognitive complexity,
-average cognitive complexity.
+average cognitive complexity,
+number of committers.
 
 Previous archives:
 
