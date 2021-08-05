@@ -36,6 +36,10 @@ TOKEN=
 
 all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
+# Record the moment in time, when processing started.
+$(TARGET)/start.txt: $(TARGET)/temp
+	ruby -e "print Time.now.to_i" > $(TARGET)/start.txt
+
 # Check the quality of code
 lint:
 	flake8 metrics/
