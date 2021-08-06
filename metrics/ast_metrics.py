@@ -120,6 +120,15 @@ def ncss(parser_class) -> int:
     return value
 
 
+def impls(tlist) -> int:
+    """
+    Count the number of interfaces the class implements.
+
+    r:type: int
+    """
+    return len(tlist[0][1].implements or [])
+
+
 if __name__ == '__main__':
     java = sys.argv[1]
     metrics = sys.argv[2]
@@ -143,6 +152,8 @@ if __name__ == '__main__':
                              f'Number of Static Methods\n')
                 metric.write(f'ncss {ncss(raw)}: '
                              f'Non Commenting Source Statements (NCSS)\n')
+                metric.write(f'impls {impls(tree_class)}: '
+                             f'Number of implemented interfaces \n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
