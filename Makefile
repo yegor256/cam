@@ -29,7 +29,7 @@ SHELL := /bin/bash
 TARGET=dataset
 
 # Total number of repositories to fetch from GitHub.
-TOTAL=2
+TOTAL=1
 
 # GitHub auth token
 TOKEN=
