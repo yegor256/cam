@@ -58,4 +58,4 @@ COPY metrics /usr/local/cam/metrics
 COPY filters /usr/local/cam/filters
 COPY tex /usr/local/cam/tex
 
-ENTRYPOINT ["make", "-e", "-C", "/usr/local/cam", "TOTAL=1"]
+ENTRYPOINT ["make", "-e", "-C", "/usr/local/cam"]
