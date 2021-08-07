@@ -44,6 +44,7 @@ $(TARGET)/start.txt: $(TARGET)/temp
 lint:
 	flake8 metrics/
 	pylint metrics/
+	shellcheck -P metrics/*.sh -P filters/*.sh
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf

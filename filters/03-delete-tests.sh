@@ -36,17 +36,19 @@ if [ -e "${list}" ]; then
     exit
 fi
 
-find "${home}" -type f -name '*Test.java' -print > "${list}"
-find "${home}" -type f -name '*ITCase.java' -print >> "${list}"
-find "${home}" -type f -name '*Tests.java' -print >> "${list}"
-find "${home}" -type f -path '**/src/test/java/**/*.java' -print >> "${list}"
+{
+    find "${home}" -type f -name '*Test.java' -print;
+    find "${home}" -type f -name '*ITCase.java' -print;
+    find "${home}" -type f -name '*Tests.java' -print;
+    find "${home}" -type f -path '**/src/test/java/**/*.java' -print
+} > "${list}"
 while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
 cat <<EOT > "${summary}"
 There were ${total} files total.
-$(cat ${list} | wc -l) of them were test files
+$(wc -l < "${list}") of them were test files
 with \ff{Test} or \ff{ITCase} suffixes
 and that's why were deleted.
 

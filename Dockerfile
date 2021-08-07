@@ -22,7 +22,7 @@
 
 FROM yegor256/rultor-image:1.6.0
 
-RUN apt -y update && apt install -y cloc
+RUN apt -y update && apt install -y cloc shellcheck
 
 RUN gem install texsc
 RUN gem install texqc

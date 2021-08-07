@@ -40,7 +40,7 @@ while IFS= read -r f; do
 done < "${list}"
 
 cat <<EOT > "${summary}"
-There were $(cat ${list} | wc -l) files named as \ff{package-info.java},
+There were $(wc -l < "${list}") files named as \ff{package-info.java},
 all of them were deleted.
 
 EOT

@@ -47,8 +47,7 @@ cp "${java}" "${tmp}/foo.java"
 
 pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml" 2>/dev/null
 
-cat "${tmp}/result.xml" | \
-  sed 's/xmlns=".*"//g' | \
+sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
   sed -E "s/.*complexity of ([0-9]+).*/\1/" | \
   sed '/^[[:space:]]*$/d' | \
