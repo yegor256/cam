@@ -34,7 +34,7 @@ TOTAL=2
 # GitHub auth token
 TOKEN=
 
-all: env $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
+all: env lint $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
