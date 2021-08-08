@@ -74,6 +74,8 @@ env:
 	fi
 	ruby -v
 	python --version
+	flake8 --version
+	pylint --version
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
