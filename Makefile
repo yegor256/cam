@@ -72,6 +72,7 @@ env:
 	  	echo "$(SHELL) version is older than five: $${BASH_VERSINFO:-0}"
 	  	exit -1
 	fi
+	set -x
 	ruby -v
 	python --version
 	flake8 --version
