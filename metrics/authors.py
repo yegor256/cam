@@ -24,6 +24,7 @@
 """Number of Committers/Authors"""
 
 import sys
+from typing import List
 from subprocess import Popen, PIPE
 
 
@@ -47,7 +48,7 @@ def noca(path: str) -> int:
         output, errors = process.communicate()
         del errors
 
-    authors: list[str] = output.split()
+    authors: List[str] = output.split()
     return len(authors)
 
 
