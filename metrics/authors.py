@@ -35,9 +35,8 @@ def noca(path: str) -> int:
     :rtype: int
     :return number of Committers/Authors
     """
-    cd_comm: str = f"cd {'/'.join(path.split('/')[:-1])}"
-    log_comm: str = f"git log --pretty=format:'%an%x09' {path} | sort | uniq"
-
+    cd_comm: str = f"cd ./{'/'.join(path.split('/')[:-1])}"
+    log_comm: str = f"git log --pretty=format:'%an%x09' {path.split('/')[-1]} | sort | uniq"
     with Popen(
             f"({cd_comm} && {log_comm})",
             shell=True,
