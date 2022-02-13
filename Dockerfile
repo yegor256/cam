@@ -39,8 +39,8 @@ RUN mkdir /opt/app
 COPY requirements.txt /opt/app
 RUN python3 -m pip install -r /opt/app/requirements.txt
 
-RUN gem install --no-user-install octokit -v 4.21.0
-RUN gem install --no-user-install slop -v 4.9.1
+RUN gem install octokit -v 4.21.0
+RUN gem install slop -v 4.9.1
 
 RUN add-apt-repository ppa:inkscape.dev/stable && \
   apt-get update -y && \

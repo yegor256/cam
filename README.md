@@ -40,9 +40,9 @@ and `XXX` is your [personal access token](https://docs.github.com/en/github/auth
 
 ```bash
 $ docker build --tag=cam .
-$ docker run -d --rm -v "$(pwd):/w" \
+$ docker run -d --rm -v "$(pwd):/w" -w /w \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/w/dataset" \
-  cam make -e -C /w
+  cam "make -e"
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
