@@ -39,8 +39,8 @@ while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
-cat <<EOT > "${summary}"
-There were $(wc -l < "${list}") files named as \ff{package-info.java},
-all of them were deleted.
-
-EOT
+touch "${summary}"
+if [ -s "${list}" ]; then
+    echo "There were $(wc -l < "${list}") files named as \ff{package-info.java},
+    all of them were deleted." > "${summary}"
+fi

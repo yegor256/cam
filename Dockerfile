@@ -22,6 +22,8 @@
 
 FROM yegor256/rultor-image:1.6.0
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt -y update && apt install -y cloc shellcheck
 
 RUN gem install texsc
@@ -50,12 +52,3 @@ RUN cd /usr/local && \
   rm pmd-bin-6.37.0.zip && \
   mv pmd-bin-6.37.0 pmd && \
   ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
-
-RUN mkdir /usr/local/cam
-COPY Makefile /usr/local/cam
-COPY discover-repos.rb /usr/local/cam
-COPY metrics /usr/local/cam/metrics
-COPY filters /usr/local/cam/filters
-COPY tex /usr/local/cam/tex
-
-ENTRYPOINT ["make", "-e", "-C", "/usr/local/cam"]

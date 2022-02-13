@@ -28,3 +28,4 @@ branding:
 runs:
   using: docker
   image: Dockerfile
+  entrypoint: make

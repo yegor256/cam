@@ -29,23 +29,28 @@ summary=$2
 temp=$3
 
 total=$(find "${home}" -type f | wc -l)
-java=$(find "${home}" -type f -a -name '*.java' | wc -l)
 
-list="${temp}/non-java-files.txt"
+list="${temp}/unparseable-files.txt"
 if [ -e "${list}" ]; then
-    echo "Non-java files have already been deleted"
+    echo "Unparseable files have already been deleted"
     exit
 fi
 
-find "${home}" -type f -not -name '*.java' -print > "${list}"
+touch "${list}"
+
+find "${home}" -type f -name '*.java' -print > "${temp}/files-to-parse.txt"
 while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
+    if ! python3 -c "
+import sys
+import javalang
+with open('${f}') as f:
+    javalang.parse.parse(f.read())
+"; then echo "$${f}" >> "${list}"; fi
+done < "${temp}/files-to-parse.txt"
 
 touch "${summary}"
 if [ -s "${list}" ]; then
-    echo "There were ${total} files total,
-    ${java} of them were \ff{.java} files.
-    All other files, which were not \ff{.java}, have been deleted:
-    $(cat ${list} | wc -l) total." > "${summary}"
+    echo "There were ${total} files total.
+    $(wc -l < "${list}") of them were Java files with broken syntax
+    and that's why were deleted." > "${summary}"
 fi
