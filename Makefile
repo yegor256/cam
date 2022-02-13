@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2021 Yegor Bugayenko
+# Copyright (c) 2021-2022 Yegor Bugayenko
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-SHELL := /bin/bash
-
-.SHELLFLAGS = -e -o pipefail -c
+.SHELLFLAGS: -e -o pipefail -c
 .ONESHELL:
+.PHONY: clone filter measure cleanup env lint zip wipe clean
+
+SHELL := bash
+
+PYTHON = python3
+RUBY = ruby
 
 # The place where all the data will be stored and managed.
-TARGET=dataset
+TARGET = dataset
 
 # Total number of repositories to fetch from GitHub.
-TOTAL=1
+TOTAL = 1
 
 # GitHub auth token
-TOKEN=
+TOKEN =
 
 all: env lint $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
-	ruby -e "print Time.now.to_i" > $(TARGET)/start.txt
+	$(RUBY) -e "print Time.now.to_i" > $(TARGET)/start.txt
 
 # Check the quality of code
 lint:
@@ -73,15 +77,19 @@ env:
 	  	exit -1
 	fi
 	set -x
-	ruby -v
-	python --version
+	$(RUBY) -v
+	$(PYTHON) --version
+	if [[ "$$($(PYTHON) --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
+	  	echo "Python must be 3+"
+	  	exit -1
+	fi
 	flake8 --version
 	pylint --version
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
-	ruby discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
+	$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
 	cat "$(TARGET)/repositories.csv"
 
 # Delete directories that don't exist in the list of
