@@ -24,17 +24,17 @@ FROM yegor256/rultor-image:1.6.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt -y update && apt install -y cloc shellcheck
+RUN apt-get -y update && apt-get install -y cloc shellcheck
 
 RUN gem install texsc
 RUN gem install texqc
-RUN apt install -y aspell
+RUN apt-get install -y aspell
 
 RUN tlmgr --verify-repo=none update --self
 RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
 RUN tlmgr --verify-repo=none install biber
 
-RUN apt install -y python3-pygments
+RUN apt-get install -y python3-pygments
 RUN mkdir /opt/app
 COPY requirements.txt /opt/app
 RUN python3 -m pip install -r /opt/app/requirements.txt
@@ -43,8 +43,8 @@ RUN gem install --no-user-install octokit -v 4.21.0
 RUN gem install --no-user-install slop -v 4.9.1
 
 RUN add-apt-repository ppa:inkscape.dev/stable && \
-  apt update -y && \
-  apt install -y inkscape
+  apt-get update -y && \
+  apt-get install -y inkscape
 
 RUN cd /usr/local && \
   wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.37.0/pmd-bin-6.37.0.zip && \
