@@ -28,28 +28,28 @@ home=$1
 summary=$2
 temp=$3
 
-list="${temp}/unparseable-files.txt"
+list="${temp}/files-with-long-lines.txt"
 if [ -e "${list}" ]; then
-    echo "Unparseable files have already been deleted"
+    echo "Long-line files have already been deleted"
     exit
 fi
 
 touch "${list}"
 
-candidates="${temp}/files-to-parse.txt"
+candidates="${temp}/files-to-check-line-lengths.txt"
+max=1024
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while IFS= read -r f; do
-    if ! python3 -c "
-import sys
-import javalang
-with open('${f}') as f:
-    javalang.parse.parse(f.read())
-"; then echo "$${f}" >> "${list}"; fi
+    length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
+    if [ "${length}" -gt "${max}" ]; then
+        echo "$${f}" >> "${list}"
+    fi
 done < "${candidates}"
 
 touch "${summary}"
 if [ -s "${list}" ]; then
     echo "There were $(wc -l < "${candidates}") files total.
-    $(wc -l < "${list}") of them were Java files with broken syntax
-    and that's why were deleted." > "${summary}"
+    $(wc -l < "${list}") of them had at least one line longer than ${max} characters,
+    which most probably is a sympton of an auto-generated code.
+    That's why they all were deleted." > "${summary}"
 fi
