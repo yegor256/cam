@@ -69,6 +69,10 @@ puts "Will fetch #{pages} GitHub pages"
     names << i[:full_name]
   end
   puts "Found #{json[:items].count} repositories in page #{p}"
+  if p > 0
+    puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
+    sleep 10.seconds
+  end
 end
 puts "Found #{names.count} total repositories in GitHub"
 if (names.count > opts[:total])
