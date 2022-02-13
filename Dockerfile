@@ -29,7 +29,7 @@ RUN gem install texqc
 RUN apt install -y aspell
 
 RUN tlmgr --verify-repo=none update --self
-RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec
+RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize
 RUN tlmgr --verify-repo=none install biber
 
 RUN apt install -y python3-pygments
