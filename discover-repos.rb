@@ -71,7 +71,7 @@ puts "Will fetch #{pages} GitHub pages"
   puts "Found #{json[:items].count} repositories in page #{p}"
   if p > 0
     puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
-    sleep 10.seconds
+    sleep 10
   end
 end
 puts "Found #{names.count} total repositories in GitHub"
