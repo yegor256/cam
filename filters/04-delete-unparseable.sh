@@ -44,7 +44,7 @@ import sys
 import javalang
 with open('${f}') as f:
     javalang.parse.parse(f.read())
-"; then echo "$${f}" >> "${list}"; fi
+"; then echo "$${f}" >> "${list}"; echo "Not parseable: ${f}"; fi
 done < "${candidates}"
 
 touch "${summary}"
