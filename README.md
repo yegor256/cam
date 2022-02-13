@@ -39,11 +39,13 @@ where `1000` is the number of repositories to fetch from GitHub
 and `XXX` is your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```bash
-$ docker run --rm -v "$(pwd):/w" -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/w/dataset" yegor256/cam
+$ docker run -d --rm -v "$(pwd):/w" -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/w/dataset" yegor256/cam
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
-maybe a few days!), and a `.zip` archive will also be there.
+maybe a few days!), and a `.zip` archive will also be there. Docker container will
+run in background: you can safely close the console and come back when the
+dataset is ready and the container is deleted.
 
 You can also run it without Docker:
 
