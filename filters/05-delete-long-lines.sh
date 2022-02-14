@@ -42,7 +42,7 @@ find "${home}" -type f -name '*.java' -print > "${candidates}"
 while IFS= read -r f; do
     length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
     if [ "${length}" -gt "${max}" ]; then
-        echo "$${f}" >> "${list}"
+        echo "${f}" >> "${list}"
         echo "Too long lines: ${f}"
     fi
 done < "${candidates}"
