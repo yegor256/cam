@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 total=$(find "${home}" -type f | wc -l)
 java=$(find "${home}" -type f -a -name '*.java' | wc -l)
@@ -42,10 +41,12 @@ while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
     echo "There were ${total} files total,
-    ${java} of them were \ff{.java} files.
-    All other files, which were not \ff{.java}, have been deleted:
-    $(cat ${list} | wc -l) total." > "${summary}"
+    ${java} of them were \ff{.java} files;
+    all other files, which were not \ff{.java}, have been deleted:
+    $(cat ${list} | wc -l) total"
+else
+    echo "All ${total} files were \ff{.java} files,
+    nothing to delete"
 fi

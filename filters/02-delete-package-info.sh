@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 list="${temp}/package-info-files.txt"
 if [ -e "${list}" ]; then
@@ -39,8 +38,10 @@ while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
     echo "There were $(wc -l < "${list}") files named as \ff{package-info.java},
-    all of them were deleted." > "${summary}"
+    all of them were deleted"
+else
+    echo "There were no files named \ff{package-info.java},
+    nothing to delete"
 fi

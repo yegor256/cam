@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 list="${temp}/unparseable-files.txt"
 if [ -e "${list}" ]; then
@@ -47,9 +46,11 @@ with open('${f}') as f:
 "; then echo "${f}" >> "${list}"; echo "Not parseable: ${f}"; rm "${f}"; fi
 done < "${candidates}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${candidates}") files total.
+    echo "There were $(wc -l < "${candidates}") files total;
     $(wc -l < "${list}") of them were Java files with broken syntax
-    and that's why were deleted." > "${summary}"
+    and that's why were deleted"
+else
+    echo "There were no files with broken syntax among
+    $(wc -l < "${candidates}") files total"
 fi

@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 list="${temp}/non-class-files.txt"
 if [ -e "${list}" ]; then
@@ -51,9 +50,11 @@ with open('${f}') as f:
 "; then echo "${f}" >> "${list}"; echo "Not a class: ${f}"; rm "${f}"; fi
 done < "${candidates}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
     echo "There were $(wc -l < "${candidates}") files total.
     $(wc -l < "${list}") of them were not Java classes but interfaces or enums,
-    that's why were deleted." > "${summary}"
+    that's why were deleted."
+else
+    echo "All $(wc -l < "${candidates}") files are Java classes,
+    nothing to delete"
 fi

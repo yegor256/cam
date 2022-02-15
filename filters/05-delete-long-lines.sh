@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 list="${temp}/files-with-long-lines.txt"
 if [ -e "${list}" ]; then
@@ -48,10 +47,12 @@ while IFS= read -r f; do
     fi
 done < "${candidates}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${candidates}") files total.
+    echo "There were $(wc -l < "${candidates}") files total;
     $(wc -l < "${list}") of them had at least one line longer than ${max} characters,
-    which most probably is a sympton of an auto-generated code.
-    That's why they all were deleted." > "${summary}"
+    which most probably is a sympton of an auto-generated code;
+    that's why they all were deleted"
+else
+    echo "There were no files among $(wc -l < "${candidates}") total
+    with lines longer than ${max} characters"
 fi

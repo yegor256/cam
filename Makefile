@@ -129,7 +129,11 @@ filter: $(TARGET)/github $(TARGET)/temp
 	mkdir -p "$(TARGET)/temp/reports"
 	for f in $$(ls filters/); do
 		echo "Running filter $${f}... (may take some time)"
-		"filters/$${f}" $(TARGET)/github "$(TARGET)/temp/reports/$${f}.tex" $(TARGET)/temp
+		"filters/$${f}" "$(TARGET)/github" "$(TARGET)/temp" |\
+			tr -d '\n\r' |\
+			sed "s/^/\\\\item /" |\
+			sed "s/$$/;/" \
+			> "$(TARGET)/temp/reports/$${f}.tex"
 		echo "Filter $${f} published its results to $(TARGET)/temp/reports/$${f}.tex"
 	done
 	for f in $$(ls "$(TARGET)/temp/reports/"); do

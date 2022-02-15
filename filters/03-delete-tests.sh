@@ -25,8 +25,7 @@ set -e
 set -o pipefail
 
 home=$1
-summary=$2
-temp=$3
+temp=$2
 
 total=$(find "${home}" -type f | wc -l)
 
@@ -46,10 +45,12 @@ while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 
-touch "${summary}"
 if [ -s "${list}" ]; then
-    echo "There were ${total} files total.
+    echo "There were ${total} files total;
     $(wc -l < "${list}") of them were test files
     with \ff{Test} or \ff{ITCase} suffixes
-    and that's why were deleted." > "${summary}"
+    and that's why were deleted"
+else
+    echo "There were no test files
+    among ${total} files seen"
 fi
