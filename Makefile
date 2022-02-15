@@ -186,7 +186,11 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 			java=$$(echo "$${m}" | sed "s|$${d}||" | sed "s|\.m$$||")
 			printf "$${java}" >> "$${csv}"
 			for a in $${all}; do
-				printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
+				if [ -e "$${m}.$${a}" ]; then
+					printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
+				else
+					printf '-' >> "$${csv}"
+				fi
 			done
 			printf "\n" >> "$${csv}"
 		done
