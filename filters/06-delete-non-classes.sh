@@ -48,7 +48,7 @@ with open('${f}') as f:
     tree = list(value for value in tree)
     if not tree:
         exit(1)
-"; then echo "${f}" >> "${list}"; echo "Not a class: ${f}"; fi
+"; then echo "${f}" >> "${list}"; echo "Not a class: ${f}"; rm "${f}"; fi
 done < "${candidates}"
 
 touch "${summary}"

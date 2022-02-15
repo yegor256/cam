@@ -44,6 +44,7 @@ while IFS= read -r f; do
     if [ "${length}" -gt "${max}" ]; then
         echo "${f}" >> "${list}"
         echo "Too long lines: ${f}"
+        rm "${f}"
     fi
 done < "${candidates}"
 

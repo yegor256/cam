@@ -64,7 +64,7 @@ There are \iexec{cat $TARGET/temp/list-of-metrics.tex | wc -l} metrics that we u
   \input{$TARGET/temp/list-of-metrics.tex}
 \end{itemize}
 
-It took \iexec{ruby -e "printf('\%0.2f', (Time.now.to_i - File.read('$TARGET/temp/start.txt').to_i).to_f / 3600)"} hours
+It took \iexec{ruby -e "printf('\%0.2f', (Time.now.to_i - File.read('$TARGET/start.txt').to_i).to_f / 3600)"} hours
 to generate this report.
 
 If any questions or suggestions, just \href{mailto:yegor256@gmail.com}{email me}.

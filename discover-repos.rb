@@ -84,7 +84,7 @@ File.write(
   opts[:tex],
   'The following search criteria have been used: ' + [
     "at least #{opts['min-stars']} and at most #{opts['max-stars']} stars",
-    "at least #{opts['min-size']}Kb and at most #{opts['max-size']}Kb size of Git repo"
+    "at least #{opts['min-size']}Kb size of Git repo"
   ].join(', ') + ".\n"
 )
 

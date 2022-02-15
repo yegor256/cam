@@ -38,7 +38,7 @@ TOTAL = 1
 # GitHub auth token
 TOKEN =
 
-all: env lint $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
+all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
@@ -53,7 +53,7 @@ lint:
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
 	rm -r $(TARGET)/temp
-	zip -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
+	zip -qq -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 	mv "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 
 # Delete calculations.
@@ -126,7 +126,7 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 
 # Apply filters to all found repositories at once.
 filter: $(TARGET)/github $(TARGET)/temp
-	mkdir -p $(TARGET)/temp/reports
+	mkdir -p "$(TARGET)/temp/reports"
 	for f in $$(ls filters/); do
 		echo "Running filter $${f}... (may take some time)"
 		"filters/$${f}" $(TARGET)/github "$(TARGET)/temp/reports/$${f}.tex" $(TARGET)/temp
@@ -141,14 +141,14 @@ filter: $(TARGET)/github $(TARGET)/temp
 # Calculate metrics for each file.
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 	echo "Searching for all .java files in $(TARGET)/github (may take some time, stay calm...)"
-	find $(TARGET)/github -name '*.java' | while IFS= read -r f; do
+	find "$(TARGET)/github" -name '*.java' | while IFS= read -r f; do
 		java="$${f}"
 		javam="$$(echo "$${java}" | sed "s|$(TARGET)/github|$(TARGET)/measurements|").m"
 		if [ -e "$${javam}" ]; then
 			echo "Metrics already exist for $${java}"
 			continue
 		fi
-		mkdir -p $$(dirname "$${javam}")
+		mkdir -p "$$(dirname "$${javam}")"
 		declare -i cnt=0
 		for m in $$(ls metrics/); do
 			if "metrics/$${m}" "$${java}" "$${javam}"; then
@@ -166,9 +166,9 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
-	all=$$(find $(TARGET)/measurements -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
+	all=$$(find "$(TARGET)/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
 	echo "All metrics: $${all}"
-	for d in $$(find $(TARGET)/measurements -maxdepth 2 -mindepth 2 -type d -print); do
+	for d in $$(find "$(TARGET)/measurements" -maxdepth 2 -mindepth 2 -type d -print); do
 		ddir=$$(echo "$${d}" | sed "s|$(TARGET)/measurements|$(TARGET)/data|")
 		if [ -e "$${ddir}" ]; then
 			echo "Already aggregated: $${ddir}"
@@ -183,7 +183,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 				echo "$${java},$$(cat "$${v}")" >> "$${csv}"
 			done
 			csv="$${ddir}/all.csv"
-			mkdir -p $$(dirname "$${csv}")
+			mkdir -p "$$(dirname "$${csv}")"
 			java=$$(echo "$${m}" | sed "s|$${d}||" | sed "s|\.m$$||")
 			printf "$${java}" >> "$${csv}"
 			for a in $${all}; do
@@ -197,13 +197,13 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 		done
 		echo "$${d} aggregated"
 	done
-	rm -rf $(TARGET)/data/*.csv
-	printf "repository,file" >> $(TARGET)/data/all.csv
+	rm -rf "$(TARGET)/data/*.csv"
+	printf "repository,file" >> "$(TARGET)/data/all.csv"
 	for a in $${all}; do
-		printf ",$${a}" >> $(TARGET)/data/all.csv
+		printf ",$${a}" >> "$(TARGET)/data/all.csv"
 	done
-	printf "\n" >> $(TARGET)/data/all.csv
-	for d in $$(find $(TARGET)/data -maxdepth 2 -mindepth 2 -type d -print); do
+	printf "\n" >> "$(TARGET)/data/all.csv"
+	for d in $$(find "$(TARGET)/data" -maxdepth 2 -mindepth 2 -type d -print); do
 		r=$$(echo "$${d}" | sed "s|$(TARGET)/data/||")
 		for csv in $$(find "$${d}" -name '*.csv' -maxdepth 1 -print); do
 			a=$$(echo "$${csv}" | sed "s|$${d}||")
@@ -215,19 +215,19 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 	done
 
 $(TARGET)/report.pdf: $(TARGET)/temp
-	rm -f $(TARGET)/temp/list-of-metrics.tex
+	rm -f "$(TARGET)/temp/list-of-metrics.tex"
 	for m in $$(ls metrics/); do
-		echo "class Foo {}" > $(TARGET)/temp/foo.java
-		rm -f $(TARGET)/temp/foo.$${m}.m
-		"metrics/$${m}" $(TARGET)/temp/foo.java $(TARGET)/temp/foo.$${m}.m
-		awk '{ s= "\\item\\ff{" $$1 "}: "; for (i = 3; i <= NF; i++) s = s $$i " "; print s; }' < $(TARGET)/temp/foo.$${m}.m >> $(TARGET)/temp/list-of-metrics.tex
+		echo "class Foo {}" > "$(TARGET)/temp/foo.java"
+		rm -f "$(TARGET)/temp/foo.$${m}.m"
+		"metrics/$${m}" "$(TARGET)/temp/foo.java" "$(TARGET)/temp/foo.$${m}.m"
+		awk '{ s= "\\item\\ff{" $$1 "}: "; for (i = 3; i <= NF; i++) s = s $$i " "; print s; }' < "$(TARGET)/temp/foo.$${m}.m" >> "$(TARGET)/temp/list-of-metrics.tex"
 		echo "$$(cat $(TARGET)/temp/foo.$${m}.m | wc -l) metrics from $${m}"
 	done
 	t=$$(realpath $(TARGET))
 	cd tex
 	TARGET="$${t}" latexmk -pdf
 	cd ..
-	cp tex/report.pdf $(TARGET)/report.pdf
+	cp tex/report.pdf "$(TARGET)/report.pdf"
 
 $(TARGET)/github:
 	mkdir -p "$(TARGET)/github"
