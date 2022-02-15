@@ -31,7 +31,6 @@ total=$(find "${home}" -type f | wc -l)
 
 list="${temp}/test-files.txt"
 if [ -e "${list}" ]; then
-    echo "Tests have already been deleted"
     exit
 fi
 

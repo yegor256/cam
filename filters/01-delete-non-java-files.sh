@@ -32,7 +32,6 @@ java=$(find "${home}" -type f -a -name '*.java' | wc -l)
 
 list="${temp}/non-java-files.txt"
 if [ -e "${list}" ]; then
-    echo "Non-java files have already been deleted"
     exit
 fi
 

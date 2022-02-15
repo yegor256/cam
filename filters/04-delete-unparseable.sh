@@ -29,7 +29,6 @@ temp=$2
 
 list="${temp}/unparseable-files.txt"
 if [ -e "${list}" ]; then
-    echo "Unparseable files have already been deleted"
     exit
 fi
 
@@ -43,7 +42,7 @@ import sys
 import javalang
 with open('${f}') as f:
     javalang.parse.parse(f.read())
-"; then echo "${f}" >> "${list}"; echo "Not parseable: ${f}"; rm "${f}"; fi
+"; then echo "${f}" >> "${list}"; rm "${f}"; fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then

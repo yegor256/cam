@@ -29,7 +29,6 @@ temp=$2
 
 list="${temp}/non-class-files.txt"
 if [ -e "${list}" ]; then
-    echo "Non-class files have already been deleted"
     exit
 fi
 
@@ -47,7 +46,7 @@ with open('${f}') as f:
     tree = list(value for value in tree)
     if not tree:
         exit(1)
-"; then echo "${f}" >> "${list}"; echo "Not a class: ${f}"; rm "${f}"; fi
+"; then echo "${f}" >> "${list}"; rm "${f}"; fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then

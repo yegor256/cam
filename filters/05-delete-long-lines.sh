@@ -29,7 +29,6 @@ temp=$2
 
 list="${temp}/files-with-long-lines.txt"
 if [ -e "${list}" ]; then
-    echo "Long-line files have already been deleted"
     exit
 fi
 
@@ -42,7 +41,6 @@ while IFS= read -r f; do
     length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
     if [ "${length}" -gt "${max}" ]; then
         echo "${f}" >> "${list}"
-        echo "Too long lines: ${f}"
         rm "${f}"
     fi
 done < "${candidates}"

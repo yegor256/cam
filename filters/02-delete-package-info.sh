@@ -29,7 +29,6 @@ temp=$2
 
 list="${temp}/package-info-files.txt"
 if [ -e "${list}" ]; then
-    echo "package-info.java files have already been deleted"
     exit
 fi
 
