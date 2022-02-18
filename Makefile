@@ -85,6 +85,7 @@ env:
 	fi
 	flake8 --version
 	pylint --version
+	gem install octokit -v 4.21.0
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
