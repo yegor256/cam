@@ -52,7 +52,6 @@ lint:
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
-	rm -r $(TARGET)/temp
 	zip -qq -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 	mv "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 
