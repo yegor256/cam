@@ -38,7 +38,7 @@ TOTAL = 1
 # GitHub auth token
 TOKEN =
 
-all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
+all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
@@ -85,6 +85,7 @@ env:
 	fi
 	flake8 --version
 	pylint --version
+	gem install octokit -v 4.21.0
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
@@ -123,6 +124,13 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 			printf "$${r},$$(git --git-dir "$(TARGET)/github/$${r}/.git" rev-parse HEAD)\n" >> "$(TARGET)/hashes.csv"
 	  	fi
 	done < "$(TARGET)/repositories.csv"
+
+# Run jpeek for the entire repo.
+jpeek: $(TARGET)/repositories.csv $(TARGET)/github
+	echo "Jpeek'ing..."
+	for d in $$(find "$(TARGET)/github" -maxdepth 2 -mindepth 2 -type d -print); do
+
+	done
 
 # Apply filters to all found repositories at once.
 filter: $(TARGET)/github $(TARGET)/temp
