@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     try:
         with open(metrics, 'a', encoding='utf-8') as metric:
-            metric.write(f'authors {noca(java)}: '
+            metric.write(f'authors {noca(java)} '
                          f'Number of Committers/Authors\n')
     except FileNotFoundError as exception:
         message: str = f"{type(exception).__name__} {str(exception)}: {java}"
