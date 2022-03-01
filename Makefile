@@ -28,6 +28,8 @@ SHELL := bash
 
 PYTHON = python3
 RUBY = ruby
+JPEEK = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite --include-ctors --include-static-methods --include-private-methods
+JPEEKCVC = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite
 
 # The place where all the data will be stored and managed.
 TARGET = dataset
@@ -125,10 +127,67 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 	  	fi
 	done < "$(TARGET)/repositories.csv"
 
-# Run jpeek for the entire repo.
+# Try to build classes and run jpeek for the entire repo.
 jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 	echo "Jpeek'ing..."
-	for d in $$(find "$(TARGET)/github" -maxdepth 2 -mindepth 2 -type d -print); do
+	for project in $$(find "$(TARGET)/github" -maxdepth 3 -mindepth 2 -type d -print); do
+		echo "Project: $${project}"
+		if [ -e "$${project}/build.gradle" ]; then
+			echo "apply plugin: 'java'" >> "$${d}/build.gradle"
+			gradle classes -p "$${project}"
+		elif [ -e "$${project}/pom.xml" ]; then
+			mvn compiler:compile -f "$${project}" -U
+		else
+			echo "Could not build classes (not maven nor gradle project)..."
+			continue
+		fi
+		measurements="$$(echo "$${project}" | sed "s|$(TARGET)/github|$(TARGET)/jpeek|")"
+		dir="$(TARGET)/temp/jpeek"
+		echo "Old-fashioned..."
+		$(JPEEK) --sources "$${project}" --target "$${dir}"
+		echo "Ctors vs cohesion..."
+		$(JPEEKCVC) --sources "$${project}" --target "$${dir}cvc"
+		accept=".*[^index|matrix|skeleton].xml"
+		lastm=""
+		for jpeek in "$${dir}" "$${dir}cvc"; do
+			echo "$${jpeek}"
+			for report in $$(find "$${jpeek}" -type f -maxdepth 1); do
+				metric="$$(basename "$${report}" | sed "s|.xml||")"
+				suffix=$$(echo "$${jpeek}" | sed "s|$${dir}||")
+				descsuffix=""
+				if [ "$${suffix}" != "" ];
+				then
+					suffix="($${suffix})"
+					descsuffix="In this case, the constructors are excluded from the metric formulas."
+				fi
+				if echo $${report} | grep -q $${accept} ; then
+					echo "found $${report}";
+					packages="$$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "$${report}")"
+					name="$$(xmlstarlet sel -t -v "/metric/title" "$${report}")"
+					description="$$(xmlstarlet sel -t -v "/metric/description" "$${report}" | tr "\n" " " | sed "s|\s+| |g") $${descsuffix}"
+					for ((i=1; i <= $${packages}; i++))
+					do
+						package="$$(echo "$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/@id" "$${report}")" | sed "s|\.|/|g")"
+						classes="$$(xmlstarlet sel -t -v "count(/metric/app/package[$${i}]/class/@id)" "$${report}")"
+						for ((j=0; j <= $${classes}; j++))
+						do
+							class="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@id" "$${report}")"
+							value="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@value" "$${report}")"
+							mfile="$$(find "$${project}" -path "*$${package}/$${class}.java" | sed "s|/github|/jpeek|")"
+							if [ "$${mfile}" != "" ]
+							then
+						  		echo "$${package}/$${class}: $${value}"
+								mkdir -p "$$(dirname $${mfile})"
+								echo "$${name}$${suffix} $${value} $${description}" >> "$${mfile}"
+								lastm="$${mfile}"
+							else
+								echo "$${package}/$${class}: can't find corresponding file"
+							fi
+						done
+					done
+				fi
+			done
+		done
 
 	done
 

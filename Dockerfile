@@ -29,6 +29,7 @@ RUN apt-get -y update && apt-get install -y cloc shellcheck
 RUN gem install texsc
 RUN gem install texqc
 RUN apt-get install -y aspell
+RUN apt-get install -y xmlstarlet
 
 RUN tlmgr --verify-repo=none update --self
 RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
@@ -52,3 +53,14 @@ RUN cd /usr/local && \
   rm pmd-bin-6.37.0.zip && \
   mv pmd-bin-6.37.0 pmd && \
   ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+
+#install Gradle
+RUN wget -q https://services.gradle.org/distributions/gradle-7.4-bin.zip \
+    && unzip gradle-7.4-bin.zip -d /opt \
+    && rm gradle-7.4-bin.zip
+
+RUN wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.30.25/jpeek-0.30.25-jar-with-dependencies.jar \
+    && mv jpeek-0.30.25-jar-with-dependencies.jar /opt/app
+# Set Gradle in the environment variables
+ENV GRADLE_HOME /opt/gradle-7.4
+ENV PATH $PATH:/opt/gradle-7.4/bin
