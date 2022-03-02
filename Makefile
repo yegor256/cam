@@ -183,7 +183,7 @@ jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 							then
 						  		echo "$${package}/$${class}: $${value}"
 								mkdir -p "$$(dirname $${mfile})"
-								echo "$${name}$${suffix} $${value} $${description}" >> "$${mfile}"
+								echo "$${name}$${suffix} $${value} $${name}" >> "$${mfile}"
 								lastm="$${mfile}"
 							else
 								echo "$${package}/$${class}: can't find corresponding file"
