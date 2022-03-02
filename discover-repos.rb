@@ -54,8 +54,7 @@ puts "Will fetch #{pages} GitHub pages"
 (0..pages - 1).each do |p|
   json = github.search_repositories(
     [
-      "stars:>=#{opts['min-stars']}",
-      "stars:<=#{opts['max-stars']}",
+      "stars:#{opts['min-stars']}..#{opts['max-stars']}",
       "size:>=#{opts['min-size']}",
       'language:java',
       'is:public',
