@@ -31,8 +31,8 @@ opts = Slop.parse do |o|
   o.string '--token', 'GitHub access token', default: ''
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
-  o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 10000
-  o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 200
+  o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100000
+  o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
   o.string '--path', 'The file name to save the list to', required: true
   o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
   o.on '--help' do
