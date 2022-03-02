@@ -59,7 +59,9 @@ puts "Will fetch #{pages} GitHub pages"
       'language:java',
       'is:public',
       'mirror:false',
-      'archived:false'
+      'archived:false',
+      'NOT',
+      'android'
     ].join(' '),
     per_page: size,
     page: p
