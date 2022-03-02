@@ -130,13 +130,18 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 # Try to build classes and run jpeek for the entire repo.
 jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 	echo "Jpeek'ing..."
-	for project in $$(find "$(TARGET)/github" -maxdepth 3 -mindepth 2 -type d -print); do
-		echo "Project: $${project}"
-		if [ -e "$${project}/build.gradle" ]; then
+	for project in $$(find "$(TARGET)/github" -depth -maxdepth 4 -mindepth 2 -type d -print); do
+		echo "Building project: $${project}"
+		if [ -e "$${project}/gradlew" ]; then
+			echo "Using gradlew"
+			$${project}/gradlew classes -p "$${project}"
+		elif [ -e "$${project}/build.gradle" ]; then
+			echo "Using build.gradle"
 			echo "apply plugin: 'java'" >> "$${d}/build.gradle"
 			gradle classes -p "$${project}"
 		elif [ -e "$${project}/pom.xml" ]; then
-			mvn compiler:compile -f "$${project}" -U
+			echo "Using mvn install"
+			mvn compiler:compile -Dmaven.test.skip=true -f "$${project}" -U
 		else
 			echo "Could not build classes (not maven nor gradle project)..."
 			continue
