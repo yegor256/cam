@@ -119,6 +119,7 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 	while IFS= read -r r; do
 	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
+			git reset --hard
 	  	else
 	    	echo "$${r}: trying to clone it..."
 	    	git clone --depth 1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
