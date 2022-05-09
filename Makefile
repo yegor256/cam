@@ -40,6 +40,9 @@ TOTAL = 1
 # GitHub auth token
 TOKEN =
 
+# Path to repositories names joined by newlines to take from
+REPOS =
+
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 
 # Record the moment in time, when processing started.
@@ -91,8 +94,16 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
-	$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
-	cat "$(TARGET)/repositories.csv"
+	csv="$(TARGET)/repositories.csv"
+	if [ test -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
+	then
+		echo "Using discover-repos.rb..."
+		$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$${csv}" "--tex=$(TARGET)/temp/repo-details.tex"
+	else
+		echo "Using repos list of csv..."
+		cat "$(REPOS)" >> "$${csv}"
+	fi
+	cat "$${csv}"
 
 # Delete directories that don't exist in the list of
 # required repositories.
