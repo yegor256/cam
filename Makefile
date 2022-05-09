@@ -265,7 +265,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 				if [ -e "$${m}.$${a}" ]; then
 					printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
 				else
-					printf '-' >> "$${csv}"
+					printf ',-' >> "$${csv}"
 				fi
 			done
 			printf "\n" >> "$${csv}"
