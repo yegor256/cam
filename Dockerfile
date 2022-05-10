@@ -31,6 +31,7 @@ RUN gem install texqc
 RUN apt-get install -y aspell
 RUN apt-get install -y xmlstarlet
 
+RUN tlmgr option repository ftp://tug.org/historic/systems/texlive/2021/tlnet-final
 RUN tlmgr --verify-repo=none update --self
 RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
 RUN tlmgr --verify-repo=none install biber
