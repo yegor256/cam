@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM yegor256/rultor-image:1.6.0
+FROM yegor256/rultor-image:1.8.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -31,7 +31,6 @@ RUN gem install texqc
 RUN apt-get install -y aspell
 RUN apt-get install -y xmlstarlet
 
-RUN tlmgr option repository ftp://tug.org/historic/systems/texlive/2021/tlnet-final
 RUN tlmgr --verify-repo=none update --self
 RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
 RUN tlmgr --verify-repo=none install biber
