@@ -140,19 +140,19 @@ if __name__ == '__main__':
             if not tree_class:
                 raise Exception('This is not a class')
             with open(metrics, 'a') as metric:
-                metric.write(f'attributes {attrs(tree_class)}: '
+                metric.write(f'attributes {attrs(tree_class)} '
                              f'Number of Non-Static Attributes\n')
-                metric.write(f'sattributes {sattrs(tree_class)}: '
+                metric.write(f'sattributes {sattrs(tree_class)} '
                              f'Number of Static Attributes\n')
-                metric.write(f'ctors {ctors(tree_class)}: '
+                metric.write(f'ctors {ctors(tree_class)} '
                              f'Number of Constructors\n')
-                metric.write(f'methods {methods(tree_class)}: '
+                metric.write(f'methods {methods(tree_class)} '
                              f'Number of Non-Static Methods\n')
-                metric.write(f'smethods {smethods(tree_class)}: '
+                metric.write(f'smethods {smethods(tree_class)} '
                              f'Number of Static Methods\n')
-                metric.write(f'ncss {ncss(raw)}: '
+                metric.write(f'ncss {ncss(raw)} '
                              f'Non Commenting Source Statements (NCSS)\n')
-                metric.write(f'impls {impls(tree_class)}: '
+                metric.write(f'impls {impls(tree_class)} '
                              f'Number of implemented interfaces \n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"

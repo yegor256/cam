@@ -28,6 +28,8 @@ SHELL := bash
 
 PYTHON = python3
 RUBY = ruby
+JPEEK = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite --include-ctors --include-static-methods --include-private-methods
+JPEEKCVC = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite
 
 # The place where all the data will be stored and managed.
 TARGET = dataset
@@ -38,7 +40,10 @@ TOTAL = 1
 # GitHub auth token
 TOKEN =
 
-all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone filter measure aggregate zip
+# Path to repositories names joined by newlines to take from
+REPOS =
+
+all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
@@ -89,8 +94,16 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
-	$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$(TARGET)/repositories.csv" "--tex=$(TARGET)/temp/repo-details.tex"
-	cat "$(TARGET)/repositories.csv"
+	csv="$(TARGET)/repositories.csv"
+	if [ test -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
+	then
+		echo "Using discover-repos.rb..."
+		$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$${csv}" "--tex=$(TARGET)/temp/repo-details.tex"
+	else
+		echo "Using repos list of csv..."
+		cat "$(REPOS)" >> "$${csv}"
+	fi
+	cat "$${csv}"
 
 # Delete directories that don't exist in the list of
 # required repositories.
@@ -117,12 +130,82 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 	while IFS= read -r r; do
 	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
+			git reset --hard
 	  	else
 	    	echo "$${r}: trying to clone it..."
 	    	git clone --depth 1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
 			printf "$${r},$$(git --git-dir "$(TARGET)/github/$${r}/.git" rev-parse HEAD)\n" >> "$(TARGET)/hashes.csv"
 	  	fi
 	done < "$(TARGET)/repositories.csv"
+
+# Try to build classes and run jpeek for the entire repo.
+jpeek: $(TARGET)/repositories.csv $(TARGET)/github
+	echo "Jpeek'ing..."
+	for project in $$(find "$(TARGET)/github" -depth -maxdepth 4 -mindepth 2 -type d -print); do
+		echo "Building project: $${project}"
+		if [ -e "$${project}/gradlew" ]; then
+			echo "Using gradlew"
+			$${project}/gradlew classes -p "$${project}"
+		elif [ -e "$${project}/build.gradle" ]; then
+			echo "Using build.gradle"
+			echo "apply plugin: 'java'" >> "$${d}/build.gradle"
+			gradle classes -p "$${project}"
+		elif [ -e "$${project}/pom.xml" ]; then
+			echo "Using mvn install"
+			mvn compiler:compile -Dmaven.test.skip=true -f "$${project}" -U
+		else
+			echo "Could not build classes (not maven nor gradle project)..."
+			continue
+		fi
+		measurements="$$(echo "$${project}" | sed "s|$(TARGET)/github|$(TARGET)/jpeek|")"
+		dir="$(TARGET)/temp/jpeek"
+		echo "Old-fashioned..."
+		$(JPEEK) --sources "$${project}" --target "$${dir}"
+		echo "Ctors vs cohesion..."
+		$(JPEEKCVC) --sources "$${project}" --target "$${dir}cvc"
+		accept=".*[^index|matrix|skeleton].xml"
+		lastm=""
+		for jpeek in "$${dir}" "$${dir}cvc"; do
+			echo "$${jpeek}"
+			for report in $$(find "$${jpeek}" -type f -maxdepth 1); do
+				metric="$$(basename "$${report}" | sed "s|.xml||")"
+				suffix=$$(echo "$${jpeek}" | sed "s|$${dir}||")
+				descsuffix=""
+				if [ "$${suffix}" != "" ];
+				then
+					suffix="($${suffix})"
+					descsuffix="In this case, the constructors are excluded from the metric formulas."
+				fi
+				if echo $${report} | grep -q $${accept} ; then
+					echo "found $${report}";
+					packages="$$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "$${report}")"
+					name="$$(xmlstarlet sel -t -v "/metric/title" "$${report}")"
+					description="$$(xmlstarlet sel -t -v "/metric/description" "$${report}" | tr "\n" " " | sed "s|\s+| |g") $${descsuffix}"
+					for ((i=1; i <= $${packages}; i++))
+					do
+						package="$$(echo "$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/@id" "$${report}")" | sed "s|\.|/|g")"
+						classes="$$(xmlstarlet sel -t -v "count(/metric/app/package[$${i}]/class/@id)" "$${report}")"
+						for ((j=0; j <= $${classes}; j++))
+						do
+							class="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@id" "$${report}")"
+							value="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@value" "$${report}")"
+							mfile="$$(find "$${project}" -path "*$${package}/$${class}.java" | sed "s|/github|/jpeek|")"
+							if [ "$${mfile}" != "" ]
+							then
+						  		echo "$${package}/$${class}: $${value}"
+								mkdir -p "$$(dirname $${mfile})"
+								echo "$${name}$${suffix} $${value} $${name}" >> "$${mfile}"
+								lastm="$${mfile}"
+							else
+								echo "$${package}/$${class}: can't find corresponding file"
+							fi
+						done
+					done
+				fi
+			done
+		done
+
+	done
 
 # Apply filters to all found repositories at once.
 filter: $(TARGET)/github $(TARGET)/temp
@@ -194,7 +277,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 				if [ -e "$${m}.$${a}" ]; then
 					printf ",$$(cat "$${m}.$${a}")" >> "$${csv}"
 				else
-					printf '-' >> "$${csv}"
+					printf ',-' >> "$${csv}"
 				fi
 			done
 			printf "\n" >> "$${csv}"
