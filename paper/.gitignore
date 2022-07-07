@@ -1,0 +1,17 @@
+.DS_Store
+_minted-*
+paper.pdf
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.run.xml
+*.aux
+*.pyg
+*.out
+*.synctex.gz
+*.zip
+package/
+paper-blx.bib
