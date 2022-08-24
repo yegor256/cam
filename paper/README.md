@@ -1,7 +1,5 @@
 [![make](https://github.com/yegor256/cam/actions/workflows/latexmk.yml/badge.svg)](https://github.com/yegor256/cam/actions/workflows/latexmk.yml)
 
-The paper is published [in arXiv](https://arxiv.org/abs/2206.02585).
-
 To build it, just run:
 
 ```bash
@@ -16,5 +14,3 @@ LaTeX,
 and
 [`texqc`](https://rubygems.org/gems/texqc)
 installed.
-
-Once compiled and packaged, upload zip archive to [arXiv](?).
