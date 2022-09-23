@@ -1,4 +1,4 @@
 javalang==0.13.0
-pygments==2.9.0
+pygments==2.13.0
 flake8==3.9.2
 pylint==2.9.3
