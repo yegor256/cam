@@ -1,0 +1,9 @@
+architect:
+  - yegor256
+docker:
+  image: yegor256/rultor-image:1.13.0
+install: |
+  pdd --file=/dev/null
+merge:
+  script: |
+    make
