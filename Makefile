@@ -127,13 +127,17 @@ cleanup: $(TARGET)/repositories.csv $(TARGET)/github
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
 clone: $(TARGET)/repositories.csv $(TARGET)/github
-	while IFS= read -r r; do
+	while IFS=',' read -r r tag; do
 	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
 			git reset --hard
 	  	else
 	    	echo "$${r}: trying to clone it..."
-	    	git clone --depth 1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
+			if [ test -z "$(tag)"]; then
+				git clone --depth 1 --branch="$${tag}" "https://github.com/$${r}" "$(TARGET)/github/$${r}"
+			else
+				git clone --depth 1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
+			fi
 			printf "$${r},$$(git --git-dir "$(TARGET)/github/$${r}/.git" rev-parse HEAD)\n" >> "$(TARGET)/hashes.csv"
 	  	fi
 	done < "$(TARGET)/repositories.csv"
