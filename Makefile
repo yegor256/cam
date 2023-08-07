@@ -133,10 +133,10 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 			git reset --hard
 	  	else
 	    	echo "$${r}: trying to clone it..."
-			if [ test -z "$(tag)"]; then
-				git clone --depth 1 --branch="$${tag}" "https://github.com/$${r}" "$(TARGET)/github/$${r}"
-			else
+			if [ -z "$${tag}" ]; then
 				git clone --depth 1 "https://github.com/$${r}" "$(TARGET)/github/$${r}"
+			else
+				git clone --depth 1 --branch="$${tag}" "https://github.com/$${r}" "$(TARGET)/github/$${r}"
 			fi
 			printf "$${r},$$(git --git-dir "$(TARGET)/github/$${r}/.git" rev-parse HEAD)\n" >> "$(TARGET)/hashes.csv"
 	  	fi
