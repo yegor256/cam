@@ -63,7 +63,6 @@ $ docker build --tag=cam .
 $ docker run --rm -v "$(pwd):/w" -w /w \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/w/dataset" \
   cam "make -e"
-
 ```
 
 The dataset will be created in the `./dataset` directory (may take some time,
