@@ -14,23 +14,24 @@ The latest ZIP archive with the dataset is here:
 It is the result of the analysis of Java classes in 1000 GitHub repositories
 against
 15 metrics:
-lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
-lines of comments,
-blank lines,
-[NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for),
-cyclomatic complexity,
-number of attributes,
-number of static attributes,
-number of constructors,
-number of methods,
-number of static methods,
-total cognitive complexity (reported by [PMD](https://pmd.github.io/)),
-maximum cognitive complexity,
-minimum cognitive complexity,
-average cognitive complexity,
-number of committers.
+ 
+  * lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
+  * lines of comments,
+  * blank lines,
+  * [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for),
+  * cyclomatic complexity,
+  * number of attributes,
+  * number of static attributes,
+  * number of constructors,
+  * number of methods,
+  * number of static methods,
+  * total cognitive complexity (reported by [PMD](https://pmd.github.io/)),
+  * maximum cognitive complexity,
+  * minimum cognitive complexity,
+  * average cognitive complexity,
+  * number of committers.
 
-Previous archives:
+Previous archives (took me a few days to build each of them):
 
 * [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip) 
   (692Mb): 1000 repos, 15 metrics
