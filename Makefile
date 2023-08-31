@@ -102,7 +102,7 @@ env:
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
 	csv="$(TARGET)/repositories.csv"
-	if [ test -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
+	if [ -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
 	then
 		echo "Using discover-repos.rb..."
 		$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$${csv}" "--tex=$(TARGET)/temp/repo-details.tex"
