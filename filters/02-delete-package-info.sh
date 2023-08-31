@@ -38,9 +38,7 @@ while IFS= read -r f; do
 done < "${list}"
 
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${list}") files named as \ff{package-info.java},
-    all of them were deleted"
+    printf "There were %d files named as \ff{package-info.java}, all of them were deleted" "$(wc -l < "${list}")"
 else
-    echo "There were no files named \ff{package-info.java},
-    nothing to delete"
+    printf "There were no files named \ff{package-info.java}, nothing to delete"
 fi
