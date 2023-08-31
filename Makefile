@@ -28,7 +28,7 @@ SHELL := bash
 
 PYTHON = python3
 RUBY = ruby
-JPEEK_JAR = /opt/app/jpeek-0.30.25-jar-with-dependencies.jar
+JPEEK_JAR = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
 JPEEK = java -jar "$(JPEEK_JAR)" --overwrite --include-ctors --include-static-methods --include-private-methods
 JPEEKCVC = java -jar "$(JPEEK_JAR)" --overwrite
 
