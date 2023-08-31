@@ -9,8 +9,8 @@ Each release has a fixed version. By referring to it in your research
 you avoid ambiguity and guarantees repeatability of your experiments.
 
 The latest ZIP archive with the dataset is here:
-[cam-2022-02-17.zip](https://github.com/yegor256/cam/releases/download/0.3.0/cam-2022-02-17.zip) (
-532Mb).
+[cam-2022-02-17.zip](https://github.com/yegor256/cam/releases/download/0.3.0/cam-2022-02-17.zip) 
+(532Mb).
 It is the result of the analysis of Java classes in 1000 GitHub repositories
 against
 15 metrics:

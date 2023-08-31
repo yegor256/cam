@@ -59,8 +59,9 @@ RUN wget -q https://services.gradle.org/distributions/gradle-7.4-bin.zip \
     && unzip gradle-7.4-bin.zip -d /opt \
     && rm gradle-7.4-bin.zip
 
-RUN wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.30.25/jpeek-0.30.25-jar-with-dependencies.jar \
-    && mv jpeek-0.30.25-jar-with-dependencies.jar /opt/app
+RUN wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
+    && mkdir -p /opt/app
+    && mv jpeek-0.32.0-jar-with-dependencies.jar /opt/app
 # Set Gradle in the environment variables
 ENV GRADLE_HOME /opt/gradle-7.4
 ENV PATH $PATH:/opt/gradle-7.4/bin

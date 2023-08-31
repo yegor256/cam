@@ -28,8 +28,9 @@ SHELL := bash
 
 PYTHON = python3
 RUBY = ruby
-JPEEK = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite --include-ctors --include-static-methods --include-private-methods
-JPEEKCVC = java -jar /opt/app/jpeek-0.30.25-jar-with-dependencies.jar --overwrite
+JPEEK_JAR = /opt/app/jpeek-0.30.25-jar-with-dependencies.jar
+JPEEK = java -jar "$(JPEEK_JAR)" --overwrite --include-ctors --include-static-methods --include-private-methods
+JPEEKCVC = java -jar "$(JPEEK_JAR)" --overwrite
 
 # The place where all the data will be stored and managed.
 TARGET = dataset
@@ -89,7 +90,7 @@ env:
 	fi
 	flake8 --version
 	pylint --version
-	gem install octokit -v 4.21.0
+	java -jar "$(JPEEK_JAR)" --help
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
