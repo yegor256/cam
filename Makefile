@@ -90,6 +90,12 @@ env:
 	fi
 	flake8 --version
 	pylint --version
+	xmlstarlet --version
+	shellcheck --version
+	pdflatex --version
+	aspell --version
+	cloc --version
+	pmd --version
 	java -jar "$(JPEEK_JAR)" --help
 
 # Get the list of repos from GitHub and then create directories
