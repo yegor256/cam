@@ -42,7 +42,7 @@ import sys
 import javalang
 with open('${f}') as f:
     javalang.parse.parse(f.read())
-"; then echo "${f}" >> "${list}"; rm "${f}"; fi
+" >/dev/null; then echo "${f}" >> "${list}"; rm "${f}"; fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then
