@@ -23,6 +23,7 @@
 .SHELLFLAGS: -e -o pipefail -c
 .ONESHELL:
 .PHONY: clone filter measure cleanup env lint zip wipe clean
+.SILENT:
 
 SHELL := bash
 
