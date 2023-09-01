@@ -102,11 +102,18 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
+	set -e
 	csv="$(TARGET)/repositories.csv"
 	if [ -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
 	then
 		echo "Using discover-repos.rb..."
-		$(RUBY) discover-repos.rb --token=$(TOKEN) --total=$(TOTAL) "--path=$${csv}" "--tex=$(TARGET)/temp/repo-details.tex"
+		$(RUBY) discover-repos.rb \
+			"--token=$(TOKEN)" \
+			"--total=$(TOTAL)" \
+			"--path=$${csv}" \
+			"--tex=$(TARGET)/temp/repo-details.tex" \
+			"--min-stars=400" \
+			"--max-stars=10000"
 	else
 		echo "Using repos list of csv..."
 		cat "$(REPOS)" >> "$${csv}"
@@ -116,6 +123,7 @@ $(TARGET)/repositories.csv: $(TARGET)/temp
 # Delete directories that don't exist in the list of
 # required repositories.
 cleanup: $(TARGET)/repositories.csv $(TARGET)/github
+	set -e
 	for d in $$(find "$(TARGET)/github" -maxdepth 2 -mindepth 2 -type d -print); do
 		repo=$$(echo $${d} | sed "s|$(TARGET)/github/||")
 		if grep -Fxq "$${repo}" $(TARGET)/repositories.csv; then
@@ -135,6 +143,7 @@ cleanup: $(TARGET)/repositories.csv $(TARGET)/github
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
 clone: $(TARGET)/repositories.csv $(TARGET)/github
+	set -e
 	while IFS=',' read -r r tag; do
 	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
 	    	echo "$${r}: Git repo is already here"
@@ -152,6 +161,7 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 
 # Try to build classes and run jpeek for the entire repo.
 jpeek: $(TARGET)/repositories.csv $(TARGET)/github
+	set -e
 	echo "Jpeek'ing..."
 	for project in $$(find "$(TARGET)/github" -depth -maxdepth 4 -mindepth 2 -type d -print); do
 		echo "Building project: $${project}"
@@ -221,6 +231,7 @@ jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 
 # Apply filters to all found repositories at once.
 filter: $(TARGET)/github $(TARGET)/temp
+	set -e
 	mkdir -p "$(TARGET)/temp/reports"
 	for f in $$(ls filters/); do
 		echo "Running filter $${f}... (may take some time)"
@@ -239,6 +250,7 @@ filter: $(TARGET)/github $(TARGET)/temp
 
 # Calculate metrics for each file.
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
+	set -e
 	echo "Searching for all .java files in $(TARGET)/github (may take some time, stay calm...)"
 	find "$(TARGET)/github" -name '*.java' | while IFS= read -r f; do
 		java="$${f}"
@@ -265,6 +277,7 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
+	set -e
 	all=$$(find "$(TARGET)/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
 	echo "All metrics: $${all}"
 	for d in $$(find "$(TARGET)/measurements" -maxdepth 2 -mindepth 2 -type d -print); do
@@ -314,6 +327,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 	done
 
 $(TARGET)/report.pdf: $(TARGET)/temp
+	set -e
 	rm -f "$(TARGET)/temp/list-of-metrics.tex"
 	for m in $$(ls metrics/); do
 		echo "class Foo {}" > "$(TARGET)/temp/foo.java"

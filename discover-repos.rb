@@ -46,12 +46,11 @@ size = [100, opts[:total]].min
 github = Octokit::Client.new
 unless opts[:token].empty?
   github = Octokit::Client.new(access_token: opts[:token])
-  puts 'Accessing GitHub with personal access token!'
+  puts 'Accessing GitHub without personal access token!'
 end
 names = []
-pages = (opts[:total] + size - 1) / size
-puts "Will fetch #{pages} GitHub pages"
-(0..pages - 1).each do |p|
+page = 0
+loop do
   json = github.search_repositories(
     [
       "stars:#{opts['min-stars']}..#{opts['max-stars']}",
@@ -64,16 +63,19 @@ puts "Will fetch #{pages} GitHub pages"
       'android'
     ].join(' '),
     per_page: size,
-    page: p
+    page: page
   )
   json[:items].each do |i|
     names << i[:full_name]
+    puts "Found #{i[:full_name].inspect} GitHub repo"
   end
-  puts "Found #{json[:items].count} repositories in page #{p}"
-  if p > 0
+  puts "Found #{json[:items].count} repositories in page #{page}"
+  break if names.count >= opts[:total]
+  if page > 0
     puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
     sleep 10
   end
+  page += 1
 end
 puts "Found #{names.count} total repositories in GitHub"
 if (names.count > opts[:total])
