@@ -96,7 +96,7 @@ env:
 	pdflatex --version
 	aspell --version
 	cloc --version
-	pmd pmd --version
+	pmd
 	java -jar "$(JPEEK_JAR)" --help
 
 # Get the list of repos from GitHub and then create directories
