@@ -62,11 +62,13 @@ lint:
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
+	set -e
 	zip -qq -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 	mv "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
 
 # Delete calculations.
 clean:
+	set -e
 	rm -rf "$(TARGET)/report.pdf"
 	rm -rf "$(TARGET)/measurements"
 	rm -rf "$(TARGET)/data"
