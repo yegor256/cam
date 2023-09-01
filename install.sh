@@ -21,6 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+set -x
+set -e
+
 apt-get -y update && apt-get install -y cloc shellcheck
 
 gem install texsc
@@ -38,7 +41,7 @@ python3 -m pip install -r requirements.txt
 gem install octokit -v 4.21.0
 gem install slop -v 4.9.1
 
-add-apt-repository ppa:inkscape.dev/stable && \
+add-apt-repository -y ppa:inkscape.dev/stable && \
   apt-get update -y && \
   apt-get install -y inkscape
 
