@@ -1,8 +1,18 @@
 docker:
   image: yegor256/rultor-image:1.21.0
+assets:
+  docker-password: yegor256/home#assets/docker-password
 install: |
   pdd --file=/dev/null
+  sudo docker build "$(pwd)"
   sudo "$(pwd)/install.sh"
 merge:
   script: |
     make REPO=yegor256/tojos
+release:
+  script: |
+    [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
+    repo=yegor256/cam
+    sudo docker build "$(pwd)" --tag "${repo}:${tag}"
+    cat ../docker-password | sudo docker login --password-stdin --username yegor256
+    sudo docker push "${repo}:${tag}"
