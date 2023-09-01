@@ -48,10 +48,10 @@ RUN add-apt-repository ppa:inkscape.dev/stable && \
   apt-get install -y inkscape
 
 RUN cd /usr/local && \
-  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.37.0/pmd-bin-6.37.0.zip && \
-  unzip pmd-bin-6.37.0.zip && \
-  rm pmd-bin-6.37.0.zip && \
-  mv pmd-bin-6.37.0 pmd && \
+  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
+  unzip pmd-bin-6.55.0.zip && \
+  rm pmd-bin-6.55.0.zip && \
+  mv pmd-bin-6.55.0 pmd && \
   ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 
 #install Gradle
