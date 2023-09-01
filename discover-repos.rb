@@ -46,7 +46,7 @@ size = [100, opts[:total]].min
 github = Octokit::Client.new
 unless opts[:token].empty?
   github = Octokit::Client.new(access_token: opts[:token])
-  puts 'Accessing GitHub without personal access token!'
+  puts 'Accessing GitHub with personal access token!'
 end
 names = []
 page = 0
