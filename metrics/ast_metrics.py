@@ -129,6 +129,12 @@ def impls(tlist) -> int:
     return len(tlist[0][1].implements or [])
 
 
+class NotClassError(Exception):
+    """
+    If it's not a class
+    """
+
+
 if __name__ == '__main__':
     JAVA = sys.argv[1]
     metrics = sys.argv[2]
@@ -138,7 +144,7 @@ if __name__ == '__main__':
             tree = raw.filter(javalang.tree.ClassDeclaration)
             tree_class = list(value for value in tree)
             if not tree_class:
-                raise Exception('This is not a class')
+                raise NotClassError('This is not a class')
             with open(metrics, 'a', encoding='utf-8') as metric:
                 metric.write(f'attributes {attrs(tree_class)} '
                              f'Number of Non-Static Attributes\n')
