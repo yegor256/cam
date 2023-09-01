@@ -107,6 +107,7 @@ env:
 $(TARGET)/repositories.csv: $(TARGET)/temp
 	set -e
 	csv="$(TARGET)/repositories.csv"
+	echo "" > "$(TARGET)/temp/repo-details.tex"
 	if [ -e "$${csv}" ]; then
 		echo "The list of repos is already here: $${csv}"
 	elif [ ! -z "$(REPO)" ]; then
@@ -340,7 +341,6 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 
 $(TARGET)/report.pdf: $(TARGET)/temp
 	set -e
-	set -x
 	rm -f "$(TARGET)/temp/list-of-metrics.tex"
 	for m in $$(ls metrics/); do
 		echo "class Foo {}" > "$(TARGET)/temp/foo.java"
