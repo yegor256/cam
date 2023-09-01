@@ -251,11 +251,15 @@ filter: $(TARGET)/github $(TARGET)/temp
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 	set -e
 	echo "Searching for all .java files in $(TARGET)/github (may take some time, stay calm...)"
+	total=$$(find "$(TARGET)/github" -name '*.java' | wc -l | xargs)
+	echo "Found $${total} Java files, starting to collect metrics..."
+	declare -i file=0
 	find "$(TARGET)/github" -name '*.java' | while IFS= read -r f; do
+		file=file+1
 		java="$${f}"
 		javam="$$(echo "$${java}" | sed "s|$(TARGET)/github|$(TARGET)/measurements|").m"
 		if [ -e "$${javam}" ]; then
-			echo "Metrics already exist for $${java}"
+			echo "Metrics already exist for $$(basename "$${java}") ($${file}/$${total})"
 			continue
 		fi
 		mkdir -p "$$(dirname "$${javam}")"
@@ -271,7 +275,7 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 				echo "Failed to collect $${m} for $${java}"
 			fi
 		done
-		echo "$${cnt} metric scripts ran for $${java}"
+		echo "$${cnt} metric scripts ran for $$(basename "$${java}") ($${file}/$${total})"
 	done
 	echo "All metrics calculated"
 
