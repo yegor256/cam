@@ -2,7 +2,7 @@ name: latexmk
 on:
   push:
 concurrency:
-  group: ${{ github.ref }}
+  group: latexmk-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build:
