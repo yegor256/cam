@@ -28,4 +28,6 @@ branding:
 runs:
   using: docker
   image: Dockerfile
-  entrypoint: make REPO=yegor256/tojos
+  entrypoint: make
+  args:
+    - 'REPO=yegor256/tojos'
