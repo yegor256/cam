@@ -145,9 +145,8 @@ cleanup: $(TARGET)/repositories.csv $(TARGET)/github
 clone: $(TARGET)/repositories.csv $(TARGET)/github
 	set -e
 	while IFS=',' read -r r tag; do
-	  	if [ -e "$(TARGET)/github/$${r}/.git" ]; then
+	  	if [ -e "$(TARGET)/github/$${r}" ]; then
 	    	echo "$${r}: Git repo is already here"
-			git reset --hard
 	  	else
 	    	echo "$${r}: trying to clone it..."
 			if [ -z "$${tag}" ]; then
@@ -167,14 +166,14 @@ jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 		echo "Building project: $${project}"
 		if [ -e "$${project}/gradlew" ]; then
 			echo "Using gradlew"
-			$${project}/gradlew classes -p "$${project}"
+			$${project}/gradlew classes -p "$${project}" || break
 		elif [ -e "$${project}/build.gradle" ]; then
 			echo "Using build.gradle"
 			echo "apply plugin: 'java'" >> "$${d}/build.gradle"
-			gradle classes -p "$${project}"
+			gradle classes -p "$${project}" || break
 		elif [ -e "$${project}/pom.xml" ]; then
 			echo "Using mvn install"
-			mvn compiler:compile -Dmaven.test.skip=true -f "$${project}" -U
+			mvn compiler:compile -Dmaven.test.skip=true -f "$${project}" -U || break
 		else
 			echo "Could not build classes (not maven nor gradle project)..."
 			continue
