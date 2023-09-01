@@ -130,9 +130,9 @@ def impls(tlist) -> int:
 
 
 if __name__ == '__main__':
-    java = sys.argv[1]
+    JAVA = sys.argv[1]
     metrics = sys.argv[2]
-    with open(java, encoding='utf-8', errors='ignore') as file:
+    with open(JAVA, encoding='utf-8', errors='ignore') as file:
         try:
             raw = javalang.parse.parse(file.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
@@ -155,5 +155,5 @@ if __name__ == '__main__':
                 metric.write(f'impls {impls(tree_class)} '
                              f'Number of implemented interfaces \n')
         except FileNotFoundError as exception:
-            message = f"{type(exception).__name__} {str(exception)}: {java}"
+            message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)

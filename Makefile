@@ -52,6 +52,7 @@ $(TARGET)/start.txt: $(TARGET)/temp
 
 # Check the quality of code
 lint:
+	set -e
 	flake8 metrics/
 	pylint metrics/
 	shellcheck -P metrics/*.sh -P filters/*.sh
@@ -76,12 +77,12 @@ wipe: clean
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
+	set -e
 	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
 		$(SHELL) -version
 	  	echo "$(SHELL) version is older than five: $${BASH_VERSINFO:-0}"
 	  	exit -1
 	fi
-	set -x
 	$(RUBY) -v
 	$(PYTHON) --version
 	if [[ "$$($(PYTHON) --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
@@ -95,7 +96,7 @@ env:
 	pdflatex --version
 	aspell --version
 	cloc --version
-	pmd --version
+	pmd pmd --version
 	java -jar "$(JPEEK_JAR)" --help
 
 # Get the list of repos from GitHub and then create directories

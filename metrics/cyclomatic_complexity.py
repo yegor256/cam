@@ -40,7 +40,7 @@ def branches(parser_class):
     """
     count = 0
     if isinstance(parser_class, tree.BinaryOperation):
-        if parser_class.operator == '&&' or parser_class.operator == '||':
+        if parser_class.operator in ('&&', '||'):
             count = 1
     elif (isinstance(parser_class, (
             tree.ForStatement,
@@ -60,9 +60,9 @@ def branches(parser_class):
 
 
 if __name__ == '__main__':
-    java = sys.argv[1]
+    JAVA = sys.argv[1]
     metrics = sys.argv[2]
-    with open(java, encoding='utf-8', errors='ignore') as f:
+    with open(JAVA, encoding='utf-8', errors='ignore') as f:
         try:
             complexity: int = 1
             ast = parse.parse(f.read())
@@ -71,5 +71,5 @@ if __name__ == '__main__':
             with open(metrics, 'a') as m:
                 m.write(f'cc {complexity} Cyclomatic Complexity\n')
         except FileNotFoundError as exception:
-            message = f"{type(exception).__name__} {str(exception)}: {java}"
+            message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
