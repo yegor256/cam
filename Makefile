@@ -341,7 +341,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 		echo "$${r} metrics added to the CSV aggregate"
 	done
 
-$(TARGET)/report.pdf: $(TARGET)/temp
+$(TARGET)/report.pdf: $(TARGET)/temp paper/paper.tex
 	set -e
 	rm -f "$(TARGET)/temp/list-of-metrics.tex"
 	for m in $$(ls metrics/); do
