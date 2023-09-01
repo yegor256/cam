@@ -107,7 +107,9 @@ env:
 $(TARGET)/repositories.csv: $(TARGET)/temp
 	set -e
 	csv="$(TARGET)/repositories.csv"
-	if [ ! -z "$(REPO)" ]; then
+	if [ -e "$${csv}" ]; then
+		echo "The list of repos is already here: $${csv}"
+	elif [ ! -z "$(REPO)" ]; then
 		echo "Using one repo: $(REPO)"
 		echo "$(REPO)" >> "$${csv}"
 	elif [ -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ]; then
@@ -167,7 +169,7 @@ clone: $(TARGET)/repositories.csv $(TARGET)/github
 jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 	set -e
 	echo "Jpeek'ing..."
-	for project in $$(find "$(TARGET)/github" -depth -maxdepth 4 -mindepth 2 -type d -print); do
+	for project in $$(find "$(TARGET)/github" -depth 2 -type d -print); do
 		echo "Building project: $${project}"
 		if [ -e "$${project}/gradlew" ]; then
 			echo "Using gradlew"
@@ -178,7 +180,7 @@ jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 			gradle classes -p "$${project}" || break
 		elif [ -e "$${project}/pom.xml" ]; then
 			echo "Using mvn install"
-			mvn compiler:compile -Dmaven.test.skip=true -f "$${project}" -U || break
+			mvn compiler:compile -quiet -Dmaven.test.skip=true -f "$${project}" -U || break
 		else
 			echo "Could not build classes (not maven nor gradle project)..."
 			continue
@@ -203,15 +205,16 @@ jpeek: $(TARGET)/repositories.csv $(TARGET)/github
 					descsuffix="In this case, the constructors are excluded from the metric formulas."
 				fi
 				if echo $${report} | grep -q $${accept} ; then
-					echo "found $${report}";
+					echo "Found $${report}";
 					packages="$$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "$${report}")"
+					echo "There are $${packages} packages";
 					name="$$(xmlstarlet sel -t -v "/metric/title" "$${report}")"
 					description="$$(xmlstarlet sel -t -v "/metric/description" "$${report}" | tr "\n" " " | sed "s|\s+| |g") $${descsuffix}"
 					for ((i=1; i <= $${packages}; i++))
 					do
 						package="$$(echo "$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/@id" "$${report}")" | sed "s|\.|/|g")"
 						classes="$$(xmlstarlet sel -t -v "count(/metric/app/package[$${i}]/class/@id)" "$${report}")"
-						for ((j=0; j <= $${classes}; j++))
+						for ((j=1; j <= $${classes}; j++))
 						do
 							class="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@id" "$${report}")"
 							value="$$(xmlstarlet sel -t -v "/metric/app/package[$${i}]/class[$${j}]/@value" "$${report}")"
@@ -337,6 +340,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 
 $(TARGET)/report.pdf: $(TARGET)/temp
 	set -e
+	set -x
 	rm -f "$(TARGET)/temp/list-of-metrics.tex"
 	for m in $$(ls metrics/); do
 		echo "class Foo {}" > "$(TARGET)/temp/foo.java"
