@@ -41,8 +41,11 @@ TOTAL = 1
 # GitHub auth token
 TOKEN =
 
-# Path to repositories names joined by newlines to take from
+# Path to file with repositories names joined by newlines
 REPOS =
+
+# Single repository name to use (mostly for testing purposes)
+REPO =
 
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 
@@ -104,8 +107,10 @@ env:
 $(TARGET)/repositories.csv: $(TARGET)/temp
 	set -e
 	csv="$(TARGET)/repositories.csv"
-	if [ -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ];
-	then
+	if [ ! -z "$(REPO)" ]; then
+		echo "Using one repo: $(REPO)"
+		echo "$(REPO)" >> "$${csv}"
+	elif [ -z "$(REPOS)" ] || [ ! -e "$(REPOS)" ]; then
 		echo "Using discover-repos.rb..."
 		$(RUBY) discover-repos.rb \
 			"--token=$(TOKEN)" \
