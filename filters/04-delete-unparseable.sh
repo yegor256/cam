@@ -42,14 +42,14 @@ import sys
 import javalang
 with open('${f}') as f:
     javalang.parse.parse(f.read())
-" >/dev/null; then echo "${f}" >> "${list}"; rm "${f}"; fi
+" >/dev/null 2>&1; then echo "${f}" >> "${list}"; rm "${f}"; fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${candidates}") files total;
-    $(wc -l < "${list}") of them were Java files with broken syntax
-    and that's why were deleted"
+    printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \
+        "$(wc -l < "${candidates}")" \
+        "$(wc -l < "${list}")"
 else
-    echo "There were no files with broken syntax among
-    $(wc -l < "${candidates}") files total"
+    printf "There were no files with broken syntax among %d files total" \
+        "$(wc -l < "${candidates}")"
 fi

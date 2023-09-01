@@ -40,7 +40,7 @@ SCOM(cvc) NaN Same as SCOM, but in this case, the constructors are excluded from
 
 file="${java//github/jpeek}"
 out=""
-if [ "${file}" != "${java}" ]; then
+if [ -e "${file}" -a "${file}" != "${java}" ]; then
 	out="$(cat "${file}")"
 else
 	out="${sample}"

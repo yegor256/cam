@@ -46,7 +46,7 @@ with open('${f}') as f:
     tree = list(value for value in tree)
     if not tree:
         exit(1)
-"; then echo "${f}" >> "${list}"; rm "${f}"; fi
+" >/dev/null 2>&1; then echo "${f}" >> "${list}"; rm "${f}"; fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then

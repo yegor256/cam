@@ -273,6 +273,7 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 		done
 		echo "$${cnt} metric scripts ran for $${java}"
 	done
+	echo "All metrics calculated"
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
