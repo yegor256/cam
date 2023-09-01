@@ -24,44 +24,7 @@ FROM yegor256/rultor-image:1.21.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -y update && apt-get install -y cloc shellcheck
+COPY requirements.txt .
+COPY install.sh .
 
-RUN gem install texsc
-RUN gem install texqc
-RUN apt-get install -y aspell
-RUN apt-get install -y xmlstarlet
-
-RUN tlmgr --verify-repo=none update --self
-RUN tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
-RUN tlmgr --verify-repo=none install biber
-
-RUN apt-get install -y python3-pygments
-RUN mkdir /opt/app
-COPY requirements.txt /opt/app
-RUN python3 -m pip install -r /opt/app/requirements.txt
-
-RUN gem install octokit -v 4.21.0
-RUN gem install slop -v 4.9.1
-
-RUN add-apt-repository ppa:inkscape.dev/stable && \
-  apt-get update -y && \
-  apt-get install -y inkscape
-
-RUN cd /usr/local && \
-  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
-  unzip pmd-bin-6.55.0.zip && \
-  rm pmd-bin-6.55.0.zip && \
-  mv pmd-bin-6.55.0 pmd && \
-  ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
-
-#install Gradle
-RUN wget -q https://services.gradle.org/distributions/gradle-7.4-bin.zip \
-    && unzip gradle-7.4-bin.zip -d /opt \
-    && rm gradle-7.4-bin.zip
-
-RUN wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
-    && mkdir -p /opt/app \
-    && mv jpeek-0.32.0-jar-with-dependencies.jar /opt/app
-# Set Gradle in the environment variables
-ENV GRADLE_HOME /opt/gradle-7.4
-ENV PATH $PATH:/opt/gradle-7.4/bin
+RUN ./install.sh

@@ -10,10 +10,9 @@ you avoid ambiguity and guarantees repeatability of your experiments.
 
 The latest ZIP archive with the dataset is here:
 [cam-2022-02-17.zip](https://github.com/yegor256/cam/releases/download/0.3.0/cam-2022-02-17.zip) 
-(532Mb).
+(532Mb). 
 It is the result of the analysis of Java classes in 1000 GitHub repositories
-against
-15 metrics:
+against a number of metrics:
  
   * lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
   * lines of comments,
@@ -31,7 +30,7 @@ against
   * average cognitive complexity,
   * number of committers.
 
-Previous archives (took me a few days to build each of them):
+Previous archives (took me a few days to build each of them, using a pretty big machine):
 
 * [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip) 
   (692Mb): 1000 repos, 15 metrics
@@ -59,15 +58,23 @@ by removing `-d` option.
 
 The dataset will be created in the `./dataset` directory (may take some time,
 maybe a few days!), and a `.zip` archive will also be there. Docker container
-will
-run in background: you can safely close the console and come back when the
+will run in background: you can safely close the console and come back when the
 dataset is ready and the container is deleted.
 
 You can also run it without Docker:
 
 ```bash
+$ make wipe
 $ make TOTAL=100
 ```
 
 Should work, if you have all dependencies installed, as suggested in the
 [Dockerfile](https://github.com/yegor256/cam/blob/master/Dockerfile).
+
+In order to analyze just a single repository, do this:
+
+```bash
+$ make wipe
+$ make REPO=yegor256/jpeek
+```
+

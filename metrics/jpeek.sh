@@ -28,15 +28,15 @@ java=$1
 output=$2
 
 sample="MMAC NaN Method-Method through Attributes Cohesion.
-CAMC NaN The Cohesion Among Methods in Class (CAMC).
-NHD NaN The NHD (Normalized Hamming Distance) class cohesion metric.
-LCOM5 NaN 'LCOM5' is a 1996 revision by B. Henderson-Sellers, L. L. Constantine, and I. M. Graham, of the initial LCOM metric.
-SCOM NaN \"Sensitive Class Cohesion Metric\" (SCOM) notes some deficits in the LCOM5 metric.
-MMAC(cvc) NaN Same as MMAC, but in this case, the constructors are excluded from the metric formulas.
-CAMC(cvc) NaN Same as CAMC, but in this case, the constructors are excluded from the metric formulas.
-NHD(cvc) NaN Same as NHD, but in this case, the constructors are excluded from the metric formulas.
-LCOM5(cvc) NaN Same as LCOM5, but in this case, the constructors are excluded from the metric formulas.
-SCOM(cvc) NaN Same as SCOM, but in this case, the constructors are excluded from the metric formulas."
+CAMC NaN Cohesion Among Methods in Class
+NHD NaN Normalized Hamming Distance
+LCOM5 NaN Revision of the initial LCOM metric
+SCOM NaN Sensitive Class Cohesion Metric
+MMAC(cvc) NaN Same as MMAC, but constructors are excluded
+CAMC(cvc) NaN Same as CAMC, but constructors are excluded
+NHD(cvc) NaN Same as NHD, but constructors are excluded
+LCOM5(cvc) NaN Same as LCOM5, but constructors are excluded
+SCOM(cvc) NaN Same as SCOM, but constructors are excluded"
 
 file="${java//github/jpeek}"
 out=""
