@@ -24,7 +24,7 @@ FROM yegor256/rultor-image:1.21.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY requirements.txt .
-COPY install.sh .
+WORKDIR /cam
+COPY . .
 
 RUN ./install.sh
