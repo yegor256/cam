@@ -268,20 +268,7 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 	./steps/aggregate.sh "$(TARGET)"
 
 $(TARGET)/report.pdf: $(TARGET)/temp paper/paper.tex
-	set -e
-	rm -f "$(TARGET)/temp/list-of-metrics.tex"
-	for m in $$(ls metrics/); do
-		echo "class Foo {}" > "$(TARGET)/temp/foo.java"
-		rm -f "$(TARGET)/temp/foo.$${m}.m"
-		"metrics/$${m}" "$(TARGET)/temp/foo.java" "$(TARGET)/temp/foo.$${m}.m"
-		awk '{ s= "\\item\\ff{" $$1 "}: "; for (i = 3; i <= NF; i++) s = s $$i " "; print s; }' < "$(TARGET)/temp/foo.$${m}.m" >> "$(TARGET)/temp/list-of-metrics.tex"
-		echo "$$(cat $(TARGET)/temp/foo.$${m}.m | wc -l) metrics from $${m}"
-	done
-	t=$$(realpath $(TARGET))
-	cd tex
-	TARGET="$${t}" latexmk -pdf
-	cd ..
-	cp tex/report.pdf "$(TARGET)/report.pdf"
+	./steps/report.sh "$(TARGET)"
 
 $(TARGET)/github:
 	mkdir -p "$(TARGET)/github"
