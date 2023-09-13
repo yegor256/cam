@@ -38,7 +38,7 @@ Previous archives (took me a few days to build each of them, using a pretty big 
   (387Mb): 1000 repos, 11 metrics
 
 If you want to create a new dataset,
-just run this and the entire dataset will be built in the current directory
+just run the following command and the entire dataset will be built in the current directory
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
 where `1000` is the number of repositories to fetch from GitHub
 and `XXX` is
@@ -47,7 +47,7 @@ your [personal access token](https://docs.github.com/en/github/authenticating-to
 ```bash
 $ docker run -d --rm -v "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
-  yegor256/cam:0.4.0 "make -e"
+  yegor256/cam:0.4.0 "make -e >/dataset/make.log 2>&1"
 ```
 
 If you want to run docker interactively and see all the logs, you cun just

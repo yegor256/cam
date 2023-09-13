@@ -263,10 +263,11 @@ filter: $(TARGET)/github $(TARGET)/temp
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 	set -e
 	echo "Searching for all .java files in $(TARGET)/github (may take some time, stay calm...)"
-	total=$$(find "$(TARGET)/github" -name '*.java' | wc -l | xargs)
+	javas=$$(find "$(TARGET)/github" -name '*.java')
+	total=$$(echo "$${javas}" | wc -l | xargs)
 	echo "Found $${total} Java files, starting to collect metrics..."
 	declare -i file=0
-	find "$(TARGET)/github" -name '*.java' | while IFS= read -r f; do
+	echo "$${javas}" | while IFS= read -r f; do
 		file=file+1
 		java="$${f}"
 		javam="$$(echo "$${java}" | sed "s|$(TARGET)/github|$(TARGET)/measurements|").m"
@@ -289,17 +290,20 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 		done
 		echo "$${cnt} metric scripts ran for $$(basename "$${java}") ($${file}/$${total})"
 	done
-	echo "All metrics calculated"
+	echo "All metrics calculated in $${total} files"
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
 	set -e
 	all=$$(find "$(TARGET)/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$$|\1|" | sort | uniq | tr '\n' ' ')
-	echo "All metrics: $${all}"
-	for d in $$(find "$(TARGET)/measurements" -maxdepth 2 -mindepth 2 -type d -print); do
+	echo "All $$(echo "$${all}" | wc -w | xargs) metrics: $${all}"
+	declare -i repo=0
+	repos=$$(find "$(TARGET)/measurements" -maxdepth 2 -mindepth 2 -type d -print)
+	total=$$(echo $${repos} | wc -l | xargs)
+	for d in $${repos}; do
 		ddir=$$(echo "$${d}" | sed "s|$(TARGET)/measurements|$(TARGET)/data|")
 		if [ -e "$${ddir}" ]; then
-			echo "Already aggregated: $${ddir}"
+			echo "$${d} already aggregated ($${repo}/$${total}): $${ddir}"
 			continue
 		fi
 		find "$${d}" -name '*.m' | while IFS= read -r m; do
@@ -323,7 +327,8 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 			done
 			printf "\n" >> "$${csv}"
 		done
-		echo "$${d} aggregated"
+		repo=repo+1
+		echo "$${d} aggregated ($${repo}/$${total})"
 	done
 	rm -rf "$(TARGET)/data/*.csv"
 	printf "repository,file" >> "$(TARGET)/data/all.csv"
