@@ -28,6 +28,10 @@ javas=$(find "${TARGET}/github" -name '*.java')
 total=$(echo "${javas}" | wc -l | xargs)
 echo "Found ${total} Java files, starting to collect metrics..."
 
+jobs=${TARGET}/temp/measure-jobs.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+
 declare -i file=0
 echo "${javas}" | while IFS= read -r f; do
     file=file+1
@@ -37,7 +41,10 @@ echo "${javas}" | while IFS= read -r f; do
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue
     fi
-    "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}"
+    echo "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}" >> "${jobs}"
 done
 
+cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
+
+wait
 echo "All metrics calculated in ${total} files"
