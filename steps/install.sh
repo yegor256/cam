@@ -36,7 +36,7 @@ tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspac
 tlmgr --verify-repo=none install biber
 
 apt-get install -y python3-pygments
-python3 -m pip install -r "$(dirname "$0")/requirements.txt"
+python3 -m pip install -r "$(dirname "$0")/../requirements.txt"
 
 gem install octokit -v 4.21.0
 gem install slop -v 4.9.1
@@ -61,5 +61,5 @@ export GRADLE_HOME=/opt/gradle-7.4
 export PATH=$PATH:/opt/gradle-7.4/bin
 
 wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
-    && mkdir -p /opt/app \
-    && mv jpeek-0.32.0-jar-with-dependencies.jar /opt/app
+    && mkdir -p "$(dirname "${JPEEK}")" \
+    && mv jpeek-0.32.0-jar-with-dependencies.jar "${JPEEK}"

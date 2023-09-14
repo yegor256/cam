@@ -51,6 +51,9 @@ export
 # The main goal
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 
+install:
+	./steps/install.sh
+
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
 	ruby -e "print Time.now.to_i" > $(TARGET)/start.txt
