@@ -32,7 +32,7 @@ apt-get install -y aspell
 apt-get install -y xmlstarlet
 
 tlmgr --verify-repo=none update --self
-tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec
+tlmgr --verify-repo=none install href-ul huawei ffcode latexmk fmtcount trimspaces libertine paralist makecell footmisc currfile enumitem wrapfig lastpage biblatex titling svg catchfile transparent textpos fvextra xstring framed environ iexec anyfontsize changepage titlesec upquote
 tlmgr --verify-repo=none install biber
 
 apt-get install -y python3-pygments
