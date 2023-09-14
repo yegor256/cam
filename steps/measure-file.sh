@@ -22,22 +22,22 @@
 # SOFTWARE.
 set -e
 
-echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
+java=$1
+javam=$2
+pos=$3
+total=$4
 
-javas=$(find "${TARGET}/github" -name '*.java')
-total=$(echo "${javas}" | wc -l | xargs)
-echo "Found ${total} Java files, starting to collect metrics..."
-
-declare -i file=0
-echo "${javas}" | while IFS= read -r f; do
-    file=file+1
-    java="${f}"
-    javam="$(echo "${java}" | sed "s|${TARGET}/github|${TARGET}/measurements|").m"
-    if [ -e "${javam}" ]; then
-        echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
-        continue
+mkdir -p "$(dirname "${javam}")"
+declare -i cnt=0
+for m in $(ls metrics/); do
+    if "metrics/${m}" "${java}" "${javam}"; then
+        while IFS= read -r t; do
+            IFS=' ' read -ra M <<< "${t}"
+            echo "${M[1]}" > "${javam}.${M[0]}"
+        done < "${javam}"
+        cnt=cnt+1
+    else
+        echo "Failed to collect ${m} for ${java}"
     fi
-    "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}"
 done
-
-echo "All metrics calculated in ${total} files"
+echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total})"
