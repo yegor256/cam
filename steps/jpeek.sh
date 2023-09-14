@@ -27,7 +27,7 @@ rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 
 repos=$(find "${TARGET}/github" -depth 2 -type d -print)
-total=$(echo $repos | wc -w | xargs)
+total=$(echo "${repos}" | wc -w | xargs)
 
 declare -i repo=0
 for r in ${repos}; do
