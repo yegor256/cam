@@ -22,18 +22,18 @@
 # SOFTWARE.
 set -e
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
-
-for m in $(ls metrics/); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
+mkdir -p "${TARGET}/temp/reports"
+for f in $(ls filters/); do
+    echo "Running filter ${f}... (may take some time)"
+    "filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
+        tr -d '\n\r' |\
+        sed "s/^/\\\\item /" |\
+        sed "s/$/;/" \
+        > "${TARGET}/temp/reports/${f}.tex"
+    echo "Filter ${f} published its results to ${TARGET}/temp/reports/${f}.tex"
 done
-
-t=$(realpath ${TARGET})
-cd tex
-TARGET="${t}" latexmk -pdf
-cd ..
-cp tex/report.pdf "${TARGET}/report.pdf"
+for f in $(ls "${TARGET}/temp/reports/"); do
+    echo "${f}:"
+    cat "${TARGET}/temp/reports/${f}"
+    echo ""
+done

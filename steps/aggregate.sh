@@ -22,8 +22,6 @@
 # SOFTWARE.
 set -e
 
-TARGET=$1
-
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
 

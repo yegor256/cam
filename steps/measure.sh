@@ -22,8 +22,6 @@
 # SOFTWARE.
 set -e
 
-TARGET=$1
-
 echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
 
 javas=$(find "${TARGET}/github" -name '*.java')

@@ -22,18 +22,16 @@
 # SOFTWARE.
 set -e
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
-
-for m in $(ls metrics/); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
-done
-
-t=$(realpath ${TARGET})
-cd tex
-TARGET="${t}" latexmk -pdf
-cd ..
-cp tex/report.pdf "${TARGET}/report.pdf"
+while IFS=',' read -r r tag; do
+    if [ -e "${TARGET}/github/${r}" ]; then
+        echo "${r}: Git repo is already here"
+    else
+        echo "${r}: trying to clone it..."
+        if [ -z "${tag}" ]; then
+            git clone --depth 1 "https://github.com/${r}" "${TARGET}/github/${r}"
+        else
+            git clone --depth 1 --branch="${tag}" "https://github.com/${r}" "${TARGET}/github/${r}"
+        fi
+        printf "${r},$(git --git-dir "${TARGET}/github/${r}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
+    fi
+done < "${TARGET}/repositories.csv"

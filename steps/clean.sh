@@ -22,18 +22,18 @@
 # SOFTWARE.
 set -e
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
-
-for m in $(ls metrics/); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
+for d in $(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print); do
+    repo=$(echo ${d} | sed "s|${TARGET}/github/||")
+    if grep -Fxq "${repo}" ${TARGET}/repositories.csv; then
+        echo "Directory ${d} is here and is needed (for ${repo})"
+    else
+        rm -rf "${d}"
+        echo "Directory ${d} is obsolete and was deleted (for ${repo})"
+    fi
 done
-
-t=$(realpath ${TARGET})
-cd tex
-TARGET="${t}" latexmk -pdf
-cd ..
-cp tex/report.pdf "${TARGET}/report.pdf"
+for d in $(find "${TARGET}/github" -maxdepth 1 -mindepth 1 -type d -print); do
+    if [ "$(ls ${d} | wc -l)" == '0' ]; then
+        rm -rf "${d}"
+        echo "Directory ${d} is empty and was deleted"
+    fi
+done

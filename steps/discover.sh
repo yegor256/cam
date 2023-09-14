@@ -22,18 +22,24 @@
 # SOFTWARE.
 set -e
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
-
-for m in $(ls metrics/); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
-done
-
-t=$(realpath ${TARGET})
-cd tex
-TARGET="${t}" latexmk -pdf
-cd ..
-cp tex/report.pdf "${TARGET}/report.pdf"
+csv="${TARGET}/repositories.csv"
+echo "" > "${TARGET}/temp/repo-details.tex"
+if [ -e "${csv}" ]; then
+    echo "The list of repos is already here: ${csv}"
+elif [ ! -z "${REPO}" ]; then
+    echo "Using one repo: ${REPO}"
+    echo "${REPO}" >> "${csv}"
+elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
+    echo "Using discover-repos.rb..."
+    ruby discover-repos.rb \
+        "--token=${TOKEN}" \
+        "--total=${TOTAL}" \
+        "--path=${csv}" \
+        "--tex=${TARGET}/temp/repo-details.tex" \
+        "--min-stars=400" \
+        "--max-stars=10000"
+else
+    echo "Using repos list of csv..."
+    cat "${REPOS}" >> "${csv}"
+fi
+cat "${csv}"
