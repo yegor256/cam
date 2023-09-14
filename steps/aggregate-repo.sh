@@ -22,28 +22,34 @@
 # SOFTWARE.
 set -e
 
-echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
+repo=$1
+pos=$2
+total=$3
 
-javas=$(find "${TARGET}/github" -name '*.java')
-total=$(echo "${javas}" | wc -l | xargs)
-echo "Found ${total} Java files, starting to collect metrics..."
-
-jobs=${TARGET}/temp/measure-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-
-declare -i file=0
-echo "${javas}" | while IFS= read -r f; do
-    file=file+1
-    java="${f}"
-    javam="$(echo "${java}" | sed "s|${TARGET}/github|${TARGET}/measurements|").m"
-    if [ -e "${javam}" ]; then
-        echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
-        continue
-    fi
-    echo "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}" >> "${jobs}"
+ddir=$(echo "${repo}" | sed "s|${TARGET}/measurements|${TARGET}/data|")
+if [ -e "${ddir}" ]; then
+    echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
+    continue
+fi
+find "${repo}" -name '*.m' | while IFS= read -r m; do
+    for v in $(ls ${m}.*); do
+        java=$(echo "${v}" | sed "s|${repo}||" | sed "s|\.m\..*$||")
+        metric=$(echo "${v}" | sed "s|${repo}${java}.m.||")
+        csv="${ddir}/${metric}.csv"
+        mkdir -p $(dirname "${csv}")
+        echo "${java},$(cat "${v}")" >> "${csv}"
+    done
+    csv="${ddir}/all.csv"
+    mkdir -p "$(dirname "${csv}")"
+    java=$(echo "${m}" | sed "s|${repo}||" | sed "s|\.m$||")
+    printf "${java}" >> "${csv}"
+    for a in ${all}; do
+        if [ -e "${m}.${a}" ]; then
+            printf ",$(cat "${m}.${a}")" >> "${csv}"
+        else
+            printf ',-' >> "${csv}"
+        fi
+    done
+    printf "\n" >> "${csv}"
 done
-
-cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
-wait
-echo "All metrics calculated in ${total} files"
+echo "${repo} aggregated (${pos}/${total})"

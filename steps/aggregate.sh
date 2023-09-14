@@ -25,40 +25,21 @@ set -e
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
 
-declare -i repo=0
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo ${repos} | wc -l | xargs)
 
-for d in ${repos}; do
-    ddir=$(echo "${d}" | sed "s|${TARGET}/measurements|${TARGET}/data|")
-    if [ -e "${ddir}" ]; then
-        echo "${d} already aggregated (${repo}/${total}): ${ddir}"
-        continue
-    fi
-    find "${d}" -name '*.m' | while IFS= read -r m; do
-        for v in $(ls ${m}.*); do
-            java=$(echo "${v}" | sed "s|${d}||" | sed "s|\.m\..*$||")
-            metric=$(echo "${v}" | sed "s|${d}${java}.m.||")
-            csv="${ddir}/${metric}.csv"
-            mkdir -p $(dirname "${csv}")
-            echo "${java},$(cat "${v}")" >> "${csv}"
-        done
-        csv="${ddir}/all.csv"
-        mkdir -p "$(dirname "${csv}")"
-        java=$(echo "${m}" | sed "s|${d}||" | sed "s|\.m$||")
-        printf "${java}" >> "${csv}"
-        for a in ${all}; do
-            if [ -e "${m}.${a}" ]; then
-                printf ",$(cat "${m}.${a}")" >> "${csv}"
-            else
-                printf ',-' >> "${csv}"
-            fi
-        done
-        printf "\n" >> "${csv}"
-    done
+jobs=${TARGET}/temp/aggregate-jobs.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+
+declare -i repo=0
+for r in ${repos}; do
     repo=repo+1
-    echo "${d} aggregated (${repo}/${total})"
+    echo "$(dirname "$0")/aggregate-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
+cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
+wait
+echo "All metrics aggregated in ${total} repositories"
 
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
