@@ -21,8 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
-set -x
-
+\
 jobs=${TARGET}/temp/jpeek-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"

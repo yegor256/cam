@@ -22,21 +22,15 @@
 # SOFTWARE.
 set -e
 
-jobs=${TARGET}/temp/clone-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
+repo=$1
+pos=$2
+total=$3
 
-total=$(cat "${TARGET}/repositories.csv" | wc -l | xargs)
-
-declare -i repo=0
-while IFS=',' read -r r tag; do
-    repo=repo+1
-    if [ -e "${TARGET}/github/${r}" ]; then
-        echo "${r}: Git repo is already here"
-    else
-        echo "$(dirname "$0")/clone-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
-    fi
-done < "${TARGET}/repositories.csv"
-cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
-wait
-echo "Cloned ${total} repositories"
+echo "${repo}: trying to clone it..."
+if [ -z "${tag}" ]; then
+    git clone --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"
+else
+    git clone --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"
+fi
+printf "${repo},$(git --git-dir "${TARGET}/github/${repo}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
+echo "${repo} cloned (${pos}/${total})"
