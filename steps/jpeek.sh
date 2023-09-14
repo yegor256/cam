@@ -21,13 +21,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -x
 
 jobs=${TARGET}/temp/jpeek-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 
-repos=$(find "${TARGET}/github" -depth 2 -type d -print)
-total=$(echo "${repos}" | wc -w | xargs)
+repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
+total=$(echo "${repos}" | wc -l | xargs)
 
 declare -i repo=0
 for r in ${repos}; do

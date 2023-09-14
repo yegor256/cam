@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -x
 
 project=$1
 pos=$2
@@ -64,9 +65,9 @@ for jpeek in "${dir}" "${dir}cvc"; do
             descsuffix="In this case, the constructors are excluded from the metric formulas."
         fi
         if echo ${report} | grep -q ${accept} ; then
-            echo "Found ${report}";
+            # echo "Found ${report}";
             packages="$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")"
-            echo "There are ${packages} packages";
+            # echo "There are ${packages} packages";
             name="$(xmlstarlet sel -t -v "/metric/title" "${report}")"
             description="$(xmlstarlet sel -t -v "/metric/description" "${report}" | tr "\n" " " | sed "s|\s+| |g") ${descsuffix}"
             for ((i=1; i <= ${packages}; i++))
@@ -80,7 +81,7 @@ for jpeek in "${dir}" "${dir}cvc"; do
                     mfile="$(find "${project}" -path "*${package}/${class}.java" | sed "s|/github|/jpeek|")"
                     if [ "${mfile}" != "" ]
                     then
-                        echo "${package}/${class}: ${value}"
+                        # echo "${package}/${class}: ${value}"
                         mkdir -p "$(dirname ${mfile})"
                         echo "${name}${suffix} ${value} ${name}" >> "${mfile}"
                         lastm="${mfile}"
