@@ -1,0 +1,28 @@
+---
+name: up
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+concurrency:
+  group: up-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  up:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - run: |-
+          git fetch --tags --force && \
+          latest=$(git tag --sort=creatordate | tail -1) && \
+          sed -E -i "s|yegor256/cam:[^ ]+|yegor256/cam:${latest}|g" README.md
+      - uses: peter-evans/create-pull-request@v5
+        with:
+          branch: version-up
+          commit-message: 'new version in README'
+          delete-branch: true
+          title: 'New version in README'
+          assignees: yegor256
+          base: master
