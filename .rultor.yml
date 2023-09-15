@@ -13,6 +13,6 @@ release:
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
     repo=yegor256/cam
     sudo docker build "$(pwd)" --tag "${repo}:${tag}"
-    sudo docker run --rm "${repo}:${tag}" -v "$(pwd)/dataset:/dataset" -e "REPO=yegor256/tojos" -e "TARGET=/dataset" "make -e >/dataset/make.log 2>&1"
+    sudo docker run --rm "${repo}:${tag}" -v "/tmp/dataset:/dataset" -e "REPO=yegor256/tojos" -e "TARGET=/dataset" "make -e >/dataset/make.log 2>&1"
     cat ../docker-password | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"
