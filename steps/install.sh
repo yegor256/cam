@@ -24,7 +24,10 @@
 set -x
 set -e
 
-apt-get -y update && apt-get install -y cloc shellcheck
+apt-get -y update
+apt-get install -y coreutils
+apt-get install -y cloc
+apt-get install -y shellcheck
 
 gem install texsc
 gem install texqc
