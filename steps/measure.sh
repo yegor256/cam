@@ -44,6 +44,6 @@ echo "${javas}" | while IFS= read -r f; do
     echo "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}" >> "${jobs}"
 done
 
-cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
+cat "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 echo "All metrics calculated in ${total} files"

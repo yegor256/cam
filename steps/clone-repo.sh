@@ -28,9 +28,9 @@ total=$3
 
 echo "${repo}: trying to clone it..."
 if [ -z "${tag}" ]; then
-    git clone --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"
+    git clone --quiet --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"
 else
-    git clone --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"
+    git clone --quiet --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"
 fi
 printf "${repo},$(git --git-dir "${TARGET}/github/${repo}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
 echo "${repo} cloned (${pos}/${total})"

@@ -35,6 +35,6 @@ for r in ${repos}; do
     echo "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
 
-cat "${jobs}" | xargs -I {} -P 0 "${SHELL}" -c "{}"
+cat "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 echo "All repos passed through jPeek, ${total} repositories"
