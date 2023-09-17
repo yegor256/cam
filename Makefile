@@ -68,9 +68,9 @@ lint:
 	    echo "The quality of code has already been checked"
 	    exit
 	fi
-	flake8 "${HOME}/metrics/"
-	pylint "${HOME}/metrics/"
-	shellcheck -P "${HOME}"/metrics/*.sh -P "${HOME}"/filters/*.sh
+	flake8 "$(HOME)/metrics/"
+	pylint "$(HOME)/metrics/"
+	shellcheck -P "$(HOME)"/metrics/*.sh -P "$(HOME)"/filters/*.sh
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
@@ -112,7 +112,7 @@ env:
 	fi
 	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
 	    "$(SHELL)" -version
-	    echo "$(SHELL) version is older than five: ${BASH_VERSINFO:-0}"
+	    echo "$(SHELL) version is older than five: $${BASH_VERSINFO:-0}"
 	    exit -1
 	fi
 	ruby -v
