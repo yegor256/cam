@@ -81,6 +81,7 @@ zip: $(TARGET)/report.pdf
 # Delete calculations.
 clean:
 	set -e
+	set -x
 	rm -rf "$(TARGET)/report.pdf"
 	rm -rf "$(TARGET)/measurements"
 	rm -rf "$(TARGET)/data"
@@ -91,6 +92,7 @@ clean:
 # Delete everything, in order to start from scratch.
 wipe: clean
 	set -e
+	set -x
 	rm -rf "$(TARGET)"/*
 	rm -rf "$(TARGET)"
 
