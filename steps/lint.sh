@@ -22,6 +22,6 @@
 # SOFTWARE.
 set -e
 
-flake8 metrics/
-pylint metrics/
-shellcheck -P metrics/*.sh -P filters/*.sh
+flake8 "${HOME}/metrics/"
+pylint "${HOME}/metrics/"
+shellcheck -P "${HOME}"/metrics/*.sh -P "${HOME}"/filters/*.sh

@@ -42,6 +42,9 @@ REPOS =
 # Single repository name to use (mostly for testing purposes)
 REPO =
 
+# Where all files are kept
+HOME := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
 # Location of jpeek JAR file
 JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
 

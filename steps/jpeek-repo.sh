@@ -52,6 +52,7 @@ echo "Ctors vs cohesion..."
 ${JPEEK_CVC} --sources "${project}" --target "${dir}cvc"
 accept=".*[^index|matrix|skeleton].xml"
 lastm=""
+
 for jpeek in "${dir}" "${dir}cvc"; do
     echo "${jpeek}"
     for report in $(find "${jpeek}" -type f -maxdepth 1); do

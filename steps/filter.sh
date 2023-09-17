@@ -23,9 +23,9 @@
 set -e
 
 mkdir -p "${TARGET}/temp/reports"
-for f in $(ls filters/); do
+for f in $(ls "${HOME}/filters/"); do
     echo "Running filter ${f}... (may take some time)"
-    "filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
+    "${HOME}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
         tr -d '\n\r' |\
         sed "s/^/\\\\item /" |\
         sed "s/$/;/" \

@@ -43,7 +43,7 @@ tlmgr --verify-repo=none install ${packages}
 tlmgr --verify-repo=none update ${packages}
 
 apt-get install -y python3-pygments
-python3 -m pip install -r "$(dirname "$0")/../requirements.txt"
+python3 -m pip install -r "${HOME}/requirements.txt"
 
 gem install octokit -v 4.21.0
 gem install slop -v 4.9.1

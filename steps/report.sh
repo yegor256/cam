@@ -24,10 +24,10 @@ set -e
 
 rm -f "${TARGET}/temp/list-of-metrics.tex"
 
-for m in $(ls metrics/); do
+for m in $(ls "${HOME}/metrics/"); do
     echo "class Foo {}" > "${TARGET}/temp/foo.java"
     rm -f "${TARGET}/temp/foo.${m}.m"
-    "metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
+    "${HOME}/metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
     echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
 done
@@ -36,4 +36,4 @@ t=$(realpath ${TARGET})
 cd tex
 TARGET="${t}" latexmk -pdf
 cd ..
-cp tex/report.pdf "${TARGET}/report.pdf"
+cp "${HOME}/tex/report.pdf" "${TARGET}/report.pdf"
