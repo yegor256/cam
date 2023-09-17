@@ -92,6 +92,12 @@ wipe: clean
 # (this is mostly for debugging in Docker)
 env:
 	if [ -e "${TARGET}/start.txt" ]; then exit; fi
+	if [[ $$(echo $(MAKE_VERSION)) =~ ^[1-3] ]]; then
+	    echo "Make must be 4+: $(MAKE_VERSION)"
+	    exit -1
+	else
+	    echo "Make version is: $(MAKE_VERSION)"
+	fi
 	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
 	    "$(SHELL)" -version
 	    echo "$(SHELL) version is older than five: ${BASH_VERSINFO:-0}"
