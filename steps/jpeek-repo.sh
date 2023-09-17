@@ -42,7 +42,7 @@ elif [ -e "${project}/pom.xml" ]; then
     mvn compiler:compile -quiet -Dmaven.test.skip=true -f "${project}" -U || break
 else
     echo "Could not build classes (not maven nor gradle project)..."
-    continue
+    exit
 fi
 measurements="$(echo "${project}" | sed "s|${TARGET}/github|${TARGET}/jpeek|")"
 dir="${TARGET}/temp/jpeek"
