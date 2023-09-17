@@ -63,7 +63,10 @@ $(TARGET)/start.txt: $(TARGET)/temp
 
 # Check the quality of code
 lint:
-	if [ -e "${TARGET}/start.txt" ]; then exit; fi
+	if [ -e "${TARGET}/start.txt" ]; then
+	    echo "The quality of code has already been checked"
+	    exit
+	fi
 	flake8 "${HOME}/metrics/"
 	pylint "${HOME}/metrics/"
 	shellcheck -P "${HOME}"/metrics/*.sh -P "${HOME}"/filters/*.sh
@@ -86,12 +89,16 @@ clean:
 
 # Delete everything, in order to start from scratch.
 wipe: clean
+	rm -rf "$(TARGET)"/*
 	rm -rf "$(TARGET)"
 
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
-	if [ -e "${TARGET}/start.txt" ]; then exit; fi
+	if [ -e "${TARGET}/start.txt" ]; then
+	    echo "The environment has already been checked"
+	    exit
+	fi
 	if [[ $$(echo $(MAKE_VERSION)) =~ ^[1-3] ]]; then
 	    echo "Make must be 4+: $(MAKE_VERSION)"
 	    exit -1
