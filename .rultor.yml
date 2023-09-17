@@ -15,5 +15,6 @@ release:
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
     sudo docker run --rm -v /tmp/dataset:/dataset -e "REPO=yegor256/tojos" -e "TARGET=/dataset" "${repo}:${tag}" "make -e >/dataset/make.log 2>&1"
+    ls -al /tmp/dataset
     cat ../docker-password | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"
