@@ -64,7 +64,7 @@ $(TARGET)/start.txt: $(TARGET)/temp
 # Check the quality of code
 lint:
 	set -e
-	if [ -e "${TARGET}/start.txt" ]; then
+	if [ -e "$(TARGET)/start.txt" ]; then
 	    echo "The quality of code has already been checked"
 	    exit
 	fi
@@ -100,7 +100,7 @@ wipe: clean
 # (this is mostly for debugging in Docker)
 env:
 	set -e
-	if [ -e "${TARGET}/start.txt" ]; then
+	if [ -e "$(TARGET)/start.txt" ]; then
 	    echo "The environment has already been checked"
 	    exit
 	fi
