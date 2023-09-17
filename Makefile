@@ -59,7 +59,7 @@ install:
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
-	ruby -e "print Time.now.to_i" > $(TARGET)/start.txt
+	ruby -e "print Time.now.to_i" > "$(TARGET)/start.txt"
 
 # Check the quality of code
 lint:
@@ -100,6 +100,8 @@ wipe: clean
 # (this is mostly for debugging in Docker)
 env:
 	set -e
+	echo "TARGET=$(TARGET)"
+	echo "HOME=$(HOME)"
 	if [ -e "$(TARGET)/start.txt" ]; then
 	    echo "The environment has already been checked"
 	    exit
