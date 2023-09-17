@@ -76,6 +76,20 @@ $ make wipe
 $ make REPO=yegor256/jpeek
 ```
 
+## How to Calculate Additional Metrics
+
+You may want to use this dataset as a basis, with an intend of adding your own
+metrics on top of it. It should be easy:
+
+  * Download ZIP archive
+  * Unpack it to `cam` directory
+  * Add a new script to the `cam/metrics/` directory (use `ast_metrics.py` as an example)
+  * Run `make` in the `cam/` directory
+
+Make should understand that a new metric was added. It will apply this new metric
+to all `.java` files, generate new `.csv` reports, and then the final `.pdf` report
+will also be updated.
+
 ## How to Contribute
 
 Fork repository, make changes, send us a [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
