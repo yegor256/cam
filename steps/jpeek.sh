@@ -25,7 +25,7 @@ set -e
 jobs=${TARGET}/temp/jpeek-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
-touch > "${jobs}"
+touch "${jobs}"
 
 repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo "${repos}" | wc -l | xargs)

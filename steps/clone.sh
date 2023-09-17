@@ -25,7 +25,7 @@ set -e
 jobs=${TARGET}/temp/clone-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
-touch > "${jobs}"
+touch "${jobs}"
 
 total=$(cat "${TARGET}/repositories.csv" | wc -l | xargs)
 
