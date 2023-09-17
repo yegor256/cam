@@ -82,7 +82,7 @@ You may want to use this dataset as a basis, with an intend of adding your own
 metrics on top of it. It should be easy:
 
   * Download ZIP archive
-  * Unpack it to `cam` directory
+  * Unpack it to a new `cam/` directory
   * Add a new script to the `cam/metrics/` directory (use `ast_metrics.py` as an example)
   * Run `make` in the `cam/` directory
 
