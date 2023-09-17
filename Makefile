@@ -63,6 +63,7 @@ $(TARGET)/start.txt: $(TARGET)/temp
 
 # Check the quality of code
 lint:
+	set -e
 	if [ -e "${TARGET}/start.txt" ]; then
 	    echo "The quality of code has already been checked"
 	    exit
@@ -89,12 +90,14 @@ clean:
 
 # Delete everything, in order to start from scratch.
 wipe: clean
+	set -e
 	rm -rf "$(TARGET)"/*
 	rm -rf "$(TARGET)"
 
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
+	set -e
 	if [ -e "${TARGET}/start.txt" ]; then
 	    echo "The environment has already been checked"
 	    exit
