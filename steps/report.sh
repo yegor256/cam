@@ -32,8 +32,23 @@ for m in $(ls "${HOME}/metrics/"); do
     echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
 done
 
-t=$(realpath ${TARGET})
-cd tex
-TARGET="${t}" latexmk -pdf
-cd ..
-cp "${HOME}/tex/report.pdf" "${TARGET}/report.pdf"
+# It's important to make sure the path is absolute, for LaTeX
+t="$(realpath "${TARGET}")"
+
+tmp="${t}/temp/pdf-report"
+if [ -e "${tmp}" ]; then
+    echo "Temporary directory for PDF report building already exists: '${tmp}'"
+    latexmk -cd -C "${tmp}/report.tex"
+    cp -r "${HOME}"/tex "${tmp}"
+else
+    cp -r "${HOME}/tex" "${tmp}"
+fi
+
+pdf="${tmp}/report.pdf"
+if [ -e "${pdf}" ]; then
+    echo "The PDF report already exists: '${pdf}'"
+    exit
+fi
+
+TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"
+mv "${pdf}" "${t}/report.pdf"

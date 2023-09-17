@@ -24,14 +24,20 @@ set -e
 
 mkdir -p "${TARGET}/temp/reports"
 for f in $(ls "${HOME}/filters/"); do
-    echo "Running filter ${f}... (may take some time)"
-    "${HOME}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
-        tr -d '\n\r' |\
-        sed "s/^/\\\\item /" |\
-        sed "s/$/;/" \
-        > "${TARGET}/temp/reports/${f}.tex"
-    echo "Filter ${f} published its results to ${TARGET}/temp/reports/${f}.tex"
+    tex="${TARGET}/temp/reports/${f}.tex"
+    if [ -e "${tex}" ]; then
+        echo "The ${f} filter was already completed earlier, see report in '${tex}'"
+    else
+        echo "Running filter ${f}... (may take some time)"
+        "${HOME}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
+            tr -d '\n\r' |\
+            sed "s/^/\\\\item /" |\
+            sed "s/$/;/" \
+            > "${tex}"
+        echo "Filter ${f} published its results to ${TARGET}/temp/reports/${f}.tex"
+    fi
 done
+
 for f in $(ls "${TARGET}/temp/reports/"); do
     echo "${f}:"
     cat "${TARGET}/temp/reports/${f}"

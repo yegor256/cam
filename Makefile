@@ -63,7 +63,10 @@ $(TARGET)/start.txt: $(TARGET)/temp
 
 # Check the quality of code
 lint:
-	./steps/lint.sh
+	if [ -e "${TARGET}/start.txt" ]; then exit; fi
+	flake8 "${HOME}/metrics/"
+	pylint "${HOME}/metrics/"
+	shellcheck -P "${HOME}"/metrics/*.sh -P "${HOME}"/filters/*.sh
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
@@ -79,6 +82,7 @@ clean:
 	rm -rf "$(TARGET)/data"
 	rm -rf "$(TARGET)/reports"
 	rm -rf "$(TARGET)/temp"
+	rm -rf "$(TARGET)/pdf-report"
 
 # Delete everything, in order to start from scratch.
 wipe: clean
@@ -87,6 +91,7 @@ wipe: clean
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
+	if [ -e "${TARGET}/start.txt" ]; then exit; fi
 	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
 	    "$(SHELL)" -version
 	    echo "$(SHELL) version is older than five: ${BASH_VERSINFO:-0}"
@@ -139,7 +144,7 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 aggregate: $(TARGET)/measurements $(TARGET)/data
 	./steps/aggregate.sh
 
-$(TARGET)/report.pdf: $(TARGET)/temp paper/paper.tex
+$(TARGET)/report.pdf: $(TARGET)/temp tex/report.tex
 	./steps/report.sh
 
 $(TARGET)/github:
