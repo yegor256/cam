@@ -29,7 +29,7 @@ total=$3
 ddir=$(echo "${repo}" | sed "s|${TARGET}/measurements|${TARGET}/data|")
 if [ -e "${ddir}" ]; then
     echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
-    continue
+    exit
 fi
 find "${repo}" -name '*.m' | while IFS= read -r m; do
     for v in $(ls ${m}.*); do
