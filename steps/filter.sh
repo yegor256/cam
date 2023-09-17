@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -o pipefail
 
 mkdir -p "${TARGET}/temp/reports"
 for f in $(ls "${HOME}/filters/"); do

@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -o pipefail
 
 for d in $(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print); do
     repo=$(echo ${d} | sed "s|${TARGET}/github/||")

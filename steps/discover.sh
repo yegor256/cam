@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -o pipefail
 
 csv="${TARGET}/repositories.csv"
 echo "" > "${TARGET}/temp/repo-details.tex"

@@ -23,6 +23,7 @@
 
 set -x
 set -e
+set -o pipefail
 
 apt-get -y update
 apt-get install -y coreutils
