@@ -31,7 +31,7 @@ total=$(echo ${repos} | wc -l | xargs)
 jobs=${TARGET}/temp/aggregate-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
-touch > "${jobs}"
+touch "${jobs}"
 
 declare -i repo=0
 for r in ${repos}; do

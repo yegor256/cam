@@ -31,7 +31,7 @@ echo "Found ${total} Java files, starting to collect metrics..."
 jobs=${TARGET}/temp/measure-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
-touch > "${jobs}"
+touch "${jobs}"
 
 declare -i file=0
 echo "${javas}" | while IFS= read -r f; do
