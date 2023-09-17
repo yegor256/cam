@@ -53,20 +53,20 @@ add-apt-repository -y ppa:inkscape.dev/stable && \
   apt-get install -y inkscape
 
 cd /usr/local && \
-  wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
+  wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
   unzip pmd-bin-6.55.0.zip && \
   rm pmd-bin-6.55.0.zip && \
   mv pmd-bin-6.55.0 pmd && \
   ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 
 #install Gradle
-wget -q https://services.gradle.org/distributions/gradle-7.4-bin.zip \
+wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
     && unzip gradle-7.4-bin.zip -d /opt \
     && rm gradle-7.4-bin.zip
 # Set Gradle in the environment variables
 export GRADLE_HOME=/opt/gradle-7.4
 export PATH=$PATH:/opt/gradle-7.4/bin
 
-wget https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
+wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
     && mkdir -p "$(dirname "${JPEEK}")" \
     && mv jpeek-0.32.0-jar-with-dependencies.jar "${JPEEK}"
