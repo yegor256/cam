@@ -50,18 +50,19 @@ unless opts[:token].empty?
 end
 names = []
 page = 0
+query = [
+  "stars:#{opts['min-stars']}..#{opts['max-stars']}",
+  "size:>=#{opts['min-size']}",
+  'language:java',
+  'is:public',
+  'mirror:false',
+  'archived:false',
+  'NOT',
+  'android'
+].join(' ')
 loop do
   json = github.search_repositories(
-    [
-      "stars:#{opts['min-stars']}..#{opts['max-stars']}",
-      "size:>=#{opts['min-size']}",
-      'language:java',
-      'is:public',
-      'mirror:false',
-      'archived:false',
-      'NOT',
-      'android'
-    ].join(' '),
+    query,
     per_page: size,
     page: page
   )
@@ -85,10 +86,12 @@ end
 
 File.write(
   opts[:tex],
-  'The following search criteria have been used: ' + [
+  [
+  ' The following search criteria have been used:',
     "at least #{opts['min-stars']} and at most #{opts['max-stars']} stars",
-    "at least #{opts['min-size']}Kb size of Git repo"
-  ].join(', ') + ".\n"
+    "at least #{opts['min-size']}Kb size of Git repo.",
+    "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
+  ].join
 )
 
 path = File.expand_path(opts[:path])
