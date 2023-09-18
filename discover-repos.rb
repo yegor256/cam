@@ -67,7 +67,7 @@ loop do
   )
   json[:items].each do |i|
     names << i[:full_name]
-    puts "Found #{i[:full_name].inspect} GitHub repo"
+    puts "Found #{i[:full_name].inspect} GitHub repo (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
   break if names.count >= opts[:total]
