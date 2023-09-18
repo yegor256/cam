@@ -39,6 +39,6 @@ while IFS=',' read -r r tag; do
         echo "$(dirname "$0")/clone-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
     fi
 done < "${TARGET}/repositories.csv"
-cat "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 echo "Cloned ${total} repositories"

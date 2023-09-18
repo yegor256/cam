@@ -39,7 +39,7 @@ for r in ${repos}; do
     repo=repo+1
     echo "$(dirname "$0")/aggregate-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
-cat "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 echo "All metrics aggregated in ${total} repositories"
 

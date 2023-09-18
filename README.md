@@ -45,14 +45,16 @@ and `XXX` is
 your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```bash
-$ docker run -d --name=cam --rm -v "$(pwd):/dataset" \
+$ docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
   yegor256/cam:0.5.3 "make -e >/dataset/make.log 2>&1"
 ```
 
-If you want to run docker interactively and see all the logs, you cun just
+This command will create a new Docker container, running in the background.
+(run `docker ps -a`, in order to see it).
+If you want to run docker interactively and see all the logs, you can just
 disable [detached mode](https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode)
-by removing the `-d` option.
+by removing the `--detach` option from the command.
 
 The dataset will be created in the current directory (may take some time,
 maybe a few days!), and a `.zip` archive will also be there. Docker container
