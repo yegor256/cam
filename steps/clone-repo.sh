@@ -29,9 +29,15 @@ total=$3
 
 echo "${repo}: trying to clone it..."
 if [ -z "${tag}" ]; then
-    until git clone --quiet --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"; do echo "retry ${repo}..."; done
+    until git clone --quiet --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"; do
+        rm -rf "${TARGET}/github/${repo}"
+        echo "Retrying ${repo}..."
+    done
 else
-    until git clone --quiet --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"; do echo "retry ${repo}..."; done
+    until git clone --quiet --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"; do
+        rm -rf "${TARGET}/github/${repo}"
+        echo "Retrying ${repo}..."
+    done
 fi
 printf "${repo},$(git --git-dir "${TARGET}/github/${repo}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
 echo "${repo} cloned (${pos}/${total})"
