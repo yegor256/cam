@@ -27,4 +27,4 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /cam
 COPY . /cam
 
-RUN make install
+RUN /bin/bash --login -c 'make install'
