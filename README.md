@@ -47,7 +47,7 @@ your [personal access token](https://docs.github.com/en/github/authenticating-to
 ```bash
 $ docker run -d --rm -v "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
-  yegor256/cam:0.5.0 "make -e >/dataset/make.log 2>&1"
+  yegor256/cam:0.5.1 "make -e >/dataset/make.log 2>&1"
 ```
 
 If you want to run docker interactively and see all the logs, you cun just
