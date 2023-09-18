@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -21,7 +23,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-STDOUT.sync = true
+$stdout.sync = true
 
 require 'fileutils'
 require 'slop'
@@ -31,7 +33,7 @@ opts = Slop.parse do |o|
   o.string '--token', 'GitHub access token', default: ''
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
-  o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100000
+  o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
   o.string '--path', 'The file name to save the list to', required: true
   o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
@@ -72,14 +74,15 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
   break if names.count >= opts[:total]
-  if page > 0
+
+  if page.positive?
     puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
     sleep 10
   end
   page += 1
 end
 puts "Found #{names.count} total repositories in GitHub"
-if (names.count > opts[:total])
+if names.count > opts[:total]
   names = names.first(opts[:total])
   puts "We will use only the first #{opts[:total]} repositories"
 end
@@ -87,8 +90,9 @@ end
 File.write(
   opts[:tex],
   [
-  ' The following search criteria have been used:',
-    "at least #{opts['min-stars']} and at most #{opts['max-stars']} stars",
+    'The following search criteria have been used:',
+    "at least #{opts['min-stars']},",
+    "at most #{opts['max-stars']} stars,",
     "at least #{opts['min-size']}Kb size of Git repo.",
     "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
   ].join
@@ -96,5 +100,5 @@ File.write(
 
 path = File.expand_path(opts[:path])
 FileUtils.mkdir_p(File.dirname(path))
-File.write(path, names.join("\n") + "\n")
+File.write(path, "#{names.join("\n")}\n")
 puts "The list of #{names.count} repos saved into #{path}"

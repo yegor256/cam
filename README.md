@@ -45,7 +45,7 @@ and `XXX` is
 your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```bash
-$ docker run -d --rm -v "$(pwd):/dataset" \
+$ docker run -d --name=cam --rm -v "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
   yegor256/cam:0.5.3 "make -e >/dataset/make.log 2>&1"
 ```

@@ -46,6 +46,7 @@ tlmgr --verify-repo=none update ${packages}
 apt-get install -y python3-pygments
 python3 -m pip install -r "${LOCAL}/requirements.txt"
 
+gem install rubocop -v 1.56.3
 gem install octokit -v 4.21.0
 gem install slop -v 4.9.1
 

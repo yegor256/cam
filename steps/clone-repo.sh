@@ -27,17 +27,23 @@ repo=$1
 pos=$2
 total=$3
 
-echo "${repo}: trying to clone it..."
-if [ -z "${tag}" ]; then
-    until git clone --quiet --depth 1 "https://github.com/${repo}" "${TARGET}/github/${repo}"; do
-        rm -rf "${TARGET}/github/${repo}"
-        echo "Retrying ${repo}..."
-    done
-else
-    until git clone --quiet --depth 1 --branch="${tag}" "https://github.com/${repo}" "${TARGET}/github/${repo}"; do
-        rm -rf "${TARGET}/github/${repo}"
-        echo "Retrying ${repo}..."
-    done
+dir="${TARGET}/github/${repo}"
+
+if [ -e "${dir}" ]; then
+    echo "The repo directory is already here: ${dir}"
+    exit
 fi
-printf "${repo},$(git --git-dir "${TARGET}/github/${repo}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
+
+args="--quiet --depth 1"
+if [ ! -z "${tag}" ]; then
+    args="${args} --branch="${tag}""
+fi
+
+echo "${repo}: trying to clone it..."
+until git clone ${args} "https://github.com/${repo}" "${dir}"; do
+    rm -rf "${dir}"
+    echo "Retrying ${repo}..."
+done
+printf "${repo},$(git --git-dir "${dir}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
+
 echo "${repo} cloned (${pos}/${total})"

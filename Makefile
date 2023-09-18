@@ -70,6 +70,7 @@ lint:
 	fi
 	flake8 "$(LOCAL)/metrics/"
 	pylint "$(LOCAL)/metrics/"
+	rubocop
 	shellcheck -P "$(LOCAL)"/metrics/*.sh -P "$(LOCAL)"/filters/*.sh
 
 # Zip the entire dataset into an archive.
