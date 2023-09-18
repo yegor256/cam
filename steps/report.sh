@@ -25,10 +25,10 @@ set -o pipefail
 
 rm -f "${TARGET}/temp/list-of-metrics.tex"
 
-for m in $(ls "${HOME}/metrics/"); do
+for m in $(ls "${LOCAL}/metrics/"); do
     echo "class Foo {}" > "${TARGET}/temp/foo.java"
     rm -f "${TARGET}/temp/foo.${m}.m"
-    "${HOME}/metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
+    "${LOCAL}/metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
     echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
 done
@@ -40,9 +40,9 @@ tmp="${t}/temp/pdf-report"
 if [ -e "${tmp}" ]; then
     echo "Temporary directory for PDF report building already exists: '${tmp}'"
     latexmk -cd -C "${tmp}/report.tex"
-    cp -r "${HOME}"/tex "${tmp}"
+    cp -r "${LOCAL}"/tex "${tmp}"
 else
-    cp -r "${HOME}/tex" "${tmp}"
+    cp -r "${LOCAL}/tex" "${tmp}"
 fi
 
 pdf="${tmp}/report.pdf"

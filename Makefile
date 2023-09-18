@@ -43,7 +43,7 @@ REPOS =
 REPO =
 
 # Where all files are kept
-HOME := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+LOCAL := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Location of jpeek JAR file
 JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
@@ -68,9 +68,9 @@ lint:
 	    echo "The quality of code has already been checked"
 	    exit
 	fi
-	flake8 "$(HOME)/metrics/"
-	pylint "$(HOME)/metrics/"
-	shellcheck -P "$(HOME)"/metrics/*.sh -P "$(HOME)"/filters/*.sh
+	flake8 "$(LOCAL)/metrics/"
+	pylint "$(LOCAL)/metrics/"
+	shellcheck -P "$(LOCAL)"/metrics/*.sh -P "$(LOCAL)"/filters/*.sh
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
@@ -81,7 +81,6 @@ zip: $(TARGET)/report.pdf
 # Delete calculations.
 clean:
 	set -e
-	set -x
 	rm -rf "$(TARGET)/report.pdf"
 	rm -rf "$(TARGET)/measurements"
 	rm -rf "$(TARGET)/data"
@@ -92,7 +91,6 @@ clean:
 # Delete everything, in order to start from scratch.
 wipe: clean
 	set -e
-	set -x
 	rm -rf "$(TARGET)"/*
 	rm -rf "$(TARGET)"
 
@@ -100,8 +98,9 @@ wipe: clean
 # (this is mostly for debugging in Docker)
 env:
 	set -e
+	set -x
 	echo "TARGET=$(TARGET)"
-	echo "HOME=$(HOME)"
+	echo "LOCAL=$(LOCAL)"
 	if [ -e "$(TARGET)/start.txt" ]; then
 	    echo "The environment has already been checked"
 	    exit

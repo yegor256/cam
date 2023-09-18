@@ -24,13 +24,13 @@ set -e
 set -o pipefail
 
 mkdir -p "${TARGET}/temp/reports"
-for f in $(ls "${HOME}/filters/"); do
+for f in $(ls "${LOCAL}/filters/"); do
     tex="${TARGET}/temp/reports/${f}.tex"
     if [ -e "${tex}" ]; then
         echo "The ${f} filter was already completed earlier, see report in '${tex}'"
     else
         echo "Running filter ${f}... (may take some time)"
-        "${HOME}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
+        "${LOCAL}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
             tr -d '\n\r' |\
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \

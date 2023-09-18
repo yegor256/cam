@@ -44,7 +44,7 @@ tlmgr --verify-repo=none install ${packages}
 tlmgr --verify-repo=none update ${packages}
 
 apt-get install -y python3-pygments
-python3 -m pip install -r "${HOME}/requirements.txt"
+python3 -m pip install -r "${LOCAL}/requirements.txt"
 
 gem install octokit -v 4.21.0
 gem install slop -v 4.9.1
@@ -65,7 +65,7 @@ wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
     && unzip gradle-7.4-bin.zip -d /opt \
     && rm gradle-7.4-bin.zip
 # Set Gradle in the environment variables
-export GRADLE_HOME=/opt/gradle-7.4
+export GRADLE_LOCAL=/opt/gradle-7.4
 export PATH=$PATH:/opt/gradle-7.4/bin
 
 wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \

@@ -32,7 +32,7 @@ elif [ ! -z "${REPO}" ]; then
     echo "${REPO}" >> "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
     echo "Using discover-repos.rb..."
-    ruby "${HOME}/discover-repos.rb" \
+    ruby "${LOCAL}/discover-repos.rb" \
         "--token=${TOKEN}" \
         "--total=${TOTAL}" \
         "--path=${csv}" \
