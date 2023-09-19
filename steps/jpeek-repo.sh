@@ -38,20 +38,20 @@ build() {
     echo "Building ${repo} (${pos}/${total}) project..."
     if [ -e "${project}/gradlew" ]; then
         if ! "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradlew"
+            echo "Failed to compile ${repo} using Gradlew, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
         echo "Сompiled ${repo} using Gradlew"
     elif [ -e "${project}/build.gradle" ]; then
         echo "apply plugin: 'java'" >> "${d}/build.gradle"
         if ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradle"
+            echo "Failed to compile ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
         echo "Сompiled ${repo} using Gradle"
     elif [ -e "${project}/pom.xml" ]; then
         if ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
-            echo "Failed to compile ${repo} using Maven"
+            echo "Failed to compile ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
         echo "Сompiled ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
