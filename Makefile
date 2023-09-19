@@ -134,6 +134,7 @@ env:
 	cloc --version
 	pygmentize -V
 	pmd pmd --version
+	bc -v
 	java -jar "$(JPEEK)" --help
 
 # Get the list of repos from GitHub and then create directories
