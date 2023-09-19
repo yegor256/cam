@@ -25,6 +25,10 @@
 .PHONY: clone filter measure cleanup env lint zip wipe clean
 .SILENT:
 
+# Our version.
+VERSION = 0.0.0
+
+# The shell to use.
 SHELL := bash
 
 # The directory where all the data will be stored and managed.
@@ -59,7 +63,7 @@ endef
 
 # The main goal
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
-	echo -e "\n\nSUCCESS!"
+	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION))!"
 
 install:
 	$(call step,install)

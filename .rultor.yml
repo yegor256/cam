@@ -11,6 +11,7 @@ merge:
 release:
   script: |
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
+    sed -i "s/0\.0\.0/${tag}/g" Makefile
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
