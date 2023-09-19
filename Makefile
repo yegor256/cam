@@ -51,12 +51,18 @@ JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
 # Make all variables from this Makefile visible in all steps/*.sh
 export
 
+# Run a single step from ./steps
+define step
+	echo -e "\n\n\n+++ $(1) +++\n"
+    ./steps/$(1).sh
+endef
+
 # The main goal
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
 	echo "SUCCESS!"
 
 install:
-	./steps/install.sh
+	$(call step,install)
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
@@ -140,36 +146,36 @@ env:
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
 $(TARGET)/repositories.csv: $(TARGET)/temp
-	./steps/discover.sh
+	$(call step,discover)
 
 # Delete directories that don't exist in the list of
 # required repositories.
 cleanup: $(TARGET)/repositories.csv $(TARGET)/github
-	./steps/clean.sh
+	$(call step,clean)
 
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.
 clone: $(TARGET)/repositories.csv $(TARGET)/github
-	./steps/clone.sh
+	$(call step,clone)
 
 # Try to build classes and run jpeek for the entire repo.
 jpeek: $(TARGET)/repositories.csv $(TARGET)/github
-	./steps/jpeek.sh
+	$(call step,jpeek)
 
 # Apply filters to all found repositories at once.
 filter: $(TARGET)/github $(TARGET)/temp
-	./steps/filter.sh
+	$(call step,filter)
 
 # Calculate metrics for each file.
 measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
-	./steps/measure.sh
+	$(call step,measure)
 
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
-	./steps/aggregate.sh
+	$(call step,aggregate)
 
 $(TARGET)/report.pdf: $(TARGET)/temp tex/report.tex
-	./steps/report.sh
+	$(call step,report)
 
 $(TARGET)/github:
 	mkdir -p "$(TARGET)/github"
