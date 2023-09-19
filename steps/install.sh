@@ -73,26 +73,27 @@ if ! inkscape --version; then
 fi
 
 if ! pmd pmd --version; then
+  pmd_version=6.55.0
   cd /usr/local && \
-    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
-    unzip -qq pmd-bin-6.55.0.zip && \
-    rm pmd-bin-6.55.0.zip && \
-    mv pmd-bin-6.55.0 pmd && \
+    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip && \
+    unzip -qq pmd-bin-${pmd_version}.zip && \
+    rm pmd-bin-${pmd_version}.zip && \
+    mv pmd-bin-${pmd_version} pmd && \
     ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 fi
 
-#install Gradle
 if ! gradle --version; then
-  wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
-      && unzip -qq gradle-7.4-bin.zip -d /opt \
-      && rm gradle-7.4-bin.zip
-  # Set Gradle in the environment variables
-  export GRADLE_LOCAL=/opt/gradle-7.4
-  export PATH=$PATH:/opt/gradle-7.4/bin
+  gradle_version=7.4
+  wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip \
+      && unzip -qq gradle-${gradle_version}-bin.zip -d /opt \
+      && rm gradle-${gradle_version}-bin.zip
+  export GRADLE_LOCAL=/opt/gradle-${gradle_version}
+  export PATH=$PATH:/opt/gradle-${gradle_version}/bin
 fi
 
 if [ ! -e "${JPEEK}" ]; then
-  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
+  jpeek_version=0.32.0
+  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar \
       && mkdir -p "$(dirname "${JPEEK}")" \
-      && mv jpeek-0.32.0-jar-with-dependencies.jar "${JPEEK}"
+      && mv jpeek-${jpeek_version}-jar-with-dependencies.jar "${JPEEK}"
 fi
