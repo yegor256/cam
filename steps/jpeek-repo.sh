@@ -35,14 +35,15 @@ logs="${TARGET}/temp/jpeek-logs/${repo}"
 mkdir -p "${logs}"
 
 build() {
-    echo "Building ${repo} (${pos}/${total}) project..."
     if [ -e "${project}/gradlew" ]; then
+        echo "Building ${repo} (${pos}/${total}) with Gradlew..."
         if ! "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradlew, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
         echo "Сompiled ${repo} using Gradlew"
     elif [ -e "${project}/build.gradle" ]; then
+        echo "Building ${repo} (${pos}/${total}) with Gradle..."
         echo "apply plugin: 'java'" >> "${d}/build.gradle"
         if ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
@@ -50,6 +51,7 @@ build() {
         fi
         echo "Сompiled ${repo} using Gradle"
     elif [ -e "${project}/pom.xml" ]; then
+        echo "Building ${repo} (${pos}/${total}) with Maven..."
         if ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
             echo "Failed to compile ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
