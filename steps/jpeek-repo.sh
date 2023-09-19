@@ -30,36 +30,42 @@ total=$3
 JPEEK_MAIN="java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods --include-private-methods"
 JPEEK_CVC="java -jar ${JPEEK} --overwrite"
 
+logs="${TARGET}/temp/jpeek-logs/${project}"
+mkdir -p "${logs}"
+
 echo "Building ${project} (${pos}/${total}) project..."
 if [ -e "${project}/gradlew" ]; then
-    if [ ! ${project}/gradlew classes -q -p "${project}" ]; then
-        echo "Failed to compile using Gradlew"
+    if [ ! ${project}/gradlew classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1 ]; then
+        echo "Failed to compile ${project} using Gradlew"
         exit
     fi
 elif [ -e "${project}/build.gradle" ]; then
     echo "apply plugin: 'java'" >> "${d}/build.gradle"
-    if [ ! gradle classes -q -p "${project}" ]; then
-        echo "Failed to compile using Gradle"
+    if [ ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1 ]; then
+        echo "Failed to compile ${project} using Gradle"
         exit
     fi
 elif [ -e "${project}/pom.xml" ]; then
-    if [ ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U ]; then
-        echo "Failed to compile using Maven"
+    if [ ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1 ]; then
+        echo "Failed to compile ${project} using Maven"
         exit
     fi
 else
     echo "Could not build classes in ${project} (${pos}/${total}) (neither Maven nor Gradle project)"
     exit
 fi
+
 measurements="$(echo "${project}" | sed "s|${TARGET}/github|${TARGET}/jpeek|")"
 dir="${TARGET}/temp/jpeek"
-${JPEEK_MAIN} --sources "${project}" --target "${dir}"
-${JPEEK_CVC} --sources "${project}" --target "${dir}cvc"
+
+"${JPEEK_MAIN}" --sources "${project}" --target "${dir}" > "${logs}/jpeek-main.log" 2>&1
+
+"${JPEEK_CVC}" --sources "${project}" --target "${dir}cvc" > "${logs}/jpeek-cvc.log" 2>&1
+
 accept=".*[^index|matrix|skeleton].xml"
 lastm=""
 
 for jpeek in "${dir}" "${dir}cvc"; do
-    echo "${jpeek}"
     for report in $(find "${jpeek}" -type f -maxdepth 1); do
         metric="$(basename "${report}" | sed "s|.xml||")"
         suffix=$(echo "${jpeek}" | sed "s|${dir}||")
@@ -84,7 +90,6 @@ for jpeek in "${dir}" "${dir}cvc"; do
                     mfile="$(find "${project}" -path "*${package}/${class}.java" | sed "s|/github|/jpeek|")"
                     if [ "${mfile}" != "" ]
                     then
-                        # echo "${package}/${class}: ${value}"
                         mkdir -p "$(dirname ${mfile})"
                         echo "${name}${suffix} ${value} ${name}" >> "${mfile}"
                         lastm="${mfile}"
