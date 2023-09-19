@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+start=$(date +%s)
+
 jobs=${TARGET}/temp/clone-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
@@ -41,4 +43,4 @@ while IFS=',' read -r r tag; do
 done < "${TARGET}/repositories.csv"
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "Cloned ${total} repositories in $(nproc) threads"
+echo "Cloned ${total} repositories in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"

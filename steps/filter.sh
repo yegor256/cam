@@ -30,12 +30,13 @@ for f in $(ls "${LOCAL}/filters/"); do
         echo "The ${f} filter was already completed earlier, see report in '${tex}'"
     else
         echo "Running filter ${f}... (may take some time)"
+        start=$(date +%s)
         "${LOCAL}/filters/${f}" "${TARGET}/github" "${TARGET}/temp" |\
             tr -d '\n\r' |\
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \
             > "${tex}"
-        echo "Filter ${f} published its results to ${TARGET}/temp/reports/${f}.tex"
+        echo "Filter ${f} fininshed in $(echo "$(date +%s) - ${start}" | bc)s and published its results to ${TARGET}/temp/reports/${f}.tex "
     fi
 done
 

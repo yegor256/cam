@@ -27,6 +27,8 @@ repo=$1
 pos=$2
 total=$3
 
+start=$(date +%s)
+
 project="${TARGET}/github/${repo}"
 
 logs="${TARGET}/temp/jpeek-logs/${repo}"
@@ -52,7 +54,7 @@ build() {
             echo "Failed to compile ${repo} using Maven"
             exit
         fi
-        echo "Сompiled ${repo} using Maven"
+        echo "Сompiled ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
     else
         echo "Could not build classes in ${repo} (${pos}/${total}) (neither Maven nor Gradle project)"
         exit
@@ -68,6 +70,8 @@ done
 measurements="$(echo "${project}" | sed "s|${TARGET}/github|${TARGET}/jpeek|")"
 
 dir="${TARGET}/temp/jpeek"
+
+start=$(date +%s)
 
 java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
     --include-private-methods --sources "${project}" \
@@ -109,4 +113,4 @@ for jpeek in "${dir}" "${dir}cvc"; do
         fi
     done
 done
-echo "${repo} analyzed through jPeek (${pos}/${total})"
+echo "${repo} analyzed through jPeek (${pos}/${total}) in $(echo "$(date +%s) - ${start}" | bc)s"

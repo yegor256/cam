@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+start=$(date +%s)
+
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
 
@@ -41,7 +43,6 @@ for r in ${repos}; do
 done
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All metrics aggregated in ${total} repositories in $(nproc) threads"
 
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
@@ -60,3 +61,5 @@ for d in $(find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print); do
     done
     echo "${r} metrics added to the CSV aggregate"
 done
+
+echo "All metrics aggregated in ${total} repositories in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"

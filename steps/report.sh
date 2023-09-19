@@ -51,5 +51,8 @@ if [ -e "${pdf}" ]; then
     exit
 fi
 
+dest="${t}/report.pdf"
 TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"
-mv "${pdf}" "${t}/report.pdf"
+mv "${pdf}" "${dest}"
+
+echo "PDF report generated in ${dest}"

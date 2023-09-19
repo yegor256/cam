@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+start=$(date +%s)
+
 echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
 
 javas=$(find "${TARGET}/github" -name '*.java')
@@ -48,4 +50,5 @@ done
 
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All metrics calculated in ${total} files in $(nproc) threads"
+
+echo "All metrics calculated in ${total} files in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"

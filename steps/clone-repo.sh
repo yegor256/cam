@@ -27,6 +27,8 @@ repo=$1
 pos=$2
 total=$3
 
+start=$(date +%s)
+
 dir="${TARGET}/github/${repo}"
 
 if [ -e "${dir}" ]; then
@@ -48,4 +50,4 @@ until git clone ${args} "https://github.com/${repo}" "${dir}"; do
 done
 printf "${repo},$(git --git-dir "${dir}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
 
-echo "${repo} cloned (${pos}/${total})"
+echo "${repo} cloned (${pos}/${total}) in $(echo "$(date +%s) - ${start}" | bc)s"
