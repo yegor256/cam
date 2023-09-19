@@ -30,7 +30,7 @@ total=$3
 dir="${TARGET}/github/${repo}"
 
 if [ -e "${dir}" ]; then
-    echo "The repo directory is already here: ${dir}"
+    echo "The repo directory #${pos}/${total} is already here: ${dir}"
     exit
 fi
 
@@ -39,7 +39,7 @@ if [ ! -z "${tag}" ]; then
     args="${args} --branch="${tag}""
 fi
 
-echo "${repo}: trying to clone it..."
+echo "${repo} (${pos}/${total}): trying to clone it..."
 until git clone ${args} "https://github.com/${repo}" "${dir}"; do
     rm -rf "${dir}"
     echo "Retrying ${repo}..."
