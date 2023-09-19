@@ -30,26 +30,30 @@ total=$3
 JPEEK_MAIN="java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods --include-private-methods"
 JPEEK_CVC="java -jar ${JPEEK} --overwrite"
 
-echo "Building project: ${project}"
+echo "Building ${project} (${pos}/${total}) project..."
 if [ -e "${project}/gradlew" ]; then
-    echo "Using gradlew"
-    ${project}/gradlew classes -q -p "${project}" || break
+    if [ ! ${project}/gradlew classes -q -p "${project}" ]; then
+        echo "Failed to compile using Gradlew"
+        exit
+    fi
 elif [ -e "${project}/build.gradle" ]; then
-    echo "Using build.gradle"
     echo "apply plugin: 'java'" >> "${d}/build.gradle"
-    gradle classes -q -p "${project}" || break
+    if [ ! gradle classes -q -p "${project}" ]; then
+        echo "Failed to compile using Gradle"
+        exit
+    fi
 elif [ -e "${project}/pom.xml" ]; then
-    echo "Using mvn install"
-    mvn compiler:compile -quiet -DskipTests -f "${project}" -U || break
+    if [ ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U ]; then
+        echo "Failed to compile using Maven"
+        exit
+    fi
 else
-    echo "Could not build classes (not maven nor gradle project)..."
+    echo "Could not build classes in ${project} (${pos}/${total}) (neither Maven nor Gradle project)"
     exit
 fi
 measurements="$(echo "${project}" | sed "s|${TARGET}/github|${TARGET}/jpeek|")"
 dir="${TARGET}/temp/jpeek"
-echo "Old-fashioned..."
 ${JPEEK_MAIN} --sources "${project}" --target "${dir}"
-echo "Ctors vs cohesion..."
 ${JPEEK_CVC} --sources "${project}" --target "${dir}cvc"
 accept=".*[^index|matrix|skeleton].xml"
 lastm=""
@@ -66,9 +70,7 @@ for jpeek in "${dir}" "${dir}cvc"; do
             descsuffix="In this case, the constructors are excluded from the metric formulas."
         fi
         if echo ${report} | grep -q ${accept} ; then
-            # echo "Found ${report}";
             packages="$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")"
-            # echo "There are ${packages} packages";
             name="$(xmlstarlet sel -t -v "/metric/title" "${report}")"
             description="$(xmlstarlet sel -t -v "/metric/description" "${report}" | tr "\n" " " | sed "s|\s+| |g") ${descsuffix}"
             for ((i=1; i <= ${packages}; i++))
