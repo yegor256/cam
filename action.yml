@@ -29,10 +29,9 @@ runs:
   using: docker
   image: Dockerfile
   entrypoint: /bin/bash
-  env:
-    HOME: /cam
   args:
     - '--login'
     - '-c'
     - 'make'
     - 'REPO=yegor256/tojos'
+    - 'HOME=/cam'
