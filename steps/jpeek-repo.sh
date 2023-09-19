@@ -33,14 +33,14 @@ JPEEK_CVC="java -jar ${JPEEK} --overwrite"
 echo "Building project: ${project}"
 if [ -e "${project}/gradlew" ]; then
     echo "Using gradlew"
-    ${project}/gradlew classes -p "${project}" || break
+    ${project}/gradlew classes -q -p "${project}" || break
 elif [ -e "${project}/build.gradle" ]; then
     echo "Using build.gradle"
     echo "apply plugin: 'java'" >> "${d}/build.gradle"
-    gradle classes -p "${project}" || break
+    gradle classes -q -p "${project}" || break
 elif [ -e "${project}/pom.xml" ]; then
     echo "Using mvn install"
-    mvn compiler:compile -quiet -Dmaven.test.skip=true -f "${project}" -U || break
+    mvn compiler:compile -quiet -DskipTests -f "${project}" -U || break
 else
     echo "Could not build classes (not maven nor gradle project)..."
     exit
