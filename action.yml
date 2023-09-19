@@ -30,7 +30,7 @@ runs:
   image: Dockerfile
   entrypoint: /bin/bash
   args:
-    - '-c'
     - '--login'
+    - '-c'
     - 'make'
     - 'REPO=yegor256/tojos'
