@@ -26,6 +26,7 @@ set -e
 set -o pipefail
 
 apt-get -y update
+apt-get install -y bc
 apt-get install -y coreutils
 apt-get install -y cloc
 apt-get install -y shellcheck
