@@ -131,6 +131,7 @@ env:
 	aspell --version
 	rubocop -v
 	cloc --version
+	pygmentize -V
 	pmd pmd --version
 	java -jar "$(JPEEK)" --help
 
