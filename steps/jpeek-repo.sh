@@ -39,17 +39,20 @@ build() {
             echo "Failed to compile ${repo} using Gradlew"
             exit
         fi
+        echo "Сompiled ${repo} using Gradlew"
     elif [ -e "${project}/build.gradle" ]; then
         echo "apply plugin: 'java'" >> "${d}/build.gradle"
         if ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradle"
             exit
         fi
+        echo "Сompiled ${repo} using Gradle"
     elif [ -e "${project}/pom.xml" ]; then
         if ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
             echo "Failed to compile ${repo} using Maven"
             exit
         fi
+        echo "Сompiled ${repo} using Maven"
     else
         echo "Could not build classes in ${repo} (${pos}/${total}) (neither Maven nor Gradle project)"
         exit
@@ -81,31 +84,25 @@ for jpeek in "${dir}" "${dir}cvc"; do
         metric="$(basename "${report}" | sed "s|.xml||")"
         suffix=$(echo "${jpeek}" | sed "s|${dir}||")
         descsuffix=""
-        if [ "${suffix}" != "" ];
-        then
+        if [ "${suffix}" != "" ]; then
             suffix="(${suffix})"
             descsuffix="In this case, the constructors are excluded from the metric formulas."
         fi
-        if echo ${report} | grep -q ${accept} ; then
+        if echo ${report} | grep -q ${accept}; then
             packages="$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")"
             name="$(xmlstarlet sel -t -v "/metric/title" "${report}")"
             description="$(xmlstarlet sel -t -v "/metric/description" "${report}" | tr "\n" " " | sed "s|\s+| |g") ${descsuffix}"
-            for ((i=1; i <= ${packages}; i++))
-            do
+            for ((i=1; i <= ${packages}; i++)); do
                 package="$(echo "$(xmlstarlet sel -t -v "/metric/app/package[${i}]/@id" "${report}")" | sed "s|\.|/|g")"
                 classes="$(xmlstarlet sel -t -v "count(/metric/app/package[${i}]/class/@id)" "${report}")"
-                for ((j=1; j <= ${classes}; j++))
-                do
+                for ((j=1; j <= ${classes}; j++)); do
                     class="$(xmlstarlet sel -t -v "/metric/app/package[${i}]/class[${j}]/@id" "${report}")"
                     value="$(xmlstarlet sel -t -v "/metric/app/package[${i}]/class[${j}]/@value" "${report}")"
                     mfile="$(find "${project}" -path "*${package}/${class}.java" | sed "s|/github|/jpeek|")"
-                    if [ "${mfile}" != "" ]
-                    then
+                    if [ ! -z "${mfile}" ]; then
                         mkdir -p "$(dirname ${mfile})"
                         echo "${name}${suffix} ${value} ${name}" >> "${mfile}"
                         lastm="${mfile}"
-                    else
-                        # echo "${package}/${class}: can't find corresponding file"
                     fi
                 done
             done
