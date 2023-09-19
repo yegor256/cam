@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+start=$(date +%s)
+
 jobs=${TARGET}/temp/jpeek-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
@@ -40,4 +42,4 @@ done
 
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All repos passed through jPeek, ${total} repositories in $(nproc) threads"
+echo "All repos passed through jPeek, ${total} repositories in $(nproc) threads, in $(echo "$(date +%s) - ${start}" | bc)s"
