@@ -44,4 +44,4 @@ for m in $(ls metrics/); do
     fi
 done
 
-echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total}) in $(echo "$(date +%N) - ${start} / 1000000" | bc)ms"
+echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total}) in $(echo "($(date +%N) - ${start}) / 1000000" | bc)ms"

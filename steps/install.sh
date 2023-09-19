@@ -30,9 +30,6 @@ apt-get install -y bc
 apt-get install -y coreutils
 apt-get install -y cloc
 apt-get install -y shellcheck
-
-gem install texsc
-gem install texqc
 apt-get install -y aspell
 apt-get install -y xmlstarlet
 
@@ -47,9 +44,9 @@ tlmgr --verify-repo=none update ${packages}
 apt-get install -y python3-pygments
 python3 -m pip install -r "${LOCAL}/requirements.txt"
 
-gem install rubocop -v 1.56.3
-gem install octokit -v 4.21.0
-gem install slop -v 4.9.1
+gem install --no-ri --no-rdoc rubocop -v 1.56.3
+gem install --no-ri --no-rdoc octokit -v 4.21.0
+gem install --no-ri --no-rdoc slop -v 4.9.1
 
 add-apt-repository -y ppa:inkscape.dev/stable && \
   apt-get update -y && \
@@ -57,14 +54,14 @@ add-apt-repository -y ppa:inkscape.dev/stable && \
 
 cd /usr/local && \
   wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
-  unzip pmd-bin-6.55.0.zip && \
+  unzip -qq pmd-bin-6.55.0.zip && \
   rm pmd-bin-6.55.0.zip && \
   mv pmd-bin-6.55.0 pmd && \
   ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 
 #install Gradle
 wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
-    && unzip gradle-7.4-bin.zip -d /opt \
+    && unzip -qq gradle-7.4-bin.zip -d /opt \
     && rm gradle-7.4-bin.zip
 # Set Gradle in the environment variables
 export GRADLE_LOCAL=/opt/gradle-7.4

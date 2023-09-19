@@ -27,19 +27,19 @@
 
 SHELL := bash
 
-# The place where all the data will be stored and managed.
+# The directory where all the data will be stored and managed.
 TARGET = dataset
 
 # Total number of repositories to fetch from GitHub.
 TOTAL = 1
 
-# GitHub auth token
+# GitHub auth token (no token is OK too).
 TOKEN =
 
-# Path to file with repositories names joined by newlines
+# Path to file with repositories names joined by newlines.
 REPOS =
 
-# Single repository name to use (mostly for testing purposes)
+# Single repository name to use (mostly for testing purposes).
 REPO =
 
 # Where all files are kept
