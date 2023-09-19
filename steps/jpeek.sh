@@ -32,7 +32,8 @@ repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo "${repos}" | wc -l | xargs)
 
 declare -i repo=0
-for r in ${repos}; do
+for d in ${repos}; do
+    r=$(echo "${d}" | sed "s|${TARGET}/github/||")
     repo=repo+1
     echo "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done

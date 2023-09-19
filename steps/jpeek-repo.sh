@@ -23,44 +23,55 @@
 set -e
 set -o pipefail
 
-project=$1
+repo=$1
 pos=$2
 total=$3
 
-JPEEK_MAIN="java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods --include-private-methods"
-JPEEK_CVC="java -jar ${JPEEK} --overwrite"
+project="${TARGET}/github/${repo}"
 
-logs="${TARGET}/temp/jpeek-logs/${project}"
+logs="${TARGET}/temp/jpeek-logs/${repo}"
 mkdir -p "${logs}"
 
-echo "Building ${project} (${pos}/${total}) project..."
-if [ -e "${project}/gradlew" ]; then
-    if [ ! ${project}/gradlew classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1 ]; then
-        echo "Failed to compile ${project} using Gradlew"
+build() {
+    echo "Building ${repo} (${pos}/${total}) project..."
+    if [ -e "${project}/gradlew" ]; then
+        if ! "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
+            echo "Failed to compile ${repo} using Gradlew"
+            exit
+        fi
+    elif [ -e "${project}/build.gradle" ]; then
+        echo "apply plugin: 'java'" >> "${d}/build.gradle"
+        if ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
+            echo "Failed to compile ${repo} using Gradle"
+            exit
+        fi
+    elif [ -e "${project}/pom.xml" ]; then
+        if ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
+            echo "Failed to compile ${repo} using Maven"
+            exit
+        fi
+    else
+        echo "Could not build classes in ${repo} (${pos}/${total}) (neither Maven nor Gradle project)"
         exit
     fi
-elif [ -e "${project}/build.gradle" ]; then
-    echo "apply plugin: 'java'" >> "${d}/build.gradle"
-    if [ ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1 ]; then
-        echo "Failed to compile ${project} using Gradle"
-        exit
-    fi
-elif [ -e "${project}/pom.xml" ]; then
-    if [ ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1 ]; then
-        echo "Failed to compile ${project} using Maven"
-        exit
-    fi
-else
-    echo "Could not build classes in ${project} (${pos}/${total}) (neither Maven nor Gradle project)"
-    exit
-fi
+}
+
+declare -i re=0
+until build; do
+    re=re+1
+    echo "Retry #${re} for ${repo} (${pos}/${total})..."
+done
 
 measurements="$(echo "${project}" | sed "s|${TARGET}/github|${TARGET}/jpeek|")"
+
 dir="${TARGET}/temp/jpeek"
 
-"${JPEEK_MAIN}" --sources "${project}" --target "${dir}" > "${logs}/jpeek-main.log" 2>&1
+java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
+    --include-private-methods --sources "${project}" \
+    --target "${dir}" > "${logs}/jpeek-main.log" 2>&1
 
-"${JPEEK_CVC}" --sources "${project}" --target "${dir}cvc" > "${logs}/jpeek-cvc.log" 2>&1
+java -jar ${JPEEK} --overwrite --sources "${project}" \
+    --target "${dir}cvc" > "${logs}/jpeek-cvc.log" 2>&1
 
 accept=".*[^index|matrix|skeleton].xml"
 lastm=""
@@ -94,11 +105,11 @@ for jpeek in "${dir}" "${dir}cvc"; do
                         echo "${name}${suffix} ${value} ${name}" >> "${mfile}"
                         lastm="${mfile}"
                     else
-                        echo "${package}/${class}: can't find corresponding file"
+                        # echo "${package}/${class}: can't find corresponding file"
                     fi
                 done
             done
         fi
     done
 done
-echo "${project} analyzed through jPeek (${pos}/${total})"
+echo "${repo} analyzed through jPeek (${pos}/${total})"

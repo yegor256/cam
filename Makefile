@@ -53,6 +53,7 @@ export
 
 # The main goal
 all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
+	echo "SUCCESS!"
 
 install:
 	./steps/install.sh

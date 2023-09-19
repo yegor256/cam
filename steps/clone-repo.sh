@@ -40,9 +40,11 @@ if [ ! -z "${tag}" ]; then
 fi
 
 echo "${repo} (${pos}/${total}): trying to clone it..."
+declare -i re=0
 until git clone ${args} "https://github.com/${repo}" "${dir}"; do
+    re=re+1
     rm -rf "${dir}"
-    echo "Retrying ${repo}..."
+    echo "Retry #${re} for ${repo}..."
 done
 printf "${repo},$(git --git-dir "${dir}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
 
