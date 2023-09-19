@@ -129,6 +129,7 @@ env:
 	shellcheck --version
 	pdflatex --version
 	aspell --version
+	rubocop -v
 	cloc --version
 	pmd pmd --version
 	java -jar "$(JPEEK)" --help

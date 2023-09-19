@@ -41,7 +41,7 @@ for r in ${repos}; do
 done
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All metrics aggregated in ${total} repositories"
+echo "All metrics aggregated in ${total} repositories in $(nproc) threads"
 
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"

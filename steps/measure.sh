@@ -48,4 +48,4 @@ done
 
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All metrics calculated in ${total} files"
+echo "All metrics calculated in ${total} files in $(nproc) threads"

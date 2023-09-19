@@ -41,4 +41,4 @@ while IFS=',' read -r r tag; do
 done < "${TARGET}/repositories.csv"
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "Cloned ${total} repositories"
+echo "Cloned ${total} repositories in $(nproc) threads"
