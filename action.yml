@@ -33,4 +33,5 @@ runs:
     - '--login'
     - '-c'
     - 'make'
+    - '-e'
     - 'REPO=yegor256/tojos'

@@ -54,6 +54,7 @@ shellcheck --version
 pdflatex --version
 aspell --version
 rubocop -v
+inkscape --version
 cloc --version
 pygmentize -V
 pmd pmd --version

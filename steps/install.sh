@@ -26,12 +26,27 @@ set -e
 set -o pipefail
 
 apt-get -y update
-apt-get install -y bc
 apt-get install -y coreutils
-apt-get install -y cloc
-apt-get install -y shellcheck
-apt-get install -y aspell
-apt-get install -y xmlstarlet
+
+if ! bc -v; then
+  apt-get install -y bc
+fi
+
+if ! cloc --version; then
+  apt-get install -y cloc
+fi
+
+if ! shellcheck --version; then
+  apt-get install -y shellcheck
+fi
+
+if ! aspell --version; then
+  apt-get install -y aspell
+fi
+
+if ! xmlstarlet --version; then
+  apt-get install -y xmlstarlet
+fi
 
 tlmgr --verify-repo=none update --self
 packages="href-ul huawei ffcode latexmk fmtcount trimspaces \
@@ -41,32 +56,43 @@ packages="href-ul huawei ffcode latexmk fmtcount trimspaces \
 tlmgr --verify-repo=none install ${packages}
 tlmgr --verify-repo=none update ${packages}
 
-apt-get install -y python3-pygments
+if ! pygmentize -V; then
+  apt-get install -y python3-pygments
+fi
+
 python3 -m pip install -r "${LOCAL}/requirements.txt"
 
-gem install --no-ri --no-rdoc rubocop -v 1.56.3
-gem install --no-ri --no-rdoc octokit -v 4.21.0
-gem install --no-ri --no-rdoc slop -v 4.9.1
+gem install --no-document rubocop -v 1.56.3
+gem install --no-document octokit -v 4.21.0
+gem install --no-document slop -v 4.9.1
 
-add-apt-repository -y ppa:inkscape.dev/stable && \
-  apt-get update -y && \
-  apt-get install -y inkscape
+if ! inkscape --version; then
+  add-apt-repository -y ppa:inkscape.dev/stable && \
+    apt-get update -y && \
+    apt-get install -y inkscape
+fi
 
-cd /usr/local && \
-  wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
-  unzip -qq pmd-bin-6.55.0.zip && \
-  rm pmd-bin-6.55.0.zip && \
-  mv pmd-bin-6.55.0 pmd && \
-  ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+if ! pmd pmd --version; then
+  cd /usr/local && \
+    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip && \
+    unzip -qq pmd-bin-6.55.0.zip && \
+    rm pmd-bin-6.55.0.zip && \
+    mv pmd-bin-6.55.0 pmd && \
+    ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+fi
 
 #install Gradle
-wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
-    && unzip -qq gradle-7.4-bin.zip -d /opt \
-    && rm gradle-7.4-bin.zip
-# Set Gradle in the environment variables
-export GRADLE_LOCAL=/opt/gradle-7.4
-export PATH=$PATH:/opt/gradle-7.4/bin
+if ! gradle --version; then
+  wget --quiet https://services.gradle.org/distributions/gradle-7.4-bin.zip \
+      && unzip -qq gradle-7.4-bin.zip -d /opt \
+      && rm gradle-7.4-bin.zip
+  # Set Gradle in the environment variables
+  export GRADLE_LOCAL=/opt/gradle-7.4
+  export PATH=$PATH:/opt/gradle-7.4/bin
+fi
 
-wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
-    && mkdir -p "$(dirname "${JPEEK}")" \
-    && mv jpeek-0.32.0-jar-with-dependencies.jar "${JPEEK}"
+if [ ! -e "${JPEEK}" ]; then
+  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/0.32.0/jpeek-0.32.0-jar-with-dependencies.jar \
+      && mkdir -p "$(dirname "${JPEEK}")" \
+      && mv jpeek-0.32.0-jar-with-dependencies.jar "${JPEEK}"
+fi
