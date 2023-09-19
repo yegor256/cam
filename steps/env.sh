@@ -26,6 +26,7 @@ set -o pipefail
 echo "TARGET=${TARGET}"
 echo "LOCAL=${LOCAL}"
 echo "SHELL=${SHELL}"
+echo "HOME=${HOME}"
 
 flag="${TARGET}/temp/env-done.txt"
 
