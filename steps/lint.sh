@@ -23,36 +23,20 @@
 set -e
 set -o pipefail
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
+flag="${TARGET}/temp/lint-done.txt"
 
-for m in $(ls "${LOCAL}/metrics/"); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "${LOCAL}/metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
-done
-
-# It's important to make sure the path is absolute, for LaTeX
-t="$(realpath "${TARGET}")"
-
-tmp="${t}/temp/pdf-report"
-if [ -e "${tmp}" ]; then
-    echo "Temporary directory for PDF report building already exists: '${tmp}'"
-    latexmk -cd -C "${tmp}/report.tex"
-    cp -r "${LOCAL}"/tex "${tmp}"
-else
-    cp -r "${LOCAL}/tex" "${tmp}"
-fi
-
-pdf="${tmp}/report.pdf"
-if [ -e "${pdf}" ]; then
-    echo "The PDF report already exists: '${pdf}'"
+if [ -e "${flag}" ]; then
+    echo "The quality of code has already been checked"
     exit
 fi
 
-dest="${t}/report.pdf"
-TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"
-mv "${pdf}" "${dest}"
+flake8 "${LOCAL}/metrics/"
 
-echo "PDF report generated in ${dest} ($(du -k "${dest}" | cut -f1) Kb)"
+pylint "${LOCAL}/metrics/"
+
+rubocop
+
+shellcheck -P "${LOCAL}"/metrics/*.sh -P "${LOCAL}"/filters/*.sh
+
+mkdir -p "$(dirname "${flag}")"
+date +%s > "${flag}"

@@ -28,6 +28,8 @@ javam=$2
 pos=$3
 total=$4
 
+start=$(date +%N)
+
 mkdir -p "$(dirname "${javam}")"
 declare -i cnt=0
 for m in $(ls metrics/); do
@@ -41,4 +43,5 @@ for m in $(ls metrics/); do
         echo "Failed to collect ${m} for ${java}"
     fi
 done
-echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total})"
+
+echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total}) in $(echo "$(date +%N) - ${start} / 1000000" | bc)ms"

@@ -54,37 +54,27 @@ export
 # Run a single step from ./steps
 define step
 	echo -e "\n\n\n+++ $(1) +++\n"
-    ./steps/$(1).sh
+    @bash $(LOCAL)/steps/$(1).sh
 endef
 
 # The main goal
-all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv cleanup clone jpeek filter measure aggregate zip
-	echo "SUCCESS!"
+all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
+	echo -e "\n\nSUCCESS!"
 
 install:
 	$(call step,install)
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
-	ruby -e "print Time.now.to_i" > "$(TARGET)/start.txt"
+	date +%s > "$(TARGET)/start.txt"
 
 # Check the quality of code
 lint:
-	set -e
-	if [ -e "$(TARGET)/start.txt" ]; then
-	    echo "The quality of code has already been checked"
-	    exit
-	fi
-	flake8 "$(LOCAL)/metrics/"
-	pylint "$(LOCAL)/metrics/"
-	rubocop
-	shellcheck -P "$(LOCAL)"/metrics/*.sh -P "$(LOCAL)"/filters/*.sh
+	$(call step,lint)
 
 # Zip the entire dataset into an archive.
 zip: $(TARGET)/report.pdf
-	set -e
-	zip -qq -r "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
-	mv "cam-$$(date +%Y-%m-%d).zip" "$(TARGET)"
+	$(call step,zip)
 
 # Delete calculations.
 clean:
@@ -105,43 +95,11 @@ wipe: clean
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
-	set -e
-	set -x
-	echo "TARGET=$(TARGET)"
-	echo "LOCAL=$(LOCAL)"
-	if [ -e "$(TARGET)/start.txt" ]; then
-	    echo "The environment has already been checked"
-	    exit
-	fi
-	if [[ $$(echo $(MAKE_VERSION)) =~ ^[1-3] ]]; then
+	if [[ "$(MAKE_VERSION)" =~ ^[1-3] ]]; then
 	    echo "Make must be 4+: $(MAKE_VERSION)"
 	    exit -1
-	else
-	    echo "Make version is: $(MAKE_VERSION)"
 	fi
-	if [ "$${BASH_VERSINFO:-0}" -lt 5 ]; then
-	    "$(SHELL)" -version
-	    echo "$(SHELL) version is older than five: $${BASH_VERSINFO:-0}"
-	    exit -1
-	fi
-	ruby -v
-	python3 --version
-	if [[ "$$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
-	    echo "Python must be 3+"
-	    exit -1
-	fi
-	flake8 --version
-	pylint --version
-	xmlstarlet --version
-	shellcheck --version
-	pdflatex --version
-	aspell --version
-	rubocop -v
-	cloc --version
-	pygmentize -V
-	pmd pmd --version
-	bc -v
-	java -jar "$(JPEEK)" --help
+	$(call step,env)
 
 # Get the list of repos from GitHub and then create directories
 # for them. Each dir will be empty.
@@ -150,8 +108,8 @@ $(TARGET)/repositories.csv: $(TARGET)/temp
 
 # Delete directories that don't exist in the list of
 # required repositories.
-cleanup: $(TARGET)/repositories.csv $(TARGET)/github
-	$(call step,clean)
+polish: $(TARGET)/repositories.csv $(TARGET)/github
+	$(call step,polish)
 
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.

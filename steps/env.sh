@@ -23,18 +23,42 @@
 set -e
 set -o pipefail
 
-for d in $(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print); do
-    repo=$(echo ${d} | sed "s|${TARGET}/github/||")
-    if grep -Fxq "${repo}" ${TARGET}/repositories.csv; then
-        echo "Directory ${d} is here and is needed (for ${repo})"
-    else
-        rm -rf "${d}"
-        echo "Directory ${d} is obsolete and was deleted (for ${repo})"
-    fi
-done
-for d in $(find "${TARGET}/github" -maxdepth 1 -mindepth 1 -type d -print); do
-    if [ "$(ls ${d} | wc -l)" == '0' ]; then
-        rm -rf "${d}"
-        echo "Directory ${d} is empty and was deleted"
-    fi
-done
+echo "TARGET=${TARGET}"
+echo "LOCAL=${LOCAL}"
+echo "SHELL=${SHELL}"
+
+flag="${TARGET}/temp/env-done.txt"
+
+if [ -e "${flag}" ]; then
+    echo "The environment has already been checked"
+    exit
+fi
+
+bash_version="$(echo "${BASH_VERSINFO:-0}")"
+if [ "${bash_version}" -lt 5 ]; then
+    "${SHELL}" -version
+    ps -p $$
+    echo "${SHELL} version is older than five: ${bash_version}"
+    exit -1
+fi
+ruby -v
+python3 --version
+if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
+    echo "Python must be 3+"
+    exit -1
+fi
+flake8 --version
+pylint --version
+xmlstarlet --version
+shellcheck --version
+pdflatex --version
+aspell --version
+rubocop -v
+cloc --version
+pygmentize -V
+pmd pmd --version
+bc -v
+java -jar "${JPEEK}" --help
+
+mkdir -p "$(dirname "${flag}")"
+date +%s > "${flag}"
