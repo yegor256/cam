@@ -32,6 +32,4 @@ runs:
   args:
     - '--login'
     - '-c'
-    - 'make'
-    - 'REPO=yegor256/tojos'
-    - 'HOME=/cam'
+    - 'export HOME=/cam; export REPO=yegor256/tojos; cd ${HOME}; make -e'
