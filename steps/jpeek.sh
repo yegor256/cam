@@ -33,6 +33,9 @@ touch "${jobs}"
 repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo "${repos}" | wc -l | xargs)
 
+dir="${TARGET}/temp/jpeek/all"
+mkdir -p "${dir}"
+
 declare -i repo=0
 for d in ${repos}; do
     r=$(echo "${d}" | sed "s|${TARGET}/github/||")
@@ -43,6 +46,6 @@ done
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 
-done=$(find "${TARGET}/temp/jpeek/all" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)
+done=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)
 
 echo "All ${total} repositories passed through jPeek, ${done} of them produced data, in $(nproc) threads, in $(echo "$(date +%s) - ${start}" | bc)s"
