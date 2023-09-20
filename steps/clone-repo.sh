@@ -44,9 +44,14 @@ fi
 echo "${repo} (${pos}/${total}): trying to clone it..."
 declare -i re=0
 until git clone ${args} "https://github.com/${repo}" "${dir}"; do
+    if [ "${re}" -gt 5 ]; then
+        echo "Too many failures (${re}) for ${repo}"
+        exit -1
+    fi
     re=re+1
     rm -rf "${dir}"
     echo "Retry #${re} for ${repo}..."
+    sleep "${re}"
 done
 printf "${repo},$(git --git-dir "${dir}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
 

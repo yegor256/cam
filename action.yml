@@ -32,4 +32,4 @@ runs:
   args:
     - '--login'
     - '-c'
-    - 'export HOME=/cam; export REPO=yegor256/tojos; cd ${HOME}; env; make -e'
+    - 'export HOME=/cam; export REPO=yegor256/tojos; cd ${HOME}; . /root/.profile; make -e'

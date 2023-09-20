@@ -42,24 +42,39 @@ if [ "${bash_version}" -lt 5 ]; then
     echo "${SHELL} version is older than five: ${bash_version}"
     exit -1
 fi
+
 ruby -v
-python3 --version
+
 if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
+    python3 --version
     echo "Python must be 3+"
     exit -1
 fi
+
 flake8 --version
+
 pylint --version
+
 xmlstarlet --version
+
 shellcheck --version
+
 pdflatex --version
+
 aspell --version
+
 rubocop -v
+
 inkscape --version
+
 cloc --version
+
 pygmentize -V
+
 pmd pmd --version
+
 bc -v
+
 java -jar "${JPEEK}" --help
 
 mkdir -p "$(dirname "${flag}")"
