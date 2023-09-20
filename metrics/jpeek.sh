@@ -32,11 +32,11 @@ CAMC NaN Cohesion Among Methods in Class
 NHD NaN Normalized Hamming Distance
 LCOM5 NaN Revision of the initial LCOM metric
 SCOM NaN Sensitive Class Cohesion Metric
-MMAC(cvc) NaN Same as MMAC, but constructors are excluded
-CAMC(cvc) NaN Same as CAMC, but constructors are excluded
-NHD(cvc) NaN Same as NHD, but constructors are excluded
-LCOM5(cvc) NaN Same as LCOM5, but constructors are excluded
-SCOM(cvc) NaN Same as SCOM, but constructors are excluded"
+MMAC-cvc NaN Same as MMAC, but constructors are excluded
+CAMC-cvc NaN Same as CAMC, but constructors are excluded
+NHD-cvc NaN Same as NHD, but constructors are excluded
+LCOM5-cvc NaN Same as LCOM5, but constructors are excluded
+SCOM-cvc NaN Same as SCOM, but constructors are excluded"
 
 file="${java//github/jpeek}"
 out=""

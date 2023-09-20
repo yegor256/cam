@@ -168,6 +168,8 @@ validate:
 	test -f "$(TARGET)/github/$(REPO)/.git"
 	test -d "$(TARGET)/data/jpeek/github/$(REPO)/src/main/java"
 	test -d "$(TARGET)/measurements/$(REPO)/src/main/java"
+	test -d "$(TARGET)/temp/jpeek/$(REPO)"
+	test -d "$(TARGET)/temp/jpeek-cvc/$(REPO)"
 	test -f "$(TARGET)/temp/reports/01-delete-non-java-files.sh.tex"
 	test -f "$(TARGET)/temp/pdf-report/report.tex"
 	echo -e "\n\nALL CLEAN!"

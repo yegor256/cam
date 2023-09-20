@@ -42,4 +42,7 @@ done
 
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
-echo "All repos passed through jPeek, ${total} repositories in $(nproc) threads, in $(echo "$(date +%s) - ${start}" | bc)s"
+
+done=$(find "${TARGET}/temp/jpeek/all" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)
+
+echo "All ${total} repositories passed through jPeek, ${done} of them produced data, in $(nproc) threads, in $(echo "$(date +%s) - ${start}" | bc)s"
