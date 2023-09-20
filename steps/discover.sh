@@ -43,4 +43,5 @@ else
     echo "Using repos list of csv..."
     cat "${REPOS}" >> "${csv}"
 fi
+
 cat "${csv}"

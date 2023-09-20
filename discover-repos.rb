@@ -50,7 +50,7 @@ unless opts[:token].empty?
   github = Octokit::Client.new(access_token: opts[:token])
   puts 'Accessing GitHub with personal access token!'
 end
-names = []
+names = Set.new
 page = 0
 query = [
   "stars:#{opts['min-stars']}..#{opts['max-stars']}",
@@ -63,11 +63,7 @@ query = [
   'android'
 ].join(' ')
 loop do
-  json = github.search_repositories(
-    query,
-    per_page: size,
-    page: page
-  )
+  json = github.search_repositories(query, per_page: size, page: page)
   json[:items].each do |i|
     names << i[:full_name]
     puts "Found #{i[:full_name].inspect} GitHub repo ##{names.count} \
@@ -75,13 +71,12 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
   break if names.count >= opts[:total]
-  if page.positive?
-    puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
-    sleep 10
-  end
+  puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
+  sleep 10
   page += 1
 end
 puts "Found #{names.count} total repositories in GitHub"
+
 if names.count > opts[:total]
   names = names.first(opts[:total])
   puts "We will use only the first #{opts[:total]} repositories"

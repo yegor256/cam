@@ -125,4 +125,4 @@ for jpeek in "${dir}" "${dir}cvc"; do
         fi
     done
 done
-echo "${repo} analyzed through jPeek (${pos}/${total}) in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "Analyzed ${repo} through jPeek (${pos}/${total}) in $(echo "$(date +%s) - ${start}" | bc)s"
