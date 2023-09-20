@@ -63,7 +63,7 @@ build() {
     fi
 }
 
-dir="${TARGET}/temp/jpeek"
+dir="${TARGET}/temp/jpeek/${repo}"
 
 collect() {
     java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
