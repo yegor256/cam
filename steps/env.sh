@@ -73,6 +73,8 @@ pygmentize -V
 
 pmd pmd --version
 
+nproc --version
+
 bc -v
 
 java -jar "${JPEEK}" --help
