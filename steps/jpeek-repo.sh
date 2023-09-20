@@ -63,6 +63,14 @@ build() {
     fi
 }
 
+jpeek() {
+    java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
+        --include-private-methods --sources "${project}" \
+        --target "${dir}" > "${logs}/jpeek-main.log" 2>&1
+    java -jar ${JPEEK} --overwrite --sources "${project}" \
+        --target "${dir}cvc" > "${logs}/jpeek-cvc.log" 2>&1
+}
+
 declare -i re=0
 until build; do
     re=re+1
@@ -75,12 +83,10 @@ dir="${TARGET}/temp/jpeek"
 
 start=$(date +%s)
 
-java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
-    --include-private-methods --sources "${project}" \
-    --target "${dir}" > "${logs}/jpeek-main.log" 2>&1
-
-java -jar ${JPEEK} --overwrite --sources "${project}" \
-    --target "${dir}cvc" > "${logs}/jpeek-cvc.log" 2>&1
+if ! jpeek; then
+    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error"
+    exit
+fi
 
 accept=".*[^index|matrix|skeleton].xml"
 lastm=""
