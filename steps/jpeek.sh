@@ -40,7 +40,7 @@ declare -i repo=0
 for d in ${repos}; do
     r=$(echo "${d}" | sed "s|${TARGET}/github/||")
     repo=repo+1
-    echo timeout 1h "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
+    echo "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
 
 cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"

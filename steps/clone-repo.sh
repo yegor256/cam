@@ -43,7 +43,7 @@ fi
 
 echo "${repo} (${pos}/${total}): trying to clone it..."
 declare -i re=0
-until git clone ${args} "https://github.com/${repo}" "${dir}"; do
+until timeout 1h git clone ${args} "https://github.com/${repo}" "${dir}"; do
     if [ "${re}" -gt 5 ]; then
         echo "Too many failures (${re}) for ${repo}"
         exit -1

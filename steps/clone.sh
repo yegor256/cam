@@ -38,7 +38,7 @@ while IFS=',' read -r r tag; do
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here"
     else
-        echo timeout 1h "$(dirname "$0")/clone-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
+        echo "$(dirname "$0")/clone-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
     fi
 done < "${TARGET}/repositories.csv"
 

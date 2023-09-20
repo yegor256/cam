@@ -37,7 +37,7 @@ mkdir -p "${logs}"
 build() {
     if [ -e "${project}/gradlew" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradlew..."
-        if ! "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
+        if ! timeout 1h "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradlew, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
@@ -45,14 +45,14 @@ build() {
     elif [ -e "${project}/build.gradle" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradle..."
         echo "apply plugin: 'java'" >> "${d}/build.gradle"
-        if ! gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
+        if ! timeout 1h gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
         echo "Сompiled ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
     elif [ -e "${project}/pom.xml" ]; then
         echo "Building ${repo} (${pos}/${total}) with Maven..."
-        if ! mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
+        if ! timeout 1h mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
             echo "Failed to compile ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
             exit
         fi
@@ -64,10 +64,10 @@ build() {
 }
 
 collect() {
-    java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
+    timeout 1h java -jar ${JPEEK} --overwrite --include-ctors --include-static-methods \
         --include-private-methods --sources "${project}" \
         --target "${TARGET}/temp/jpeek/all/${repo}" > "${logs}/jpeek-main.log" 2>&1
-    java -jar ${JPEEK} --overwrite --sources "${project}" \
+    timeout 1h java -jar ${JPEEK} --overwrite --sources "${project}" \
         --target "${TARGET}/temp/jpeek/cvc/${repo}" > "${logs}/jpeek-cvc.log" 2>&1
 }
 
