@@ -36,3 +36,7 @@ echo "enum Bar {}" > "${temp}/Bar.java"
 test ! -e "${temp}/Bar.java"
 grep "${temp}/Bar.java" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 A Java file with a enum inside was deleted correctly"
+
+"${LOCAL}/filters/delete-non-classes.py" "${temp}/file-is-absent.java" "${temp}/deleted.txt"
+grep -v "${temp}/file-is-absent.java" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 Absent file didn't fail the script"

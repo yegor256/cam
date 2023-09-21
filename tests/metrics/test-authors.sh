@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -20,23 +20,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set -e
+set -o pipefail
 
-import sys
-import javalang
-import os
+temp=$1
 
-if __name__ == '__main__':
-    java: str = sys.argv[1]
-    lst: str = sys.argv[2]
-
-    try:
-        with open(java) as f:
-            raw = javalang.parse.parse(f.read())
-            tree = raw.filter(javalang.tree.ClassDeclaration)
-            tree = list(value for value in tree)
-            if not tree:
-                os.remove(java)
-                with open(lst, 'a') as others:
-                    others.write(java + "\n")
-    except FileNotFoundError:
-        pass
+cd "${temp}"
+rm -rf *
+rm -rf .git
+git init --quiet .
+echo "class Foo {}" > Foo.java
+git add Foo.java
+git commit --quiet -am start
+"${LOCAL}/metrics/authors.sh" Foo.java stdout
+grep "authors 1" stdout >/dev/null
+echo "👍🏻 Correctly calculated authors"

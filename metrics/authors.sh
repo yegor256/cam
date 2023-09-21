@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -21,22 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-import javalang
-import os
+set -e
+set -o pipefail
 
-if __name__ == '__main__':
-    java: str = sys.argv[1]
-    lst: str = sys.argv[2]
+java=$1
+output=$2
 
-    try:
-        with open(java) as f:
-            raw = javalang.parse.parse(f.read())
-            tree = raw.filter(javalang.tree.ClassDeclaration)
-            tree = list(value for value in tree)
-            if not tree:
-                os.remove(java)
-                with open(lst, 'a') as others:
-                    others.write(java + "\n")
-    except FileNotFoundError:
-        pass
+cd "$(dirname "${java}")"
+noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
+echo "authors ${noca} Number of Committers/Authors" > "${output}"
