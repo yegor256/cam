@@ -11,6 +11,7 @@ merge:
     make lint
     make REPO=yegor256/tojos
     make validate
+    make test
 release:
   script: |
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
@@ -18,6 +19,6 @@ release:
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
-    sudo docker run --rm -v /tmp/dataset:/dataset -e "REPO=yegor256/tojos" -e "TARGET=/dataset" "${repo}:${tag}" 'make env lint; make -e'
+    sudo docker run --rm -v /tmp/dataset:/dataset -e "REPO=yegor256/tojos" -e "TARGET=/dataset" "${repo}:${tag}" 'make env lint; make -e; make validate; make test'
     cat ../docker-password | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"

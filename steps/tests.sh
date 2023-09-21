@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -20,23 +20,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set -e
+set -o pipefail
 
-import sys
-import javalang
-import os
+temp="${LOCAL}/temp"
+mkdir -p "${temp}"
 
-if __name__ == '__main__':
-    java: str = sys.argv[1]
-    lst: str = sys.argv[2]
-
-    try:
-        with open(java) as f:
-            try:
-                javalang.parse.parse(f.read())
-            except Exception:
-                os.remove(java)
-                with open(lst, 'a') as others:
-                    others.write(java + "\n")
-    except FileNotFoundError:
-        pass
-
+find "${LOCAL}/tests" -name '*.sh' | while read -r test; do
+    name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
+    t="${temp}/${test}"
+    mkdir -p "${t}"
+    echo -e "\n${name}:"
+    "${test}" "${t}"
+done

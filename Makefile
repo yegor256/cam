@@ -68,6 +68,9 @@ all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter me
 install:
 	$(call step,install)
 
+test:
+	$(call step,tests)
+
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
 	date +%s > "$(TARGET)/start.txt"

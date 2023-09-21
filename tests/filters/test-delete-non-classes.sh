@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -20,23 +20,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set -e
+set -o pipefail
 
-import sys
-import javalang
-import os
+temp=$1
 
-if __name__ == '__main__':
-    java: str = sys.argv[1]
-    lst: str = sys.argv[2]
+echo "interface Foo {}" > "${temp}/Foo.java"
+"${LOCAL}/filters/delete-non-classes.py" "${temp}/Foo.java" "${temp}/deleted.txt"
+test ! -e "${temp}/Foo.java"
+grep "${temp}/Foo.java" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 A Java file with an interface inside was deleted correctly"
 
-    try:
-        with open(java) as f:
-            try:
-                javalang.parse.parse(f.read())
-            except Exception:
-                os.remove(java)
-                with open(lst, 'a') as others:
-                    others.write(java + "\n")
-    except FileNotFoundError:
-        pass
-
+echo "enum Bar {}" > "${temp}/Bar.java"
+"${LOCAL}/filters/delete-non-classes.py" "${temp}/Bar.java" "${temp}/deleted.txt"
+test ! -e "${temp}/Bar.java"
+grep "${temp}/Bar.java" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 A Java file with a enum inside was deleted correctly"
