@@ -23,6 +23,7 @@
 
 set -e
 set -o pipefail
+set -x
 
 home=$1
 temp=$2
