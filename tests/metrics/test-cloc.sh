@@ -25,12 +25,7 @@ set -o pipefail
 
 temp=$1
 
-echo "--- not java syntax at all ---" > "${temp}/Foo.java"
-rm -f "${temp}/report/unparseable-files.txt"
-msg=$("${LOCAL}/filters/04-delete-unparseable.sh" "${temp}" "${temp}/report")
-echo "${msg}" | grep "1 of them were Java files with broken syntax" >/dev/null
-test ! -e "${temp}/Foo.java"
-test -e "${temp}/report/unparseable-files.txt"
-test "$(wc -l < "${temp}/report/unparseable-files.txt" | xargs)" = 1
-echo "👍🏻 An unparseable Java file was deleted"
-
+echo "class Foo {}" > "${temp}/Foo.java"
+"${LOCAL}/metrics/cloc.sh" "${temp}/Foo.java" "${temp}/stdout"
+grep "loc 1" "${temp}/stdout" >/dev/null
+echo "👍🏻 Correctly counted lines of code"

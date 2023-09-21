@@ -26,8 +26,8 @@ set -o pipefail
 temp=$1
 
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 >/dev/null
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
-"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 >/dev/null
 echo "👍🏻 A re-clone worked correctly"

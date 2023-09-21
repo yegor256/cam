@@ -28,7 +28,7 @@ temp=$1
 echo "some text in the file" > "${temp}/Foo.java"
 rm -f "${temp}/report/files-with-long-lines.txt"
 msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/report")
-echo "${msg}" | grep "no files among 1 total"
+echo "${msg}" | grep "no files among 1 total" >/dev/null
 test -e "${temp}/Foo.java"
 test -e "${temp}/report/files-with-long-lines.txt"
 test "$(wc -l < "${temp}/report/files-with-long-lines.txt" | xargs)" = 0
@@ -37,7 +37,7 @@ echo "👍🏻 A Java file with short lines wasn't deleted"
 printf 'a%.0s' {1..5000} > "${temp}/Foo.java"
 rm -f "${temp}/report/files-with-long-lines.txt"
 msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/report")
-echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters"
+echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters" >/dev/null
 test ! -e "${temp}/Foo.java"
 test -e "${temp}/report/files-with-long-lines.txt"
 test "$(wc -l < "${temp}/report/files-with-long-lines.txt" | xargs)" = 1

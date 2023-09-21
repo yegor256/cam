@@ -27,6 +27,6 @@ temp=$1
 
 echo "yegor256/jaxec" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh"
+"${LOCAL}/steps/clone.sh" >/dev/null
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
