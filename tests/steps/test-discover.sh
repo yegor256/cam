@@ -23,28 +23,9 @@
 set -e
 set -o pipefail
 
-details="${TARGET}/temp/repo-details.tex"
-mkdir "$(dirname "${details}")"
+temp=$1
 
-csv="${TARGET}/repositories.csv"
-echo "" > "${details}"
-if [ -e "${csv}" ]; then
-    echo "The list of repos is already here: ${csv}"
-elif [ -n "${REPO}" ]; then
-    echo "Using one repo: ${REPO}"
-    echo "${REPO}" >> "${csv}"
-elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
-    echo "Using discover-repos.rb..."
-    ruby "${LOCAL}/discover-repos.rb" \
-        "--token=${TOKEN}" \
-        "--total=${TOTAL}" \
-        "--path=${csv}" \
-        "--tex=${TARGET}/temp/repo-details.tex" \
-        "--min-stars=400" \
-        "--max-stars=10000"
-else
-    echo "Using repos list of csv..."
-    cat "${REPOS}" >> "${csv}"
-fi
-
-cat "${csv}"
+rm -f "${TARGET}/repositories.csv"
+TOTAL=3 "${LOCAL}/steps/discover.sh" >/dev/null
+test -e "${TARGET}/repositories.csv"
+echo "👍🏻 A few repositories discovered correctly"

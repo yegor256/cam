@@ -82,6 +82,7 @@ if names.count > opts[:total]
   puts "We will use only the first #{opts[:total]} repositories"
 end
 
+FileUtils.mkdir_p(File.dirname(opts[:tex]))
 File.write(
   opts[:tex],
   [
