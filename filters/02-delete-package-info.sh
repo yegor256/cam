@@ -27,11 +27,12 @@ set -o pipefail
 home=$1
 temp=$2
 
-list="${temp}/package-info-files.txt"
+list="${temp}/filter-lists/package-info-files.txt"
 if [ -e "${list}" ]; then
     exit
 fi
 
+mkdir -p "$(dirname "${list}")"
 find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
 while read -r f; do
     rm -f "${f}"

@@ -30,12 +30,14 @@ temp=$2
 total=$(find "${home}" -type f | wc -l)
 java=$(find "${home}" -type f -a -name '*.java' | wc -l)
 
-list="${temp}/non-java-files.txt"
+list="${temp}/filter-lists/non-java-files.txt"
 if [ -e "${list}" ]; then
     exit
 fi
 
-find "${home}" -type f -not -name '*.java' -print > "${list}" | while read -r f; do
+mkdir -p "$(dirname "${list}")"
+find "${home}" -type f -not -name '*.java' -print > "${list}"
+while read -r f; do
     rm -f "${f}"
 done < "${list}"
 

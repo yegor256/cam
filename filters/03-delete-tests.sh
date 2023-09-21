@@ -29,7 +29,7 @@ temp=$2
 
 total=$(find "${home}" -type f | wc -l | xargs)
 
-list="${temp}/test-files.txt"
+list="${temp}/filter-lists/test-files.txt"
 if [ -e "${list}" ]; then
     exit
 fi

@@ -24,13 +24,14 @@ set -e
 set -o pipefail
 
 temp=$1
+list="${temp}/temp/filter-lists/test-files.txt"
 
 echo "class FooTest {}" > "${temp}/FooTest.java"
-rm -f "${temp}/report/test-files.txt"
-msg=$("${LOCAL}/filters/03-delete-tests.sh" "${temp}" "${temp}/report")
+rm -f "${list}"
+msg=$("${LOCAL}/filters/03-delete-tests.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "that's why they were deleted" >/dev/null
 test ! -e "${temp}/FooTest.java"
-test -e "${temp}/report/test-files.txt"
-test "$(wc -l < "${temp}/report/test-files.txt" | xargs)" = 1
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
 echo "👍🏻 A Java test file was deleted"
 

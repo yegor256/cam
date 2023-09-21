@@ -27,7 +27,7 @@ set -o pipefail
 home=$1
 temp=$2
 
-list="${temp}/unparseable-files.txt"
+list="${temp}/filter-lists/unparseable-files.txt"
 if [ -e "${list}" ]; then
     exit
 fi

@@ -24,13 +24,14 @@ set -e
 set -o pipefail
 
 temp=$1
+list="${temp}/temp/filter-lists/unparseable-files.txt"
 
 echo "--- not java syntax at all ---" > "${temp}/Foo.java"
-rm -f "${temp}/report/unparseable-files.txt"
-msg=$("${LOCAL}/filters/04-delete-unparseable.sh" "${temp}" "${temp}/report")
+rm -f "${list}"
+msg=$("${LOCAL}/filters/04-delete-unparseable.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "1 of them were Java files with broken syntax" >/dev/null
 test ! -e "${temp}/Foo.java"
-test -e "${temp}/report/unparseable-files.txt"
-test "$(wc -l < "${temp}/report/unparseable-files.txt" | xargs)" = 1
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
 echo "👍🏻 An unparseable Java file was deleted"
 

@@ -25,6 +25,19 @@ set -o pipefail
 
 temp=$1
 
+rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/a/b"
 "${LOCAL}/steps/filter.sh" >/dev/null
 echo "👍🏻 A simple filtering ran smoothly"
+
+rm -rf "${TARGET}/github"
+rm -rf "${TARGET}/temp/reports"
+rm -rf "${TARGET}/temp/filter-lists"
+mkdir -p "${TARGET}/github/foo/bar"
+echo "class Foo {}" > "${TARGET}/github/foo/bar/Foo.java"
+echo "interface Boom {}" > "${TARGET}/github/foo/bar/Boom.java"
+echo "broken code" > "${TARGET}/github/foo/bar/Broken.java"
+"${LOCAL}/steps/filter.sh" >/dev/null
+test ! -e "${TARGET}/github/foo/bar/Broken.java"
+test ! -e "${TARGET}/github/foo/bar/Boom.java"
+echo "👍🏻 A more complex filtering ran smoothly"

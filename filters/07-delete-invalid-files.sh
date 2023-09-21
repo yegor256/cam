@@ -27,11 +27,12 @@ set -o pipefail
 home=$1
 temp=$2
 
-list="${temp}/invalid-files.txt"
+list="${temp}/filter-lists/invalid-files.txt"
 if [ -e "${list}" ]; then
     exit
 fi
 
+mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
 candidates="${temp}/classes-to-filter.txt"

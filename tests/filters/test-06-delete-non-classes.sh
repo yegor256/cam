@@ -24,13 +24,14 @@ set -e
 set -o pipefail
 
 temp=$1
+list="${temp}/temp/filter-lists/non-class-files.txt"
 
 echo "interface Foo {}" > "${temp}/Foo.java"
-rm -f "${temp}/report/non-class-files.txt"
-msg=$("${LOCAL}/filters/06-delete-non-classes.sh" "${temp}" "${temp}/report")
+rm -f "${list}"
+msg=$("${LOCAL}/filters/06-delete-non-classes.sh" "${temp}" "${temp}/temp")
 # echo "${msg}" | grep "that's why they were deleted"
 test ! -e "${temp}/Foo.java"
-test -e "${temp}/report/non-class-files.txt"
-test "$(wc -l < "${temp}/report/non-class-files.txt" | xargs)" = 1
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
 echo "👍🏻 A file with a Java interface was deleted"
 

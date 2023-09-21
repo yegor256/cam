@@ -29,7 +29,7 @@ temp=$2
 
 max=1024
 
-list="${temp}/files-with-long-lines.txt"
+list="${temp}/filter-lists/files-with-long-lines.txt"
 if [ -e "${list}" ]; then
     exit
 fi
