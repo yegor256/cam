@@ -37,12 +37,10 @@ touch "${list}"
 candidates="${temp}/files-to-parse.txt"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while IFS= read -r f; do
-    if ! python3 -c "
-import sys
-import javalang
-with open('${f}') as f:
-    javalang.parse.parse(f.read())
-" >/dev/null 2>&1; then echo "${f}" >> "${list}"; rm "${f}"; fi
+    if ! python3 "${LOCAL}/filters/parse-java.py" "${f}" >/dev/null 2>&1; then
+        echo "${f}" >> "${list}"
+        rm "${f}"
+    fi
 done < "${candidates}"
 
 if [ -s "${list}" ]; then
