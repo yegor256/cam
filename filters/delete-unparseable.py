@@ -26,17 +26,17 @@ import javalang
 import os
 
 if __name__ == '__main__':
-    java: str = sys.argv[1]
-    lst: str = sys.argv[2]
+    JAVA: str = sys.argv[1]
+    LST: str = sys.argv[2]
 
     try:
-        with open(java) as f:
+        with open(JAVA) as f:
             try:
                 javalang.parse.parse(f.read())
             except Exception:
-                os.remove(java)
-                with open(lst, 'a+') as others:
-                    others.write(java + "\n")
+                os.remove(JAVA)
+                with open(LST, 'a+') as others:
+                    others.write(JAVA + "\n")
     except FileNotFoundError:
         pass
 
