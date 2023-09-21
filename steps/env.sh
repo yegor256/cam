@@ -75,6 +75,8 @@ pmd pmd --version
 
 nproc --version
 
+sed --version
+
 realpath --version
 
 bc -v

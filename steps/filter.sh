@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 mkdir -p "${TARGET}/temp/reports"
-find "${LOCAL}/filters" -name '*.sh' -realpath --relative-to="${LOCAL}/filters" {} \; | while read -r filter; do
+find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | while read -r filter; do
     tex="${TARGET}/temp/reports/${filter}.tex"
     if [ -e "${tex}" ]; then
         echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
@@ -40,7 +40,7 @@ find "${LOCAL}/filters" -name '*.sh' -realpath --relative-to="${LOCAL}/filters" 
     fi
 done
 
-find "${TARGET}/temp/reports/" -exec basename {} \; | while read -r f; do
+find "${TARGET}/temp/reports" -type f -exec basename {} \; | while read -r f; do
     echo "${f}:"
     cat "${TARGET}/temp/reports/${f}"
     echo ""

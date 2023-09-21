@@ -137,7 +137,7 @@ class NotClassError(Exception):
 
 if __name__ == '__main__':
     JAVA = sys.argv[1]
-    metrics = sys.argv[2]
+    METRICS = sys.argv[2]
     with open(JAVA, encoding='utf-8', errors='ignore') as file:
         try:
             raw = javalang.parse.parse(file.read())
@@ -145,7 +145,7 @@ if __name__ == '__main__':
             tree_class = list(value for value in tree)
             if not tree_class:
                 raise NotClassError('This is not a class')
-            with open(metrics, 'a', encoding='utf-8') as metric:
+            with open(METRICS, 'a', encoding='utf-8') as metric:
                 metric.write(f'attributes {attrs(tree_class)} '
                              f'Number of Non-Static Attributes\n')
                 metric.write(f'sattributes {sattrs(tree_class)} '

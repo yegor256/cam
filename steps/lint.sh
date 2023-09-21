@@ -30,9 +30,9 @@ if [ -e "${flag}" ]; then
     exit
 fi
 
-flake8 "${LOCAL}/metrics/"
+flake8 "${LOCAL}/metrics/" "${LOCAL}/steps/"
 
-pylint "${LOCAL}/metrics/"
+pylint "${LOCAL}/metrics/" "${LOCAL}/steps/"
 
 rubocop
 

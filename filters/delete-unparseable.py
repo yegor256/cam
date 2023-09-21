@@ -30,9 +30,10 @@ if __name__ == '__main__':
     lst: str = sys.argv[2]
 
     with open(java) as f:
-        javalang.parse.parse(f.read())
-    except Error as ex:
-        os.remove(java)
-        with open(lst, 'a') as others:
-            others.write(java + "\n")
+        try:
+            javalang.parse.parse(f.read())
+        except javalang.tokenizer.LexerError:
+            os.remove(java)
+            with open(lst, 'a') as others:
+                others.write(java + "\n")
 

@@ -154,22 +154,4 @@ $(TARGET)/temp:
 # Check that all files that are supposed to be in place, actually
 # are there. This goal must be run only during testing, when REPO is specified.
 validate:
-	test -d "$(TARGET)"
-	test -f "$(TARGET)/start.txt"
-	test -f "$(TARGET)/hashes.csv"
-	test -f "$(TARGET)/report.pdf"
-	test -f "$(TARGET)/repositories.csv"
-	test -f "$(TARGET)/data/$(REPO)/ncss.csv"
-	test -f "$(TARGET)/data/$(REPO)/NHD.csv"
-	test -f "$(TARGET)/data/$(REPO)/SCOM(cvc).csv"
-	test -f "$(TARGET)/data/ncss.csv"
-	test -f "$(TARGET)/data/NHD.csv"
-	test -f "$(TARGET)/data/SCOM(cvc).csv"
-	test -f "$(TARGET)/github/$(REPO)/.git"
-	test -d "$(TARGET)/data/jpeek/github/$(REPO)/src/main/java"
-	test -d "$(TARGET)/measurements/$(REPO)/src/main/java"
-	test -d "$(TARGET)/temp/jpeek/$(REPO)"
-	test -d "$(TARGET)/temp/jpeek-cvc/$(REPO)"
-	test -f "$(TARGET)/temp/reports/01-delete-non-java-files.sh.tex"
-	test -f "$(TARGET)/temp/pdf-report/report.tex"
-	echo -e "\n\nALL CLEAN!"
+	$(call step,validate)

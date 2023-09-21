@@ -52,7 +52,7 @@ done
 printf "\n" >> "${TARGET}/data/all.csv"
 
 find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print | while read -r d; do
-    r=$(realpath --relative-to="${TARGET}/data" "$r" )
+    r=$(realpath --relative-to="${TARGET}/data" "$d" )
     find "${d}" -name '*.csv' -maxdepth 1 -exec basename {} \; | while read -r csv; do
         while read -r t; do
             echo "${r},${t}" >> "${TARGET}/data/${csv}"

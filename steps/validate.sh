@@ -20,38 +20,34 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+repo=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \; | head -1)
+echo "Found ${repo} repository for validating"
 
-list="${temp}/unparseable-files.txt"
-if [ -e "${list}" ]; then
-    exit
+test -d "${TARGET}"
+for f in start.txt hashes.csv report.pdf repositories.csv; do
+    test -f "${TARGET}/${f}"
+done
+
+test -f "${TARGET}/data/${repo}/ncss.csv"
+test -f "${TARGET}/data/${repo}/NHD.csv"
+test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"
+test -f "${TARGET}/data/ncss.csv"
+test -f "${TARGET}/data/NHD.csv"
+test -f "${TARGET}/data/SCOM-cvc.csv"
+test -d "${TARGET}/jpeek/${repo}/src/main/java"
+test -d "${TARGET}/measurements/${repo}/src/main/java"
+test -d "${TARGET}/temp/jpeek/all/${repo}"
+test -d "${TARGET}/temp/jpeek/cvc/${repo}"
+test -f "${TARGET}/temp/reports/01-delete-non-java-files.sh.tex"
+test -f "${TARGET}/temp/pdf-report/report.tex"
+test -f "${TARGET}"/*.zip
+
+if cat "${TARGET}/data/${repo}/NHD.csv" | grep "NaN"; then
+    echo "NaN found in jpeek report"
+    exit 1
 fi
 
-touch "${list}"
-
-jobs=${TARGET}/temp/delete-unparseable.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-candidates="${temp}/files-to-parse.txt"
-find "${home}" -type f -name '*.java' -print > "${candidates}"
-while read -r f; do
-    echo "python3 \"${LOCAL}/filters/delete-unparseable.py\" \"${f}\" \"${list}\" >/dev/null 2>&1" >> "${jobs}"
-done < "${candidates}"
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
-wait
-
-if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \
-        "$(wc -l < "${candidates}")" \
-        "$(wc -l < "${list}")"
-else
-    printf "There were no files with broken syntax among %d files total" \
-        "$(wc -l < "${candidates}")"
-fi
+echo -e "ALL CLEAN!"
