@@ -24,8 +24,16 @@ set -e
 set -o pipefail
 
 temp=$1
+csv="${TARGET}/repositories.csv"
 
-rm -f "${TARGET}/repositories.csv"
+rm -f "${csv}"
 TOTAL=3 "${LOCAL}/steps/discover.sh" >/dev/null
-test -e "${TARGET}/repositories.csv"
+test -e "${csv}"
+test $(wc -l < "${csv}" | xargs) = '3'
 echo "👍🏻 A few repositories discovered correctly"
+
+rm -f "${csv}"
+REPO=yegor256/jaxec "${LOCAL}/steps/discover.sh" >/dev/null
+test -e "${csv}"
+test $(wc -l < "${csv}" | xargs) = '1'
+echo "👍🏻 A single repository discovered correctly"
