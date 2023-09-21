@@ -23,7 +23,7 @@
 
 set -e
 set -o pipefail
-
+set -x
 home=$1
 temp=$2
 
@@ -32,6 +32,7 @@ if [ -e "${list}" ]; then
     exit
 fi
 
+mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
 jobs=${TARGET}/temp/delete-unparseable.txt
@@ -45,7 +46,7 @@ find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
     echo "python3 \"${LOCAL}/filters/delete-unparseable.py\" \"${f}\" \"${list}\" >/dev/null 2>&1" >> "${jobs}"
 done < "${candidates}"
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c '{}'
 wait
 
 if [ -s "${list}" ]; then

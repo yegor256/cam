@@ -29,7 +29,7 @@ echo "class FooTest {}" > "${temp}/FooTest.java"
 rm -f "${temp}/report/test-files.txt"
 msg=$("${LOCAL}/filters/03-delete-tests.sh" "${temp}" "${temp}/report")
 echo "${msg}" | grep "that's why they were deleted"
-test ! -e "${temp}/FooTeest.java"
+test ! -e "${temp}/FooTest.java"
 test -e "${temp}/report/test-files.txt"
 test "$(wc -l < "${temp}/report/test-files.txt" | xargs)" = 1
 echo "👍🏻 A Java test file was deleted"

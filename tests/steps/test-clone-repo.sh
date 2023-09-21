@@ -25,9 +25,9 @@ set -o pipefail
 
 temp=$1
 
-echo "this is not Java code at all" > "${temp}/Foo.java"
-TARGET="${temp}/clone" "${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
-test ! -e "${temp}/clone/yegor256/jaxec/pom.xml"
+rm -rf "${TARGET}/github"
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
+test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
-TARGET="${temp}/clone" "${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1
 echo "👍🏻 A re-clone worked correctly"

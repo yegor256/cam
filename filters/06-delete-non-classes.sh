@@ -32,6 +32,7 @@ if [ -e "${list}" ]; then
     exit
 fi
 
+mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
 jobs=${TARGET}/temp/delete-non-classes.txt

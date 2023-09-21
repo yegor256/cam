@@ -23,15 +23,14 @@
 set -e
 set -o pipefail
 
-temp="${LOCAL}/temp"
-mkdir -p "${temp}"
+temp=$1
 
-find "${LOCAL}/tests" -name '*.sh' | while read -r test; do
-    name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
-    t="${temp}/${name}"
-    mkdir -p "${t}"
-    echo -e "\n${name}:"
-    tgt="${t}/target"
-    mkdir -p "${tgt}"
-    TARGET="${tgt}" "${test}" "${t}"
-done
+echo "interface Foo {}" > "${temp}/Foo.java"
+rm -f "${temp}/report/non-class-files.txt"
+msg=$("${LOCAL}/filters/06-delete-non-classes.sh" "${temp}" "${temp}/report")
+# echo "${msg}" | grep "that's why they were deleted"
+test ! -e "${temp}/Foo.java"
+test -e "${temp}/report/non-class-files.txt"
+test "$(wc -l < "${temp}/report/non-class-files.txt" | xargs)" = 1
+echo "👍🏻 A file with a Java interface was deleted"
+

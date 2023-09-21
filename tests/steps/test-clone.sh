@@ -23,15 +23,10 @@
 set -e
 set -o pipefail
 
-temp="${LOCAL}/temp"
-mkdir -p "${temp}"
+temp=$1
 
-find "${LOCAL}/tests" -name '*.sh' | while read -r test; do
-    name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
-    t="${temp}/${name}"
-    mkdir -p "${t}"
-    echo -e "\n${name}:"
-    tgt="${t}/target"
-    mkdir -p "${tgt}"
-    TARGET="${tgt}" "${test}" "${t}"
-done
+echo "yegor256/jaxec" > "${TARGET}/repositories.csv"
+rm -rf "${TARGET}/github"
+"${LOCAL}/steps/clone.sh"
+test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
+echo "👍🏻 A repo cloned correctly"
