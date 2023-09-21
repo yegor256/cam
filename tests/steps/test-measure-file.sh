@@ -20,39 +20,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
 
-list="${temp}/filter-lists/non-class-files.txt"
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-touch "${list}"
-
-jobs=${TARGET}/temp/delete-non-classes.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-candidates="${temp}/classes-to-challenge.txt"
-mkdir -p "$(dirname "${candidates}")"
-find "${home}" -type f -name '*.java' -print > "${candidates}"
-while read -r f; do
-    echo "python3 \"${LOCAL}/filters/delete-non-classes.py\" \"${f}\" \"${list}\" >/dev/null 2>&1" >> "${jobs}"
-done < "${candidates}"
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
-wait
-
-if [ -s "${list}" ]; then
-    printf "There were %d files total. %d of them were not Java classes but interfaces or enums, that's why were deleted." \
-        "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)"
-else
-    printf "All %d files are Java classes, nothing to delete" \
-        "$(wc -l < "${candidates}" | xargs)"
-fi
+echo "class Foo {}" > "${temp}/Foo.java"
+"${LOCAL}/steps/measure-file.sh" "${temp}/Foo.java" "${temp}/m">/dev/null
+test -e "${temp}/m"
+echo "👍🏻 Single file measured correctly"
