@@ -29,6 +29,7 @@ csv="${TARGET}/repositories.csv"
 rm -f "${csv}"
 TOTAL=3 "${LOCAL}/steps/discover.sh" >/dev/null
 test -e "${csv}"
+test -e "${TARGET}/temp/repo-details.tex"
 test $(wc -l < "${csv}" | xargs) = '3'
 echo "👍🏻 A few repositories discovered correctly"
 
