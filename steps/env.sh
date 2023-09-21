@@ -76,8 +76,10 @@ pmd pmd --version
 
 nproc --version
 
+# Part of coreutils (by GNU):
 sed --version
 
+# Part of coreutils (by GNU):
 realpath --version
 
 bc -v
