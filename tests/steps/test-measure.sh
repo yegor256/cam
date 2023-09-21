@@ -23,32 +23,10 @@
 set -e
 set -o pipefail
 
-start=$(date +%s)
+temp=$1
 
-echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
-
-javas=$(find "${TARGET}/github" -name '*.java' -print)
-total=$(echo "${javas}" | wc -l | xargs)
-echo "Found ${total} Java files, starting to collect metrics..."
-
-jobs=${TARGET}/temp/measure-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-declare -i file=0
-echo "${javas}" | while read -r java; do
-    file=$((file+1))
-    rel=$(realpath --relative-to="${TARGET}/github" "${java}")
-    javam="${TARGET}/measurements/${rel}.m"
-    if [ -e "${javam}" ]; then
-        echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
-        continue
-    fi
-    echo "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}" >> "${jobs}"
-done
-
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
-wait
-
-echo "All metrics calculated in ${total} files in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"
+mkdir -p "${TARGET}/github/a/b"
+echo "class Foo {}" > "${TARGET}/github/a/b/Foo.java"
+"${LOCAL}/steps/measure.sh" >/dev/null
+test -e "${TARGET}/measurements/a/b/Foo.java.m"
+echo "👍🏻 Measured metrics correctly"
