@@ -34,20 +34,19 @@ fi
 
 touch "${list}"
 
+jobs=${TARGET}/temp/delete-non-classes.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+touch "${jobs}"
+
 candidates="${temp}/classes-to-challenge.txt"
+mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
-    if ! python3 -c "
-import sys
-import javalang
-with open('${f}') as f:
-    raw = javalang.parse.parse(f.read())
-    tree = raw.filter(javalang.tree.ClassDeclaration)
-    tree = list(value for value in tree)
-    if not tree:
-        exit(1)
-" >/dev/null 2>&1; then echo "${f}" >> "${list}"; rm "${f}"; fi
+    echo "python3 \"${LOCAL}/filters/delete-non-classes.py\" \"${f}\" \"${list}\" >/dev/null 2>&1" >> "${jobs}"
 done < "${candidates}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+wait
 
 if [ -s "${list}" ]; then
     echo "There were $(wc -l < "${candidates}") files total.

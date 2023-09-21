@@ -35,8 +35,7 @@ if [ -e "${list}" ]; then
     exit
 fi
 
-find "${home}" -type f -not -name '*.java' -print > "${list}"
-while read -r f; do
+find "${home}" -type f -not -name '*.java' -print > "${list}" | while read -r f; do
     rm -f "${f}"
 done < "${list}"
 

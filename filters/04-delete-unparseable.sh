@@ -40,6 +40,7 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
 candidates="${temp}/files-to-parse.txt"
+mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
     echo "python3 \"${LOCAL}/filters/delete-unparseable.py\" \"${f}\" \"${list}\" >/dev/null 2>&1" >> "${jobs}"

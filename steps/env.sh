@@ -22,6 +22,7 @@
 # SOFTWARE.
 set -e
 set -o pipefail
+set -x
 
 echo "TARGET=${TARGET}"
 echo "LOCAL=${LOCAL}"

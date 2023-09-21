@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env python3
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2022 Yegor Bugayenko
@@ -20,34 +20,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-set -e
-set -o pipefail
 
-repo=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \; | head -1)
-echo "Found ${repo} repository for validating"
+import sys
+import javalang
+import os
 
-test -d "${TARGET}"
-for f in start.txt hashes.csv report.pdf repositories.csv; do
-    test -f "${TARGET}/${f}"
-done
+if __name__ == '__main__':
+    java: str = sys.argv[1]
+    lst: str = sys.argv[2]
 
-test -f "${TARGET}/data/${repo}/ncss.csv"
-test -f "${TARGET}/data/${repo}/NHD.csv"
-test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"
-test -f "${TARGET}/data/ncss.csv"
-test -f "${TARGET}/data/NHD.csv"
-test -f "${TARGET}/data/SCOM-cvc.csv"
-test -d "${TARGET}/jpeek/${repo}/src/main/java"
-test -d "${TARGET}/measurements/${repo}/src/main/java"
-test -d "${TARGET}/temp/jpeek/all/${repo}"
-test -d "${TARGET}/temp/jpeek/cvc/${repo}"
-test -f "${TARGET}/temp/reports/01-delete-non-java-files.sh.tex"
-test -f "${TARGET}/temp/pdf-report/report.tex"
-test -f "${TARGET}"/*.zip
-
-if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
-    echo "NaN found in jpeek report"
-    exit 1
-fi
-
-echo -e "ALL CLEAN!"
+    with open(java) as f:
+        raw = javalang.parse.parse(f.read())
+        tree = raw.filter(javalang.tree.ClassDeclaration)
+        tree = list(value for value in tree)
+        if not tree:
+            os.remove(java)
+            with open(lst, 'a') as others:
+                others.write(java + "\n")
