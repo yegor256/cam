@@ -36,7 +36,7 @@ find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filt
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \
             > "${tex}"
-        echo "Filter ${filter} fininshed in $(echo "$(date +%s) - ${start}" | bc)s and published its results to ${TARGET}/temp/reports/${filter}.tex "
+        echo "Filter ${filter} finished in $(echo "$(date +%s) - ${start}" | bc)s and published its results to ${TARGET}/temp/reports/${filter}.tex "
     fi
 done
 
