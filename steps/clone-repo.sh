@@ -24,8 +24,9 @@ set -e
 set -o pipefail
 
 repo=$1
-pos=$2
-total=$3
+tag=$2
+pos=$3
+total=$4
 
 start=$(date +%s)
 
@@ -36,23 +37,23 @@ if [ -e "${dir}" ]; then
     exit
 fi
 
-args="--quiet --depth 1"
-if [ ! -z "${tag}" ]; then
-    args="${args} --branch="${tag}""
+declare -a args=('--quiet' '--depth=')
+if [ ! "${tag}" = '.' ]; then
+    args+=("--branch=${tag}")
 fi
 
 echo "${repo} (${pos}/${total}): trying to clone it..."
 declare -i re=0
-until timeout 1h git clone ${args} "https://github.com/${repo}" "${dir}"; do
+until timeout 1h git clone "${args[@]}" "https://github.com/${repo}" "${dir}"; do
     if [ "${re}" -gt 5 ]; then
         echo "Too many failures (${re}) for ${repo}"
-        exit -1
+        exit 1
     fi
-    re=re+1
+    re=$((re+1))
     rm -rf "${dir}"
     echo "Retry #${re} for ${repo}..."
     sleep "${re}"
 done
-printf "${repo},$(git --git-dir "${dir}/.git" rev-parse HEAD)\n" >> "${TARGET}/hashes.csv"
+printf "%s,%s\n" "${repo}" "$(git --git-dir "${dir}/.git" rev-parse HEAD)" >> "${TARGET}/hashes.csv"
 
 echo "${repo} cloned (${pos}/${total}) in $(echo "$(date +%s) - ${start}" | bc)s"

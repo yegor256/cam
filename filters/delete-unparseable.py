@@ -23,10 +23,16 @@
 
 import sys
 import javalang
+import os
 
 if __name__ == '__main__':
     java: str = sys.argv[1]
+    lst: str = sys.argv[2]
 
     with open(java) as f:
         javalang.parse.parse(f.read())
+    except Error as ex:
+        os.remove(java)
+        with open(lst, 'a') as others:
+            others.write(java + "\n")
 

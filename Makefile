@@ -101,7 +101,7 @@ wipe: clean
 env:
 	if [[ "$(MAKE_VERSION)" =~ ^[1-3] ]]; then
 	    echo "Make must be 4+: $(MAKE_VERSION)"
-	    exit -1
+	    exit 1
 	fi
 	$(call step,env)
 

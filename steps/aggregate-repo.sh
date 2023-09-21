@@ -27,22 +27,24 @@ repo=$1
 pos=$2
 total=$3
 
-ddir=$(echo "${repo}" | sed "s|${TARGET}/measurements|${TARGET}/data|")
+dir="${TARGET}/measurements/${repo}"
+ddir="${TARGET}/data/${repo}"
 if [ -e "${ddir}" ]; then
     echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
     exit
 fi
-find "${repo}" -name '*.m' | while IFS= read -r m; do
-    for v in $(ls ${m}.*); do
-        java=$(echo "${v}" | sed "s|${repo}||" | sed "s|\.m\..*$||")
-        metric=$(echo "${v}" | sed "s|${repo}${java}.m.||")
+
+find "${dir}" -name '*.m' | while read -r m; do
+    ls "${m}".* | while read -r v; do
+        java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
+        metric=$(echo "${v}" | sed "s|${dir}${java}.m.||")
         csv="${ddir}/${metric}.csv"
         mkdir -p $(dirname "${csv}")
         echo "${java},$(cat "${v}")" >> "${csv}"
     done
     csv="${ddir}/all.csv"
     mkdir -p "$(dirname "${csv}")"
-    java=$(echo "${m}" | sed "s|${repo}||" | sed "s|\.m$||")
+    java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
     printf "${java}" >> "${csv}"
     for a in ${all}; do
         if [ -e "${m}.${a}" ]; then
@@ -53,4 +55,5 @@ find "${repo}" -name '*.m' | while IFS= read -r m; do
     done
     printf "\n" >> "${csv}"
 done
+
 echo "${repo} aggregated (${pos}/${total})"

@@ -37,7 +37,7 @@ touch "${list}"
 candidates="${temp}/files-to-check-line-lengths.txt"
 max=1024
 find "${home}" -type f -name '*.java' -print > "${candidates}"
-while IFS= read -r f; do
+while read -r f; do
     length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
     if [ "${length}" -gt "${max}" ]; then
         echo "${f}" >> "${list}"

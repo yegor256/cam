@@ -34,14 +34,18 @@ fi
 
 touch "${list}"
 
+jobs=${TARGET}/temp/delete-unparseable.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+touch "${jobs}"
+
 candidates="${temp}/files-to-parse.txt"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
-while IFS= read -r f; do
-    if ! python3 "${LOCAL}/filters/parse-java.py" "${f}" >/dev/null 2>&1; then
-        echo "${f}" >> "${list}"
-        rm "${f}"
-    fi
+while read -r f; do
+    echo "python3" "${LOCAL}/filters/delete-unparseable.py" "${f}" "${list}" ">/dev/null" "2>&1" >> "${jobs}"
 done < "${candidates}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+wait
 
 if [ -s "${list}" ]; then
     printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \

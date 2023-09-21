@@ -27,7 +27,7 @@ csv="${TARGET}/repositories.csv"
 echo "" > "${TARGET}/temp/repo-details.tex"
 if [ -e "${csv}" ]; then
     echo "The list of repos is already here: ${csv}"
-elif [ ! -z "${REPO}" ]; then
+elif [ -n "${REPO}" ]; then
     echo "Using one repo: ${REPO}"
     echo "${REPO}" >> "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then

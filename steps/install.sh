@@ -49,12 +49,12 @@ if ! xmlstarlet --version; then
 fi
 
 tlmgr --verify-repo=none update --self
-packages="href-ul huawei ffcode latexmk fmtcount trimspaces \
+declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   libertine paralist makecell footmisc currfile enumitem wrapfig \
   lastpage biblatex titling svg catchfile transparent textpos fvextra \
-  xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber"
-tlmgr --verify-repo=none install ${packages}
-tlmgr --verify-repo=none update ${packages}
+  xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
+tlmgr --verify-repo=none install "${packages[@]}"
+tlmgr --verify-repo=none update "${packages[@]}"
 
 if ! pygmentize -V; then
   apt-get install -y python3-pygments

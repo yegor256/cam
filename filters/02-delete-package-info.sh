@@ -33,7 +33,7 @@ if [ -e "${list}" ]; then
 fi
 
 find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
+while read -r f; do
     rm -f "${f}"
 done < "${list}"
 

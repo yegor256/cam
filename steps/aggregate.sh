@@ -28,8 +28,8 @@ start=$(date +%s)
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
 
-repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -print)
-total=$(echo ${repos} | wc -l | xargs)
+repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
+total=$(echo "${repos}" | wc -l | xargs)
 
 jobs=${TARGET}/temp/aggregate-jobs.txt
 rm -rf "${jobs}"
@@ -38,26 +38,25 @@ touch "${jobs}"
 
 declare -i repo=0
 for r in ${repos}; do
-    repo=repo+1
+    repo=$((repo+1))
     echo "$(dirname "$0")/aggregate-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
-cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
 for a in ${all}; do
-    printf ",${a}" >> "${TARGET}/data/all.csv"
+    printf ',%s' "${a}" >> "${TARGET}/data/all.csv"
 done
 printf "\n" >> "${TARGET}/data/all.csv"
 
-for d in $(find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print); do
-    r=$(echo "${d}" | sed "s|${TARGET}/data/||")
-    for csv in $(find "${d}" -name '*.csv' -maxdepth 1 -print); do
-        a=$(echo "${csv}" | sed "s|${d}||")
-        while IFS= read -r t; do
-            echo "${r},${t}" >> "${TARGET}/data/${a}"
-        done < "${csv}"
+find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print | while read -r d; do
+    r=$(realpath --relative-to="${TARGET}/data" "$r" )
+    find "${d}" -name '*.csv' -maxdepth 1 -exec basename {} \; | while read -r csv; do
+        while read -r t; do
+            echo "${r},${t}" >> "${TARGET}/data/${csv}"
+        done < "${d}/${csv}"
     done
     echo "${r} metrics added to the CSV aggregate"
 done

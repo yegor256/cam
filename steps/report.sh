@@ -25,12 +25,15 @@ set -o pipefail
 
 rm -f "${TARGET}/temp/list-of-metrics.tex"
 
-for m in $(ls "${LOCAL}/metrics/"); do
-    echo "class Foo {}" > "${TARGET}/temp/foo.java"
-    rm -f "${TARGET}/temp/foo.${m}.m"
-    "${LOCAL}/metrics/${m}" "${TARGET}/temp/foo.java" "${TARGET}/temp/foo.${m}.m"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${TARGET}/temp/foo.${m}.m" >> "${TARGET}/temp/list-of-metrics.tex"
-    echo "$(cat ${TARGET}/temp/foo.${m}.m | wc -l) metrics from ${m}"
+java="${TARGET}/temp/Foo.java"
+mkdir -p "$(dirname "${java}")"
+find "${LOCAL}/metrics" -type f -exec basename {} \; | while read -r m; do
+    echo "class Foo {}" > "${java}"
+    metric="${TARGET}/temp/Foo.${m}.m"
+    rm -f "${metric}"
+    "${LOCAL}/metrics/${m}" "${java}" "${metric}"
+    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${TARGET}/temp/list-of-metrics.tex"
+    echo "$(wc -l < "${metric}" | xargs) metrics from ${m}"
 done
 
 # It's important to make sure the path is absolute, for LaTeX
@@ -42,6 +45,7 @@ if [ -e "${tmp}" ]; then
     latexmk -cd -C "${tmp}/report.tex"
     cp -r "${LOCAL}"/tex "${tmp}"
 else
+    mkdir -p "$(dirname "${tmp}")"
     cp -r "${LOCAL}/tex" "${tmp}"
 fi
 

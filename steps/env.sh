@@ -35,12 +35,12 @@ if [ -e "${flag}" ]; then
     exit
 fi
 
-bash_version="$(echo "${BASH_VERSINFO:-0}")"
+bash_version="${BASH_VERSINFO:-0}"
 if [ "${bash_version}" -lt 5 ]; then
     "${SHELL}" -version
     ps -p $$
     echo "${SHELL} version is older than five: ${bash_version}"
-    exit -1
+    exit 1
 fi
 
 ruby -v
@@ -48,7 +48,7 @@ ruby -v
 if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
     python3 --version
     echo "Python must be 3+"
-    exit -1
+    exit 1
 fi
 
 flake8 --version
@@ -74,6 +74,8 @@ pygmentize -V
 pmd pmd --version
 
 nproc --version
+
+realpath --version
 
 bc -v
 

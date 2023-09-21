@@ -32,13 +32,13 @@ start=$(date +%N)
 
 mkdir -p "$(dirname "${javam}")"
 declare -i cnt=0
-for m in $(ls metrics/); do
+find "${LOCAL}/metrics/" -type f -exec basename {} \; | while read -r m; do
     if "metrics/${m}" "${java}" "${javam}"; then
-        while IFS= read -r t; do
-            IFS=' ' read -ra M <<< "${t}"
+        while read -r t; do
+            IFS=' ' read -r -ra M <<< "${t}"
             echo "${M[1]}" > "${javam}.${M[0]}"
         done < "${javam}"
-        cnt=cnt+1
+        cnt=$((cnt+1))
     else
         echo "Failed to collect ${m} for ${java}"
     fi

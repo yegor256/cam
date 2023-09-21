@@ -38,12 +38,12 @@ mkdir -p "${dir}"
 
 declare -i repo=0
 for d in ${repos}; do
-    r=$(echo "${d}" | sed "s|${TARGET}/github/||")
-    repo=repo+1
+    r=$(realpath --relative-to="${TARGET}/github" "${d}" )
+    repo=$((repo+1))
     echo "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
 done
 
-cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 
 done=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)

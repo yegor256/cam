@@ -27,8 +27,8 @@ start=$(date +%s)
 
 echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
 
-javas=$(find "${TARGET}/github" -name '*.java')
-total=$(echo "${javas}" | wc -l | xargs)
+javas=$(find "${TARGET}/github" -name '*.java' -print)
+total=$(echo -n "${javas}" | wc -l | xargs)
 echo "Found ${total} Java files, starting to collect metrics..."
 
 jobs=${TARGET}/temp/measure-jobs.txt
@@ -37,10 +37,9 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
 declare -i file=0
-echo "${javas}" | while IFS= read -r f; do
-    file=file+1
-    java="${f}"
-    javam="$(echo "${java}" | sed "s|${TARGET}/github|${TARGET}/measurements|").m"
+echo -n "${javas}" | while read -r java; do
+    file=$((file+1))
+    javam="${java//${TARGET}\/github/${TARGET}\/measurements/}.m"
     if [ -e "${javam}" ]; then
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue
@@ -48,7 +47,7 @@ echo "${javas}" | while IFS= read -r f; do
     echo "$(dirname "$0")/measure-file.sh" "${java}" "${javam}" "${file}" "${total}" >> "${jobs}"
 done
 
-cat "${jobs}" | uniq | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 
 echo "All metrics calculated in ${total} files in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"

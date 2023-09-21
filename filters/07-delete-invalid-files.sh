@@ -36,7 +36,7 @@ touch "${list}"
 
 candidates="${temp}/classes-to-filter.txt"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
-while IFS= read -r f; do
+while read -r f; do
     if ! python3 -c "
 import sys
 import javalang
