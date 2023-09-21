@@ -36,7 +36,7 @@ if __name__ == '__main__':
             tree = list(value for value in tree)
             if not tree:
                 os.remove(java)
-                with open(lst, 'a') as others:
+                with open(lst, 'a+') as others:
                     others.write(java + "\n")
     except FileNotFoundError:
         pass

@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 details="${TARGET}/temp/repo-details.tex"
-mkdir "$(dirname "${details}")"
+mkdir -p "$(dirname "${details}")"
 
 csv="${TARGET}/repositories.csv"
 echo "" > "${details}"

@@ -35,7 +35,7 @@ if __name__ == '__main__':
                 javalang.parse.parse(f.read())
             except Exception:
                 os.remove(java)
-                with open(lst, 'a') as others:
+                with open(lst, 'a+') as others:
                     others.write(java + "\n")
     except FileNotFoundError:
         pass
