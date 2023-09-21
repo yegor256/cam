@@ -49,10 +49,9 @@ uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
 wait
 
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${candidates}") files total.
-    $(wc -l < "${list}") of them were not Java classes but interfaces or enums,
-    that's why were deleted."
+    printf "There were %d files total. %d of them were not Java classes but interfaces or enums, that's why were deleted." \
+        "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)"
 else
-    echo "All $(wc -l < "${candidates}") files are Java classes,
-    nothing to delete"
+    printf "All %d files are Java classes, nothing to delete" \
+        "$(wc -l < "${candidates}" | xargs)"
 fi

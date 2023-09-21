@@ -50,9 +50,9 @@ wait
 
 if [ -s "${list}" ]; then
     printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \
-        "$(wc -l < "${candidates}")" \
-        "$(wc -l < "${list}")"
+        "$(wc -l < "${candidates}" | xargs)" \
+        "$(wc -l < "${list}" | xargs)"
 else
     printf "There were no files with broken syntax among %d files total" \
-        "$(wc -l < "${candidates}")"
+        "$(wc -l < "${candidates}" | xargs)"
 fi

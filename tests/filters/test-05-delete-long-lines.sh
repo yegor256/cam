@@ -20,37 +20,25 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
 
-max=1024
+echo "some text in the file" > "${temp}/Foo.java"
+rm -f "${temp}/report/files-with-long-lines.txt"
+msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/report")
+echo "${msg}" | grep "no files among 1 total"
+test -e "${temp}/Foo.java"
+test -e "${temp}/report/files-with-long-lines.txt"
+test "$(wc -l < "${temp}/report/files-with-long-lines.txt" | xargs)" = 0
+echo "👍🏻 A Java file with short lines wasn't deleted"
 
-list="${temp}/files-with-long-lines.txt"
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-touch "${list}"
-
-candidates="${temp}/files-to-check-line-lengths.txt"
-find "${home}" -type f -name '*.java' -print > "${candidates}"
-while read -r f; do
-    length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
-    if [ "${length}" -gt "${max}" ]; then
-        echo "${f}" >> "${list}"
-        rm "${f}"
-    fi
-done < "${candidates}"
-
-if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them had at least one line longer than %d characters, which most probably is a sympton of an auto-generated code; that's why they all were deleted" \
-        "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)" "${max}"
-else
-    printf "There were no files among %d total with lines longer than %d characters" \
-        "$(wc -l < "${candidates}" | xargs)" "${max}"
-fi
+printf 'a%.0s' {1..5000} > "${temp}/Foo.java"
+rm -f "${temp}/report/files-with-long-lines.txt"
+msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/report")
+echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters"
+test ! -e "${temp}/Foo.java"
+test -e "${temp}/report/files-with-long-lines.txt"
+test "$(wc -l < "${temp}/report/files-with-long-lines.txt" | xargs)" = 1
+echo "👍🏻 A Java file with a lone line was deleted"

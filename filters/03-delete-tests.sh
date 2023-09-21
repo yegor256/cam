@@ -46,8 +46,7 @@ done < "${list}"
 
 if [ -s "${list}" ]; then
     printf "There were %d files total; %d of them were test files with \\\ff{Test} or \\\ff{ITCase} suffixes and that's why were deleted" \
-    "${total}" \
-    "$(wc -l < "${list}")"
+        "${total}" "$(wc -l < "${list}" | xargs)"
 else
-    echo "There were no test files among %d files seen" "${total}"
+    printf "There were no test files among %d files seen" "${total}"
 fi

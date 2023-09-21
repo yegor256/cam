@@ -40,11 +40,9 @@ find "${home}" -type f -not -name '*.java' -print > "${list}" | while read -r f;
 done < "${list}"
 
 if [ -s "${list}" ]; then
-    echo "There were ${total} files total,
-    ${java} of them were \ff{.java} files;
-    all other files, which were not \ff{.java}, have been deleted:
-    $(cat ${list} | wc -l) total"
+    printf "There were %d files total, %d of them were \\\ff{.java} files; all other files, which were not \\\ff{.java}, have been deleted: %d total" \
+        "${total}" "${java}" "$(cat ${list} | wc -l | xargs)"
 else
-    echo "All ${total} files were \ff{.java} files,
-    nothing to delete"
+    printf "All %d files were \\\ff{.java} files, nothing to delete" \
+        "${total}"
 fi
