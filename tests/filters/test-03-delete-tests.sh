@@ -20,35 +20,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
 
-total=$(find "${home}" -type f | wc -l | xargs)
+echo "class FooTest {}" > "${temp}/FooTest.java"
+rm -f "${temp}/report/test-files.txt"
+msg=$("${LOCAL}/filters/03-delete-tests.sh" "${temp}" "${temp}/report")
+echo "${msg}" | grep "that's why they were deleted"
+test ! -e "${temp}/FooTeest.java"
+test -e "${temp}/report/test-files.txt"
+test "$(wc -l < "${temp}/report/test-files.txt" | xargs)" = 1
+echo "👍🏻 A Java test file was deleted"
 
-list="${temp}/test-files.txt"
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-
-{
-    find "${home}" -type f -name '*Test.java' -print;
-    find "${home}" -type f -name '*ITCase.java' -print;
-    find "${home}" -type f -name '*Tests.java' -print;
-    find "${home}" -type f -path '**/src/test/java/**/*.java' -print
-} > "${list}"
-while read -r f; do
-    rm -f "${f}"
-done < "${list}"
-
-if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them were test files with \\\ff{Test} or \\\ff{ITCase} suffixes and that's why they were deleted" \
-        "${total}" "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no test files among %d files seen" "${total}"
-fi

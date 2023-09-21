@@ -48,7 +48,7 @@ while read -r f; do
 done < "${candidates}"
 
 if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them had at least one line longer than %d characters, which most probably is a sympton of an auto-generated code; that's why they all were deleted" \
+    printf "There were %d files total; %d of them had at least one line longer than %d characters, which most probably is a symptom of an auto-generated code; that's why they all were deleted" \
         "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)" "${max}"
 else
     printf "There were no files among %d total with lines longer than %d characters" \
