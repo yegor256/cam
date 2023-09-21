@@ -62,7 +62,7 @@ define step
 endef
 
 # The main goal
-all: env lint $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
+all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
 	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION))!"
 
 install:
