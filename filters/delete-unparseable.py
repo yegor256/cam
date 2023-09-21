@@ -32,7 +32,7 @@ if __name__ == '__main__':
     with open(java) as f:
         try:
             javalang.parse.parse(f.read())
-        except javalang.tokenizer.LexerError:
+        except Exception:
             os.remove(java)
             with open(lst, 'a') as others:
                 others.write(java + "\n")
