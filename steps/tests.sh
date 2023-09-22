@@ -31,7 +31,7 @@ find "${LOCAL}/tests" -name '*.sh' | sort | while read -r test; do
     t=${temp}/${name}
     mkdir -p "${t}"
     echo -e "\n${name}:"
-    if [ -n "${TEST}" -a ! "${TEST}" = "${name}" ]; then
+    if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ]; then
         echo "Skipped"
         continue
     fi

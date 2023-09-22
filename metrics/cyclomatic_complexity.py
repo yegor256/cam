@@ -24,8 +24,9 @@
 """cyclomatic_complexity.py"""
 
 import sys
-
 from javalang import tree, parse
+
+sys.setrecursionlimit(10000)
 
 
 def branches(parser_class):
