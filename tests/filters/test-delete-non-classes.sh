@@ -25,17 +25,26 @@ set -o pipefail
 
 temp=$1
 
-echo "interface Foo {}" > "${temp}/Foo.java"
-"${LOCAL}/filters/delete-non-classes.py" "${temp}/Foo.java" "${temp}/deleted.txt"
-test ! -e "${temp}/Foo.java"
-grep "${temp}/Foo.java" "${temp}/deleted.txt" >/dev/null
+java="${temp}/Foo.java"
+echo "interface Foo {}" > "${java}"
+"${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 A Java file with an interface inside was deleted correctly"
 
-echo "enum Bar {}" > "${temp}/Bar.java"
-"${LOCAL}/filters/delete-non-classes.py" "${temp}/Bar.java" "${temp}/deleted.txt"
-test ! -e "${temp}/Bar.java"
-grep "${temp}/Bar.java" "${temp}/deleted.txt" >/dev/null
+java="${temp}/Bar.java"
+echo "enum Bar {}" > "${java}"
+"${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 A Java file with a enum inside was deleted correctly"
+
+java="${temp}/Broken.java"
+echo "broken syntax" > "${java}"
+"${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 A Java file with broken syntax was deleted correctly"
 
 "${LOCAL}/filters/delete-non-classes.py" "${temp}/file-is-absent.java" "${temp}/deleted.txt"
 grep -v "${temp}/file-is-absent.java" "${temp}/deleted.txt" >/dev/null
