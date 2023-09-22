@@ -28,7 +28,7 @@ javam=$2
 pos=$3
 total=$4
 
-start=$(date +%N)
+start=$(( $(date +%N) / 1000000 ))
 
 mkdir -p "$(dirname "${javam}")"
 metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
@@ -48,8 +48,8 @@ echo "${metrics}" | while read -r m; do
     fi
 done
 
-end=$(date +%N)
+end=$(( $(date +%N) / 1000000 ))
 
 echo "$(echo "${metrics}" | wc -w | xargs) scripts \
 collected $(find "${javam}".* -type f | wc -l | xargs) metrics \
-for $(basename "${java}") (${pos}/${total}) in $(( end > start ? (end - start) / 1000000 : 0 ))ms"
+for $(basename "${java}") (${pos}/${total}) in $(( end > start ? end - start : 0 ))ms"
