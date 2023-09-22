@@ -34,6 +34,6 @@ git config user.name 'Foo'
 echo "class Foo {}" > Foo.java
 git add Foo.java
 git commit --quiet -am start
-"${LOCAL}/metrics/authors.sh" Foo.java stdout
+"${LOCAL}/git-metrics/authors.sh" Foo.java stdout
 grep "authors 1" stdout >/dev/null
 echo "👍🏻 Correctly calculated authors"
