@@ -29,6 +29,8 @@ cd "${temp}"
 rm -rf *
 rm -rf .git
 git init --quiet .
+git config user.email 'foo@example.com'
+git config user.name 'Foo'
 echo "class Foo {}" > Foo.java
 git add Foo.java
 git commit --quiet -am start

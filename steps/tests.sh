@@ -26,11 +26,15 @@ set -o pipefail
 temp=${LOCAL}/test-zone
 mkdir -p "${temp}"
 
-find "${LOCAL}/tests" -name '*.sh' | while read -r test; do
+find "${LOCAL}/tests" -name '*.sh' | sort | while read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
     t=${temp}/${name}
     mkdir -p "${t}"
     echo -e "\n${name}:"
+    if [ -n "${TEST}" -a ! "${TEST}" = "${name}" ]; then
+        echo "Skipped"
+        continue
+    fi
     tgt=${t}/target
     mkdir -p "${tgt}"
     TARGET="${tgt}" "${test}" "${t}"

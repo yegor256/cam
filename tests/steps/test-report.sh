@@ -23,30 +23,12 @@
 set -e
 set -o pipefail
 
+temp=$1
+
+date +%s > "${TARGET}/start.txt"
+echo "" > "${TARGET}/temp/repo-details.tex"
 mkdir -p "${TARGET}/temp/reports"
-find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | sort | while read -r filter; do
-    tex=${TARGET}/temp/reports/${filter}.tex
-    if [ -e "${tex}" ]; then
-        echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
-    else
-        before=$(find "${TARGET}/github" -type f | wc -l | xargs)
-        echo "Running filter ${filter}... (may take some time)"
-        start=$(date +%s)
-        "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
-            tr -d '\n\r' |\
-            sed "s/^/\\\\item /" |\
-            sed "s/$/;/" \
-            > "${tex}"
-        after=$(find "${TARGET}/github" -type f | wc -l | xargs)
-        echo "Filter ${filter} finished in $(echo "$(date +%s) - ${start}" | bc)s, \
-deleted $(echo "${before} - ${after}" | bc) files \
-and published its results to ${TARGET}/temp/reports/${filter}.tex "
-    fi
-done
-
-
-find "${TARGET}/temp/reports" -type f -exec basename {} \; | while read -r f; do
-    echo "${f}:"
-    cat "${TARGET}/temp/reports/${f}"
-    echo ""
-done
+echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
+"${LOCAL}/steps/report.sh" >/dev/null
+test -e "${TARGET}/report.pdf"
+echo "👍🏻 A PDF report generated correctly"
