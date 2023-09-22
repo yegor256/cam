@@ -37,7 +37,7 @@ echo "${metrics}" | while read -r m; do
     #  the directory already doesn't have the ".git" folder --- it was filtered out
     #  by one of the filters in the "filters/" directory. Probably, we should avoid shallow clones
     #  and then get an opportunity to have more Git-based metrics.
-    if [ "${m}" = "authors.py" ]; then continue; fi
+    if [ "${m}" = "authors.sh" ]; then continue; fi
     if "metrics/${m}" "${java}" "${javam}"; then
         while read -r t; do
             IFS=' ' read -r -ra M <<< "${t}"
