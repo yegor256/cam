@@ -49,3 +49,11 @@ echo "👍🏻 A Java file with broken syntax was deleted correctly"
 "${LOCAL}/filters/delete-non-classes.py" "${temp}/file-is-absent.java" "${temp}/deleted.txt"
 grep -v "${temp}/file-is-absent.java" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 Absent file didn't fail the script"
+
+java="${temp}/Good.java"
+echo "class Good {}" > "${java}"
+"${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
+test -e "${java}"
+grep -v "${java}" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 A good Java file was not deleted, it's correct behavior"
+

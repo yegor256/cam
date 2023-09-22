@@ -25,16 +25,18 @@ set -o pipefail
 
 temp=$1
 
-echo "this is not Java code at all" > "${temp}/Foo.java"
-"${LOCAL}/filters/delete-unparseable.py" "${temp}/Foo.java" "${temp}/deleted.txt"
-test ! -e "${temp}/Foo.java"
-grep "${temp}/Foo.java" "${temp}/deleted.txt" >/dev/null
+java="${temp}/Foo.java"
+echo "this is not Java code at all" > "${java}"
+"${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 A Java file with a broken syntax inside was deleted correctly"
 
-echo "class привет { --- }" > "${temp}/Foo.java"
-"${LOCAL}/filters/delete-unparseable.py" "${temp}/Foo.java" "${temp}/deleted.txt"
-test ! -e "${temp}/Foo.java"
-grep "${temp}/Foo.java" "${temp}/deleted.txt" >/dev/null
+java="${temp}/Bar.java"
+echo "class привет { --- }" > "${java}"
+"${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 Another broken syntax inside was deleted correctly"
 
 "${LOCAL}/filters/delete-unparseable.py" "${temp}/file-is-absent.java" "${temp}/deleted.txt"
