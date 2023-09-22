@@ -28,7 +28,6 @@ import os
 if __name__ == '__main__':
     JAVA: str = sys.argv[1]
     LST: str = sys.argv[2]
-
     try:
         with open(JAVA) as f:
             try:

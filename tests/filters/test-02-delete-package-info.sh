@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -20,26 +20,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set -e
+set -o pipefail
 
-import sys
-import javalang
-import os
+temp=$1
+list="${temp}/temp/filter-lists/package-info-files.txt"
 
-if __name__ == '__main__':
-    JAVA: str = sys.argv[1]
-    LST: str = sys.argv[2]
-    try:
-        with open(JAVA) as f:
-            raw = javalang.parse.parse(f.read())
-            tree = raw.filter(javalang.tree.ClassDeclaration)
-            tree = list(value for value in tree)
-            if not tree:
-                os.remove(JAVA)
-                with open(LST, 'a+') as others:
-                    others.write(JAVA + "\n")
-    except FileNotFoundError:
-        pass
-    except Exception:
-        os.remove(JAVA)
-        with open(LST, 'a+') as others:
-            others.write(JAVA + "\n")
+info="${temp}/package-info.java"
+echo "package foo;" > "${info}"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/02-delete-package-info.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${info}"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
+echo "👍🏻 A package-info.java file was deleted"
+
