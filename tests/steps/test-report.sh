@@ -26,7 +26,7 @@ set -o pipefail
 temp=$1
 
 date +%s > "${TARGET}/start.txt"
-echo "" > "${TARGET}/temp/repo-details.tex"
+echo "nothing" > "${TARGET}/temp/repo-details.tex"
 mkdir -p "${TARGET}/temp/reports"
 echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
 "${LOCAL}/steps/report.sh" >/dev/null
