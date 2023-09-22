@@ -48,8 +48,6 @@ echo "${metrics}" | while read -r m; do
     fi
 done
 
-cnt=
-
 echo "$(echo "${metrics}" | wc -w | xargs) scripts \
 collected $(find "${javam}".* -type f | wc -l | xargs) metrics \
 for $(basename "${java}") (${pos}/${total}) in $(echo "($(date +%N) - ${start}) / 1000000" | bc)ms"
