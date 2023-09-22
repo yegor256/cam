@@ -33,6 +33,11 @@ start=$(date +%N)
 mkdir -p "$(dirname "${javam}")"
 metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
 echo "${metrics}" | while read -r m; do
+    # @todo #74 This metric doesn't work, because when we run it,
+    #  the directory already don't have ".git" folder, it was filtered out
+    #  by one of the filters. Probably we should avoid shallow clones
+    #  and then get an opportunity to have more Git-based metrics.
+    if [ "${m}" = "authors.py" ]; then continue; fi
     if "metrics/${m}" "${java}" "${javam}"; then
         while read -r t; do
             IFS=' ' read -r -ra M <<< "${t}"
