@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env python3
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -20,28 +20,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-set -e
-set -o pipefail
 
-mkdir -p "${TARGET}/temp/reports"
-find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | sort | while read -r filter; do
-    tex=${TARGET}/temp/reports/${filter}.tex
-    if [ -e "${tex}" ]; then
-        echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
-    else
-        echo "Running filter ${filter}... (may take some time)"
-        start=$(date +%s)
-        "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
-            tr -d '\n\r' |\
-            sed "s/^/\\\\item /" |\
-            sed "s/$/;/" \
-            > "${tex}"
-        echo "Filter ${filter} finished in $(echo "$(date +%s) - ${start}" | bc)s and published its results to ${TARGET}/temp/reports/${filter}.tex "
-    fi
-done
+import sys
+import javalang
+import os
 
-find "${TARGET}/temp/reports" -type f -exec basename {} \; | while read -r f; do
-    echo "${f}:"
-    cat "${TARGET}/temp/reports/${f}"
-    echo ""
-done
+if __name__ == '__main__':
+    JAVA: str = sys.argv[1]
+    LST: str = sys.argv[2]
+    try:
+        with open(JAVA) as f:
+            raw = javalang.parse.parse(f.read())
+            if (len(raw.types) != 1):
+                os.remove(JAVA)
+                with open(LST, 'a+') as others:
+                    others.write(JAVA + "\n")
+    except Exception:
+        pass

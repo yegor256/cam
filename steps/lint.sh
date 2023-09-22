@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-flag="${TARGET}/temp/lint-done.txt"
+flag=${TARGET}/temp/lint-done.txt
 
 if [ -e "${flag}" ]; then
     echo "The quality of code has already been checked"

@@ -25,7 +25,7 @@ set -o pipefail
 
 start=$(date +%s)
 
-jobs=${TARGET}/temp/jpeek-jobs.txt
+jobs=${TARGET}/jobs/jpeek-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
@@ -33,7 +33,7 @@ touch "${jobs}"
 repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo "${repos}" | wc -l | xargs)
 
-dir="${TARGET}/temp/jpeek/all"
+dir=${TARGET}/temp/jpeek/all
 mkdir -p "${dir}"
 
 declare -i repo=0

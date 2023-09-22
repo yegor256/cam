@@ -36,6 +36,6 @@ if __name__ == '__main__':
                 os.remove(JAVA)
                 with open(LST, 'a+') as others:
                     others.write(JAVA + "\n")
-    except FileNotFoundError:
+    except Exception:
         pass
 

@@ -25,7 +25,7 @@ set -o pipefail
 
 start=$(date +%s)
 
-zip="cam-$(date +%Y-%m-%d).zip"
+zip=cam-$(date +%Y-%m-%d).zip
 
 zip -qq -r "${zip}" "${TARGET}"
 mv "${zip}" "${TARGET}"

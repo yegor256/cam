@@ -31,7 +31,7 @@ javas=$(find "${TARGET}/github" -name '*.java' -print)
 total=$(echo "${javas}" | wc -l | xargs)
 echo "Found ${total} Java files, starting to collect metrics..."
 
-jobs=${TARGET}/temp/measure-jobs.txt
+jobs=${TARGET}/jobs/measure-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
@@ -40,7 +40,7 @@ declare -i file=0
 echo "${javas}" | while read -r java; do
     file=$((file+1))
     rel=$(realpath --relative-to="${TARGET}/github" "${java}")
-    javam="${TARGET}/measurements/${rel}.m"
+    javam=${TARGET}/measurements/${rel}.m
     if [ -e "${javam}" ]; then
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue

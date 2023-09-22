@@ -24,9 +24,9 @@ set -e
 set -o pipefail
 
 temp=$1
-list="${temp}/temp/filter-lists/package-info-files.txt"
+list=${temp}/temp/filter-lists/package-info-files.txt
 
-info="${temp}/package-info.java"
+info=${temp}/package-info.java
 echo "package foo;" > "${info}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/02-delete-package-info.sh" "${temp}" "${temp}/temp")

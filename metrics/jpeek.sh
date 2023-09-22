@@ -38,12 +38,12 @@ NHD-cvc NaN Same as NHD, but constructors are excluded
 LCOM5-cvc NaN Same as LCOM5, but constructors are excluded
 SCOM-cvc NaN Same as SCOM, but constructors are excluded"
 
-file="${java//github/jpeek}"
+file=${java//github/jpeek}
 out=""
 if [ -e "${file}" ] && [ "${file}" != "${java}" ]; then
-	out="$(cat "${file}")"
+	out=$(cat "${file}")
 else
-	out="${sample}"
+	out=${sample}
 fi
 
 cat <<EOT> "${output}"

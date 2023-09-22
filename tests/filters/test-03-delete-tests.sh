@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
-list="${temp}/temp/filter-lists/test-files.txt"
+list=${temp}/temp/filter-lists/test-files.txt
 
 echo "class FooTest {}" > "${temp}/FooTest.java"
 rm -f "${list}"

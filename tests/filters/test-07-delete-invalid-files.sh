@@ -23,25 +23,21 @@
 set -e
 set -o pipefail
 
-mkdir -p "${TARGET}/temp/reports"
-find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | sort | while read -r filter; do
-    tex=${TARGET}/temp/reports/${filter}.tex
-    if [ -e "${tex}" ]; then
-        echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
-    else
-        echo "Running filter ${filter}... (may take some time)"
-        start=$(date +%s)
-        "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
-            tr -d '\n\r' |\
-            sed "s/^/\\\\item /" |\
-            sed "s/$/;/" \
-            > "${tex}"
-        echo "Filter ${filter} finished in $(echo "$(date +%s) - ${start}" | bc)s and published its results to ${TARGET}/temp/reports/${filter}.tex "
-    fi
-done
+temp=$1
+list=${temp}/temp/filter-lists/invalid-files.txt
 
-find "${TARGET}/temp/reports" -type f -exec basename {} \; | while read -r f; do
-    echo "${f}:"
-    cat "${TARGET}/temp/reports/${f}"
-    echo ""
-done
+echo "class Foo{} class Bar{}" > "${temp}/Foo.java"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/07-delete-invalid-files.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "that's why were deleted" >/dev/null
+test ! -e "${temp}/Foo.java"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
+echo "👍🏻 An invalid Java file was deleted"
+
+rm -f "${list}"
+mkdir -p "${temp}/empty"
+msg=$("${LOCAL}/filters/07-delete-invalid-files.sh" "${temp}/empty" "${temp}/temp")
+echo "${msg}" | grep "There are no Java classes, nothing to delete" >/dev/null
+echo "👍🏻 A empty directory didn't fail the script"
+

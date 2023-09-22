@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-dir="${TARGET}/github"
+dir=${TARGET}/github
 
 declare -i cnt=0
 find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \; | while read -r repo; do

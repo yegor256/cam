@@ -30,7 +30,7 @@ temp=$2
 total=$(find "${home}" -type f | wc -l)
 java=$(find "${home}" -type f -a -name '*.java' | wc -l)
 
-list="${temp}/filter-lists/non-java-files.txt"
+list=${temp}/filter-lists/non-java-files.txt
 if [ -e "${list}" ]; then
     exit
 fi

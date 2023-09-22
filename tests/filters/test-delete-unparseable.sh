@@ -25,14 +25,14 @@ set -o pipefail
 
 temp=$1
 
-java="${temp}/Foo.java"
+java=${temp}/Foo.java
 echo "this is not Java code at all" > "${java}"
 "${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/deleted.txt"
 test ! -e "${java}"
 grep "${java}" "${temp}/deleted.txt" >/dev/null
 echo "👍🏻 A Java file with a broken syntax inside was deleted correctly"
 
-java="${temp}/Bar.java"
+java=${temp}/Bar.java
 echo "class привет { --- }" > "${java}"
 "${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/deleted.txt"
 test ! -e "${java}"

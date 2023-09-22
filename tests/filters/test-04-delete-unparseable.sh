@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
-list="${temp}/temp/filter-lists/unparseable-files.txt"
+list=${temp}/temp/filter-lists/unparseable-files.txt
 
 echo "--- not java syntax at all ---" > "${temp}/Foo.java"
 rm -f "${list}"

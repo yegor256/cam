@@ -27,7 +27,7 @@ set -o pipefail
 home=$1
 temp=$2
 
-list="${temp}/filter-lists/invalid-files.txt"
+list=${temp}/filter-lists/invalid-files.txt
 if [ -e "${list}" ]; then
     exit
 fi
@@ -35,24 +35,29 @@ fi
 mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
-candidates="${temp}/classes-to-filter.txt"
+jobs=${TARGET}/jobs/delete-invalid-files.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+touch "${jobs}"
+
+candidates=${temp}/classes-to-filter.txt
+mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
-    if ! python3 -c "
-import sys
-import javalang
-with open('${f}') as f:
-    raw = javalang.parse.parse(f.read())
-    if (len(raw.types) != 1):
-        exit(1)
-"; then echo "${f}" >> "${list}"; rm "${f}"; fi
+    echo "python3 \"${LOCAL}/filters/delete-invalid-files.py\" \"${f}\" \"${list}\"" >> "${jobs}"
 done < "${candidates}"
+uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c '{}'
+wait
 
+total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    echo "There were $(wc -l < "${candidates}") files total.
-    $(wc -l < "${list}") of them had more than 1 Java class,
-    that's why were deleted."
+    printf "There were %s files total; %d of them had more than 1 Java class, that's why were deleted." \
+        "${total}" "$(wc -l < "${list}")"
 else
-    echo "All $(wc -l < "${candidates}") files are Java classes,
-    nothing to delete"
+    if [ "${total}" -eq 0 ]; then
+        printf "There are no Java classes, nothing to delete"
+    else
+        printf "All %d files are Java classes, nothing to delete" \
+            "${total}"
+    fi
 fi

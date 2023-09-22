@@ -30,7 +30,7 @@ total=$4
 
 start=$(date +%s)
 
-dir="${TARGET}/github/${repo}"
+dir=${TARGET}/github/${repo}
 
 if [ -e "${dir}" ]; then
     echo "The repo directory #${pos}/${total} is already here: ${dir}"

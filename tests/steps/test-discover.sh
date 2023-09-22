@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
-csv="${TARGET}/repositories.csv"
+csv=${TARGET}/repositories.csv
 
 rm -f "${csv}"
 TOTAL=3 "${LOCAL}/steps/discover.sh" >/dev/null

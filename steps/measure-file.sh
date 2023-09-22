@@ -31,17 +31,20 @@ total=$4
 start=$(date +%N)
 
 mkdir -p "$(dirname "${javam}")"
-declare -i cnt=0
-find "${LOCAL}/metrics/" -type f -exec basename {} \; | while read -r m; do
+metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
+echo "${metrics}" | while read -r m; do
     if "metrics/${m}" "${java}" "${javam}"; then
         while read -r t; do
             IFS=' ' read -r -ra M <<< "${t}"
             echo "${M[1]}" > "${javam}.${M[0]}"
         done < "${javam}"
-        cnt=$((cnt+1))
     else
         echo "Failed to collect ${m} for ${java}"
     fi
 done
 
-echo "${cnt} metric scripts ran for $(basename "${java}") (${pos}/${total}) in $(echo "($(date +%N) - ${start}) / 1000000" | bc)ms"
+cnt=
+
+echo "$(echo "${metrics}" | wc -w | xargs) scripts \
+collected $(find "${javam}".* -type f | wc -l | xargs) metrics \
+for $(basename "${java}") (${pos}/${total}) in $(echo "($(date +%N) - ${start}) / 1000000" | bc)ms"

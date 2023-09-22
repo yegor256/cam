@@ -23,10 +23,10 @@
 set -e
 set -o pipefail
 
-details="${TARGET}/temp/repo-details.tex"
+details=${TARGET}/temp/repo-details.tex
 mkdir -p "$(dirname "${details}")"
 
-csv="${TARGET}/repositories.csv"
+csv=${TARGET}/repositories.csv
 echo "" > "${details}"
 if [ -e "${csv}" ]; then
     echo "The list of repos is already here: ${csv}"

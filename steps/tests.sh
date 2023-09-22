@@ -23,15 +23,15 @@
 set -e
 set -o pipefail
 
-temp="${LOCAL}/temp"
+temp=${LOCAL}/test-zone
 mkdir -p "${temp}"
 
 find "${LOCAL}/tests" -name '*.sh' | while read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
-    t="${temp}/${name}"
+    t=${temp}/${name}
     mkdir -p "${t}"
     echo -e "\n${name}:"
-    tgt="${t}/target"
+    tgt=${t}/target
     mkdir -p "${tgt}"
     TARGET="${tgt}" "${test}" "${t}"
 done

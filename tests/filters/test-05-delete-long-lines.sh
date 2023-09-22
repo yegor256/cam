@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
-list="${temp}/temp/filter-lists/files-with-long-lines.txt"
+list=${temp}/temp/filter-lists/files-with-long-lines.txt
 
 echo "some text in the file" > "${temp}/Foo.java"
 rm -f "${list}"

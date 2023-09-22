@@ -27,8 +27,8 @@ repo=$1
 pos=$2
 total=$3
 
-dir="${TARGET}/measurements/${repo}"
-ddir="${TARGET}/data/${repo}"
+dir=${TARGET}/measurements/${repo}
+ddir=${TARGET}/data/${repo}
 if [ -e "${ddir}" ]; then
     echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
     exit
@@ -38,11 +38,11 @@ find "${dir}" -name '*.m' | while read -r m; do
     ls "${m}".* | while read -r v; do
         java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
         metric=$(echo "${v}" | sed "s|${dir}${java}.m.||")
-        csv="${ddir}/${metric}.csv"
+        csv=${ddir}/${metric}.csv
         mkdir -p $(dirname "${csv}")
         echo "${java},$(cat "${v}")" >> "${csv}"
     done
-    csv="${ddir}/all.csv"
+    csv=${ddir}/all.csv
     mkdir -p "$(dirname "${csv}")"
     java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
     printf "${java}" >> "${csv}"

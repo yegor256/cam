@@ -25,7 +25,7 @@ set -e
 set -o pipefail
 
 java=$1
-output=$2
+output=$(realpath "$2")
 
 cd "$(dirname "${java}")"
 noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)

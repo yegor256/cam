@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
-list="${temp}/temp/filter-lists/non-class-files.txt"
+list=${temp}/temp/filter-lists/non-class-files.txt
 
 echo "interface Foo {}" > "${temp}/Foo.java"
 rm -f "${list}"

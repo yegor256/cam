@@ -27,7 +27,7 @@ set -o pipefail
 home=$1
 temp=$2
 
-list="${temp}/filter-lists/package-info-files.txt"
+list=${temp}/filter-lists/package-info-files.txt
 if [ -e "${list}" ]; then
     exit
 fi

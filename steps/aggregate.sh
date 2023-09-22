@@ -31,7 +31,7 @@ echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
 total=$(echo "${repos}" | wc -l | xargs)
 
-jobs=${TARGET}/temp/aggregate-jobs.txt
+jobs=${TARGET}/jobs/aggregate-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"

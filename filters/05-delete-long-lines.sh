@@ -29,7 +29,7 @@ temp=$2
 
 max=1024
 
-list="${temp}/filter-lists/files-with-long-lines.txt"
+list=${temp}/filter-lists/files-with-long-lines.txt
 if [ -e "${list}" ]; then
     exit
 fi
@@ -37,7 +37,7 @@ fi
 mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
-candidates="${temp}/files-to-check-line-lengths.txt"
+candidates=${temp}/files-to-check-line-lengths.txt
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
     length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)

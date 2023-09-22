@@ -29,14 +29,14 @@ echo "LOCAL=${LOCAL}"
 echo "SHELL=${SHELL}"
 echo "HOME=${HOME}"
 
-flag="${TARGET}/temp/env-done.txt"
+flag=${TARGET}/temp/env-done.txt
 
 if [ -e "${flag}" ]; then
     echo "The environment has already been checked"
     exit
 fi
 
-bash_version="${BASH_VERSINFO:-0}"
+bash_version=${BASH_VERSINFO:-0}
 if [ "${bash_version}" -lt 5 ]; then
     "${SHELL}" -version
     ps -p $$

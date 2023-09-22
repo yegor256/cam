@@ -25,11 +25,11 @@ set -o pipefail
 
 rm -f "${TARGET}/temp/list-of-metrics.tex"
 
-java="${TARGET}/temp/Foo.java"
+java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
 find "${LOCAL}/metrics" -type f -exec basename {} \; | while read -r m; do
     echo "class Foo {}" > "${java}"
-    metric="${TARGET}/temp/Foo.${m}.m"
+    metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"
     "${LOCAL}/metrics/${m}" "${java}" "${metric}"
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${TARGET}/temp/list-of-metrics.tex"
@@ -37,9 +37,9 @@ find "${LOCAL}/metrics" -type f -exec basename {} \; | while read -r m; do
 done
 
 # It's important to make sure the path is absolute, for LaTeX
-t="$(realpath "${TARGET}")"
+t=$(realpath "${TARGET}")
 
-tmp="${t}/temp/pdf-report"
+tmp=${t}/temp/pdf-report
 if [ -e "${tmp}" ]; then
     echo "Temporary directory for PDF report building already exists: '${tmp}'"
     latexmk -cd -C "${tmp}/report.tex"
@@ -49,13 +49,13 @@ else
     cp -r "${LOCAL}/tex" "${tmp}"
 fi
 
-pdf="${tmp}/report.pdf"
+pdf=${tmp}/report.pdf
 if [ -e "${pdf}" ]; then
     echo "The PDF report already exists: '${pdf}'"
     exit
 fi
 
-dest="${t}/report.pdf"
+dest=${t}/report.pdf
 TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"
 mv "${pdf}" "${dest}"
 
