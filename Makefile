@@ -57,8 +57,16 @@ export
 
 # Run a single step from ./steps
 define step
+	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
     @bash $(LOCAL)/steps/$(1).sh
+	end=$$(date +%s%N)
+    ms=$$(echo "($${end} - $${start}) / 1000000" | bc)
+    if [ "$${ms}" -gt "1000" ]; then
+	    echo "Took $$(( ms / 1000 ))s"
+    else
+	    echo "Took $${ms}ms"
+    fi
 endef
 
 # The main goal
