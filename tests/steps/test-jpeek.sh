@@ -25,9 +25,11 @@ set -o pipefail
 
 temp=$1
 
-echo "yegor256/jaxec" > "${TARGET}/repositories.csv"
+repo="yegor256/jaxec"
+echo "${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 "${LOCAL}/steps/clone.sh" >/dev/null
-"${LOCAL}/steps/jpeek.sh" >/dev/null
+msg=$("${LOCAL}/steps/jpeek.sh")
+echo "${msg}" | grep -v "Analyzed ${repo} through jPeek" >/dev/null
 test -e "${TARGET}/jpeek"
 echo "👍🏻 A simple repo analyzed with jpeek correctly"
