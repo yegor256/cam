@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -25,12 +25,20 @@ set -o pipefail
 
 temp=$1
 
-java=${temp}/Foo.java
+java="${temp}/Foo (x).java"
 echo "interface Foo {}" > "${java}"
 "${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
 test ! -e "${java}"
 grep "${java}" "${temp}/deleted.txt" >/dev/null
-echo "👍🏻 A Java file with an interface inside was deleted correctly"
+echo "👍🏻 A Java file with a small interface inside was deleted correctly"
+
+java="${temp}/foo/dir (with) _ long & and weird name /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "/* hello */ package foo.bar.xxx; import java.io.File; public interface Foo { File bar(); }" > "${java}"
+"${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/deleted.txt"
+test ! -e "${java}"
+grep "${java}" "${temp}/deleted.txt" >/dev/null
+echo "👍🏻 A Java file with a bigger interface inside was deleted correctly"
 
 java=${temp}/Bar.java
 echo "enum Bar {}" > "${java}"

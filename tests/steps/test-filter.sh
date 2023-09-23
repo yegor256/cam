@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -33,11 +33,17 @@ echo "👍🏻 A simple filtering ran smoothly"
 rm -rf "${TARGET}/github"
 rm -rf "${TARGET}/temp/reports"
 rm -rf "${TARGET}/temp/filter-lists"
-mkdir -p "${TARGET}/github/foo/bar"
-echo "class Foo {}" > "${TARGET}/github/foo/bar/Foo.java"
-echo "interface Boom {}" > "${TARGET}/github/foo/bar/Boom.java"
-echo "broken code" > "${TARGET}/github/foo/bar/Broken.java"
-"${LOCAL}/steps/filter.sh" >/dev/null
-test ! -e "${TARGET}/github/foo/bar/Broken.java"
-test ! -e "${TARGET}/github/foo/bar/Boom.java"
+dir=${TARGET}/github
+class="${dir}/foo - '(weird)'/bar/Foo.java"
+    mkdir -p "$(dirname "${class}")"
+    echo "class Foo {}" > "${class}"
+interface="${dir}/foo/-- \";'/Boom.java"
+    mkdir -p "$(dirname "${interface}")"
+    echo "interface Boom {}" > "${interface}"
+broken="${dir}/''foo/;;'\"/Boom.java"
+    mkdir -p "$(dirname "${broken}")"
+    echo "broken code" > "${broken}"
+"${LOCAL}/steps/filter.sh" > /dev/null
+test ! -e "${broken}"
+test ! -e "${interface}"
 echo "👍🏻 A more complex filtering ran smoothly"

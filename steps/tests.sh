@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -28,14 +28,22 @@ mkdir -p "${temp}"
 
 find "${LOCAL}/tests" -name '*.sh' | sort | while read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
-    t=${temp}/${name}
-    mkdir -p "${t}"
-    echo -e "\n${name}:"
     if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ]; then
-        echo "Skipped"
         continue
     fi
+    echo -e "\n${name}:"
+    t=${temp}/${name}
+    if [ -e "${t}" ]; then
+        rm -rf "${t}"
+    fi
+    mkdir -p "${t}"
     tgt=${t}/target
+    if [ -e "${tgt}" ]; then
+        rm -rf "${tgt}"
+    fi
     mkdir -p "${tgt}"
-    TARGET="${tgt}" "${test}" "${t}"
+    if ! TARGET="${tgt}" "${test}" "${t}"; then
+        echo "❌ Non-zero exit code"
+        exit 1
+    fi
 done

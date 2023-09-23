@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -30,6 +30,6 @@ mkdir -p "${TARGET}/temp"
 echo "nothing" > "${TARGET}/temp/repo-details.tex"
 mkdir -p "${TARGET}/temp/reports"
 echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
-"${LOCAL}/steps/report.sh" >/dev/null
+"${LOCAL}/steps/report.sh" >/dev/null 2>&1
 test -e "${TARGET}/report.pdf"
 echo "👍🏻 A PDF report generated correctly"

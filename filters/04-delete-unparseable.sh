@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -43,10 +43,14 @@ touch "${jobs}"
 candidates=${temp}/files-to-parse.txt
 mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
+py=${LOCAL}/filters/delete-unparseable.py
 while read -r f; do
-    echo "python3 \"${LOCAL}/filters/delete-unparseable.py\" \"${f}\" \"${list}\"" >> "${jobs}"
+    printf 'python3 %s %s %s\n' "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c '{}'
+echo ----
+cat $jobs
+echo ----
+uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
 if [ -s "${list}" ]; then

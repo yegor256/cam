@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # MIT License
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko

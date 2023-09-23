@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -31,9 +31,10 @@ rm -rf .git
 git init --quiet .
 git config user.email 'foo@example.com'
 git config user.name 'Foo'
-echo "class Foo {}" > Foo.java
-git add Foo.java
+java="Foo long 'weird' name (--).java"
+echo "class Foo {}" > "${java}"
+git add "${java}"
 git commit --quiet -am start
-"${LOCAL}/git-metrics/authors.sh" Foo.java stdout
+"${LOCAL}/git-metrics/authors.sh" "${java}" stdout
 grep "authors 1" stdout >/dev/null
 echo "👍🏻 Correctly calculated authors"

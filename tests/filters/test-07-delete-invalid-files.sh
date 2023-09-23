@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -26,11 +26,13 @@ set -o pipefail
 temp=$1
 list=${temp}/temp/filter-lists/invalid-files.txt
 
-echo "class Foo{} class Bar{}" > "${temp}/Foo.java"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "class Foo{} class Bar{}" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/07-delete-invalid-files.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "that's why were deleted" >/dev/null
-test ! -e "${temp}/Foo.java"
+test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
 echo "👍🏻 An invalid Java file was deleted"

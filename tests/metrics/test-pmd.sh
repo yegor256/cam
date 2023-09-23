@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -25,7 +25,8 @@ set -o pipefail
 
 temp=$1
 
-echo "class Foo {}" > "${temp}/Foo.java"
-"${LOCAL}/metrics/pmd.sh" "${temp}/Foo.java" "${temp}/stdout"
+java="${temp}/Foo long 'weird' name (--).java"
+echo "class Foo {}" > "${java}"
+"${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
 grep "coc 0" "${temp}/stdout" >/dev/null
 echo "👍🏻 Correctly calculated congitive complexity"

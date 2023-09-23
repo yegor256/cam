@@ -29,7 +29,7 @@ if __name__ == '__main__':
     JAVA: str = sys.argv[1]
     LST: str = sys.argv[2]
     try:
-        with open(JAVA) as f:
+        with open(JAVA, encoding='utf-8') as f:
             raw = javalang.parse.parse(f.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
             tree = list(value for value in tree)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -26,11 +26,13 @@ set -o pipefail
 temp=$1
 list=${temp}/temp/filter-lists/unparseable-files.txt
 
-echo "--- not java syntax at all ---" > "${temp}/Foo.java"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "--- not java syntax at all ---" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/04-delete-unparseable.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "1 of them were Java files with broken syntax" >/dev/null
-test ! -e "${temp}/Foo.java"
+test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
 echo "👍🏻 An unparseable Java file was deleted"

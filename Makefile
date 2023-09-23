@@ -99,6 +99,7 @@ clean:
 	rm -rf "$(TARGET)/data"
 	rm -rf "$(TARGET)/reports"
 	rm -rf "$(TARGET)/temp"
+	rm -rf "$(TARGET)/test-zone"
 	rm -rf "$(TARGET)/pdf-report"
 
 # Delete everything, in order to start from scratch.

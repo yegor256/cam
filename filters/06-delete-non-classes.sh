@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -43,14 +43,15 @@ touch "${jobs}"
 candidates=${temp}/classes-to-challenge.txt
 mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
+py=${LOCAL}/filters/delete-non-classes.py
 while read -r f; do
-    echo "python3 \"${LOCAL}/filters/delete-non-classes.py\" \"${f}\" \"${list}\"" >> "${jobs}"
+    printf 'python3 %s %s %s\n' "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
 if [ -s "${list}" ]; then
-    printf "There were %d files total. %d of them were not Java classes but interfaces or enums, that's why were deleted" \
+    printf "There were %d files total. %d of them were not Java classes but interfaces or enums, that's why they were deleted" \
         "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)"
 else
     printf "All %d files are Java classes, nothing to delete" \

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -26,11 +26,13 @@ set -o pipefail
 temp=$1
 list=${temp}/temp/filter-lists/files-with-long-lines.txt
 
-echo "some text in the file" > "${temp}/Foo.java"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "some text in the file" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "no files among 1 total" >/dev/null
-test -e "${temp}/Foo.java"
+test -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 0
 echo "👍🏻 A Java file with short lines wasn't deleted"

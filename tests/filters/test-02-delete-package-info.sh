@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -26,7 +26,8 @@ set -o pipefail
 temp=$1
 list=${temp}/temp/filter-lists/package-info-files.txt
 
-info=${temp}/package-info.java
+info="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /package-info.java"
+mkdir -p "$(dirname "${info}")"
 echo "package foo;" > "${info}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/02-delete-package-info.sh" "${temp}" "${temp}/temp")
