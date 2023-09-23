@@ -25,8 +25,12 @@ set -o pipefail
 
 temp=$1
 
-mkdir -p "${TARGET}/github/a/b"
-echo "class Foo {}" > "${TARGET}/github/a/b/Foo.java"
-"${LOCAL}/steps/measure.sh" >/dev/null
-test -e "${TARGET}/measurements/a/b/Foo.java.m"
+name="dir (with) _ long & and weird name /Foo.java"
+java="${TARGET}/github/foo/bar/${name}"
+mkdir -p "$(dirname "${java}")"
+echo "class Foo {}" > "${java}"
+msg=$("${LOCAL}/steps/measure.sh")
+echo "${msg}" | grep "metrics for Foo.java (1/1)" >/dev/null
+echo "${msg}" | grep "All metrics calculated in 1 files" >/dev/null
+test -e "${TARGET}/measurements/foo/bar/${name}.m"
 echo "👍🏻 Measured metrics correctly"

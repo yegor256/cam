@@ -25,7 +25,8 @@ set -o pipefail
 
 temp=$1
 
-echo "class Foo {}" > "${temp}/Foo.java"
-"${LOCAL}/steps/measure-file.sh" "${temp}/Foo.java" "${temp}/m">/dev/null
+java="${temp}/Foo(xls;)';a привет '\".java"
+echo "class Foo {}" > "${java}"
+"${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m">/dev/null
 test -e "${temp}/m"
 echo "👍🏻 Single file measured correctly"

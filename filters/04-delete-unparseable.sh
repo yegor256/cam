@@ -47,9 +47,6 @@ py=${LOCAL}/filters/delete-unparseable.py
 while read -r f; do
     printf 'python3 %s %s %s\n' "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
-echo ----
-cat $jobs
-echo ----
 uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
