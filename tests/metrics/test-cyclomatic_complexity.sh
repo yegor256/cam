@@ -25,7 +25,9 @@ set -o pipefail
 
 temp=$1
 
-echo "class Foo {}" > "${temp}/Foo.java"
-"${LOCAL}/metrics/cyclomatic_complexity.py" "${temp}/Foo.java" "${temp}/stdout"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /FooTest.java"
+mkdir -p "$(dirname "${java}")"
+echo "class Foo {}" > "${java}"
+"${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
 grep "cc 1" "${temp}/stdout" >/dev/null
 echo "👍🏻 Correctly calculated cyclomatic complexity"
