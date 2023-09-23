@@ -6,7 +6,7 @@ install: |
   pdd --file=/dev/null
 merge:
   script: |
-    sudo make install
+    sudo make install -f "$(pwd)/Makefile"
     make env
     make lint
     make REPO=yegor256/tojos
