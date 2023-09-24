@@ -25,26 +25,12 @@ set -o pipefail
 
 temp=$1
 
+touch "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-mkdir -p "${TARGET}/github/a/b"
-"${LOCAL}/steps/filter.sh" >/dev/null
-echo "👍🏻 A simple filtering ran smoothly"
-
-rm -rf "${TARGET}/github"
-rm -rf "${TARGET}/temp/reports"
-rm -rf "${TARGET}/temp/filter-lists"
-dir=${TARGET}/github
-class="${dir}/foo - '(weird)'/bar/Foo.java"
-    mkdir -p "$(dirname "${class}")"
-    echo "class Foo {}" > "${class}"
-interface="${dir}/foo/-- \";'/Boom.java"
-    mkdir -p "$(dirname "${interface}")"
-    echo "interface Boom {}" > "${interface}"
-broken="${dir}/''foo/;;'\"/Boom.java"
-    mkdir -p "$(dirname "${broken}")"
-    echo "broken code" > "${broken}"
-msg=$("${LOCAL}/steps/filter.sh")
-echo "${msg}" | grep -v "that's why they were deleted" >/dev/null
+mkdir -p "${TARGET}/github/foo/bar"
+msg=$("${LOCAL}/steps/polish.sh")
+echo "${msg}" | grep -v "foo/bar is obsolete and was deleted" >/dev/null
+echo "${msg}" | grep -v "All 1 repo directories" >/dev/null
 test ! -e "${broken}"
 test ! -e "${interface}"
 echo "👍🏻 A more complex filtering ran smoothly"

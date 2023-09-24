@@ -25,9 +25,8 @@ set -o pipefail
 
 dir=${TARGET}/github
 
-declare -i cnt=0
-find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \; | while read -r repo; do
-    cnt=$((cnt+1))
+repos=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \;)
+echo "${repos}" | while read -r repo; do
     if grep -Fxq "${repo}" "${TARGET}/repositories.csv"; then
         echo "Directory of ${repo} is already here"
     else
@@ -35,15 +34,14 @@ find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${di
         echo "Directory of ${repo} is obsolete and was deleted"
     fi
 done
-echo "All ${cnt} repo directories inside ${dir} look good"
+echo "All $(echo ${repos} | wc -l | xargs) repo directories inside ${dir} look good"
 
-cnt=0
-find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \; | while read -r org; do
-    cnt=$((cnt+1))
+orgs=$(find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \;)
+echo "${orgs}" | while read -r org; do
     if [ "$(find "${dir}/${org}" | wc -l | xargs)" == '0' ]; then
         rm -rf "${dir:?}/${org}"
         echo "Organization ${org} is empty and was deleted"
     fi
 done
-echo "All ${cnt} user directories inside ${dir} look good"
+echo "All $(echo ${orgs} | wc -l | xargs) org directories inside ${dir} look good"
 
