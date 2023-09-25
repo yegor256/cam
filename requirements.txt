@@ -1,4 +1,4 @@
 javalang==0.13.0
 pygments==2.16.1
 flake8==6.1.0
-pylint==2.17.5
+pylint==2.17.6
