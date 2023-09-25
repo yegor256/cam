@@ -68,6 +68,8 @@ rubocop -v
 
 inkscape --version
 
+awk --version
+
 cloc --version
 
 pygmentize -V
