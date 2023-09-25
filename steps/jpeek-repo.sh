@@ -86,8 +86,10 @@ fi
 
 accept=".*[^index|matrix|skeleton].xml"
 
-sum=0
-declare -i files=0
+values=${TARGET}/temp/jpeek-values/${repo}.txt
+mkdir -p "$(dirname "${values}")"
+files=${TARGET}/temp/jpeek-files/${repo}.txt
+mkdir -p "$(dirname "${files}")"
 for type in all cvc; do
     dir=${TARGET}/temp/jpeek/${type}/${repo}
     if [ ! -e "${dir}" ]; then
@@ -95,7 +97,7 @@ for type in all cvc; do
         continue
     fi
     find "${dir}" -type f -maxdepth 1 -print | while read -r report; do
-        files=$((files+1))
+        echo "${report}" > "${files}"
         if echo "${report}" | grep -q "${accept}"; then
             packages=$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")
             name=$(xmlstarlet sel -t -v "/metric/title" "${report}")
@@ -107,7 +109,7 @@ for type in all cvc; do
                     class=$(xmlstarlet sel -t -v "/metric/app/package[${i}]/class[${j}]/@id" "${report}")
                     value=$(xmlstarlet sel -t -v "/metric/app/package[${i}]/class[${j}]/@value" "${report}")
                     if [ ! "${value}" = "NaN" ]; then
-                        sum=$(echo "${sum} + ${value}" | bc)
+                        echo "${value}" >> "${values}"
                     fi
                     mfile=$(find "${project}" -path "*${package}/${class}.java" | sed "s|/github|/jpeek|")
                     if [ -n "${mfile}" ]; then
@@ -126,4 +128,7 @@ for type in all cvc; do
     done
 done
 
-echo "Analyzed ${repo} through jPeek (${pos}/${total}), ${files} files, sum is ${sum}, in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "Analyzed ${repo} through jPeek (${pos}/${total}), \
+$(wc -l < "${files}" | xargs) files, \
+sum is $(awk '{ sum += $1 } END { print sum }' ${values} | xargs), \
+in $(echo "$(date +%s) - ${start}" | bc)s"
