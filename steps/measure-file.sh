@@ -38,7 +38,7 @@ echo "${metrics}" | while read -r m; do
     #  by one of the filters in the "filters/" directory. Probably, we should avoid shallow clones
     #  and then get an opportunity to have more Git-based metrics.
     if [ "${m}" = "authors.sh" ]; then continue; fi
-    if timeout 10m "metrics/${m}" "${java}" "${javam}"; then
+    if timeout 30m "metrics/${m}" "${java}" "${javam}"; then
         while read -r t; do
             IFS=' ' read -r -ra M <<< "${t}"
             echo "${M[1]}" > "${javam}.${M[0]}"
