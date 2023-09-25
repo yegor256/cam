@@ -71,7 +71,7 @@ endef
 
 # The main goal
 all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
-	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION))!"
+	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION) in $$(echo "($$(date +%s) - $$(cat "$(TARGET)/start.txt")) / 60" | bc) minutes)!"
 
 install:
 	$(call step,install)
