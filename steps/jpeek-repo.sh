@@ -80,7 +80,7 @@ done
 start=$(date +%s)
 
 if ! collect; then
-    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error"
+    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error in $(echo "$(date +%s) - ${start}" | bc)s"
     exit
 fi
 
