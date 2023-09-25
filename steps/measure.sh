@@ -42,7 +42,6 @@ echo "${javas}" | while read -r java; do
     file=$((file+1))
     rel=$(realpath --relative-to="${TARGET}/github" "${java}")
     javam=${TARGET}/measurements/${rel}.m
-    echo $javam
     if [ -e "${javam}" ]; then
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue
