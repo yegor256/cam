@@ -37,11 +37,22 @@ test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 0
 echo "👍🏻 A Java file with short lines wasn't deleted"
 
-printf 'a%.0s' {1..5000} > "${temp}/Foo.java"
+java="${temp}/foo/bb/Привет.java"
+mkdir -p "$(dirname "${java}")"
+printf 'a%.0s' {1..5000} > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters" >/dev/null
-test ! -e "${temp}/Foo.java"
+test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
-echo "👍🏻 A Java file with a lone line was deleted"
+echo "👍🏻 A Java file with a long line was deleted"
+
+# see https://stackoverflow.com/questions/77169978/how-to-reproduce-awk-warning-invalid-multibyte-data-detected
+java="${temp}/foo/bb/привет/Привет.java"
+mkdir -p "$(dirname "${java}")"
+printf '\xC0\x80' > "${java}"
+rm -f "${list}"
+msg=$(LC_ALL=en_US.UTF-8 "${LOCAL}/filters/05-delete-long-lines.sh" "$(dirname "${java}")" "${temp}/temp" 2>&1)
+echo "${msg}" | (grep "Invalid multibyte data detected" && exit 1 || true)
+echo "👍🏻 A non-unicode file didn't cause awk troubles"

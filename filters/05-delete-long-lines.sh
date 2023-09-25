@@ -40,17 +40,18 @@ touch "${list}"
 candidates=${temp}/files-to-check-line-lengths.txt
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while read -r f; do
-    length=$(awk '{ print length }' < "${f}" | sort -n | tail -1)
+    length=$(LC_ALL=C awk '{ print length($0) }' < "${f}" | sort -n | tail -1)
     if [ "${length}" -gt "${max}" ]; then
         echo "${f}" >> "${list}"
         rm "${f}"
     fi
 done < "${candidates}"
 
+total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
     printf "There were %d files total; %d of them had at least one line longer than %d characters, which most probably is a symptom of an auto-generated code; that's why they all were deleted" \
-        "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)" "${max}"
+        "${total}" "$(wc -l < "${list}" | xargs)" "${max}"
 else
     printf "There were no files among %d total with lines longer than %d characters" \
-        "$(wc -l < "${candidates}" | xargs)" "${max}"
+        "${total}" "${max}"
 fi
