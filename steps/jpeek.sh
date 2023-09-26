@@ -44,7 +44,7 @@ for d in ${repos}; do
     printf "timeout 1h %s %s %s %s || true\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
 
-uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
+"${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 done=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)

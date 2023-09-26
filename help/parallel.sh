@@ -23,10 +23,10 @@
 set -e
 set -o pipefail
 
-# The input stream to this script must have a list
-# of bash commands to execute.
-
-x=$1
+jobs=$1
+x=$2
 if [ -z "${x}" ]; then x=1; fi
 
-xargs -0 -P "$(echo "$(nproc) * ${x}" | bc)" "${SHELL}" -c
+args=('--halt-on-error=now,fail=1' '--max-procs' "$(echo "$(nproc) * ${x}" | bc)")
+
+uniq "${jobs}" | parallel "${args[@]}" "${SHELL}" -c

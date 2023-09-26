@@ -70,6 +70,8 @@ inkscape --version
 
 awk --version
 
+parallel --version
+
 cloc --version
 
 pygmentize -V

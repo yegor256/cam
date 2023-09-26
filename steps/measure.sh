@@ -49,7 +49,7 @@ echo "${javas}" | while read -r java; do
     printf "%s %s %s %s %s\n" ${sh@Q} "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
 done
 
-uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
+"${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 echo "All metrics calculated in ${total} files in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"

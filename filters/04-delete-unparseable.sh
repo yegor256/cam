@@ -47,7 +47,7 @@ py=${LOCAL}/filters/delete-unparseable.py
 while read -r f; do
     printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
-uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
+"${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 total=$(wc -l < "${candidates}" | xargs)

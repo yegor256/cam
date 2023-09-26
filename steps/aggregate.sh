@@ -42,7 +42,7 @@ for r in ${repos}; do
     repo=$((repo+1))
     printf "%s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
-uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
+"${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 rm -rf "${TARGET}/data/*.csv"
