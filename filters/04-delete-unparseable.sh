@@ -50,11 +50,12 @@ done < "${candidates}"
 uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
+total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
     printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \
-        "$(wc -l < "${candidates}" | xargs)" \
+        "${total}" \
         "$(wc -l < "${list}" | xargs)"
 else
     printf "There were no files with broken syntax among %d files total" \
-        "$(wc -l < "${candidates}" | xargs)"
+        "${total}"
 fi
