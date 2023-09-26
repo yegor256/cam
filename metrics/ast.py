@@ -199,17 +199,17 @@ if __name__ == '__main__':
                 metric.write(f'smtds {smethods(tree_class)} '
                              f'Number of Static Methods\n')
                 metric.write(f'ncss {ncss(raw)} '
-                             f'Non Commenting Source Statements (NCSS)\n')
+                             f'Non-Commenting Source Statements (NCSS)\n')
                 metric.write(f'impls {impls(tree_class)} '
-                             f'Number of implemented interfaces\n')
+                             f'Number of Implemented Interfaces\n')
                 metric.write(f'extnds {extnds(tree_class)} '
-                             f'Number of extended classes\n')
+                             f'Number of Extended Classes\n')
                 metric.write(f'gnrcs {gnrcs(tree_class)} '
-                             f'Number of type parameters (generics)\n')
+                             f'Number of Type Parameters (generics)\n')
                 metric.write(f'final {final(tree_class)} '
-                             f'Class is final\n')
+                             f'Class is Final\n')
                 metric.write(f'annts {annts(tree_class)} '
-                             f'Number of annotations\n')
+                             f'Number of Annotations\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
