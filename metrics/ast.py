@@ -144,6 +144,15 @@ def extnds(tlist) -> int:
     return 0 if tlist[0][1].extends is None else 1
 
 
+def final(tlist) -> int:
+    """
+    Return 1 if the class is final, zero otherwise.
+
+    r:type: int
+    """
+    return 1 if 'final' in tlist[0][1].modifiers else 0
+
+
 def gnrcs(tlist) -> int:
     """
     Return number of type parameters (generics).
@@ -188,6 +197,8 @@ if __name__ == '__main__':
                              f'Number of extended classes\n')
                 metric.write(f'gnrcs {gnrcs(tree_class)} '
                              f'Number of type parameters (generics)\n')
+                metric.write(f'final {final(tree_class)} '
+                             f'Class is final\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
