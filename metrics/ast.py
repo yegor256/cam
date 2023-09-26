@@ -30,6 +30,7 @@ import javalang
 
 def attrs(tlist) -> int:
     """
+    Count non-static attributes.
 
     :rtype: int
     """
@@ -45,6 +46,7 @@ def attrs(tlist) -> int:
 
 def sattrs(tlist) -> int:
     """
+    Count static attributes.
 
     :rtype: int
     """
@@ -60,6 +62,7 @@ def sattrs(tlist) -> int:
 
 def ctors(tlist) -> int:
     """
+    Count constructors.
 
     :rtype: int
     """
@@ -70,6 +73,7 @@ def ctors(tlist) -> int:
 
 def methods(tlist) -> int:
     """
+    Count non-static methods.
 
     :rtype: int
     """
@@ -85,6 +89,7 @@ def methods(tlist) -> int:
 
 def smethods(tlist) -> int:
     """
+    Count static methods.
 
     :rtype: int
     """
@@ -100,6 +105,7 @@ def smethods(tlist) -> int:
 
 def ncss(parser_class) -> int:
     """
+    Count the NCSS (non-commenting source statement) lines.
 
     :rtype: int
     """
@@ -129,6 +135,15 @@ def impls(tlist) -> int:
     return len(tlist[0][1].implements or [])
 
 
+def extnds(tlist) -> int:
+    """
+    Count the number of classes this class extends (0 or 1).
+
+    r:type: int
+    """
+    return 0 if tlist[0][1].extends is None else 1
+
+
 class NotClassError(Exception):
     """
     If it's not a class
@@ -146,20 +161,22 @@ if __name__ == '__main__':
             if not tree_class:
                 raise NotClassError('This is not a class')
             with open(METRICS, 'a', encoding='utf-8') as metric:
-                metric.write(f'attributes {attrs(tree_class)} '
+                metric.write(f'attrs {attrs(tree_class)} '
                              f'Number of Non-Static Attributes\n')
-                metric.write(f'sattributes {sattrs(tree_class)} '
+                metric.write(f'sattrs {sattrs(tree_class)} '
                              f'Number of Static Attributes\n')
                 metric.write(f'ctors {ctors(tree_class)} '
                              f'Number of Constructors\n')
-                metric.write(f'methods {methods(tree_class)} '
+                metric.write(f'mtds {methods(tree_class)} '
                              f'Number of Non-Static Methods\n')
-                metric.write(f'smethods {smethods(tree_class)} '
+                metric.write(f'smtds {smethods(tree_class)} '
                              f'Number of Static Methods\n')
                 metric.write(f'ncss {ncss(raw)} '
                              f'Non Commenting Source Statements (NCSS)\n')
                 metric.write(f'impls {impls(tree_class)} '
-                             f'Number of implemented interfaces \n')
+                             f'Number of implemented interfaces\n')
+                metric.write(f'extnds {extnds(tree_class)} '
+                             f'Number of extended classes\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
