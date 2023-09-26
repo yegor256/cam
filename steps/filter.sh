@@ -31,14 +31,14 @@ find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filt
     else
         before=$(find "${TARGET}/github" -type f | wc -l | xargs)
         echo "Running filter ${filter}... (may take some time)"
-        start=$(date +%s)
+        start=$(date +%s%N)
         "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
             tr -d '\n\r' |\
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \
             > "${tex}"
         after=$(find "${TARGET}/github" -type f | wc -l | xargs)
-        echo "Filter ${filter} finished in $(echo "$(date +%s) - ${start}" | bc)s, \
+        echo "Filter ${filter} finished$("${LOCAL}/help/tdiff.sh" "${start}"), \
 deleted $(echo "${before} - ${after}" | bc) files \
 and published its results to ${TARGET}/temp/reports/${filter}.tex "
     fi

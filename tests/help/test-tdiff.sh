@@ -23,33 +23,14 @@
 set -e
 set -o pipefail
 
-start=$(date +%s%N)
+start=$(( $(date +%s%N) - 5 * 1000 * 1000 * 1000 ))
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 5s'
+echo "👍🏻 Correctly calculated seconds"
 
-echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
+start=$(( $(date +%s%N) - 7 * 60 * 1000 * 1000 * 1000 ))
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 7m'
+echo "👍🏻 Correctly calculated minutes"
 
-javas=$(find "${TARGET}/github" -name '*.java' -print)
-total=$(echo "${javas}" | wc -l | xargs)
-echo "Found ${total} Java files, starting to collect metrics..."
-
-jobs=${TARGET}/jobs/measure-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-declare -i file=0
-sh="$(dirname "$0")/measure-file.sh"
-echo "${javas}" | while read -r java; do
-    file=$((file+1))
-    rel=$(realpath --relative-to="${TARGET}/github" "${java}")
-    javam=${TARGET}/measurements/${rel}.m
-    if [ -e "${javam}" ]; then
-        echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
-        continue
-    fi
-    printf "%s %s %s %s %s\n" ${sh@Q} "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
-done
-
-uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
-wait
-
-echo "All metrics calculated in ${total} files in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
+start=$(( $(date +%s%N) - 3 * 60 * 60 * 1000 * 1000 * 1000 ))
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 3h'
+echo "👍🏻 Correctly calculated hours"

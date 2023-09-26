@@ -60,18 +60,12 @@ define step
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
     @bash $(LOCAL)/steps/$(1).sh
-	end=$$(date +%s%N)
-    ms=$$(echo "($${end} - $${start}) / 1000000" | bc)
-    if [ "$${ms}" -gt "1000" ]; then
-	    echo "Took $$(( ms / 1000 ))s"
-    else
-	    echo "Took $${ms}ms"
-    fi
+    echo "Finished$$("$${LOCAL}/help/tdiff.sh" "$${start}")"
 endef
 
 # The main goal
 all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
-	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION) in $$(echo "($$(date +%s) - $$(cat "$(TARGET)/start.txt")) / 60" | bc) minutes)!"
+	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION)$$("$${LOCAL}/help/tdiff.sh" "$$(cat "$(TARGET)/start.txt")"))!"
 
 install:
 	$(call step,install)
@@ -81,7 +75,7 @@ test:
 
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
-	date +%s > "$(TARGET)/start.txt"
+	date +%s%N > "$(TARGET)/start.txt"
 
 # Check the quality of code
 lint:

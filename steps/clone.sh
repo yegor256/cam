@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 jobs=${TARGET}/jobs/clone-jobs.txt
 rm -rf "${jobs}"
@@ -47,4 +47,4 @@ done < "${TARGET}/repositories.csv"
 uniq "${jobs}" | xargs -0 -P "$(echo "$(nproc) * 8" | bc)" "${SHELL}" -c
 wait
 
-echo "Cloned ${total} repositories in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "Cloned ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"

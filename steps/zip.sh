@@ -23,11 +23,11 @@
 set -e
 set -o pipefail
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 zip=cam-$(date +%Y-%m-%d).zip
 
 zip -qq -r "${zip}" "${TARGET}"
 mv "${zip}" "${TARGET}"
 
-echo "ZIP archive ${zip} ($(du -k "${TARGET}/${zip}" | cut -f1) Kb) created at ${TARGET} in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "ZIP archive ${zip} ($(du -k "${TARGET}/${zip}" | cut -f1) Kb) created at ${TARGET}$("${LOCAL}/help/tdiff.sh" "${start}")"

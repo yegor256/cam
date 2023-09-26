@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
@@ -62,4 +62,4 @@ find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print | while read -r d; 
     echo "${r} metrics added to the CSV aggregate"
 done
 
-echo "All metrics aggregated in ${total} repositories in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "All metrics aggregated in ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"

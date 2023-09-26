@@ -91,4 +91,4 @@ java -jar "${JPEEK}" --help
 locale
 
 mkdir -p "$(dirname "${flag}")"
-date +%s > "${flag}"
+date +%s%N > "${flag}"

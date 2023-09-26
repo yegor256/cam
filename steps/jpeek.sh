@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 jobs=${TARGET}/jobs/jpeek-jobs.txt
 rm -rf "${jobs}"
@@ -49,4 +49,4 @@ wait
 
 done=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)
 
-echo "All ${total} repositories passed through jPeek, ${done} of them produced data, in $(nproc) threads, in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "All ${total} repositories passed through jPeek, ${done} of them produced data, in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"

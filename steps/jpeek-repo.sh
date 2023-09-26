@@ -27,7 +27,7 @@ repo=$1
 pos=$2
 total=$3
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 project=${TARGET}/github/${repo}
 
@@ -38,25 +38,25 @@ build() {
     if [ -e "${project}/gradlew" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradlew..."
         if ! timeout 1h "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradlew, in $(echo "$(date +%s) - ${start}" | bc)s"
+            echo "Failed to compile ${repo} using Gradlew$("${LOCAL}/help/tdiff.sh" "${start}")"
             exit
         fi
-        echo "Сompiled ${repo} using Gradlew, in $(echo "$(date +%s) - ${start}" | bc)s"
+        echo "Сompiled ${repo} using Gradlew$("${LOCAL}/help/tdiff.sh" "${start}")"
     elif [ -e "${project}/build.gradle" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradle..."
         echo "apply plugin: 'java'" >> "${project}/build.gradle"
         if ! timeout 1h gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
+            echo "Failed to compile ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
             exit
         fi
-        echo "Сompiled ${repo} using Gradle, in $(echo "$(date +%s) - ${start}" | bc)s"
+        echo "Сompiled ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
     elif [ -e "${project}/pom.xml" ]; then
         echo "Building ${repo} (${pos}/${total}) with Maven..."
         if ! timeout 1h mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
-            echo "Failed to compile ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
+            echo "Failed to compile ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
             exit
         fi
-        echo "Сompiled ${repo} using Maven, in $(echo "$(date +%s) - ${start}" | bc)s"
+        echo "Сompiled ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
     else
         echo "Could not build classes in ${repo} (${pos}/${total}) (neither Maven nor Gradle project)"
         exit
@@ -77,10 +77,10 @@ until build; do
     echo "Retry #${re} for ${repo} (${pos}/${total})..."
 done
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 if ! collect; then
-    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error in $(echo "$(date +%s) - ${start}" | bc)s"
+    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error$("${LOCAL}/help/tdiff.sh" "${start}")"
     exit
 fi
 
@@ -132,5 +132,4 @@ done
 
 echo "Analyzed ${repo} through jPeek (${pos}/${total}), \
 $(wc -l < "${files}" | xargs) files, \
-sum is $(awk '{ sum += $1 } END { print sum }' ${values} | xargs), \
-in $(echo "$(date +%s) - ${start}" | bc)s"
+sum is $(awk '{ sum += $1 } END { print sum }' ${values} | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"

@@ -28,7 +28,7 @@ tag=$2
 pos=$3
 total=$4
 
-start=$(date +%s)
+start=$(date +%s%N)
 
 dir=${TARGET}/github/${repo}
 
@@ -56,4 +56,4 @@ until timeout 1h git clone "${args[@]}" "https://github.com/${repo}" "${dir}"; d
 done
 printf "%s,%s\n" "${repo}" "$(git --git-dir "${dir}/.git" rev-parse HEAD)" >> "${TARGET}/hashes.csv"
 
-echo "${repo} cloned (${pos}/${total}), $(du -sh "${dir}" | cut -f1 | xargs) in $(echo "$(date +%s) - ${start}" | bc)s"
+echo "${repo} cloned (${pos}/${total}), $(du -sh "${dir}" | cut -f1 | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"

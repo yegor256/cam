@@ -23,33 +23,21 @@
 set -e
 set -o pipefail
 
-start=$(date +%s%N)
+start=$1
+if [ -z "${start}" ]; then exit 1; fi
 
-echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
-
-javas=$(find "${TARGET}/github" -name '*.java' -print)
-total=$(echo "${javas}" | wc -l | xargs)
-echo "Found ${total} Java files, starting to collect metrics..."
-
-jobs=${TARGET}/jobs/measure-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-declare -i file=0
-sh="$(dirname "$0")/measure-file.sh"
-echo "${javas}" | while read -r java; do
-    file=$((file+1))
-    rel=$(realpath --relative-to="${TARGET}/github" "${java}")
-    javam=${TARGET}/measurements/${rel}.m
-    if [ -e "${javam}" ]; then
-        echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
-        continue
-    fi
-    printf "%s %s %s %s %s\n" ${sh@Q} "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
-done
-
-uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
-wait
-
-echo "All metrics calculated in ${total} files in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
+pfx=', in '
+mks=$(echo "($(date +%s%N) - ${start}) / 1000" | bc)
+if ((mks < 100)); then
+    exit
+elif ((mks < 1000)); then
+    printf '%s%dμs' "${pfx}" "${mks}"
+elif ((mks < 1000 * 1000)); then
+    printf '%s%dms' "${pfx}" "$((mks / 1000))"
+elif ((mks < 60 * 1000 * 1000)); then
+    printf '%s%ds' "${pfx}" "$((mks / (1000 * 1000)))"
+elif ((mks < 60 * 60 * 1000 * 1000)); then
+    printf '%s%dm' "${pfx}" "$((mks / (60 * 1000 * 1000)))"
+else
+    printf '%s%dh' "${pfx}" "$((mks / (60 * 60 * 1000 * 1000)))"
+fi
