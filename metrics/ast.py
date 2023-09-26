@@ -162,6 +162,15 @@ def gnrcs(tlist) -> int:
     return len(tlist[0][1].type_parameters or [])
 
 
+def annts(tlist) -> int:
+    """
+    Return number of annotations of the class.
+
+    r:type: int
+    """
+    return len(tlist[0][1].annotations or [])
+
+
 class NotClassError(Exception):
     """
     If it's not a class
@@ -199,6 +208,8 @@ if __name__ == '__main__':
                              f'Number of type parameters (generics)\n')
                 metric.write(f'final {final(tree_class)} '
                              f'Class is final\n')
+                metric.write(f'annts {annts(tree_class)} '
+                             f'Number of annotations\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
