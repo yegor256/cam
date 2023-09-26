@@ -144,6 +144,15 @@ def extnds(tlist) -> int:
     return 0 if tlist[0][1].extends is None else 1
 
 
+def gnrcs(tlist) -> int:
+    """
+    Return number of type parameters (generics).
+
+    r:type: int
+    """
+    return len(tlist[0][1].type_parameters or [])
+
+
 class NotClassError(Exception):
     """
     If it's not a class
@@ -177,6 +186,8 @@ if __name__ == '__main__':
                              f'Number of implemented interfaces\n')
                 metric.write(f'extnds {extnds(tree_class)} '
                              f'Number of extended classes\n')
+                metric.write(f'gnrcs {gnrcs(tree_class)} '
+                             f'Number of type parameters (generics)\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)

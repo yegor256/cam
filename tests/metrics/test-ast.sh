@@ -26,7 +26,7 @@ set -o pipefail
 temp=$1
 
 java="${temp}/Foo long 'weird' name (--).java"
-echo "class Foo extends Bar implements Boom, Hello {
+echo "class Foo<T> extends Bar implements Boom, Hello {
     final File a;
     static String Z;
     void x() { }
@@ -38,4 +38,5 @@ grep "sattrs 1" "${temp}/stdout" >/dev/null
 grep "mtds 2" "${temp}/stdout" >/dev/null
 grep "impls 2" "${temp}/stdout" >/dev/null
 grep "extnds 1" "${temp}/stdout" >/dev/null
+grep "gnrcs 1" "${temp}/stdout" >/dev/null
 echo "👍🏻 Correctly collected AST metrics"
