@@ -30,3 +30,11 @@ rm -rf "${TARGET}/github"
 "${LOCAL}/steps/clone.sh" >/dev/null
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
+
+TARGET="${TARGET}/another/ж\"'  () привет /t"
+mkdir -p "${TARGET}"
+echo "yegor256/jaxec" > "${TARGET}/repositories.csv"
+rm -rf "${TARGET}/github"
+"${LOCAL}/steps/clone.sh" >/dev/null
+test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
+echo "👍🏻 A repo cloned correctly into weird directory"

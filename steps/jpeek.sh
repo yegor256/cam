@@ -37,13 +37,14 @@ dir=${TARGET}/temp/jpeek/all
 mkdir -p "${dir}"
 
 declare -i repo=0
+sh="$(dirname "$0")/jpeek-repo.sh"
 for d in ${repos}; do
     r=$(realpath --relative-to="${TARGET}/github" "${d}" )
     repo=$((repo+1))
-    echo "$(dirname "$0")/jpeek-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
+    printf '%s %s %s %s' "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
 
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
 done=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -print | wc -l | xargs)

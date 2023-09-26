@@ -33,17 +33,18 @@ touch "${jobs}"
 total=$(wc -l < "${TARGET}/repositories.csv" | xargs)
 
 declare -i repo=0
+sh="$(dirname "$0")/clone-repo.sh"
 while IFS=',' read -r r tag; do
     repo=$((repo+1))
     if [ -z "${tag}" ]; then tag='.'; fi
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here"
     else
-        echo "$(dirname "$0")/clone-repo.sh" "${r}" "${tag}" "${repo}" "${total}" >> "${jobs}"
+        printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
 done < "${TARGET}/repositories.csv"
 
-uniq "${jobs}" | xargs -I {} -P "$(echo "$(nproc) * 8" | bc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -0 -P "$(echo "$(nproc) * 8" | bc)" "${SHELL}" -c
 wait
 
 echo "Cloned ${total} repositories in $(nproc) threads in $(echo "$(date +%s) - ${start}" | bc)s"

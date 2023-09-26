@@ -37,11 +37,12 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
 declare -i repo=0
+sh="$(dirname "$0")/aggregate-repo.sh"
 for r in ${repos}; do
     repo=$((repo+1))
-    echo "$(dirname "$0")/aggregate-repo.sh" "${r}" "${repo}" "${total}" >> "${jobs}"
+    printf "%s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
-uniq "${jobs}" | xargs -I {} -P "$(nproc)" "${SHELL}" -c "{}"
+uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
 wait
 
 rm -rf "${TARGET}/data/*.csv"

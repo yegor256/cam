@@ -88,10 +88,10 @@ accept=".*[^index|matrix|skeleton].xml"
 
 values=${TARGET}/temp/jpeek-values/${repo}.txt
 mkdir -p "$(dirname "${values}")"
-echo > "${files}"
+echo > "${values}"
 files=${TARGET}/temp/jpeek-files/${repo}.txt
 mkdir -p "$(dirname "${files}")"
-echo > "${values}"
+echo > "${files}"
 for type in all cvc; do
     dir=${TARGET}/temp/jpeek/${type}/${repo}
     if [ ! -e "${dir}" ]; then
