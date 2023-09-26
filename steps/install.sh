@@ -28,6 +28,10 @@ set -o pipefail
 apt-get -y update
 apt-get install -y coreutils
 
+if ! parallel --version; then
+  apt-get -y install parallel
+fi
+
 if ! bc -v; then
   apt-get install -y bc
 fi
