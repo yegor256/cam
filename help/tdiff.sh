@@ -39,5 +39,7 @@ elif ((mks < 60 * 1000 * 1000)); then
 elif ((mks < 60 * 60 * 1000 * 1000)); then
     printf '%s%dm' "${pfx}" "$((mks / (60 * 1000 * 1000)))"
 else
-    printf '%s%dh' "${pfx}" "$((mks / (60 * 60 * 1000 * 1000)))"
+    hours=$((mks / (60 * 60 * 1000 * 1000)))
+    minutes=$(((mks - hours * 60 * 60 * 1000 * 1000) / (60 * 1000 * 1000)))
+    printf '%s%dh%dm' "${pfx}" "${hours}" "${minutes}"
 fi

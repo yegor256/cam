@@ -32,5 +32,9 @@ test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 7m'
 echo "👍🏻 Correctly calculated minutes"
 
 start=$(( $(date +%s%N) - 3 * 60 * 60 * 1000 * 1000 * 1000 ))
-test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 3h'
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 3h0m'
 echo "👍🏻 Correctly calculated hours"
+
+start=$(( $(date +%s%N) - 3 * 60 * 60 * 1000 * 1000 * 1000 + 25 * 60 * 1000 * 1000 * 1000 ))
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 2h35m'
+echo "👍🏻 Correctly calculated hours and minutes"
