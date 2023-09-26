@@ -44,7 +44,7 @@ while IFS=',' read -r r tag; do
     fi
 done < "${TARGET}/repositories.csv"
 
-uniq "${jobs}" | xargs -0 -P "$(echo "$(nproc) * 8" | bc)" "${SHELL}" -c
+uniq "${jobs}" | "${LOCAL}/help/parallel.sh" 8
 wait
 
 echo "Cloned ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"

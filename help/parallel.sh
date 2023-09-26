@@ -20,42 +20,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+# The input stream to this script must have a list
+# of bash commands to execute.
 
-list=${temp}/filter-lists/unparseable-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
+x=$1
+if [ -z "${x}" ]; then x=1; fi
 
-mkdir -p "$(dirname "${list}")"
-touch "${list}"
-
-jobs=${TARGET}/jobs/delete-unparseable.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-candidates=${temp}/files-to-parse.txt
-mkdir -p "$(dirname "${candidates}")"
-find "${home}" -type f -name '*.java' -print > "${candidates}"
-py=${LOCAL}/filters/delete-unparseable.py
-while read -r f; do
-    printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
-done < "${candidates}"
-uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
-wait
-
-total=$(wc -l < "${candidates}" | xargs)
-if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them were Java files with broken syntax and that's why were deleted" \
-        "${total}" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files with broken syntax among %d files total" \
-        "${total}"
-fi
+xargs -0 -P "$(echo "$(nproc) * ${x}" | bc)" "${SHELL}" -c

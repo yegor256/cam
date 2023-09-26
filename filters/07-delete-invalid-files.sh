@@ -47,7 +47,7 @@ py=${LOCAL}/filters/delete-invalid-files.py
 while read -r f; do
     printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
-uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
+uniq "${jobs}" | "${LOCAL}/help/parallel.sh"
 wait
 
 total=$(wc -l < "${candidates}" | xargs)
