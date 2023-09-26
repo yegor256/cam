@@ -24,6 +24,10 @@ set -e
 set -o pipefail
 
 dir=${TARGET}/github
+if [ ! -e "${dir}" ]; then
+    echo "Nothing to polish, the directory is absent: ${dir}"
+    exit
+fi
 
 repos=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \;)
 echo "${repos}" | while read -r repo; do
