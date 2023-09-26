@@ -41,7 +41,7 @@ sh="$(dirname "$0")/jpeek-repo.sh"
 for d in ${repos}; do
     r=$(realpath --relative-to="${TARGET}/github" "${d}" )
     repo=$((repo+1))
-    printf '%s %s %s %s' "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+    printf "timeout 1h %s %s %s %s || true\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
 
 uniq "${jobs}" | xargs -0 -P "$(nproc)" "${SHELL}" -c
