@@ -29,10 +29,12 @@ require 'fileutils'
 require 'slop'
 require 'octokit'
 
+max = 1000
+
 opts = Slop.parse do |o|
   o.string '--token', 'GitHub access token', default: ''
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
-  o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
+  o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: max
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
   o.string '--path', 'The file name to save the list to', required: true
@@ -42,6 +44,8 @@ opts = Slop.parse do |o|
     exit
   end
 end
+
+raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [100, opts[:total]].min
 
@@ -63,6 +67,10 @@ query = [
   'android'
 ].join(' ')
 loop do
+  if page * size >= max
+    puts "Can't go to page ##{page}, since it will be over #{max}"
+    break
+  end
   json = github.search_repositories(query, per_page: size, page: page)
   json[:items].each do |i|
     names << i[:full_name]
@@ -71,7 +79,7 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
   break if names.count >= opts[:total]
-  puts 'Let\'s sleep for a few seconds to cool off GitHub API...'
+  puts "Let\'s sleep for a few seconds to cool off GitHub API (already found #{names.count} repos)..."
   sleep 10
   page += 1
 end
