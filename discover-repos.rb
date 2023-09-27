@@ -67,7 +67,7 @@ query = [
   'android'
 ].join(' ')
 loop do
-  if page * size >= max
+  if page * size > max
     puts "Can't go to page ##{page}, since it will be over #{max}"
     break
   end
