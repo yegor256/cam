@@ -37,7 +37,7 @@ opts = Slop.parse do |o|
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: max
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
-  o.string '--path', 'The file name to save the list to', required: true
+  o.string '--csv', 'The file name to save the list to', required: true
   o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
   o.on '--help' do
     puts o
@@ -54,7 +54,7 @@ unless opts[:token].empty?
   github = Octokit::Client.new(access_token: opts[:token])
   puts 'Accessing GitHub with personal access token!'
 end
-names = Set.new
+found = {}
 page = 0
 query = [
   "stars:#{opts['min-stars']}..#{opts['max-stars']}",
@@ -73,20 +73,28 @@ loop do
   end
   json = github.search_repositories(query, per_page: size, page: page)
   json[:items].each do |i|
-    names << i[:full_name]
-    puts "Found #{i[:full_name].inspect} GitHub repo ##{names.count} \
+    found[i[:full_name]] = {
+      full_name: i[:full_name],
+      default_branch: i[:default_branch],
+      stars: i[:stargazers_count],
+      forks: i[:forks_count],
+      created_at: i[:created_at].iso8601,
+      size: i[:size],
+      open_issues_count: i[:open_issues_count]
+    }
+    puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
-  break if names.count >= opts[:total]
-  puts "Let\'s sleep for a few seconds to cool off GitHub API (already found #{names.count} repos)..."
+  break if found.count >= opts[:total]
+  puts "Let\'s sleep for a few seconds to cool off GitHub API (already found #{found.count} repos)..."
   sleep 10
   page += 1
 end
-puts "Found #{names.count} total repositories in GitHub"
+puts "Found #{found.count} total repositories in GitHub"
 
-if names.count > opts[:total]
-  names = names.first(opts[:total])
+if found.count > opts[:total]
+  found = found.first(opts[:total])
   puts "We will use only the first #{opts[:total]} repositories"
 end
 
@@ -102,7 +110,9 @@ File.write(
   ].join
 )
 
-path = File.expand_path(opts[:path])
+path = File.expand_path(opts[:csv])
 FileUtils.mkdir_p(File.dirname(path))
-File.write(path, "#{names.join("\n")}\n")
-puts "The list of #{names.count} repos saved into #{path}"
+File.write(path,
+  ([found.first[1].keys.join(',')] + found.values.map { |m| m.values.join(',') }).join("\n")
+)
+puts "The list of #{found.count} repos saved into #{path}"

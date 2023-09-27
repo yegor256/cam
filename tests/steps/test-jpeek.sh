@@ -26,7 +26,7 @@ set -o pipefail
 temp=$1
 
 repo="yegor256/jaxec"
-echo "${repo}" > "${TARGET}/repositories.csv"
+echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 "${LOCAL}/steps/clone.sh" >/dev/null
 msg=$("${LOCAL}/steps/jpeek.sh")

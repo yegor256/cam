@@ -23,14 +23,14 @@
 set -e
 set -o pipefail
 
-temp=$1
+csv=${TARGET}/foo.csv
+tex=${TARGET}/foo.tex
 
-repo="yegor256/jaxec"
-echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
-rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >/dev/null
-msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
-echo "${msg}" | (grep "0 files, sum is 0" && exit 1 || true)
-echo "${msg}" | grep -v "Analyzed ${repo} through jPeek" >/dev/null
-test -e "${TARGET}/jpeek"
-echo "👍🏻 A simple repo analyzed with jpeek correctly"
+rm -f "${csv}"
+stdout=$("${LOCAL}/steps/discover-repos.rb" --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
+echo "${stdout}" | grep "Found 3 repositories in page 0" >/dev/null
+echo "${stdout}" | grep "Found 3 total repositories in GitHub" >/dev/null
+test -e "${csv}"
+test -e "${tex}"
+test $(wc -l < "${csv}" | xargs) = '3'
+echo "👍🏻 A few repositories discovered correctly"

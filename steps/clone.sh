@@ -30,7 +30,10 @@ rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
-total=$(wc -l < "${TARGET}/repositories.csv" | xargs)
+repos="${TARGET}/temp/repositories.txt"
+mkdir -p "$(dirname "${repos}")"
+tail -n +2 "${TARGET}/repositories.csv" > "${repos}"
+total=$(wc -l < "${repos}" | xargs)
 
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
@@ -42,7 +45,7 @@ while IFS=',' read -r r tag; do
     else
         printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
-done < "${TARGET}/repositories.csv"
+done < "${repos}"
 
 "${LOCAL}/help/parallel.sh" "${jobs}" 8
 wait

@@ -35,10 +35,10 @@ elif [ -n "${REPO}" ]; then
     echo "${REPO}" >> "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
     echo "Using discover-repos.rb..."
-    ruby "${LOCAL}/discover-repos.rb" \
+    ruby "${LOCAL}/steps/discover-repos.rb" \
         "--token=${TOKEN}" \
         "--total=${TOTAL}" \
-        "--path=${csv}" \
+        "--csv=${csv}" \
         "--tex=${TARGET}/temp/repo-details.tex" \
         "--min-stars=400" \
         "--max-stars=10000"
