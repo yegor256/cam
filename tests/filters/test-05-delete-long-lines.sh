@@ -56,3 +56,14 @@ rm -f "${list}"
 msg=$(LC_ALL=en_US.UTF-8 "${LOCAL}/filters/05-delete-long-lines.sh" "$(dirname "${java}")" "${temp}/temp" 2>&1)
 echo "${msg}" | (grep "Invalid multibyte data detected" && exit 1 || true)
 echo "👍🏻 A non-unicode file didn't cause awk troubles"
+
+java="${temp}/--/empty.java"
+mkdir -p "$(dirname "${java}")"
+touch "${java}"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
+test -e "${java}"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 0
+echo "👍🏻 An empty Java file wasn't deleted"
+
