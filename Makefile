@@ -76,6 +76,7 @@ test:
 # Record the moment in time, when processing started.
 $(TARGET)/start.txt: $(TARGET)/temp
 	date +%s%N > "$(TARGET)/start.txt"
+	echo "STARTED yegor256/cam $(VERSION) at $$(date)"
 
 # Check the quality of code
 lint:
