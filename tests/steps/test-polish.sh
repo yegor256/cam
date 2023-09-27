@@ -34,3 +34,8 @@ echo "${msg}" | grep -v "All 1 repo directories" >/dev/null
 test ! -e "${broken}"
 test ! -e "${interface}"
 echo "👍🏻 A more complex filtering ran smoothly"
+
+TARGET=${TARGET}/dir-is-absent
+msg=$("${LOCAL}/steps/polish.sh")
+echo "${msg}" | grep "Nothing to polish, the directory is absent" >/dev/null
+echo "👍🏻 An empty directory passes filtering"
