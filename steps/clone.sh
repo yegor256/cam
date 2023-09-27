@@ -37,7 +37,7 @@ total=$(wc -l < "${repos}" | xargs)
 
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
-while IFS=',' read -r r tag; do
+while IFS=',' read -r r tag tail; do
     repo=$((repo+1))
     if [ -z "${tag}" ]; then tag='.'; fi
     if [ -e "${TARGET}/github/${r}" ]; then

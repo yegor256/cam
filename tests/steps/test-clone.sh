@@ -25,7 +25,7 @@ set -o pipefail
 
 temp=$1
 
-echo -e "name\nyegor256/jaxec" > "${TARGET}/repositories.csv"
+echo -e "name\nyegor256/jaxec,master,4,5,5,6" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 "${LOCAL}/steps/clone.sh" >/dev/null
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
