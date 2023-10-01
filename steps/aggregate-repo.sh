@@ -27,6 +27,8 @@ repo=$1
 pos=$2
 total=$3
 
+start=$(date +%s%N)
+
 dir=${TARGET}/measurements/${repo}
 ddir=${TARGET}/data/${repo}
 if [ -e "${ddir}" ]; then
@@ -56,4 +58,4 @@ find "${dir}" -name '*.m' | while read -r m; do
     printf "\n" >> "${csv}"
 done
 
-echo "${repo} aggregated (${pos}/${total})"
+echo "${repo} aggregated (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
