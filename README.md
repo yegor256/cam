@@ -8,11 +8,14 @@ in this repository. You are welcome to use it in your researches.
 Each release has a fixed version. By referring to it in your research
 you avoid ambiguity and guarantees repeatability of your experiments.
 
+This is a more formal explanation of this project: 
+[in PDF]().
+
 The latest ZIP archive with the dataset is here:
 [cam-2022-02-17.zip](https://github.com/yegor256/cam/releases/download/0.3.0/cam-2022-02-17.zip) 
 (532Mb). 
-It is the result of the analysis of Java classes in 1000 GitHub repositories
-against a number of metrics:
+It is the result of the analysis of Java classes in 900+ GitHub repositories
+against a number of metrics, including:
  
   * lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
   * lines of comments,
@@ -100,7 +103,8 @@ provided they don't violate our quality standards. To avoid frustration,
 before sending us your pull request please run full Maven build:
 
 ```bash
+$ make test
 $ make REPO=yegor256/tojos
 ```
 
-This should take a few minutes to complete.
+This should take a few minutes to complete, without errors.
