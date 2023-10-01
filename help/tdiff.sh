@@ -24,7 +24,10 @@ set -e
 set -o pipefail
 
 start=$1
-if [ -z "${start}" ]; then exit 1; fi
+if [ -z "${start}" ]; then
+    echo 'One argument is required'
+    exit 1
+fi
 
 pfx=', in '
 mks=$(echo "($(date +%s%N) - ${start}) / 1000" | bc)
@@ -37,7 +40,9 @@ elif ((mks < 1000 * 1000)); then
 elif ((mks < 60 * 1000 * 1000)); then
     printf '%s%ds' "${pfx}" "$((mks / (1000 * 1000)))"
 elif ((mks < 60 * 60 * 1000 * 1000)); then
-    printf '%s%dm' "${pfx}" "$((mks / (60 * 1000 * 1000)))"
+    minutes=$((mks / (60 * 1000 * 1000)))
+    seconds=$(((mks - minutes * 60 * 1000 * 1000) / (1000 * 1000)))
+    printf '%s%dm%ds' "${pfx}" "${minutes}" "${seconds}"
 else
     hours=$((mks / (60 * 60 * 1000 * 1000)))
     minutes=$(((mks - hours * 60 * 60 * 1000 * 1000) / (60 * 1000 * 1000)))

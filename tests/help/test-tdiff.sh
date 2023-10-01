@@ -27,8 +27,8 @@ start=$(( $(date +%s%N) - 5 * 1000 * 1000 * 1000 ))
 test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 5s'
 echo "👍🏻 Correctly calculated seconds"
 
-start=$(( $(date +%s%N) - 7 * 60 * 1000 * 1000 * 1000 ))
-test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 7m'
+start=$(( $(date +%s%N) - 7 * 60 * 1000 * 1000 * 1000 - 15 * 1000 * 1000 * 1000 ))
+test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 7m15s'
 echo "👍🏻 Correctly calculated minutes"
 
 start=$(( $(date +%s%N) - 3 * 60 * 60 * 1000 * 1000 * 1000 ))
