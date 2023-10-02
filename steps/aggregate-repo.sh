@@ -38,7 +38,7 @@ if [ -e "${ddir}" ]; then
 fi
 
 find "${dir}" -name '*.m' | {
-    declare -i sum=0
+    sum=0
     while IFS= read -r m; do
         find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
             java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
@@ -53,10 +53,10 @@ find "${dir}" -name '*.m' | {
         printf '%s' "${java}" >> "${csv}"
         for a in ${all}; do
             if [ -e "${m}.${a}" ]; then
-                value=$(cat "${m}.${a}")
+                value=$(cat "${m}.${a}" | "${LOCAL}/help/float.sh")
                 printf ",%s" "${value}" >> "${csv}"
                 if [ ! "${value}" = "NaN" ]; then
-                    sum=$((sum + value))
+                    sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
                 fi
             else
                 printf ',-' >> "${csv}"

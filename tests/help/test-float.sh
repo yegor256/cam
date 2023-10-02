@@ -23,32 +23,15 @@
 set -e
 set -o pipefail
 
-java=$1
-javam=$2
-pos=$3
-total=$4
+test "$(echo '.42' | "${LOCAL}/help/float.sh")" = '0.42'
+echo "👍🏻 Corrected floating point number"
 
-start=$(date +%s%N)
+test "$(echo '254.42' | "${LOCAL}/help/float.sh")" = '254.42'
+echo "👍🏻 Corrected longer floating point number"
 
-mkdir -p "$(dirname "${javam}")"
-metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
-echo "${metrics}" | {
-    sum=0
-    while IFS= read -r m; do
-        if timeout 30m "metrics/${m}" "${java}" "${javam}"; then
-            while IFS= read -r t; do
-                IFS=' ' read -r -ra M <<< "${t}"
-                value=$(echo "${M[1]}" | "${LOCAL}/help/float.sh")
-                echo "${value}" > "${javam}.${M[0]}"
-                if [ ! "${value}" = "NaN" ]; then
-                    sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
-                fi
-            done < "${javam}"
-        else
-            echo "Failed to collect ${m} for ${java}"
-        fi
-    done
-    echo "$(echo "${metrics}" | wc -w | xargs) scripts \
-collected $(find "${javam}".* -type f | wc -l | xargs) metrics (sum=${sum}) \
-for $(basename "${java}") (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
-}
+test "$(echo '256' | "${LOCAL}/help/float.sh")" = '256'
+echo "👍🏻 Corrected integer number"
+
+test "$(echo '.000000099' | "${LOCAL}/help/float.sh")" = '0.0000001'
+echo "👍🏻 Corrected small precision number"
+

@@ -29,8 +29,8 @@ repo="foo/bar test ; "
 dir="${TARGET}/measurements/${repo}/a"
 mkdir -p "${dir}"
 touch "${dir}/Foo.java.m"
+echo ".75" > "${dir}/Foo.java.m.nhd"
 echo "42" > "${dir}/Foo.java.m.loc"
-echo "256" > "${dir}/Foo.java.m.nhd"
 msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
 echo "${msg}" | (grep "sum=0" && exit 1 || true)
 test -e "${TARGET}/data/${repo}/all.csv"
