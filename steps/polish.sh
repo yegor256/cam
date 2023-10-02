@@ -30,7 +30,7 @@ if [ ! -e "${dir}" ]; then
 fi
 
 repos=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \;)
-echo "${repos}" | while read -r repo; do
+echo "${repos}" | while IFS= read -r repo; do
     if [ -z "${repo}" ]; then continue; fi
     if grep -Fxq "${repo}" "${TARGET}/repositories.csv"; then
         echo "Directory of ${repo} is already here"
@@ -42,7 +42,7 @@ done
 echo "All $(echo "${repos}" | wc -l | xargs) repo directories inside ${dir} look good"
 
 orgs=$(find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \;)
-echo "${orgs}" | while read -r org; do
+echo "${orgs}" | while IFS= read -r org; do
     if [ "$(find "${dir}/${org}" | wc -l | xargs)" == '0' ]; then
         rm -rf "${dir:?}/${org}"
         echo "Organization ${org} is empty and was deleted"

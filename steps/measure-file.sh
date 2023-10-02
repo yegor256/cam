@@ -32,14 +32,14 @@ start=$(date +%s%N)
 
 mkdir -p "$(dirname "${javam}")"
 metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
-echo "${metrics}" | while read -r m; do
+echo "${metrics}" | while IFS= read -r m; do
     # @todo #74 This metric doesn't work, because when we run it,
     #  the directory already doesn't have the ".git" folder --- it was filtered out
     #  by one of the filters in the "filters/" directory. Probably, we should avoid shallow clones
     #  and then get an opportunity to have more Git-based metrics.
     if [ "${m}" = "authors.sh" ]; then continue; fi
     if timeout 30m "metrics/${m}" "${java}" "${javam}"; then
-        while read -r t; do
+        while IFS= read -r t; do
             IFS=' ' read -r -ra M <<< "${t}"
             echo "${M[1]}" > "${javam}.${M[0]}"
         done < "${javam}"

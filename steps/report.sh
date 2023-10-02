@@ -27,7 +27,7 @@ rm -f "${TARGET}/temp/list-of-metrics.tex"
 
 java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
-find "${LOCAL}/metrics" -type f -exec basename {} \; | while read -r m; do
+find "${LOCAL}/metrics" -type f -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
     metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"

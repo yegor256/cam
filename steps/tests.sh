@@ -26,7 +26,7 @@ set -o pipefail
 temp=${LOCAL}/test-zone
 mkdir -p "${temp}"
 
-find "${LOCAL}/tests" -name '*.sh' | sort | while read -r test; do
+find "${LOCAL}/tests" -name '*.sh' | sort | while IFS= read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
     if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ]; then
         continue

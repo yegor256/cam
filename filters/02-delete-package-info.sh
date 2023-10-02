@@ -34,7 +34,7 @@ fi
 
 mkdir -p "$(dirname "${list}")"
 find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while read -r f; do
+while IFS= read -r f; do
     rm -f "${f}"
 done < "${list}"
 

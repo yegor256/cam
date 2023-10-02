@@ -38,7 +38,7 @@ touch "${jobs}"
 
 declare -i file=0
 sh="$(dirname "$0")/measure-file.sh"
-echo "${javas}" | while read -r java; do
+echo "${javas}" | while IFS= read -r java; do
     file=$((file+1))
     rel=$(realpath --relative-to="${TARGET}/github" "${java}")
     javam=${TARGET}/measurements/${rel}.m

@@ -25,12 +25,12 @@ set -o pipefail
 
 temp=$1
 
-repo="foo/bar test"
+repo="foo/bar test ; "
 dir="${TARGET}/measurements/${repo}/a"
 mkdir -p "${dir}"
 touch "${dir}/Foo.java.m"
 echo "42" > "${dir}/Foo.java.m.loc"
-"${LOCAL}/steps/aggregate.sh"
+"${LOCAL}/steps/aggregate.sh" >/dev/null
 test -e "${TARGET}/data/${repo}/all.csv"
 test -e "${TARGET}/data/${repo}/loc.csv"
 cat "${TARGET}/data/${repo}/loc.csv" | grep ",42" >/dev/null

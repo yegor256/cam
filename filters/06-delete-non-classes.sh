@@ -44,7 +44,7 @@ candidates=${temp}/classes-to-challenge.txt
 mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 py=${LOCAL}/filters/delete-non-classes.py
-while read -r f; do
+while IFS= read -r f; do
     printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
 "${LOCAL}/help/parallel.sh" "${jobs}"

@@ -38,7 +38,7 @@ touch "${jobs}"
 
 declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
-echo "${repos}" | while read -r r; do
+echo "${repos}" | while IFS= read -r r; do
     repo=$((repo+1))
     printf "%s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
@@ -48,15 +48,15 @@ wait
 mkdir -p "${TARGET}/data"
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
-echo "${all}" | while read -r a; do
+echo "${all}" | while IFS= read -r a; do
     printf ',%s' "${a}" >> "${TARGET}/data/all.csv"
 done
 printf "\n" >> "${TARGET}/data/all.csv"
 
-find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print | while read -r d; do
+find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print | while IFS= read -r d; do
     r=$(realpath --relative-to="${TARGET}/data" "$d" )
-    find "${d}" -name '*.csv' -maxdepth 1 -exec basename {} \; | while read -r csv; do
-        while read -r t; do
+    find "${d}" -name '*.csv' -maxdepth 1 -exec basename {} \; | while IFS= read -r csv; do
+        while IFS= read -r t; do
             echo "${r},${t}" >> "${TARGET}/data/${csv}"
         done < "${d}/${csv}"
     done
