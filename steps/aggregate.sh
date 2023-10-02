@@ -38,7 +38,7 @@ touch "${jobs}"
 
 declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
-for r in ${repos}; do
+echo "${repos}" | while read -r r; do
     repo=$((repo+1))
     printf "%s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
@@ -47,7 +47,7 @@ wait
 
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
-for a in ${all}; do
+echo "${all}" | while read -r a; do
     printf ',%s' "${a}" >> "${TARGET}/data/all.csv"
 done
 printf "\n" >> "${TARGET}/data/all.csv"
