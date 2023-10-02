@@ -31,6 +31,7 @@ fi
 
 repos=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \;)
 echo "${repos}" | while read -r repo; do
+    if [ -z "${repo}" ]; then continue; fi
     if grep -Fxq "${repo}" "${TARGET}/repositories.csv"; then
         echo "Directory of ${repo} is already here"
     else
