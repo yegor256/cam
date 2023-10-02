@@ -23,40 +23,17 @@
 set -e
 set -o pipefail
 
-repo=$1
-pos=$2
-total=$3
-all=$4
+temp=$1
 
-start=$(date +%s%N)
-
-dir=${TARGET}/measurements/${repo}
-ddir=${TARGET}/data/${repo}
-if [ -e "${ddir}" ]; then
-    echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
-    exit
-fi
-
-find "${dir}" -name '*.m' | while IFS= read -r m; do
-    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
-        java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
-        metric=${v//${dir}${java}\.m\./}
-        csv=${ddir}/${metric}.csv
-        mkdir -p "$(dirname "${csv}")"
-        echo "${java},$(cat "${v}")" >> "${csv}"
-    done
-    csv=${ddir}/all.csv
-    mkdir -p "$(dirname "${csv}")"
-    java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-    printf '%s' "${java}" >> "${csv}"
-    echo "${all}" | while IFS= read -r a; do
-        if [ -e "${m}.${a}" ]; then
-            printf ",%s" "$(cat "${m}.${a}")" >> "${csv}"
-        else
-            printf ',-' >> "${csv}"
-        fi
-    done
-    printf "\n" >> "${csv}"
-done
-
-echo "${repo} aggregated (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+repo="foo/bar test ; "
+dir="${TARGET}/measurements/${repo}/a"
+mkdir -p "${dir}"
+touch "${dir}/Foo.java.m"
+echo "42" > "${dir}/Foo.java.m.loc"
+echo "256" > "${dir}/Foo.java.m.nhd"
+"${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd' >/dev/null
+test -e "${TARGET}/data/${repo}/all.csv"
+test -e "${TARGET}/data/${repo}/loc.csv"
+test -e "${TARGET}/data/${repo}/nhd.csv"
+cat "${TARGET}/data/${repo}/loc.csv" | grep ",42" >/dev/null
+echo "👍🏻 A repo cloned correctly"
