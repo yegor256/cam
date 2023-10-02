@@ -41,7 +41,7 @@ find "${dir}" -name '*.m' | while read -r m; do
         java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
         metric=$(echo "${v}" | sed "s|${dir}${java}.m.||")
         csv=${ddir}/${metric}.csv
-        mkdir -p $(dirname "${csv}")
+        mkdir -p "$(dirname "${csv}")"
         echo "${java},$(cat "${v}")" >> "${csv}"
     done
     csv=${ddir}/all.csv
