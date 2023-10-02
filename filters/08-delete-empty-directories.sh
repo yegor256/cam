@@ -27,13 +27,21 @@ set -o pipefail
 home=$1
 temp=$2
 
-dirs=$(find "${home}" -mindepth 1 -type d -empty -print)
-echo "${dirs}" | while IFS= read -r dir; do
-    rm -r "${dir}"
+list=${temp}/deleted-empty-directories.txt
+mkdir -p "$(dirname "${list}")"
+touch "${list}"
+
+while true; do
+    dirs=$(find "${home}" -mindepth 1 -type d -empty -print)
+    if [ -z "${dirs}" ]; then break; fi
+    echo "${dirs}" | while IFS= read -r dir; do
+        rm -r "${dir}"
+        echo "${dir}" >> "${list}"
+    done
 done
 
-total=$(echo "${dirs}" | wc -l | xargs)
-if [ -s "${dirs}" ]; then
+total=$(wc -l < "${list}" | xargs)
+if [ "${total}" -eq 0 ]; then
     printf "There were no empty directories"
 else
     printf "There were %d empty directories total; all of them were deleted" "${total}"
