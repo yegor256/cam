@@ -32,17 +32,22 @@ start=$(date +%s%N)
 
 mkdir -p "$(dirname "${javam}")"
 metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
-echo "${metrics}" | while IFS= read -r m; do
-    if timeout 30m "metrics/${m}" "${java}" "${javam}"; then
-        while IFS= read -r t; do
-            IFS=' ' read -r -ra M <<< "${t}"
-            echo "${M[1]}" > "${javam}.${M[0]}"
-        done < "${javam}"
-    else
-        echo "Failed to collect ${m} for ${java}"
-    fi
-done
-
-echo "$(echo "${metrics}" | wc -w | xargs) scripts \
-collected $(find "${javam}".* -type f | wc -l | xargs) metrics \
+echo "${metrics}" | {
+    declare -i sum=0
+    while IFS= read -r m; do
+        if timeout 30m "metrics/${m}" "${java}" "${javam}"; then
+            while IFS= read -r t; do
+                IFS=' ' read -r -ra M <<< "${t}"
+                echo "${M[1]}" > "${javam}.${M[0]}"
+                if [ ! "${M[1]}" = "NaN" ]; then
+                    sum=$((sum + M[1]))
+                fi
+            done < "${javam}"
+        else
+            echo "Failed to collect ${m} for ${java}"
+        fi
+    done
+    echo "$(echo "${metrics}" | wc -w | xargs) scripts \
+collected $(find "${javam}".* -type f | wc -l | xargs) metrics (sum=${sum}) \
 for $(basename "${java}") (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+}

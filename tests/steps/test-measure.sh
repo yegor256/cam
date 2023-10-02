@@ -31,7 +31,7 @@ java="${TARGET}/github/${repo}/${name}"
 mkdir -p "$(dirname "${java}")"
 echo "class Foo {}" > "${java}"
 msg=$("${LOCAL}/steps/measure.sh")
-echo "${msg}" | grep "metrics for Foo.java (1/1)" >/dev/null
+echo "${msg}" | grep "for Foo.java (1/1)" >/dev/null
 echo "${msg}" | grep "All metrics calculated in 1 files" >/dev/null
 test -e "${TARGET}/measurements/${repo}/${name}.m"
 echo "👍🏻 Measured metrics correctly"

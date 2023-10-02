@@ -27,6 +27,7 @@ temp=$1
 
 java="${temp}/Foo(xls;)';a привет '\".java"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m">/dev/null
+msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
+echo "${msg}" | (grep "sum=0" && exit 1 || true)
 test -e "${temp}/m"
 echo "👍🏻 Single file measured correctly"
