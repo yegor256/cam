@@ -44,8 +44,7 @@ and published its results to ${TARGET}/temp/reports/${filter}.tex "
     fi
 done
 
-
-find "${TARGET}/temp/reports" -type f -exec basename {} \; | while IFS= read -r f; do
+find "${TARGET}/temp/reports" -type f -exec basename {} \; | sort | while IFS= read -r f; do
     echo "${f}:"
     cat "${TARGET}/temp/reports/${f}"
     echo ""
