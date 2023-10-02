@@ -30,11 +30,11 @@ rm -f "${csv}"
 TOTAL=3 "${LOCAL}/steps/discover.sh" >/dev/null
 test -e "${csv}"
 test -e "${TARGET}/temp/repo-details.tex"
-test $(wc -l < "${csv}" | xargs) = '3'
+test $(wc -l < "${csv}" | xargs) = '4'
 echo "👍🏻 A few repositories discovered correctly"
 
 rm -f "${csv}"
 REPO=yegor256/jaxec "${LOCAL}/steps/discover.sh" >/dev/null
 test -e "${csv}"
-test $(wc -l < "${csv}" | xargs) = '1'
+test $(wc -l < "${csv}" | xargs) = '2'
 echo "👍🏻 A single repository discovered correctly"

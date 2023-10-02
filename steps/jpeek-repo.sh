@@ -132,4 +132,4 @@ done
 
 echo "Analyzed ${repo} through jPeek (${pos}/${total}), \
 $(wc -l < "${files}" | xargs) files, \
-sum is $(awk '{ sum += $1 } END { print sum }' ${values} | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"
+sum is $(awk '{ sum += $1 } END { print sum }' "${values}" | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"

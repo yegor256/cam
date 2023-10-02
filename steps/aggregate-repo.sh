@@ -47,10 +47,10 @@ find "${dir}" -name '*.m' | while read -r m; do
     csv=${ddir}/all.csv
     mkdir -p "$(dirname "${csv}")"
     java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-    printf "${java}" >> "${csv}"
+    printf '%s' "${java}" >> "${csv}"
     for a in ${all}; do
         if [ -e "${m}.${a}" ]; then
-            printf ",$(cat "${m}.${a}")" >> "${csv}"
+            printf ",%s" "$(cat "${m}.${a}")" >> "${csv}"
         else
             printf ',-' >> "${csv}"
         fi

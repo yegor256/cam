@@ -22,7 +22,6 @@
 # SOFTWARE.
 set -e
 set -o pipefail
-set -x
 
 temp=$1
 

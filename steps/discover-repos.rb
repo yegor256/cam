@@ -87,7 +87,7 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page #{page}"
   break if found.count >= opts[:total]
-  puts "Let\'s sleep for a few seconds to cool off GitHub API (already found #{found.count} repos)..."
+  puts "Let's sleep for a few seconds to cool off GitHub API (already found #{found.count} repos)..."
   sleep 10
   page += 1
 end
@@ -112,7 +112,7 @@ File.write(
 
 path = File.expand_path(opts[:csv])
 FileUtils.mkdir_p(File.dirname(path))
-File.write(path,
-  ([found.first[1].keys.join(',')] + found.values.map { |m| m.values.join(',') }).join("\n")
-)
+lines = [found.first[1].keys.join(',')] + found.values.map { |m| m.values.join(',') }
+lines << ''
+File.write(path, lines.join("\n"))
 puts "The list of #{found.count} repos saved into #{path}"

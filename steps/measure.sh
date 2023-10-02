@@ -46,7 +46,7 @@ echo "${javas}" | while read -r java; do
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue
     fi
-    printf "%s %s %s %s %s\n" ${sh@Q} "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
 done
 
 "${LOCAL}/help/parallel.sh" "${jobs}"

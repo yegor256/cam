@@ -39,7 +39,7 @@ echo "${repos}" | while read -r repo; do
         echo "Directory of ${repo} is obsolete and was deleted"
     fi
 done
-echo "All $(echo ${repos} | wc -l | xargs) repo directories inside ${dir} look good"
+echo "All $(echo "${repos}" | wc -l | xargs) repo directories inside ${dir} look good"
 
 orgs=$(find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \;)
 echo "${orgs}" | while read -r org; do
@@ -48,5 +48,5 @@ echo "${orgs}" | while read -r org; do
         echo "Organization ${org} is empty and was deleted"
     fi
 done
-echo "All $(echo ${orgs} | wc -l | xargs) org directories inside ${dir} look good"
+echo "All $(echo "${orgs}" | wc -l | xargs) org directories inside ${dir} look good"
 
