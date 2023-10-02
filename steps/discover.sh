@@ -32,7 +32,7 @@ if [ -e "${csv}" ]; then
     echo "The list of repos is already here: ${csv}"
 elif [ -n "${REPO}" ]; then
     echo "Using one repo: ${REPO}"
-    echo "${REPO}" >> "${csv}"
+    echo -e "repo\n${REPO}" > "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
     echo "Using discover-repos.rb..."
     ruby "${LOCAL}/steps/discover-repos.rb" \
