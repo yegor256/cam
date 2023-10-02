@@ -37,7 +37,7 @@ if [ -e "${ddir}" ]; then
 fi
 
 find "${dir}" -name '*.m' | while IFS= read -r m; do
-    ls "${m}".* | while IFS= read -r v; do
+    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
         java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
         metric=$(echo "${v}" | sed "s|${dir}${java}.m.||")
         csv=${ddir}/${metric}.csv
