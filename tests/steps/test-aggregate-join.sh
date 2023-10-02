@@ -23,20 +23,15 @@
 set -e
 set -o pipefail
 
-repo=$1
-dir=$2
-pos=$3
-total=$4
+temp=$1
 
-start=$(date +%s%N)
-
-csvs=$(find "${dir}" -name '*.csv' -maxdepth 1 -exec basename {} \;)
-
-total=$(echo "${csvs}" | wc -l | xargs)
-echo "${csvs}" | while IFS= read -r csv; do
-    while IFS= read -r t; do
-        printf '%s,%s\n' "${reop}" "${t}" >> "${TARGET}/data/${csv}"
-    done < "${dir}/${csv}"
-done
-
-echo "${total} metrics added to the CSV aggregate of ${repo} (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+repo="foo/bar,1"
+dir="${TARGET}/data/${repo}"
+mkdir -p "${dir}"
+echo -e "java_file,loc\nFoo.java,42\nBar.java,256" > "${dir}/loc.csv"
+msg=$("${LOCAL}/steps/aggregate-join.sh" "${repo}" "${dir}" 1 1)
+echo "${msg}" | (grep "sum=0" && exit 1 || true)
+test -e "${TARGET}/data/loc.csv"
+grep "repo,java_file,loc" "${TARGET}/data/loc.csv" > /dev/null
+grep "foo/bar\\\\,1,Foo.java,42" "${TARGET}/data/loc.csv" > /dev/null
+echo "👍🏻 A data joined correctly"

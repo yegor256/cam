@@ -26,7 +26,7 @@ set -o pipefail
 start=$(date +%s%N)
 
 all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
-echo "All $(echo "${all}" | wc -w | xargs) metrics: ${all}"
+echo "All $(echo "${all}" | wc -w | xargs) metrics (in alphanumeric order): ${all}"
 
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
 total=$(echo "${repos}" | wc -l | xargs)
@@ -53,12 +53,12 @@ echo "${all}" | while IFS= read -r a; do
 done
 printf "\n" >> "${TARGET}/data/all.csv"
 
-jobs=${TARGET}/jobs/aggregate-add-jobs.txt
+jobs=${TARGET}/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 declare -i repo=0
-sh="$(dirname "$0")/aggregate-add.sh"
+sh="$(dirname "$0")/aggregate-join.sh"
 repos=$(find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print)
 echo "${repos}" | while IFS= read -r d; do
     r=$(realpath --relative-to="${TARGET}/data" "${d}" )

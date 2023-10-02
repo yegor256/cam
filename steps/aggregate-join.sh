@@ -23,22 +23,27 @@
 set -e
 set -o pipefail
 
-temp=$1
+repo=$1
+dir=$2
+pos=$3
+total=$4
 
-repo="foo/bar test ; "
-dir="${TARGET}/measurements/${repo}/a"
-mkdir -p "${dir}"
-touch "${dir}/Foo,Bar.java.m"
-echo ".75" > "${dir}/Foo,Bar.java.m.nhd"
-echo "42" > "${dir}/Foo,Bar.java.m.loc"
-msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
-echo "${msg}" | (grep "sum=0" && exit 1 || true)
-test -e "${TARGET}/data/${repo}/all.csv"
-grep "/a/Foo\\\\,Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv" > /dev/null
-grep "java_file,loc,nhd" "${TARGET}/data/${repo}/all.csv" > /dev/null
-test -e "${TARGET}/data/${repo}/loc.csv"
-grep "java_file,loc" "${TARGET}/data/${repo}/loc.csv" > /dev/null
-grep "/a/Foo\\\\,Bar.java,42" "${TARGET}/data/${repo}/loc.csv" > /dev/null
-test -e "${TARGET}/data/${repo}/nhd.csv"
-grep ",42" "${TARGET}/data/${repo}/loc.csv" >/dev/null
-echo "👍🏻 A repo aggregated correctly"
+start=$(date +%s%N)
+
+csvs=$(find "${dir}" -name '*.csv' -maxdepth 1 -exec basename {} \;)
+
+total=$(echo "${csvs}" | wc -l | xargs)
+echo "${csvs}" | while IFS= read -r csv; do
+    join=${TARGET}/data/${csv}
+    rm -rf "${join}"
+    mkdir -p "$(dirname "${join}")"
+    while IFS= read -r t; do
+        if [ ! -e "${join}" ]; then
+            printf 'repo,%s\n' "${t}" > "${join}"
+        else
+            printf '%s,%s\n' "$(echo "${repo}" | sed 's/,/\\,/')" "${t}" >> "${join}"
+        fi
+    done < "${dir}/${csv}"
+done
+
+echo "${total} metrics added to the CSV aggregate of ${repo} (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"

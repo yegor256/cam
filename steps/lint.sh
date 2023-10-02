@@ -38,7 +38,7 @@ pylint "${LOCAL}/steps/"
 
 rubocop
 
-shellcheck -P "${LOCAL}"/metrics/*.sh -P "${LOCAL}"/filters/*.sh -P "${LOCAL}"/steps/*.sh
+shellcheck -P "${LOCAL}"/metrics/*.sh -P "${LOCAL}"/filters/*.sh -P "${LOCAL}"/steps/*.sh -P "${LOCAL}"/tests/*.sh
 
 mkdir -p "$(dirname "${flag}")"
 date +%s%N > "${flag}"

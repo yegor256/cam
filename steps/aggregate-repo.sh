@@ -45,15 +45,25 @@ find "${dir}" -name '*.m' | {
             metric=${v//${dir}${java}\.m\./}
             csv=${ddir}/${metric}.csv
             mkdir -p "$(dirname "${csv}")"
-            echo "${java},$(cat "${v}")" >> "${csv}"
+            if [ ! -e "${csv}" ]; then
+                printf 'java_file,%s\n' "${metric}" > "${csv}"
+            fi
+            printf '%s,%s\n' "${java//,/\\,}" "$(cat "${v}")" >> "${csv}"
         done
         csv=${ddir}/all.csv
         mkdir -p "$(dirname "${csv}")"
+        if [ ! -e "${csv}" ]; then
+            printf 'java_file' > "${csv}"
+            for a in ${all}; do
+                printf ",%s" "${a}" >> "${csv}"
+            done
+            printf '\n' >> "${csv}"
+        fi
         java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-        printf '%s' "${java}" >> "${csv}"
+        printf '%s' "${java//,/\\,}" >> "${csv}"
         for a in ${all}; do
             if [ -e "${m}.${a}" ]; then
-                value=$(cat "${m}.${a}" | "${LOCAL}/help/float.sh")
+                value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
                 printf ",%s" "${value}" >> "${csv}"
                 if [ ! "${value}" = "NaN" ]; then
                     sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
@@ -62,7 +72,7 @@ find "${dir}" -name '*.m' | {
                 printf ',-' >> "${csv}"
             fi
         done
-        printf "\n" >> "${csv}"
+        printf '\n' >> "${csv}"
     done
     echo "${repo} (${pos}/${total}) aggregated (sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"
 }
