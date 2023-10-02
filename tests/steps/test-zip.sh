@@ -23,6 +23,6 @@
 set -e
 set -o pipefail
 
-"${LOCAL}/steps/zip.sh"
+"${LOCAL}/steps/zip.sh" > /dev/null
 test -e "${TARGET}"/*.zip
 echo "👍🏻 A zip archive generated correctly"

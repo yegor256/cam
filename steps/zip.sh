@@ -27,6 +27,8 @@ start=$(date +%s%N)
 
 zip=cam-$(date +%Y-%m-%d).zip
 
+echo "Archiving the data into ${zip} (may take some time) ..."
+
 zip -qq -r "${zip}" "${TARGET}"
 mv "${zip}" "${TARGET}"
 
