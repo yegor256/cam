@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -21,19 +21,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-import javalang
-import os
+set -e
+set -o pipefail
 
-if __name__ == '__main__':
-    JAVA: str = sys.argv[1]
-    LST: str = sys.argv[2]
-    try:
-        with open(JAVA) as f:
-            raw = javalang.parse.parse(f.read())
-            if (len(raw.types) != 1):
-                os.remove(JAVA)
-                with open(LST, 'a+') as others:
-                    others.write(JAVA + "\n")
-    except Exception:
-        pass
+home=$1
+temp=$2
+
+dirs=$(find "${home}" -mindepth 1 -type d -empty -print)
+echo "${dirs}" | while IFS= read -r dir; do
+    rm -r "${dir}"
+done
+
+total=$(echo "${dirs}" | wc -l | xargs)
+if [ -s "${dirs}" ]; then
+    printf "There were no empty directories"
+else
+    printf "There were %d empty directories total; all of them were deleted" "${total}"
+fi
+

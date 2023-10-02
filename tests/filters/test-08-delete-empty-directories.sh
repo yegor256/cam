@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
@@ -20,20 +20,26 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+set -e
+set -o pipefail
 
-import sys
-import javalang
-import os
+temp=$1
 
-if __name__ == '__main__':
-    JAVA: str = sys.argv[1]
-    LST: str = sys.argv[2]
-    try:
-        with open(JAVA) as f:
-            raw = javalang.parse.parse(f.read())
-            if (len(raw.types) != 1):
-                os.remove(JAVA)
-                with open(LST, 'a+') as others:
-                    others.write(JAVA + "\n")
-    except Exception:
-        pass
+empty="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c"
+mkdir -p "${empty}"
+full="${temp}/x/ ; 'w' \"nx\" /f/d/k"
+mkdir -p "${full}"
+java=${full}/Foo.java
+touch "${java}"
+msg=$("${LOCAL}/filters/08-delete-empty-directories.sh" "${temp}")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${empty}"
+test -e "${full}"
+test -e "${java}"
+echo "👍🏻 A empty directory was deleted"
+
+mkdir -p "${temp}/bar/a/b/c/d/e/f"
+msg=$("${LOCAL}/filters/08-delete-empty-directories.sh" "${temp}")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${temp}/bar"
+echo "👍🏻 All empty directories deleted recursively"
