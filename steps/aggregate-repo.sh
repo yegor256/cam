@@ -48,7 +48,7 @@ find "${dir}" -name '*.m' | {
             if [ ! -e "${csv}" ]; then
                 printf 'java_file,%s\n' "${metric}" > "${csv}"
             fi
-            printf '%s,%s\n' "${java//,/\\,}" "$(cat "${v}")" >> "${csv}"
+            printf '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
         done
         csv=${ddir}/all.csv
         mkdir -p "$(dirname "${csv}")"
@@ -60,7 +60,7 @@ find "${dir}" -name '*.m' | {
             printf '\n' >> "${csv}"
         fi
         java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-        printf '%s' "${java//,/\\,}" >> "${csv}"
+        printf '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
         for a in ${all}; do
             if [ -e "${m}.${a}" ]; then
                 value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
