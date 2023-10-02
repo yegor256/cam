@@ -25,7 +25,7 @@ set -o pipefail
 
 temp=$1
 
-repo="foo/bar"
+repo="foo/bar test"
 dir="${TARGET}/measurements/${repo}/a"
 mkdir -p "${dir}"
 touch "${dir}/Foo.java.m"
