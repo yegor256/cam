@@ -40,7 +40,7 @@ declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
 echo "${repos}" | while IFS= read -r r; do
     repo=$((repo+1))
-    printf "%s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${all@Q}" >> "${jobs}"
 done
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait

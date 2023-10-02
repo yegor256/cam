@@ -26,6 +26,7 @@ set -o pipefail
 repo=$1
 pos=$2
 total=$3
+all=$4
 
 start=$(date +%s%N)
 
