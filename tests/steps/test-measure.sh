@@ -25,7 +25,7 @@ set -o pipefail
 
 temp=$1
 
-repo="foo/bar test \"; "
+repo="foo /bar test \"; "
 name="dir (with) _ long & and weird ; name /Foo.java"
 java="${TARGET}/github/${repo}/${name}"
 mkdir -p "$(dirname "${java}")"
