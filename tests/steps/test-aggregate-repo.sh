@@ -31,9 +31,10 @@ mkdir -p "${dir}"
 touch "${dir}/Foo.java.m"
 echo "42" > "${dir}/Foo.java.m.loc"
 echo "256" > "${dir}/Foo.java.m.nhd"
-"${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd' >/dev/null
+msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
+echo "${msg}" | (grep "sum=0" && exit 1 || true)
 test -e "${TARGET}/data/${repo}/all.csv"
 test -e "${TARGET}/data/${repo}/loc.csv"
 test -e "${TARGET}/data/${repo}/nhd.csv"
 cat "${TARGET}/data/${repo}/loc.csv" | grep ",42" >/dev/null
-echo "👍🏻 A repo cloned correctly"
+echo "👍🏻 A repo aggregated correctly"

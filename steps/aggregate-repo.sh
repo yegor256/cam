@@ -37,26 +37,32 @@ if [ -e "${ddir}" ]; then
     exit
 fi
 
-find "${dir}" -name '*.m' | while IFS= read -r m; do
-    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
-        java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
-        metric=${v//${dir}${java}\.m\./}
-        csv=${ddir}/${metric}.csv
+find "${dir}" -name '*.m' | {
+    declare -i sum=0
+    while IFS= read -r m; do
+        find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
+            java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
+            metric=${v//${dir}${java}\.m\./}
+            csv=${ddir}/${metric}.csv
+            mkdir -p "$(dirname "${csv}")"
+            echo "${java},$(cat "${v}")" >> "${csv}"
+        done
+        csv=${ddir}/all.csv
         mkdir -p "$(dirname "${csv}")"
-        echo "${java},$(cat "${v}")" >> "${csv}"
+        java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
+        printf '%s' "${java}" >> "${csv}"
+        for a in ${all}; do
+            if [ -e "${m}.${a}" ]; then
+                value=$(cat "${m}.${a}")
+                printf ",%s" "${value}" >> "${csv}"
+                if [ ! "${value}" = "NaN" ]; then
+                    sum=$((sum + value))
+                fi
+            else
+                printf ',-' >> "${csv}"
+            fi
+        done
+        printf "\n" >> "${csv}"
     done
-    csv=${ddir}/all.csv
-    mkdir -p "$(dirname "${csv}")"
-    java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-    printf '%s' "${java}" >> "${csv}"
-    echo "${all}" | while IFS= read -r a; do
-        if [ -e "${m}.${a}" ]; then
-            printf ",%s" "$(cat "${m}.${a}")" >> "${csv}"
-        else
-            printf ',-' >> "${csv}"
-        fi
-    done
-    printf "\n" >> "${csv}"
-done
-
-echo "${repo} aggregated (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+    echo "${repo} (${pos}/${total}) aggregated (sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"
+}
