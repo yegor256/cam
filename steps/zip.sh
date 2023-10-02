@@ -29,7 +29,7 @@ zip=cam-$(date +%Y-%m-%d).zip
 
 echo "Archiving the data into ${zip} (may take some time) ..."
 
-zip -qq -r "${zip}" "${TARGET}"
+zip -qq -x "${TARGET}/jpeek/*" -x "${TARGET}/temp/*" -x "${TARGET}/measurements/*" -r "${zip}" "${TARGET}"
 mv "${zip}" "${TARGET}"
 
 echo "ZIP archive ${zip} ($(du -k "${TARGET}/${zip}" | cut -f1) Kb) created at ${TARGET}$("${LOCAL}/help/tdiff.sh" "${start}")"
