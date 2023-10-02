@@ -48,7 +48,7 @@ find "${dir}" -name '*.m' | while IFS= read -r m; do
     mkdir -p "$(dirname "${csv}")"
     java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
     printf '%s' "${java}" >> "${csv}"
-    for a in ${all}; do
+    echo "${all}" | while IFS= read -r a; do
         if [ -e "${m}.${a}" ]; then
             printf ",%s" "$(cat "${m}.${a}")" >> "${csv}"
         else
