@@ -45,6 +45,7 @@ done
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
+mkdir -p "${TARGET}/data"
 rm -rf "${TARGET}/data/*.csv"
 printf "repository,file" >> "${TARGET}/data/all.csv"
 echo "${all}" | while read -r a; do
