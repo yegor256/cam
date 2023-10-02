@@ -35,7 +35,7 @@ fi
 mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
-jobs=${TARGET}/jobs/delete-unparseable.txt
+jobs=${temp}/jobs/delete-unparseable.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"

@@ -31,7 +31,7 @@ javas=$(find "${TARGET}/github" -name '*.java' -print)
 total=$(echo "${javas}" | wc -l | xargs)
 echo "Found ${total} Java files, starting to collect metrics..."
 
-jobs=${TARGET}/jobs/measure-jobs.txt
+jobs=${TARGET}/temp/jobs/measure-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"

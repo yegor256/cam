@@ -25,7 +25,7 @@ set -o pipefail
 
 start=$(date +%s%N)
 
-jobs=${TARGET}/jobs/clone-jobs.txt
+jobs=${TARGET}/temp/jobs/clone-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"

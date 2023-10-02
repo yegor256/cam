@@ -31,7 +31,7 @@ echo "All $(echo "${all}" | wc -w | xargs) metrics (in alphanumeric order): ${al
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
 total=$(echo "${repos}" | wc -l | xargs)
 
-jobs=${TARGET}/jobs/aggregate-jobs.txt
+jobs=${TARGET}/temp/jobs/aggregate-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
@@ -53,7 +53,7 @@ echo "${all}" | while IFS= read -r a; do
 done
 printf "\n" >> "${TARGET}/data/all.csv"
 
-jobs=${TARGET}/jobs/aggregate-join-jobs.txt
+jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
