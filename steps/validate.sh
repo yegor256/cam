@@ -44,6 +44,10 @@ test -d "${TARGET}/temp/jpeek/cvc/${repo}"
 test -f "${TARGET}/temp/reports/01-delete-non-java-files.sh.tex"
 test -f "${TARGET}/temp/pdf-report/report.tex"
 test -f "${TARGET}"/*.zip
+test -f "${TARGET}/hashes.csv"
+test -f "${TARGET}/repositories.csv"
+test -f "${TARGET}/start.txt"
+test -f "${TARGET}/report.pdf"
 
 if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
     echo "NaN found in jpeek report"
