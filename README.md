@@ -86,8 +86,9 @@ $ make REPO=yegor256/jpeek
 You may want to use this dataset as a basis, with an intend of adding your own
 metrics on top of it. It should be easy:
 
+  * Clone this repo into `cam/` directory
   * Download ZIP archive
-  * Unpack it to a new `cam/` directory
+  * Unpack it to the `cam/dataset/` directory
   * Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
   * Run `make` in the `cam/` directory
 
