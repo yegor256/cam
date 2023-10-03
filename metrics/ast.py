@@ -21,17 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""ast_metrics.py"""
-
 import sys
-
 import javalang
 
 
 def attrs(tlist) -> int:
-    """
-    Count non-static attributes.
-
+    """Count non-static attributes.
     :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
@@ -45,9 +40,7 @@ def attrs(tlist) -> int:
 
 
 def sattrs(tlist) -> int:
-    """
-    Count static attributes.
-
+    """Count static attributes.
     :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
@@ -61,9 +54,7 @@ def sattrs(tlist) -> int:
 
 
 def ctors(tlist) -> int:
-    """
-    Count constructors.
-
+    """Count constructors.
     :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.ConstructorDeclaration)
@@ -72,9 +63,7 @@ def ctors(tlist) -> int:
 
 
 def methods(tlist) -> int:
-    """
-    Count non-static methods.
-
+    """Count non-static methods.
     :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
@@ -88,9 +77,7 @@ def methods(tlist) -> int:
 
 
 def smethods(tlist) -> int:
-    """
-    Count static methods.
-
+    """Count static methods.
     :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
@@ -104,9 +91,7 @@ def smethods(tlist) -> int:
 
 
 def ncss(parser_class) -> int:
-    """
-    Count the NCSS (non-commenting source statement) lines.
-
+    """Count the NCSS (non-commenting source statement) lines.
     :rtype: int
     """
     value = 0
@@ -127,54 +112,42 @@ def ncss(parser_class) -> int:
 
 
 def impls(tlist) -> int:
-    """
-    Count the number of interfaces the class implements.
-
+    """Count the number of interfaces the class implements.
     r:type: int
     """
     return len(tlist[0][1].implements or [])
 
 
 def extnds(tlist) -> int:
-    """
-    Count the number of classes this class extends (0 or 1).
-
+    """Count the number of classes this class extends (0 or 1).
     r:type: int
     """
     return 0 if tlist[0][1].extends is None else 1
 
 
 def final(tlist) -> int:
-    """
-    Return 1 if the class is final, zero otherwise.
-
+    """Return 1 if the class is final, zero otherwise.
     r:type: int
     """
     return 1 if 'final' in tlist[0][1].modifiers else 0
 
 
 def gnrcs(tlist) -> int:
-    """
-    Return number of type parameters (generics).
-
+    """Return number of type parameters (generics).
     r:type: int
     """
     return len(tlist[0][1].type_parameters or [])
 
 
 def annts(tlist) -> int:
-    """
-    Return number of annotations of the class.
-
+    """Return number of annotations of the class.
     r:type: int
     """
     return len(tlist[0][1].annotations or [])
 
 
 class NotClassError(Exception):
-    """
-    If it's not a class
-    """
+    """If it's not a class"""
 
 
 if __name__ == '__main__':
@@ -184,8 +157,7 @@ if __name__ == '__main__':
         try:
             raw = javalang.parse.parse(file.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
-            tree_class = list(value for value in tree)
-            if not tree_class:
+            if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
             with open(METRICS, 'a', encoding='utf-8') as metric:
                 metric.write(f'attrs {attrs(tree_class)} '

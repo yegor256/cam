@@ -22,8 +22,8 @@
 # SOFTWARE.
 
 import sys
-import javalang
 import os
+import javalang
 
 if __name__ == '__main__':
     JAVA: str = sys.argv[1]
@@ -32,10 +32,9 @@ if __name__ == '__main__':
         with open(JAVA, encoding='utf-8') as f:
             raw = javalang.parse.parse(f.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
-            tree = list(value for value in tree)
-            if not tree:
+            if not (tree := list((value for value in tree))):
                 os.remove(JAVA)
-                with open(LST, 'a+') as others:
+                with open(LST, 'a+', encoding='utf-8') as others:
                     others.write(JAVA + "\n")
     except Exception:
         pass

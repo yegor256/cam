@@ -22,8 +22,8 @@
 # SOFTWARE.
 
 import sys
-import javalang
 import os
+import javalang
 
 if __name__ == '__main__':
     JAVA: str = sys.argv[1]
@@ -34,8 +34,7 @@ if __name__ == '__main__':
                 javalang.parse.parse(f.read())
             except Exception:
                 os.remove(JAVA)
-                with open(LST, 'a+') as others:
+                with open(LST, 'a+', encoding='utf-8') as others:
                     others.write(JAVA + "\n")
     except Exception:
         pass
-

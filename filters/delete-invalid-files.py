@@ -22,18 +22,18 @@
 # SOFTWARE.
 
 import sys
-import javalang
 import os
+import javalang
 
 if __name__ == '__main__':
     JAVA: str = sys.argv[1]
     LST: str = sys.argv[2]
     try:
-        with open(JAVA) as f:
+        with open(JAVA, encoding='utf-8') as f:
             raw = javalang.parse.parse(f.read())
-            if (len(raw.types) != 1):
+            if len(raw.types) != 1:
                 os.remove(JAVA)
-                with open(LST, 'a+') as others:
+                with open(LST, 'a+', encoding='utf-8') as others:
                     others.write(JAVA + "\n")
     except Exception:
         pass

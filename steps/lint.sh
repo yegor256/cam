@@ -30,11 +30,20 @@ if [ -e "${flag}" ]; then
     exit
 fi
 
-flake8 "${LOCAL}/metrics/"
-flake8 "${LOCAL}/steps/"
+flake8 --max-line-length=140 "${LOCAL}/"
 
-pylint "${LOCAL}/metrics/"
-pylint "${LOCAL}/steps/"
+find "${LOCAL}" -name '*.py' -exec pylint --enable-all-extensions \
+    --disable=empty-comment \
+    --disable=missing-module-docstring \
+    --disable=invalid-name \
+    --disable=too-many-try-statements \
+    --disable=broad-exception-caught \
+    --disable=magic-value-comparison \
+    --disable=line-too-long \
+    --disable=confusing-consecutive-elif \
+    --disable=use-set-for-membership \
+    --disable=duplicate-code \
+    {} \;
 
 rubocop
 

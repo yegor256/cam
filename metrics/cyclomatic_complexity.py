@@ -21,8 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""cyclomatic_complexity.py"""
-
 import sys
 from javalang import tree, parse
 
@@ -30,26 +28,16 @@ sys.setrecursionlimit(10000)
 
 
 def branches(parser_class):
-    """
-    Determines the number of branches for a node
+    """Determines the number of branches for a node
     according to the Extended Cyclomatic Complexity metric.
     Binary operations (&&, ||) and each case statement
     are taken into account.
-    :param parser_class: class provided by the parser (targeted to Java 8 spec)
-    :rtype int
-    :returns: number
     """
     count = 0
     if isinstance(parser_class, tree.BinaryOperation):
         if parser_class.operator in ('&&', '||'):
             count = 1
-    elif (isinstance(parser_class, (
-            tree.ForStatement,
-            tree.IfStatement,
-            tree.WhileStatement,
-            tree.DoStatement,
-            tree.TernaryExpression
-    ))):
+    elif (isinstance(parser_class, (tree.ForStatement, tree.IfStatement, tree.WhileStatement, tree.DoStatement, tree.TernaryExpression))):
         count = 1
     elif isinstance(parser_class, tree.SwitchStatementCase):
         count = 1
