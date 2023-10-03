@@ -23,16 +23,14 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 repo="yegor256/jaxec"
 echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/${repo}"
 cp -r "${LOCAL}/fixtures/jaxec/" "${TARGET}/github/${repo}"
 msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
-echo "${msg}" | (grep "0 files, sum is 0" && exit 1 || true)
-echo "${msg}" | grep -v "Analyzed ${repo} through jPeek" >/dev/null
+test "$(echo "${msg}" | grep -c "0 files, sum is 0")" = 0
+echo "${msg}" | grep "Analyzed ${repo} through jPeek" > /dev/null
 mfile=${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD
 test -e "${mfile}"
 value=$(cat "${mfile}")

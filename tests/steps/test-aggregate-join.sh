@@ -23,14 +23,12 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 repo="foo/bar,1"
 dir="${TARGET}/data/${repo}"
 mkdir -p "${dir}"
 echo -e "java_file,loc\nFoo.java,42\nBar.java,256" > "${dir}/loc.csv"
 msg=$("${LOCAL}/steps/aggregate-join.sh" "${repo}" "${dir}" 1 1)
-echo "${msg}" | (grep "sum=0" && exit 1 || true)
+test "$(echo "${msg}" | grep -c "sum=0")" = 0
 test -e "${TARGET}/data/loc.csv"
 grep "repo,java_file,loc" "${TARGET}/data/loc.csv" > /dev/null
 grep "foo/bar\\\\,1,Foo.java,42" "${TARGET}/data/loc.csv" > /dev/null

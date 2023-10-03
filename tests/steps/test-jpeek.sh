@@ -23,8 +23,6 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 repo="yegor256/jaxec"
 echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"

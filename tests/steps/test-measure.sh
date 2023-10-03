@@ -23,8 +23,6 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 repo="foo /bar test \"; "
 name="dir (with) _ long & and weird ; name /Foo.java"
 java="${TARGET}/github/${repo}/${name}"

@@ -23,8 +23,6 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 rm -rf "${TARGET}/github"
 "${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 >/dev/null
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"

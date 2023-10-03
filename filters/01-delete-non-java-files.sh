@@ -43,7 +43,7 @@ done < "${list}"
 
 if [ -s "${list}" ]; then
     printf "There were %d files total, %d of them were \\\ff{.java} files; all other files, which were not \\\ff{.java}, have been deleted: %d total" \
-        "${total}" "${java}" "$(cat ${list} | wc -l | xargs)"
+        "${total}" "${java}" "$(wc -l < "${list}" | xargs)"
 else
     printf "All %d files were \\\ff{.java} files, nothing to delete" \
         "${total}"

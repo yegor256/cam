@@ -23,16 +23,12 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 touch "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/foo/bar"
 msg=$("${LOCAL}/steps/polish.sh")
 echo "${msg}" | grep -v "foo/bar is obsolete and was deleted" >/dev/null
 echo "${msg}" | grep -v "All 1 repo directories" >/dev/null
-test ! -e "${broken}"
-test ! -e "${interface}"
 echo "👍🏻 A more complex filtering ran smoothly"
 
 TARGET=${TARGET}/dir-is-absent

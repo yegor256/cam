@@ -23,8 +23,6 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/a/b"
 "${LOCAL}/steps/filter.sh" >/dev/null

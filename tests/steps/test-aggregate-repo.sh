@@ -23,8 +23,6 @@
 set -e
 set -o pipefail
 
-temp=$1
-
 repo="foo/bar test ; "
 dir="${TARGET}/measurements/${repo}/a"
 mkdir -p "${dir}"
@@ -32,7 +30,7 @@ touch "${dir}/Foo,Bar.java.m"
 echo ".75" > "${dir}/Foo,Bar.java.m.nhd"
 echo "42" > "${dir}/Foo,Bar.java.m.loc"
 msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
-echo "${msg}" | (grep "sum=0" && exit 1 || true)
+test "$(echo "${msg}" | grep -c "sum=0")" == 0
 test -e "${TARGET}/data/${repo}/all.csv"
 grep "/a/Foo\\\\,Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv" > /dev/null
 grep "java_file,loc,nhd" "${TARGET}/data/${repo}/all.csv" > /dev/null

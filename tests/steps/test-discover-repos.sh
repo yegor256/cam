@@ -32,5 +32,5 @@ echo "${stdout}" | grep "Found 3 repositories in page 0" >/dev/null
 echo "${stdout}" | grep "Found 3 total repositories in GitHub" >/dev/null
 test -e "${csv}"
 test -e "${tex}"
-test $(wc -l < "${csv}" | xargs) = '4'
+test "$(wc -l < "${csv}" | xargs)" = '4'
 echo "👍🏻 A few repositories discovered correctly"

@@ -26,7 +26,7 @@ set -o pipefail
 temp=$1
 
 cd "${temp}"
-rm -rf *
+rm -rf ./*
 rm -rf .git
 git init --quiet .
 git config user.email 'foo@example.com'
