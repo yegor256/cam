@@ -37,7 +37,7 @@ if [ -e "${dir}" ]; then
     exit
 fi
 
-declare -a args=('--quiet')
+declare -a args=('--quiet' '--depth=1')
 if [ ! "${tag}" = '.' ]; then
     args+=("--branch=${tag}")
 fi
