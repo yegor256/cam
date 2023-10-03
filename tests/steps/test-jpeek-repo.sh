@@ -36,4 +36,6 @@ test -e "${mfile}"
 value=$(cat "${mfile}")
 test ! "${value}" = '0'
 test ! "${value}" = 'NaN'
+test -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc"
+test ! -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc-cvc"
 echo "👍🏻 A simple repo analyzed with jpeek correctly"

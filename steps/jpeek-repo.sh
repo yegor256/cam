@@ -113,11 +113,12 @@ for type in all cvc; do
                     if [ ! "${value}" = "NaN" ]; then
                         echo "${value}" >> "${values}"
                     fi
+                    suffix=${name}
                     if [ ! "${type}" = "all" ]; then
-                        name=${name}-${type}
+                        suffix=${suffix}-${type}
                     fi
                     jfile=$(find "${project}" -path "*${package}/${class}.java" -exec realpath --relative-to="${project}" {} \;)
-                    mfile=${TARGET}/measurements/${repo}/${jfile}.m.${name}
+                    mfile=${TARGET}/measurements/${repo}/${jfile}.m.${suffix}
                     mkdir -p "$(dirname "${mfile}")"
                     echo "${value}" > "${mfile}"
                 done
