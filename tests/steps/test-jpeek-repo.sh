@@ -22,6 +22,7 @@
 # SOFTWARE.
 set -e
 set -o pipefail
+set -x
 
 repo="yegor256/jaxec"
 echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
