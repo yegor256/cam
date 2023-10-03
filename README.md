@@ -88,7 +88,7 @@ metrics on top of it. It should be easy:
 
   * Download ZIP archive
   * Unpack it to a new `cam/` directory
-  * Add a new script to the `cam/metrics/` directory (use `ast_metrics.py` as an example)
+  * Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
   * Run `make` in the `cam/` directory
 
 Make should understand that a new metric was added. It will apply this new metric
