@@ -31,6 +31,7 @@ for f in start.txt hashes.csv report.pdf repositories.csv; do
     test -f "${TARGET}/${f}"
 done
 
+test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 10
 test -f "${TARGET}/data/${repo}/ncss.csv"
 test -f "${TARGET}/data/${repo}/NHD.csv"
 test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"

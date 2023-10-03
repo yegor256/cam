@@ -57,10 +57,11 @@ export
 
 # Run a single step from ./steps
 define step
+	set -e
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
     @bash $(LOCAL)/steps/$(1).sh
-    echo "Finished$$("$${LOCAL}/help/tdiff.sh" "$${start}")"
+	echo "Finished$$("$${LOCAL}/help/tdiff.sh" "$${start}")"
 endef
 
 # The main goal
