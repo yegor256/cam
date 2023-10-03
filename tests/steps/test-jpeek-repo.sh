@@ -29,8 +29,9 @@ rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/${repo}"
 cp -r "${LOCAL}/fixtures/jaxec"/* "${TARGET}/github/${repo}"
 msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
-test "$(echo "${msg}" | grep -c "0 files, sum is 0")" = 0
+test "$(echo "${msg}" | grep -c "0 classes, sum is 0")" = 0
 echo "${msg}" | grep "Analyzed ${repo} through jPeek" > /dev/null
+echo "${msg}" | grep ", 2 classes" > /dev/null
 mfile=${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD
 test -e "${mfile}"
 value=$(cat "${mfile}")

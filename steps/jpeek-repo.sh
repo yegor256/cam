@@ -91,7 +91,7 @@ mkdir -p "$(dirname "${values}")"
 echo > "${values}"
 files=${TARGET}/temp/jpeek-files/${repo}.txt
 mkdir -p "$(dirname "${files}")"
-echo > "${files}"
+printf '' > "${files}"
 for type in all cvc; do
     dir=${TARGET}/temp/jpeek/${type}/${repo}
     if [ ! -e "${dir}" ]; then
@@ -99,7 +99,6 @@ for type in all cvc; do
         continue
     fi
     find "${dir}" -type f -maxdepth 1 -print | while IFS= read -r report; do
-        echo "${report}" >> "${files}"
         if echo "${report}" | grep -q "${accept}"; then
             packages=$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")
             name=$(xmlstarlet sel -t -v "/metric/title" "${report}")
@@ -118,6 +117,7 @@ for type in all cvc; do
                         suffix=${suffix}-${type}
                     fi
                     jfile=$(find "${project}" -path "*${package}/${class}.java" -exec realpath --relative-to="${project}" {} \;)
+                    echo "${jfile}" >> "${files}"
                     mfile=${TARGET}/measurements/${repo}/${jfile}.m.${suffix}
                     mkdir -p "$(dirname "${mfile}")"
                     echo "${value}" > "${mfile}"
@@ -128,5 +128,5 @@ for type in all cvc; do
 done
 
 echo "Analyzed ${repo} through jPeek (${pos}/${total}), \
-$(wc -l < "${files}" | xargs) files, \
+$(sort "${files}" | uniq | wc -l | xargs) classes, \
 sum is $(awk '{ sum += $1 } END { print sum }' "${values}" | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"
