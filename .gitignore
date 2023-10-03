@@ -1,8 +1,5 @@
 .DS_Store
-*.zip
 dataset/
 .idea/
-venv/
-repos.csv
 Library/
 test-zone/
