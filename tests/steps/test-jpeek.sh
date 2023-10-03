@@ -28,8 +28,12 @@ temp=$1
 repo="yegor256/jaxec"
 echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >/dev/null
+mkdir -p "${TARGET}/github/${repo}"
+cp -r "${LOCAL}/fixtures/jaxec/" "${TARGET}/github/${repo}"
 msg=$("${LOCAL}/steps/jpeek.sh")
 echo "${msg}" | grep -v "Analyzed ${repo} through jPeek" >/dev/null
-test -e "${TARGET}/jpeek"
+mfile=${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD
+value=$(cat "${mfile}")
+test ! "${value}" = '0'
+test ! "${value}" = 'NaN'
 echo "👍🏻 A simple repo analyzed with jpeek correctly"

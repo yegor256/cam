@@ -66,7 +66,7 @@ build() {
 collect() {
     timeout 1h java -jar "${JPEEK}" --overwrite --include-ctors --include-static-methods \
         --include-private-methods --sources "${project}" \
-        --target "${TARGET}/temp/jpeek/all/${repo}" > "${logs}/jpeek-main.log" 2>&1
+        --target "${TARGET}/temp/jpeek/all/${repo}" > "${logs}/jpeek-all.log" 2>&1
     timeout 1h java -jar "${JPEEK}" --overwrite --sources "${project}" \
         --target "${TARGET}/temp/jpeek/cvc/${repo}" > "${logs}/jpeek-cvc.log" 2>&1
 }
@@ -113,17 +113,13 @@ for type in all cvc; do
                     if [ ! "${value}" = "NaN" ]; then
                         echo "${value}" >> "${values}"
                     fi
-                    mfile=$(find "${project}" -path "*${package}/${class}.java" | sed "s|/github|/jpeek|")
-                    if [ -n "${mfile}" ]; then
-                        mkdir -p "$(dirname "${mfile}")"
-                        line="${value} ${name}"
-                        if [ "${type}" = "all" ]; then
-                            line="${name} ${line}"
-                        else
-                            line="${name}-${type} ${line}"
-                        fi
-                        echo "${line}" >> "${mfile}"
+                    if [ ! "${type}" = "all" ]; then
+                        name=${name}-${type}
                     fi
+                    jfile=$(find "${project}" -path "*${package}/${class}.java" -exec realpath --relative-to="${project}" {} \;)
+                    mfile=${TARGET}/measurements/${repo}/${jfile}.m.${name}
+                    mkdir -p "$(dirname "${mfile}")"
+                    echo "${value}" > "${mfile}"
                 done
             done
         fi

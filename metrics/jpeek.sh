@@ -27,25 +27,19 @@ set -o pipefail
 java=$1
 output=$2
 
-sample="MMAC NaN Method-Method through Attributes Cohesion.
-CAMC NaN Cohesion Among Methods in Class
-NHD NaN Normalized Hamming Distance
-LCOM5 NaN Revision of the initial LCOM metric
-SCOM NaN Sensitive Class Cohesion Metric
-MMAC-cvc NaN Same as MMAC, but constructors are excluded
-CAMC-cvc NaN Same as CAMC, but constructors are excluded
-NHD-cvc NaN Same as NHD, but constructors are excluded
-LCOM5-cvc NaN Same as LCOM5, but constructors are excluded
-SCOM-cvc NaN Same as SCOM, but constructors are excluded"
-
-file=${java//github/jpeek}
-out=""
-if [ -e "${file}" ] && [ "${file}" != "${java}" ]; then
-	out=$(cat "${file}")
-else
-	out=${sample}
+if [[ ! "$(realpath --relative-to="${TARGET}/github" "${java}")" =~ ^\.\. ]]; then
+    exit
 fi
 
 cat <<EOT> "${output}"
-${out}
+MMAC 0 Method-Method through Attributes Cohesion.
+CAMC 0 Cohesion Among Methods in Class
+NHD 0 Normalized Hamming Distance
+LCOM5 0 Revision of the initial LCOM metric
+SCOM 0 Sensitive Class Cohesion Metric
+MMAC-cvc 0 Same as MMAC, but constructors are excluded
+CAMC-cvc 0 Same as CAMC, but constructors are excluded
+NHD-cvc 0 Same as NHD, but constructors are excluded
+LCOM5-cvc 0 Same as LCOM5, but constructors are excluded
+SCOM-cvc 0 Same as SCOM, but constructors are excluded
 EOT
