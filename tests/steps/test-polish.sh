@@ -27,7 +27,6 @@ echo -e 'repo,branch\nfoo/bar,master,44,55' > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/foo/bar"
 msg=$("${LOCAL}/steps/polish.sh")
-echo $msg
 test -e "${TARGET}/github/foo/bar"
 echo "${msg}" | grep -v "foo/bar is already here" >/dev/null
 echo "👍🏻 A correct directory was not deleted"

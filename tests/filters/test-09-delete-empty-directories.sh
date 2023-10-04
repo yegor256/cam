@@ -31,7 +31,7 @@ full="${temp}/x/ ; 'w' \"nx\" /f/d/k"
 mkdir -p "${full}"
 java=${full}/Foo.java
 touch "${java}"
-msg=$("${LOCAL}/filters/08-delete-empty-directories.sh" "${temp}" "${temp}/temp")
+msg=$("${LOCAL}/filters/09-delete-empty-directories.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "all of them were deleted" >/dev/null
 test ! -e "${empty}"
 test -e "${full}"
@@ -39,7 +39,7 @@ test -e "${java}"
 echo "👍🏻 A empty directory was deleted"
 
 mkdir -p "${temp}/bar/a/b/c/d/e/f"
-msg=$("${LOCAL}/filters/08-delete-empty-directories.sh" "${temp}" "${temp}/temp")
+msg=$("${LOCAL}/filters/09-delete-empty-directories.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "all of them were deleted" >/dev/null
 test ! -e "${temp}/bar"
 echo "👍🏻 All empty directories deleted recursively"
