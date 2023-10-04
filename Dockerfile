@@ -28,6 +28,7 @@ WORKDIR /cam
 COPY Makefile /cam
 COPY requirements.txt /cam
 COPY steps/install.sh /cam/steps/
+COPY help/* /cam/help/
 
 RUN /bin/bash --login -c 'make install'
 
