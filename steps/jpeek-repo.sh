@@ -52,7 +52,7 @@ build() {
         echo "Сompiled ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
     elif [ -e "${project}/pom.xml" ]; then
         echo "Building ${repo} (${pos}/${total}) with Maven..."
-        if ! timeout 1h mvn compiler:compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
+        if ! timeout 1h mvn compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
             echo "Failed to compile ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
             exit
         fi
