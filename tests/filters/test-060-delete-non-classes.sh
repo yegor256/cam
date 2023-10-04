@@ -20,45 +20,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
+list=${temp}/temp/filter-lists/non-class-files.txt
 
-list=${temp}/filter-lists/invalid-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "interface Foo {}" > "${java}"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/060-delete-non-classes.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "that's why they were deleted" > /dev/null
+test ! -e "${java}"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
+echo "👍🏻 A file with a Java interface was deleted"
 
-mkdir -p "$(dirname "${list}")"
-touch "${list}"
-
-jobs=${temp}/jobs/delete-invalid-files.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-candidates=${temp}/classes-to-filter.txt
-mkdir -p "$(dirname "${candidates}")"
-find "${home}" -type f -name '*.java' -print > "${candidates}"
-py=${LOCAL}/filters/delete-invalid-files.py
-while IFS= read -r f; do
-    printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
-done < "${candidates}"
-"${LOCAL}/help/parallel.sh" "${jobs}"
-wait
-
-total=$(wc -l < "${candidates}" | xargs)
-if [ -s "${list}" ]; then
-    printf "There were %s files total; %d of them had more than 1 Java class, that's why were deleted." \
-        "${total}" "$(wc -l < "${list}")"
-else
-    if [ "${total}" -eq 0 ]; then
-        printf "There are no Java classes, nothing to delete"
-    else
-        printf "All %d files are Java classes, nothing to delete" \
-            "${total}"
-    fi
-fi

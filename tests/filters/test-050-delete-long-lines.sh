@@ -30,7 +30,7 @@ java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
 mkdir -p "$(dirname "${java}")"
 echo "some text in the file" > "${java}"
 rm -f "${list}"
-msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
+msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "no files among 1 total" >/dev/null
 test -e "${java}"
 test -e "${list}"
@@ -41,7 +41,7 @@ java="${temp}/foo/bb/Привет.java"
 mkdir -p "$(dirname "${java}")"
 printf 'a%.0s' {1..5000} > "${java}"
 rm -f "${list}"
-msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
+msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters" >/dev/null
 test ! -e "${java}"
 test -e "${list}"
@@ -53,7 +53,7 @@ java="${temp}/foo/bb/привет/Привет.java"
 mkdir -p "$(dirname "${java}")"
 printf '\xC0\x80' > "${java}"
 rm -f "${list}"
-msg=$(LC_ALL=en_US.UTF-8 "${LOCAL}/filters/05-delete-long-lines.sh" "$(dirname "${java}")" "${temp}/temp" 2>&1)
+msg=$(LC_ALL=en_US.UTF-8 "${LOCAL}/filters/050-delete-long-lines.sh" "$(dirname "${java}")" "${temp}/temp" 2>&1)
 test "$(echo "${msg}" | grep -c "Invalid multibyte data detected")" = 0
 echo "👍🏻 A non-unicode file didn't cause awk troubles"
 
@@ -61,7 +61,7 @@ java="${temp}/--/empty.java"
 mkdir -p "$(dirname "${java}")"
 touch "${java}"
 rm -f "${list}"
-msg=$("${LOCAL}/filters/05-delete-long-lines.sh" "${temp}" "${temp}/temp")
+msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
 test -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 0

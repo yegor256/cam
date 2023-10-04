@@ -24,16 +24,22 @@ set -e
 set -o pipefail
 
 temp=$1
-list=${temp}/temp/filter-lists/package-info-files.txt
 
-info="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /package-info.java"
-mkdir -p "$(dirname "${info}")"
-echo "package foo;" > "${info}"
-rm -f "${list}"
-msg=$("${LOCAL}/filters/02-delete-package-info.sh" "${temp}" "${temp}/temp")
+empty="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c"
+mkdir -p "${empty}"
+full="${temp}/x/ ; 'w' \"nx\" /f/d/k"
+mkdir -p "${full}"
+java=${full}/Foo.java
+touch "${java}"
+msg=$("${LOCAL}/filters/090-delete-empty-directories.sh" "${temp}" "${temp}/temp")
 echo "${msg}" | grep "all of them were deleted" >/dev/null
-test ! -e "${info}"
-test -e "${list}"
-test "$(wc -l < "${list}" | xargs)" = 1
-echo "👍🏻 A package-info.java file was deleted"
+test ! -e "${empty}"
+test -e "${full}"
+test -e "${java}"
+echo "👍🏻 A empty directory was deleted"
 
+mkdir -p "${temp}/bar/a/b/c/d/e/f"
+msg=$("${LOCAL}/filters/090-delete-empty-directories.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${temp}/bar"
+echo "👍🏻 All empty directories deleted recursively"

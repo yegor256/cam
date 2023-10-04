@@ -24,19 +24,16 @@ set -e
 set -o pipefail
 
 temp=$1
-list=${temp}/temp/filter-lists/unparseable-files.txt
+list=${temp}/temp/filter-lists/test-files.txt
 
-java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /FooTest.java"
 mkdir -p "$(dirname "${java}")"
-echo "--- not java syntax at all ---" > "${java}"
-another="$(dirname "${java}")/Bar.java"
-echo "class Bar {}" > "${another}"
+echo "class FooTest {}" > "${java}"
 rm -f "${list}"
-msg=$("${LOCAL}/filters/04-delete-unparseable.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "1 of them were Java files with broken syntax" >/dev/null
+msg=$("${LOCAL}/filters/030-delete-tests.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "that's why they were deleted" >/dev/null
 test ! -e "${java}"
-test -e "${another}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
-echo "👍🏻 An unparseable Java file was deleted"
+echo "👍🏻 A Java test file was deleted"
 

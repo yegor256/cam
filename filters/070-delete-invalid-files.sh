@@ -20,19 +20,45 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
 
-temp=$1
+home=$1
+temp=$2
 
-link="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c/Foo.java"
-mkdir -p "$(dirname "${link}")"
-file="${temp}/x/y- ;/dir (with) ; ' _ l/Bar.java"
-mkdir -p "$(dirname "${file}")"
-echo > "${file}"
-ln -s "${file}" "${link}"
-msg=$("${LOCAL}/filters/08-delete-symlinks.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" >/dev/null
-test ! -e "${link}"
-test -e "${file}"
-echo "👍🏻 A symblink was deleted"
+list=${temp}/filter-lists/invalid-files.txt
+if [ -e "${list}" ]; then
+    exit
+fi
+
+mkdir -p "$(dirname "${list}")"
+touch "${list}"
+
+jobs=${temp}/jobs/delete-invalid-files.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+touch "${jobs}"
+
+candidates=${temp}/classes-to-filter.txt
+mkdir -p "$(dirname "${candidates}")"
+find "${home}" -type f -name '*.java' -print > "${candidates}"
+py=${LOCAL}/filters/delete-invalid-files.py
+while IFS= read -r f; do
+    printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
+done < "${candidates}"
+"${LOCAL}/help/parallel.sh" "${jobs}"
+wait
+
+total=$(wc -l < "${candidates}" | xargs)
+if [ -s "${list}" ]; then
+    printf "There were %s files total; %d of them had more than 1 Java class, that's why were deleted" \
+        "${total}" "$(wc -l < "${list}")"
+else
+    if [ "${total}" -eq 0 ]; then
+        printf "There are no Java classes, nothing to delete"
+    else
+        printf "All %d files are Java classes, nothing to delete" \
+            "${total}"
+    fi
+fi

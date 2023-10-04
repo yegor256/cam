@@ -24,22 +24,22 @@ set -e
 set -o pipefail
 
 temp=$1
+list=${temp}/temp/filter-lists/invalid-files.txt
 
-empty="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c"
-mkdir -p "${empty}"
-full="${temp}/x/ ; 'w' \"nx\" /f/d/k"
-mkdir -p "${full}"
-java=${full}/Foo.java
-touch "${java}"
-msg=$("${LOCAL}/filters/09-delete-empty-directories.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" >/dev/null
-test ! -e "${empty}"
-test -e "${full}"
-test -e "${java}"
-echo "👍🏻 A empty directory was deleted"
+java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+mkdir -p "$(dirname "${java}")"
+echo "class Foo{} class Bar{}" > "${java}"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "that's why were deleted" >/dev/null
+test ! -e "${java}"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
+echo "👍🏻 An invalid Java file was deleted"
 
-mkdir -p "${temp}/bar/a/b/c/d/e/f"
-msg=$("${LOCAL}/filters/09-delete-empty-directories.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" >/dev/null
-test ! -e "${temp}/bar"
-echo "👍🏻 All empty directories deleted recursively"
+rm -f "${list}"
+mkdir -p "${temp}/empty"
+msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}/empty" "${temp}/temp")
+echo "${msg}" | grep "There are no Java classes, nothing to delete" >/dev/null
+echo "👍🏻 A empty directory didn't fail the script"
+

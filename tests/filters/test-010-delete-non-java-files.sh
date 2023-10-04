@@ -20,31 +20,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
+list=${temp}/temp/filter-lists/non-java-files.txt
 
-total=$(find "${home}" -type f | wc -l)
-java=$(find "${home}" -type f -a -name '*.java' | wc -l)
-
-list=${temp}/filter-lists/non-java-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
-
+png="${temp}/foo/dir (with) _ long & and 'java' \"name\" /test.png"
+mkdir -p "$(dirname "${png}")"
+echo "" > "${png}"
 mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -not -name '*.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
+rm -f "${list}"
+msg=$("${LOCAL}/filters/010-delete-non-java-files.sh" "${temp}/foo" "${temp}/temp")
+echo "${msg}" | grep "have been deleted: 1 total" >/dev/null
+test ! -e "${png}"
+test -e "${list}"
+test "$(wc -l < "${list}" | xargs)" = 1
+echo "👍🏻 A binanry non-Java file was deleted"
 
-if [ -s "${list}" ]; then
-    printf "There were %d files total, %d of them were \\\ff{.java} files; all other files, which were not \\\ff{.java}, have been deleted: %d total" \
-        "${total}" "${java}" "$(wc -l < "${list}" | xargs)"
-else
-    printf "All %d files were \\\ff{.java} files, nothing to delete" \
-        "${total}"
-fi

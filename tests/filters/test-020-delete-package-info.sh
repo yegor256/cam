@@ -24,22 +24,16 @@ set -e
 set -o pipefail
 
 temp=$1
-list=${temp}/temp/filter-lists/invalid-files.txt
+list=${temp}/temp/filter-lists/package-info-files.txt
 
-java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
-mkdir -p "$(dirname "${java}")"
-echo "class Foo{} class Bar{}" > "${java}"
+info="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /package-info.java"
+mkdir -p "$(dirname "${info}")"
+echo "package foo;" > "${info}"
 rm -f "${list}"
-msg=$("${LOCAL}/filters/07-delete-invalid-files.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "that's why were deleted" >/dev/null
-test ! -e "${java}"
+msg=$("${LOCAL}/filters/020-delete-package-info.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${info}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
-echo "👍🏻 An invalid Java file was deleted"
-
-rm -f "${list}"
-mkdir -p "${temp}/empty"
-msg=$("${LOCAL}/filters/07-delete-invalid-files.sh" "${temp}/empty" "${temp}/temp")
-echo "${msg}" | grep "There are no Java classes, nothing to delete" >/dev/null
-echo "👍🏻 A empty directory didn't fail the script"
+echo "👍🏻 A package-info.java file was deleted"
 

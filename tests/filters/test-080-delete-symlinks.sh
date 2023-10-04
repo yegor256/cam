@@ -24,16 +24,15 @@ set -e
 set -o pipefail
 
 temp=$1
-list=${temp}/temp/filter-lists/non-class-files.txt
 
-java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
-mkdir -p "$(dirname "${java}")"
-echo "interface Foo {}" > "${java}"
-rm -f "${list}"
-msg=$("${LOCAL}/filters/06-delete-non-classes.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "that's why they were deleted" > /dev/null
-test ! -e "${java}"
-test -e "${list}"
-test "$(wc -l < "${list}" | xargs)" = 1
-echo "👍🏻 A file with a Java interface was deleted"
-
+link="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c/Foo.java"
+mkdir -p "$(dirname "${link}")"
+file="${temp}/x/y- ;/dir (with) ; ' _ l/Bar.java"
+mkdir -p "$(dirname "${file}")"
+echo > "${file}"
+ln -s "${file}" "${link}"
+msg=$("${LOCAL}/filters/080-delete-symlinks.sh" "${temp}" "${temp}/temp")
+echo "${msg}" | grep "all of them were deleted" >/dev/null
+test ! -e "${link}"
+test -e "${file}"
+echo "👍🏻 A symblink was deleted"
