@@ -29,7 +29,7 @@ find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filt
     if [ -e "${tex}" ]; then
         echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
     else
-        before=$(find "${TARGET}/github" -type f | wc -l | xargs)
+        before=$(find "${TARGET}/github" -type f -type l -type d | wc -l | xargs)
         echo "Running filter ${filter}... (may take some time)"
         start=$(date +%s%N)
         "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
@@ -37,7 +37,7 @@ find "${LOCAL}/filters" -name '*.sh' -exec realpath --relative-to="${LOCAL}/filt
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \
             > "${tex}"
-        after=$(find "${TARGET}/github" -type f | wc -l | xargs)
+        after=$(find "${TARGET}/github" -type f -type l -type d | wc -l | xargs)
         echo "Filter ${filter} finished$("${LOCAL}/help/tdiff.sh" "${start}"), \
 deleted $(echo "${before} - ${after}" | bc) files \
 and published its results to ${TARGET}/temp/reports/${filter}.tex "

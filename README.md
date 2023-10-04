@@ -64,6 +64,9 @@ maybe a few days!), and a `.zip` archive will also be there. Docker container
 will run in the background: you can safely close the console and come back when the
 dataset is ready and the container is deleted.
 
+If the script fails at some point, you can restart it again, without deleting previously
+created files. The process is incremental --- it will understand where it stopped before.
+
 You can also run it without Docker:
 
 ```bash
