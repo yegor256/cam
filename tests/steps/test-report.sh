@@ -22,6 +22,7 @@
 # SOFTWARE.
 set -e
 set -o pipefail
+set -x
 
 date +%s%N > "${TARGET}/start.txt"
 mkdir -p "${TARGET}/temp"
