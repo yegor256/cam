@@ -24,4 +24,10 @@ set -e
 set -o pipefail
 
 num=$(cat)
-printf '%.8f' "${num}" | sed -e 's/0\+$//' | sed -e 's/\.$//'
+
+if [ "${num}" == 'NaN' ]; then
+    printf '%s' "${num}"
+    exit
+fi
+
+(printf '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'

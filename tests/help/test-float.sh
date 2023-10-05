@@ -32,6 +32,21 @@ echo "👍🏻 Corrected longer floating point number"
 test "$(echo '256' | "${LOCAL}/help/float.sh")" = '256'
 echo "👍🏻 Corrected integer number"
 
+test "$(echo '09' | "${LOCAL}/help/float.sh")" = '9'
+echo "👍🏻 Corrected integer number with leading zero"
+
+test "$(echo '' | "${LOCAL}/help/float.sh")" = '0'
+echo "👍🏻 Corrected integer number with empty text"
+
+test "$(echo '  ' | "${LOCAL}/help/float.sh")" = '0'
+echo "👍🏻 Corrected integer number with spaces"
+
+test "$(echo 'Blank' | "${LOCAL}/help/float.sh")" = '0'
+echo "👍🏻 Corrected integer number with text input"
+
+test "$(echo 'NaN' | "${LOCAL}/help/float.sh")" = 'NaN'
+echo "👍🏻 Corrected integer number with NaN"
+
 test "$(echo '.000000099' | "${LOCAL}/help/float.sh")" = '0.0000001'
 echo "👍🏻 Corrected small precision number"
 
