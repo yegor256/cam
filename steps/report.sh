@@ -56,7 +56,10 @@ if [ -e "${pdf}" ]; then
 fi
 
 dest=${t}/report.pdf
-TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"
+if ! TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"; then
+    cat "${tmp}/report.log"
+    exit 1
+fi
 mv "${pdf}" "${dest}"
 
 echo "PDF report generated in ${dest} ($(du -k "${dest}" | cut -f1) Kb)"
