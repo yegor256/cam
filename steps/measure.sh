@@ -48,7 +48,7 @@ echo "${javas}" | while IFS= read -r java; do
     fi
     printf "%s %s %s %s %s\n" "${sh@Q}" "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
     if [ "${file: -4}" = '0000' ]; then
-        echo "Prepared ${file} jobs..."
+        echo "Prepared ${file} jobs out of ${total}..."
     fi
 done
 
