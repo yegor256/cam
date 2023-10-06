@@ -39,6 +39,7 @@ touch "${jobs}"
 declare -i file=0
 sh="$(dirname "$0")/measure-file.sh"
 echo "${javas}" | while IFS= read -r java; do
+    pstart=$(date +%s%N)
     file=$((file+1))
     rel=$(realpath --relative-to="${TARGET}/github" "${java}")
     javam=${TARGET}/measurements/${rel}.m
@@ -48,7 +49,7 @@ echo "${javas}" | while IFS= read -r java; do
     fi
     printf "%s %s %s %s %s\n" "${sh@Q}" "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
     if [ "${file: -4}" = '0000' ]; then
-        echo "Prepared ${file} jobs out of ${total}..."
+        echo "Prepared ${file} jobs out of ${total}$("${LOCAL}/help/tdiff.sh" "${pstart}")..."
     fi
 done
 
