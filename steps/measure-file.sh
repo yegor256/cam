@@ -31,6 +31,7 @@ total=$4
 start=$(date +%s%N)
 
 mkdir -p "$(dirname "${javam}")"
+touch "${javam}"
 metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
 echo "${metrics}" | {
     sum=0
@@ -49,6 +50,6 @@ echo "${metrics}" | {
         fi
     done
     echo "$(echo "${metrics}" | wc -w | xargs) scripts \
-collected $(find "${javam}".* -type f | wc -l | xargs) metrics (sum=${sum}) \
+collected $(find "$(dirname "${javam}")" -type f -name "$(basename "${javam}").*" | wc -l | xargs) metrics (sum=${sum}) \
 for $(basename "${java}") (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
 }

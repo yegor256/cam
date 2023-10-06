@@ -52,6 +52,7 @@ if ! xmlstarlet --version; then
   apt-get install -y xmlstarlet
 fi
 
+tlmgr option repository ctan
 tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   libertine paralist makecell footmisc currfile enumitem wrapfig \
