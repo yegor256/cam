@@ -82,18 +82,14 @@ if ! xmlstarlet --version; then
   fi
 fi
 
-sudo='sudo'
-if [ -n "${linux}" ]; then
-  sudo=''
-fi
-"${sudo}" tlmgr option repository ctan
-"${sudo}" tlmgr --verify-repo=none update --self
+tlmgr option repository ctan
+tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   libertine paralist makecell footmisc currfile enumitem wrapfig \
   lastpage biblatex titling svg catchfile transparent textpos fvextra \
   xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
-"${sudo}" tlmgr --verify-repo=none install "${packages[@]}"
-"${sudo}" tlmgr --verify-repo=none update "${packages[@]}"
+tlmgr --verify-repo=none install "${packages[@]}"
+tlmgr --verify-repo=none update "${packages[@]}"
 
 if ! pygmentize -V; then
   if [ -n "${linux}" ]; then
