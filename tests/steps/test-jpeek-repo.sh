@@ -40,3 +40,10 @@ test ! "${value}" = 'NaN'
 test -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc"
 test ! -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc-cvc"
 echo "👍🏻 A simple repo analyzed with jpeek correctly"
+
+repo="foo/bar"
+rm -rf "${TARGET}/github"
+mkdir -p "${TARGET}/temp/jpeek-logs/${repo}"
+msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
+echo "${msg}" | grep "Repo ${repo} already analyzed by jPeek" > /dev/null
+echo "👍🏻 A duplicate analysis didn't happen"

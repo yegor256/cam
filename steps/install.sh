@@ -25,44 +25,82 @@ set -x
 set -e
 set -o pipefail
 
-apt-get -y update
-apt-get install -y coreutils
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  linux=yes
+fi
+
+if [ -n "${linux}" ]; then
+  apt-get -y update
+  apt-get install -y coreutils
+fi
 
 if ! parallel --version; then
-  apt-get -y install parallel
+  if [ -n "${linux}" ]; then
+    apt-get -y install parallel
+  else
+    echo "Install 'parallel' somehow"
+  fi
 fi
 
 if ! bc -v; then
-  apt-get install -y bc
+  if [ -n "${linux}" ]; then
+    apt-get install -y bc
+  else
+    echo "Install 'GNU bc' somehow"
+  fi
 fi
 
 if ! cloc --version; then
-  apt-get install -y cloc
+  if [ -n "${linux}" ]; then
+    apt-get install -y cloc
+  else
+    echo "Install 'cloc' somehow"
+  fi
 fi
 
 if ! shellcheck --version; then
-  apt-get install -y shellcheck
+  if [ -n "${linux}" ]; then
+    apt-get install -y shellcheck
+  else
+    echo "Install 'shellcheck' somehow"
+  fi
 fi
 
 if ! aspell --version; then
-  apt-get install -y aspell
+  if [ -n "${linux}" ]; then
+    apt-get install -y aspell
+  else
+    echo "Install 'GNU aspell' somehow"
+  fi
 fi
 
 if ! xmlstarlet --version; then
-  apt-get install -y xmlstarlet
+  if [ -n "${linux}" ]; then
+    apt-get install -y xmlstarlet
+  else
+    echo "Install 'xmlstarlet' somehow"
+  fi
 fi
 
-tlmgr option repository ctan
-tlmgr --verify-repo=none update --self
+sudo='sudo'
+if [ -n "${linux}" ]; then
+  sudo=''
+fi
+"${sudo}" tlmgr option repository ctan
+"${sudo}" tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   libertine paralist makecell footmisc currfile enumitem wrapfig \
   lastpage biblatex titling svg catchfile transparent textpos fvextra \
   xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
-tlmgr --verify-repo=none install "${packages[@]}"
-tlmgr --verify-repo=none update "${packages[@]}"
+"${sudo}" tlmgr --verify-repo=none install "${packages[@]}"
+"${sudo}" tlmgr --verify-repo=none update "${packages[@]}"
 
 if ! pygmentize -V; then
-  apt-get install -y python3-pygments
+  if [ -n "${linux}" ]; then
+    apt-get install -y python3-pygments
+  else
+    echo "Install 'python3-pygments' somehow"
+  fi
 fi
 
 python3 -m pip install -r "${LOCAL}/requirements.txt"
@@ -72,9 +110,13 @@ gem install --no-document octokit -v 4.21.0
 gem install --no-document slop -v 4.9.1
 
 if ! inkscape --version; then
-  add-apt-repository -y ppa:inkscape.dev/stable && \
-    apt-get update -y && \
-    apt-get install -y inkscape
+  if [ -n "${linux}" ]; then
+    add-apt-repository -y ppa:inkscape.dev/stable && \
+      apt-get update -y && \
+      apt-get install -y inkscape
+  else
+    echo "Install 'inkscape' somehow"
+  fi
 fi
 
 if ! pmd pmd --version; then

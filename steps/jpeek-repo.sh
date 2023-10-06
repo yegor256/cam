@@ -32,6 +32,12 @@ start=$(date +%s%N)
 project=${TARGET}/github/${repo}
 
 logs=${TARGET}/temp/jpeek-logs/${repo}
+
+if [ -e "${logs}" ]; then
+    echo "Repo ${repo} already analyzed by jPeek"
+    exit
+fi
+
 mkdir -p "${logs}"
 
 build() {
