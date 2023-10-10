@@ -26,8 +26,28 @@ set -o pipefail
 temp=$1
 
 java="${temp}/Foo(xls;)';a привет '\".java"
-echo "class Foo {}" > "${java}"
+cat > "${java}" <<EOT
+class Foo extends Boo implements Bar {
+    // This is static
+    private static int X = 1;
+    private String z;
+
+    Foo(String zz) {
+        this.z = zz;
+    }
+}
+EOT
 msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
 test "$(echo "${msg}" | grep -c "sum=0")" = 0
-test -e "${temp}/m"
+test "$(cat "${temp}/m.loc")" = "7"
+test "$(cat "${temp}/m.comments")" = "1"
+test "$(cat "${temp}/m.cc")" = "1"
+test "$(cat "${temp}/m.ncss")" = "5"
+test "$(cat "${temp}/m.smtds")" = "0"
+test "$(cat "${temp}/m.mtds")" = "0"
+test "$(cat "${temp}/m.ctors")" = "1"
+test "$(cat "${temp}/m.extnds")" = "1"
+test "$(cat "${temp}/m.impls")" = "1"
+test "$(cat "${temp}/m.final")" = "0"
+test "$(cat "${temp}/m.blanks")" = "1"
 echo "👍🏻 Single file measured correctly"
