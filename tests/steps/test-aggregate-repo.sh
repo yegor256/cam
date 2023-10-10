@@ -31,6 +31,7 @@ echo ".75" > "${dir}/Foo,Bar.java.m.nhd"
 echo "42" > "${dir}/Foo,Bar.java.m.loc"
 msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
 test "$(echo "${msg}" | grep -c "sum=0")" == 0
+test "$(echo "${msg}" | grep -c "files=0")" == 0
 test -e "${TARGET}/data/${repo}/all.csv"
 grep "/a/Foo\\\\,Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv" > /dev/null
 grep "java_file,loc,nhd" "${TARGET}/data/${repo}/all.csv" > /dev/null

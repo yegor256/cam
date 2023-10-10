@@ -39,6 +39,7 @@ fi
 
 find "${dir}" -name '*.m' | {
     sum=0
+    declare -i total=0
     while IFS= read -r m; do
         find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
             java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
@@ -73,6 +74,7 @@ find "${dir}" -name '*.m' | {
             fi
         done
         printf '\n' >> "${csv}"
+        total=$((total+1))
     done
-    echo "${repo} (${pos}/${total}) aggregated (sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"
+    echo "${repo} (${pos}/${total}) aggregated (files=${total}, sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"
 }
