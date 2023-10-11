@@ -32,7 +32,7 @@ start=$(date +%s%N)
 
 csvs=$(find "${dir}" -name '*.csv' -maxdepth 1 -exec basename {} \;)
 
-total=$(echo "${csvs}" | wc -l | xargs)
+files=$(echo "${csvs}" | wc -l | xargs)
 echo "${csvs}" | while IFS= read -r csv; do
     join=${TARGET}/data/${csv}
     rm -rf "${join}"
@@ -46,4 +46,4 @@ echo "${csvs}" | while IFS= read -r csv; do
     done < "${dir}/${csv}"
 done
 
-echo "${total} metrics added to the CSV aggregate of ${repo} (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+echo "${files} metrics added to the CSV aggregate of ${repo} (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
