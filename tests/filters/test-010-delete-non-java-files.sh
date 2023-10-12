@@ -34,7 +34,7 @@ echo "" > "${png}"
 mkdir -p "$(dirname "${list}")"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/010-delete-non-java-files.sh" "${temp}/foo" "${temp}/temp")
-echo "${msg}" | grep "have been deleted: 1 total" > "${stdout}" 2>&1
+echo "${msg}" | grep "have been deleted: 1 total" >> "${stdout}" 2>&1
 test ! -e "${png}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1

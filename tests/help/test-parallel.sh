@@ -30,7 +30,7 @@ for i in A B C D E F G H I J; do
     echo "echo -n ${i}" >> "${jobs}"
 done
 msg=$("${LOCAL}/help/parallel.sh" "${jobs}")
-echo "${msg}" > "${stdout}"
+echo "${msg}" >> "${stdout}"
 test "${#msg}" = '10'
 echo "👍🏻 Correctly ran parallel"
 

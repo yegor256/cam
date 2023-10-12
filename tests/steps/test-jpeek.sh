@@ -31,8 +31,8 @@ rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/${repo}"
 cp -r "${LOCAL}/fixtures/jaxec"/* "${TARGET}/github/${repo}"
 msg=$("${LOCAL}/steps/jpeek.sh")
-echo "${msg}" > "${stdout}"
-echo "${msg}" | grep "Analyzed ${repo} through jPeek" > "${stdout}" 2>&1
+echo "${msg}" >> "${stdout}"
+echo "${msg}" | grep "Analyzed ${repo} through jPeek" >> "${stdout}" 2>&1
 mfile=${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD
 value=$(cat "${mfile}")
 test ! "${value}" = '0'

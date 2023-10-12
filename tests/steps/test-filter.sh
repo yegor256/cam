@@ -27,7 +27,7 @@ stdout=$2
 
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/github/a/b"
-"${LOCAL}/steps/filter.sh" > "${stdout}" 2>&1
+"${LOCAL}/steps/filter.sh" >> "${stdout}" 2>&1
 echo "👍🏻 A simple filtering ran smoothly"
 
 rm -rf "${TARGET}/github"

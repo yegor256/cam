@@ -27,7 +27,7 @@ stdout=$2
 
 num=$(echo '.42' | "${LOCAL}/help/float.sh")
 test "${num}" = '0.42'
-echo "${num}" > "${stdout}"
+echo "${num}" >> "${stdout}"
 echo "👍🏻 Corrected floating point number"
 
 test "$(echo '254.42' | "${LOCAL}/help/float.sh")" = '254.42'

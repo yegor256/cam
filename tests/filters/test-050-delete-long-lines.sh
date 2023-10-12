@@ -33,7 +33,7 @@ mkdir -p "$(dirname "${java}")"
 echo "some text in the file" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "no files among 1 total" > "${stdout}" 2>&1
+echo "${msg}" | grep "no files among 1 total" >> "${stdout}" 2>&1
 test -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 0
@@ -44,7 +44,7 @@ mkdir -p "$(dirname "${java}")"
 printf 'a%.0s' {1..5000} > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters" > "${stdout}" 2>&1
+echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters" >> "${stdout}" 2>&1
 test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1

@@ -35,7 +35,7 @@ another="$(dirname "${java}")/Bar.java"
 echo "class Bar {}" > "${another}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/040-delete-unparseable.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "1 of them were Java files with broken syntax" > "${stdout}" 2>&1
+echo "${msg}" | grep "1 of them were Java files with broken syntax" >> "${stdout}" 2>&1
 test ! -e "${java}"
 test -e "${another}"
 test -e "${list}"

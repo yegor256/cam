@@ -29,13 +29,13 @@ stdout=$2
 java="${TARGET}/github/foo/bar/Foo.java"
 mkdir -p "$(dirname "${java}")"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/metrics/jpeek.sh" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
+"${LOCAL}/metrics/jpeek.sh" "${java}" "${temp}/stdout" >> "${stdout}" 2>&1
 test ! -e "${temp}/stdout"
 echo "👍🏻 Correctly ignored metrics generation"
 
 java="${TARGET}/temp/Test.java"
 mkdir -p "$(dirname "${java}")"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/metrics/jpeek.sh" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
+"${LOCAL}/metrics/jpeek.sh" "${java}" "${temp}/stdout" >> "${stdout}" 2>&1
 test -e "${temp}/stdout"
 echo "👍🏻 Correctly generated metrics description"

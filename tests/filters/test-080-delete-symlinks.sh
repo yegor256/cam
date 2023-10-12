@@ -33,7 +33,7 @@ mkdir -p "$(dirname "${file}")"
 echo > "${file}"
 ln -s "${file}" "${link}"
 msg=$("${LOCAL}/filters/080-delete-symlinks.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" > "${stdout}" 2>&1
+echo "${msg}" | grep "all of them were deleted" >> "${stdout}" 2>&1
 test ! -e "${link}"
 test -e "${file}"
 echo "👍🏻 A symblink was deleted"

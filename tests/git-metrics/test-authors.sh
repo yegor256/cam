@@ -37,6 +37,6 @@ echo "class Foo {}" > "${java}"
 git add "${java}"
 git config commit.gpgsign false
 git commit --quiet -am start
-"${LOCAL}/git-metrics/authors.sh" "${java}" stdout > "${stdout}" 2>&1
-grep "authors 1" stdout > "${stdout}" 2>&1
+"${LOCAL}/git-metrics/authors.sh" "${java}" stdout >> "${stdout}" 2>&1
+grep "authors 1" stdout >> "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"

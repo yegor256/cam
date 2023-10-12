@@ -33,7 +33,7 @@ mkdir -p "$(dirname "${java}")"
 echo "class FooTest {}" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/030-delete-tests.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "that's why they were deleted" > "${stdout}" 2>&1
+echo "${msg}" | grep "that's why they were deleted" >> "${stdout}" 2>&1
 test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1

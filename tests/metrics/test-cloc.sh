@@ -28,6 +28,6 @@ stdout=$2
 
 java="${temp}/Foo long 'weird' name (--).java"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/metrics/cloc.sh" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
-grep "loc 1" "${temp}/stdout" > "${stdout}" 2>&1
+"${LOCAL}/metrics/cloc.sh" "${java}" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "loc 1" "${temp}/stdout" >> "${stdout}" 2>&1
 echo "👍🏻 Correctly counted lines of code"

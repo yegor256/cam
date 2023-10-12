@@ -33,13 +33,13 @@ echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
     void x() { }
     int y() { return 0; }
 }" > "${java}"
-"${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
-grep "attrs 1" "${temp}/stdout" > "${stdout}" 2>&1
-grep "sattrs 1" "${temp}/stdout" > "${stdout}" 2>&1
-grep "mtds 2" "${temp}/stdout" > "${stdout}" 2>&1
-grep "impls 2" "${temp}/stdout" > "${stdout}" 2>&1
-grep "extnds 1" "${temp}/stdout" > "${stdout}" 2>&1
-grep "gnrcs 1" "${temp}/stdout" > "${stdout}" 2>&1
-grep "final 1" "${temp}/stdout" > "${stdout}" 2>&1
-grep "annts 1" "${temp}/stdout" > "${stdout}" 2>&1
+"${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "attrs 1" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "sattrs 1" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "mtds 2" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "impls 2" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "extnds 1" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "gnrcs 1" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "final 1" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "annts 1" "${temp}/stdout" >> "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"

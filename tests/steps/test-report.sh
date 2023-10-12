@@ -33,6 +33,6 @@ mkdir -p "${TARGET}/temp/reports"
 mkdir -p "${TARGET}/data"
 mkdir -p "${TARGET}/github"
 echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
-"${LOCAL}/steps/report.sh" > "${stdout}" 2>&1
+"${LOCAL}/steps/report.sh" >> "${stdout}" 2>&1
 test -e "${TARGET}/report.pdf"
 echo "👍🏻 A PDF report generated correctly"

@@ -23,18 +23,29 @@
 set -e
 set -o pipefail
 
+temp=$1
 stdout=$2
 
-echo -e "name\nyegor256/jaxec,master,4,5,5,6" > "${TARGET}/repositories.csv"
+uri=${temp}/foo!
+git init --quiet "${uri}"
+cd "${uri}"
+git config user.email 'foo@example.com'
+git config user.name 'Foo'
+touch test.txt
+git add .
+git config commit.gpgsign false
+git commit --quiet -am test
+
+echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" > "${stdout}" 2>&1
-test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
+"${LOCAL}/steps/clone.sh" >> "${stdout}" 2>&1
+test -e "${TARGET}/github/files/foo!/test.txt"
 echo "👍🏻 A repo cloned correctly"
 
 TARGET="${TARGET}/another/ж\"'  () привет /t"
 mkdir -p "${TARGET}"
-echo -e "name\nyegor256/jaxec" > "${TARGET}/repositories.csv"
+echo -e "name\n${uri}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" > "${stdout}" 2>&1
-test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
+"${LOCAL}/steps/clone.sh" >> "${stdout}" 2>&1
+test -e "${TARGET}/github/files/foo!/test.txt"
 echo "👍🏻 A repo cloned correctly into weird directory"

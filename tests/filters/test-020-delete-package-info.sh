@@ -33,7 +33,7 @@ mkdir -p "$(dirname "${info}")"
 echo "package foo;" > "${info}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/020-delete-package-info.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" > "${stdout}" 2>&1
+echo "${msg}" | grep "all of them were deleted" >> "${stdout}" 2>&1
 test ! -e "${info}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1

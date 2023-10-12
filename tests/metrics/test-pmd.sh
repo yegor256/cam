@@ -34,6 +34,6 @@ ruby --version > /dev/null
 java="${temp}/Foo long 'weird' name (--).java"
 mkdir -p "$(dirname "${java}")"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
-grep "coco 0" "${temp}/stdout" > "${stdout}" 2>&1
+"${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout" >> "${stdout}" 2>&1
+grep "coco 0" "${temp}/stdout" >> "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated congitive complexity"

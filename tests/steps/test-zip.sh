@@ -25,6 +25,6 @@ set -o pipefail
 
 stdout=$2
 
-"${LOCAL}/steps/zip.sh" > "${stdout}" 2>&1
+"${LOCAL}/steps/zip.sh" >> "${stdout}" 2>&1
 test -e "${TARGET}"/*.zip
 echo "👍🏻 A zip archive generated correctly"

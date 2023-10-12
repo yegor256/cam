@@ -39,7 +39,7 @@ class Foo extends Boo implements Bar {
 }
 EOT
 msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
-echo "${msg}" > "${stdout}"
+echo "${msg}" >> "${stdout}"
 test "$(echo "${msg}" | grep -c "sum=0")" = 0
 test "$(cat "${temp}/m.loc")" = "7"
 test "$(cat "${temp}/m.comments")" = "1"
