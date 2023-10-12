@@ -84,11 +84,13 @@ metrics on top of it. It should be easy:
   * Download ZIP archive
   * Unpack it to the `cam/dataset/` directory
   * Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
+  * Delete all other files except yours from the `cam/metrics/` directory
   * Run `make` in the `cam/` directory
 
-Make should understand that a new metric was added. It will apply this new metric
-to all `.java` files, generate new `.csv` reports, and then the final `.pdf` report
-will also be updated.
+The `make` should understand that a new metric was added. It will apply this new metric
+to all `.java` files, generate new `.csv` reports, aggregate them with existing
+reports (in the `cam/dataset/data/` directory), 
+and then the final `.pdf` report will also be updated.
 
 ## How to Contribute
 

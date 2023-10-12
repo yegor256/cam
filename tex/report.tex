@@ -49,15 +49,15 @@ The filtering process was the following:
 The structure of the archive is the following:
 
 \begin{itemize}
+
   \item \ff{data/} is the collection of \ff{.csv} files with the data
   (\iexec{find "${TARGET}/data" -name '*.csv' | wc -l}\unskip{} total);
+
   \item \ff{github/} is the entire collection of
   \iexec{find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
   source files ``as is''
-  (\iexec{du -sh "${TARGET}/github" | cut -f1}\unskip{} total);
-  \item \ff{measurements/} is a supplementary collection of
-  files with metrics for each Java class
-  (\iexec{find "${TARGET}/github" -name '*.m.*' | wc -l}\unskip{} total).
+  (\iexec{du -sh "${TARGET}/github" | cut -f1}\unskip{} total).
+
 \end{itemize}
 
 There are \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics:

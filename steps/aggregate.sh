@@ -25,8 +25,8 @@ set -o pipefail
 
 start=$(date +%s%N)
 
-all=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
-echo "All $(echo "${all}" | wc -w | xargs) metrics (in alphanumeric order): ${all}"
+metrics=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
+echo "All $(echo "${metrics}" | wc -w | xargs) metrics (in alphanumeric order): ${metrics}"
 
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
 total=$(echo "${repos}" | wc -l | xargs)
@@ -40,18 +40,19 @@ declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
 echo "${repos}" | while IFS= read -r r; do
     repo=$((repo+1))
-    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${all@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${metrics@Q}" >> "${jobs}"
 done
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 mkdir -p "${TARGET}/data"
 rm -rf "${TARGET}/data/*.csv"
-printf "repository,file" >> "${TARGET}/data/all.csv"
-echo "${all}" | while IFS= read -r a; do
-    printf ',%s' "${a}" >> "${TARGET}/data/all.csv"
+all=${TARGET}/data/all.csv
+printf "repository,file" >> "${all}"
+echo "${metrics}" | while IFS= read -r a; do
+    printf ',%s' "${a}" >> "${all}"
 done
-printf "\n" >> "${TARGET}/data/all.csv"
+printf "\n" >> "${all}"
 
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
