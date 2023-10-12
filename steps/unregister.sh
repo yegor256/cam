@@ -36,7 +36,7 @@ tail -n +2 "${csv}" > "${before}"
 
 head=$(head -1 "${csv}")
 rm -f "${csv}"
-echo ${head} > "${csv}"
+echo "${head}" > "${csv}"
 
 declare -i total=0
 declare -i good=0

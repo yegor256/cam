@@ -4,3 +4,5 @@ AllCops:
 
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+Metrics/BlockLength:
+  Max: 30

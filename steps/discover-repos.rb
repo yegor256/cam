@@ -75,10 +75,10 @@ loop do
     break
   end
   json = if opts[:dry]
-    {items: page > 100 ? [] : [{full_name: "foo/#{Random.hex(5)}", created_at: Time.now}]}
-  else
-    github.search_repositories(query, per_page: size, page: page)
-  end
+           { items: page > 100 ? [] : [{ full_name: "foo/#{Random.hex(5)}", created_at: Time.now }] }
+         else
+           github.search_repositories(query, per_page: size, page: page)
+         end
   json[:items].each do |i|
     found[i[:full_name]] = {
       full_name: i[:full_name],
@@ -94,7 +94,8 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page ##{page}"
   break if found.count >= opts[:total]
-  puts "Let's sleep for a few seconds to cool off GitHub API (already found #{found.count} repos, need #{opts[:total]})..."
+  puts "Let's sleep for a few seconds to cool off GitHub API \
+(already found #{found.count} repos, need #{opts[:total]})..."
   sleep opts[:pause]
   page += 1
 end
