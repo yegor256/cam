@@ -35,7 +35,7 @@
 This report was generated automatically by the script, which is located in
 the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 
-In total, \iexec{set -o pipefail; tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{}
+In total, \iexec{tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{}
 were found and retrieved from GitHub.
 \iexec{cat "${TARGET}/temp/repo-details.tex"}
 The full list of them is in the \ff{repositories.csv} file.
@@ -50,14 +50,14 @@ The structure of the archive is the following:
 
 \begin{itemize}
   \item \ff{data/} is the collection of \ff{.csv} files with the data
-  (\iexec{set -o pipefail; find "${TARGET}/data" -name '*.csv' | wc -l}\unskip{} total);
+  (\iexec{find "${TARGET}/data" -name '*.csv' | wc -l}\unskip{} total);
   \item \ff{github/} is the entire collection of
-  \iexec{set -o pipefail; find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
+  \iexec{find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
   source files ``as is''
-  (\iexec{set -o pipefail; du -sh "${TARGET}/github" | cut -f1}\unskip{} total);
+  (\iexec{du -sh "${TARGET}/github" | cut -f1}\unskip{} total);
 \end{itemize}
 
-There are \iexec{set -o pipefail; cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics:
+There are \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics:
 
 \begin{itemize}
   \input{$TARGET/temp/list-of-metrics.tex}
