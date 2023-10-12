@@ -12,26 +12,15 @@ This is a more formal explanation of this project:
 [in PDF](https://github.com/yegor256/cam/blob/gh-pages/paper.pdf).
 
 The latest ZIP archive with the dataset is here:
-[cam-2022-02-17.zip](https://github.com/yegor256/cam/releases/download/0.3.0/cam-2022-02-17.zip) 
-(532Mb). 
-It is the result of the analysis of Java classes in 900+ GitHub repositories
-against a number of metrics, including:
- 
-  * lines of code (reported by [cloc](https://github.com/AlDanial/cloc)),
-  * lines of comments,
-  * blank lines,
-  * [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for),
-  * cyclomatic complexity,
-  * number of attributes,
-  * number of static attributes,
-  * number of constructors,
-  * number of methods,
-  * number of static methods,
-  * total cognitive complexity (reported by [PMD](https://pmd.github.io/)),
-  * maximum cognitive complexity,
-  * minimum cognitive complexity,
-  * average cognitive complexity,
-  * number of committers.
+[cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip) 
+(3Gb, 844,083 Java classes).
+It is the result of the analysis of Java classes in 959 GitHub repositories
+against 29 metrics, including:
+lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
+[NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for);
+cyclomatic and cognitive complexity;
+number of attributes, constructors, methods, and others 
+([see PDF](http://cam.yegor256.com/cam-2023-10-11.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
