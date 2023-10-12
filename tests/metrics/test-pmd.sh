@@ -26,8 +26,10 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-# Just to make sure it's installed
+# Just to make sure they are installed
 pmd pmd --help > /dev/null
+xmllint --version > /dev/null 2>&1
+ruby --version > /dev/null
 
 java="${temp}/Foo long 'weird' name (--).java"
 mkdir -p "$(dirname "${java}")"
