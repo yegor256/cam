@@ -32,11 +32,11 @@
 
 \maketitle
 
-This report is generated automatically by the script, which you can find in
+This report was generated automatically by the script, which is located in
 the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 
-We found and retrieved \iexec{set -o pipefail; tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{}
-repositories from GitHub.
+In total, \iexec{set -o pipefail; tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{}
+were found and retrieved from GitHub.
 \iexec{cat "${TARGET}/temp/repo-details.tex"}
 The full list of them is in the \ff{repositories.csv} file.
 The \ff{hashes.csv} file has a list of Git hashes of their latest commits.
@@ -46,19 +46,18 @@ The filtering process was the following:
 \iexec{cat "${TARGET}"/temp/reports/*.tex}\unskip{}
 \end{enumerate}
 
-The structure of the archive:
+The structure of the archive is the following:
 
 \begin{itemize}
   \item \ff{data/} is the collection of \ff{.csv} files with the data
-  you are looking for (\iexec{set -o pipefail; find "$TARGET/data" -name '*.csv' | wc -l}\unskip{} total);
-
+  (\iexec{set -o pipefail; find "$TARGET/data" -name '*.csv' | wc -l}\unskip{} total);
   \item \ff{github/} is the entire collection of
   \iexec{set -o pipefail; find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
   source files ``as is''
   (\iexec{set -o pipefail; du -sh "${TARGET}/github" | cut -f1}\unskip{} total);
 \end{itemize}
 
-There are \iexec{set -o pipefail; cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics that we use:
+There are \iexec{set -o pipefail; cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics:
 
 \begin{itemize}
   \input{$TARGET/temp/list-of-metrics.tex}
@@ -68,6 +67,6 @@ The dataset was built by
 \iexec{nproc}\unskip{}
 CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
 
-If any questions or suggestions, just \href{mailto:yegor256@gmail.com}{email me}.
+If any questions or suggestions, please \href{mailto:yegor256@gmail.com}{email}.
 
 \end{document}
