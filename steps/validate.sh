@@ -23,6 +23,11 @@
 set -e
 set -o pipefail
 
+if [ ! -e "${TARGET}/github" ]; then
+    echo "Run 'make' first, to collect the data"
+    exit 1
+fi
+
 repo=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \; | head -1)
 echo "Found ${repo} repository for validating"
 
@@ -31,6 +36,7 @@ for f in start.txt hashes.csv report.pdf repositories.csv; do
     test -f "${TARGET}/${f}"
 done
 
+set -x
 test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 10
 test -f "${TARGET}/data/${repo}/ncss.csv"
 test -f "${TARGET}/data/${repo}/NHD.csv"
@@ -48,6 +54,7 @@ test -f "${TARGET}/hashes.csv"
 test -f "${TARGET}/repositories.csv"
 test -f "${TARGET}/start.txt"
 test -f "${TARGET}/report.pdf"
+set +x
 
 if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
     echo "NaN found in jpeek report"

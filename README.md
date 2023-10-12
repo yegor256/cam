@@ -98,6 +98,7 @@ provided they don't violate our quality standards. To avoid frustration,
 before sending us your pull request please run full Maven build:
 
 ```bash
+$ make install
 $ make test
 $ make REPO=yegor256/tojos
 ```
