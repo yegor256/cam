@@ -47,7 +47,7 @@ test -f "${TARGET}/data/SCOM-cvc.csv"
 test -d "${TARGET}/measurements/${repo}/src/main/java"
 test -d "${TARGET}/temp/jpeek/all/${repo}"
 test -d "${TARGET}/temp/jpeek/cvc/${repo}"
-test -f "${TARGET}/temp/reports/01-delete-non-java-files.sh.tex"
+test -f "${TARGET}/temp/reports/010-delete-non-java-files.sh.tex"
 test -f "${TARGET}/temp/pdf-report/report.tex"
 test -f "${TARGET}"/*.zip
 test -f "${TARGET}/hashes.csv"

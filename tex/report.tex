@@ -55,6 +55,9 @@ The structure of the archive is the following:
   \iexec{find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
   source files ``as is''
   (\iexec{du -sh "${TARGET}/github" | cut -f1}\unskip{} total);
+  \item \ff{measurements/} is a supplementary collection of
+  files with metrics for each Java class
+  (\iexec{find "${TARGET}/github" -name '*.m.*' | wc -l}\unskip{} total).
 \end{itemize}
 
 There are \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics:
