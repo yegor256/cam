@@ -33,7 +33,10 @@ max = 1000
 
 opts = Slop.parse do |o|
   o.string '--token', 'GitHub access token', default: ''
+  o.boolean '--dry', 'Make no round-trips to GitHub API (for testing)', default: false
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
+  o.integer '--pause', 'How many seconds to sleep between API calls', default: 10
+  o.integer '--page-size', 'Number of repos to fetch in one API call', default: 100
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: max
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
@@ -47,7 +50,7 @@ end
 
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
-size = [100, opts[:total]].min
+size = [opts[:page_size], opts[:total]].min
 
 github = Octokit::Client.new
 unless opts[:token].empty?
@@ -71,7 +74,11 @@ loop do
     puts "Can't go to page ##{page}, since it will be over #{max}"
     break
   end
-  json = github.search_repositories(query, per_page: size, page: page)
+  json = if opts[:dry]
+    {items: page > 100 ? [] : [{full_name: "foo/#{Random.hex(5)}", created_at: Time.now}]}
+  else
+    github.search_repositories(query, per_page: size, page: page)
+  end
   json[:items].each do |i|
     found[i[:full_name]] = {
       full_name: i[:full_name],
@@ -85,10 +92,10 @@ loop do
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
   end
-  puts "Found #{json[:items].count} repositories in page #{page}"
+  puts "Found #{json[:items].count} repositories in page ##{page}"
   break if found.count >= opts[:total]
-  puts "Let's sleep for a few seconds to cool off GitHub API (already found #{found.count} repos)..."
-  sleep 10
+  puts "Let's sleep for a few seconds to cool off GitHub API (already found #{found.count} repos, need #{opts[:total]})..."
+  sleep opts[:pause]
   page += 1
 end
 puts "Found #{found.count} total repositories in GitHub"
