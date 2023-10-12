@@ -29,22 +29,33 @@ mkdir -p "$(dirname "${details}")"
 csv=${TARGET}/repositories.csv
 echo "" > "${details}"
 if [ -e "${csv}" ]; then
-    echo "The list of repos is already here: ${csv}"
+  echo "The list of repos is already here: ${csv}"
+  if [ -n "${REPO}" ]; then
+    echo "Before using REPO environment variable you should delete the ${csv} file ($(wc -l < "${csv}" | xargs) lines)"
+    clones=${TARGET}/github
+    if [ -e "${clones}" ]; then
+      printf "ATTENTION: If you do this (delete the CSV file), and then run 'make' again, all cloned repositories in the '%s' directory will be deleted (%d directories). " \
+        "${TARGET}/github/" "$(find "${clones}" -type d -depth 2 | wc -l | xargs)"
+      printf "After this, the dataset will not be suitable for further analysis! "
+      printf "Think twice! If you just want to analyze one repository, do it in a different directory.\n"
+    fi
+    exit 1
+  fi
 elif [ -n "${REPO}" ]; then
-    echo "Using one repo: ${REPO}"
-    echo -e "repo,\n${REPO}," > "${csv}"
+  echo "Using one repo: ${REPO}"
+  echo -e "repo,\n${REPO}," > "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
-    echo "Using discover-repos.rb..."
-    ruby "${LOCAL}/steps/discover-repos.rb" \
-        "--token=${TOKEN}" \
-        "--total=${TOTAL}" \
-        "--csv=${csv}" \
-        "--tex=${TARGET}/temp/repo-details.tex" \
-        "--min-stars=400" \
-        "--max-stars=10000"
+  echo "Using discover-repos.rb..."
+  ruby "${LOCAL}/steps/discover-repos.rb" \
+    "--token=${TOKEN}" \
+    "--total=${TOTAL}" \
+    "--csv=${csv}" \
+    "--tex=${TARGET}/temp/repo-details.tex" \
+    "--min-stars=400" \
+    "--max-stars=10000"
 else
-    echo "Using repos list of csv..."
-    cat "${REPOS}" >> "${csv}"
+  echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
+  cat "${REPOS}" > "${csv}"
 fi
 
 cat "${csv}"
