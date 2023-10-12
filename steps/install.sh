@@ -160,5 +160,5 @@ if [ ! -e "${JPEEK}" ]; then
   cd /tmp && \
     wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar && \
     mkdir -p "$(dirname "${JPEEK}")" && \
-    mv /tmp/jpeek.jar "${JPEEK}"
+    mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
 fi
