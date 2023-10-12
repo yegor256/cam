@@ -34,7 +34,7 @@ if [ -n "${linux}" ]; then
   apt-get install -y coreutils
 fi
 
-if ! parallel --version; then
+if ! parallel --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get -y install parallel
   else
@@ -43,7 +43,7 @@ if ! parallel --version; then
   fi
 fi
 
-if ! bc -v; then
+if ! bc -v 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y bc
   else
@@ -52,7 +52,7 @@ if ! bc -v; then
   fi
 fi
 
-if ! cloc --version; then
+if ! cloc --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y cloc
   else
@@ -61,7 +61,7 @@ if ! cloc --version; then
   fi
 fi
 
-if ! shellcheck --version; then
+if ! shellcheck --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y shellcheck
   else
@@ -70,7 +70,7 @@ if ! shellcheck --version; then
   fi
 fi
 
-if ! aspell --version; then
+if ! aspell --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y aspell
   else
@@ -79,7 +79,7 @@ if ! aspell --version; then
   fi
 fi
 
-if ! xmlstarlet --version; then
+if ! xmlstarlet --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y xmlstarlet
   else
@@ -100,7 +100,7 @@ declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
 tlmgr --verify-repo=none install "${packages[@]}"
 tlmgr --verify-repo=none update "${packages[@]}"
 
-if ! pygmentize -V; then
+if ! pygmentize -V 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y python3-pygments
   else
@@ -115,7 +115,7 @@ gem install --no-document rubocop -v 1.56.3
 gem install --no-document octokit -v 4.21.0
 gem install --no-document slop -v 4.9.1
 
-if ! inkscape --version; then
+if ! inkscape --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     add-apt-repository -y ppa:inkscape.dev/stable && \
       apt-get update -y && \
@@ -126,7 +126,7 @@ if ! inkscape --version; then
   fi
 fi
 
-if ! pmd pmd --version; then
+if ! pmd pmd --version 2>/dev/null; then
   if [ ! -e /usr/local ]; then
     echo "The directory /usr/local must exist"
     exit 1
@@ -140,7 +140,7 @@ if ! pmd pmd --version; then
     ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 fi
 
-if ! gradle --version; then
+if ! gradle --version 2>/dev/null; then
   if [ ! -e /usr/local ]; then
     echo "The directory /usr/local must exist"
     exit 1
@@ -157,7 +157,8 @@ fi
 
 if [ ! -e "${JPEEK}" ]; then
   jpeek_version=0.32.0
-  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar /tmp/jpeek.jar \
-      && mkdir -p "$(dirname "${JPEEK}")" \
-      && mv /tmp/jpeek.jar "${JPEEK}"
+  cd /tmp && \
+    wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar && \
+    mkdir -p "$(dirname "${JPEEK}")" && \
+    mv /tmp/jpeek.jar "${JPEEK}"
 fi
