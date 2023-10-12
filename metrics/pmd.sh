@@ -35,6 +35,7 @@ cat <<EOT > "${tmp}/config.xml"
 <ruleset name="cam" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>Only CoCo</description>
   <rule ref="category/java/design.xml/CognitiveComplexity">
     <properties>
       <property name="reportLevel" value="1" />
@@ -45,7 +46,7 @@ EOT
 
 cp "${java}" "${tmp}/foo.java"
 
-pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml"
+pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --cache "${TARGET}/temp/pmd-cache" --format xml --fail-on-violation false > "${tmp}/result.xml" 2>/dev/null
 
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - || echo '') | \
@@ -54,10 +55,10 @@ sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   ruby -e '
     a = STDIN.read.split(" ").map(&:to_i)
     sum = a.inject(&:+)
-    puts "coc #{a.empty? ? 0 : sum} Total Cognitive Complexity of All Methods"
-    puts "acoc #{a.empty? ? 0 : sum / a.count} Average Cognitive Complexity of a Method"
-    puts "mxcoc #{a.empty? ? 0 : a.max} Max Cognitive Complexity of a Method"
-    puts "mncoc #{a.empty? ? 0 : a.min} Min Cognitive Complexity of a Method"
+    puts "coco #{a.empty? ? 0 : sum} Total Cognitive Complexity of All Methods"
+    puts "acoco #{a.empty? ? 0 : sum / a.count} Average Cognitive Complexity of a Method"
+    puts "mxcoco #{a.empty? ? 0 : a.max} Max Cognitive Complexity of a Method"
+    puts "mncoco #{a.empty? ? 0 : a.min} Min Cognitive Complexity of a Method"
   ' > "${output}"
 
 rm -rf "${tmp}"
