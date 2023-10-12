@@ -50,7 +50,7 @@ The structure of the archive is the following:
 
 \begin{itemize}
   \item \ff{data/} is the collection of \ff{.csv} files with the data
-  (\iexec{set -o pipefail; find "$TARGET/data" -name '*.csv' | wc -l}\unskip{} total);
+  (\iexec{set -o pipefail; find "${TARGET}/data" -name '*.csv' | wc -l}\unskip{} total);
   \item \ff{github/} is the entire collection of
   \iexec{set -o pipefail; find "${TARGET}/github" -name '*.java' | wc -l}\unskip{}
   source files ``as is''

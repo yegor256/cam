@@ -24,6 +24,8 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
+
 list=${temp}/temp/filter-lists/invalid-files.txt
 
 java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
@@ -31,7 +33,7 @@ mkdir -p "$(dirname "${java}")"
 echo "class Foo{} class Bar{}" > "${java}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "that's why were deleted" >/dev/null
+echo "${msg}" | grep "that's why were deleted" > "${stdout}" 2>&1
 test ! -e "${java}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1
@@ -40,6 +42,6 @@ echo "👍🏻 An invalid Java file was deleted"
 rm -f "${list}"
 mkdir -p "${temp}/empty"
 msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}/empty" "${temp}/temp")
-echo "${msg}" | grep "There are no Java classes, nothing to delete" >/dev/null
+echo "${msg}" | grep "There are no Java classes, nothing to delete" > "${stdout}" 2>&1
 echo "👍🏻 A empty directory didn't fail the script"
 

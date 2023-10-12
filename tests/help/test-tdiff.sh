@@ -23,8 +23,12 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 start=$(( $(date +%s%N) - 5 * 1000 * 1000 * 1000 ))
-test "$("${LOCAL}/help/tdiff.sh" "${start}")" = ', in 5s'
+diff=$("${LOCAL}/help/tdiff.sh" "${start}")
+test "${diff}" = ', in 5s'
+echo "${diff}" > "${stdout}"
 echo "👍🏻 Correctly calculated seconds"
 
 start=$(( $(date +%s%N) - 7 * 60 * 1000 * 1000 * 1000 - 15 * 1000 * 1000 * 1000 ))

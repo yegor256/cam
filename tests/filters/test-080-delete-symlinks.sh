@@ -24,6 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
 
 link="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /a/b/c/Foo.java"
 mkdir -p "$(dirname "${link}")"
@@ -32,7 +33,7 @@ mkdir -p "$(dirname "${file}")"
 echo > "${file}"
 ln -s "${file}" "${link}"
 msg=$("${LOCAL}/filters/080-delete-symlinks.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" >/dev/null
+echo "${msg}" | grep "all of them were deleted" > "${stdout}" 2>&1
 test ! -e "${link}"
 test -e "${file}"
 echo "👍🏻 A symblink was deleted"

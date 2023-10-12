@@ -24,9 +24,10 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
 
 java="${temp}/Foo long 'weird' name (--).java"
 echo "class Foo {}" > "${java}"
 "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
-grep "coc 0" "${temp}/stdout" >/dev/null
+grep "coc 0" "${temp}/stdout" > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated congitive complexity"

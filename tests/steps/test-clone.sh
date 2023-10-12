@@ -23,9 +23,11 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 echo -e "name\nyegor256/jaxec,master,4,5,5,6" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >/dev/null
+"${LOCAL}/steps/clone.sh" > "${stdout}" 2>&1
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
 
@@ -33,6 +35,6 @@ TARGET="${TARGET}/another/ж\"'  () привет /t"
 mkdir -p "${TARGET}"
 echo -e "name\nyegor256/jaxec" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >/dev/null
+"${LOCAL}/steps/clone.sh" > "${stdout}" 2>&1
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly into weird directory"

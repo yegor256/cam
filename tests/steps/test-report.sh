@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 date +%s%N > "${TARGET}/start.txt"
 mkdir -p "${TARGET}/temp"
 printf '%s' "repo,branch\nyegor256/jaxec,master" > "${TARGET}/repositories.csv"
@@ -31,7 +33,6 @@ mkdir -p "${TARGET}/temp/reports"
 mkdir -p "${TARGET}/data"
 mkdir -p "${TARGET}/github"
 echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
-"${LOCAL}/steps/report.sh"
-"${LOCAL}/steps/report.sh" >/dev/null 2>&1
+"${LOCAL}/steps/report.sh" > "${stdout}" 2>&1
 test -e "${TARGET}/report.pdf"
 echo "👍🏻 A PDF report generated correctly"

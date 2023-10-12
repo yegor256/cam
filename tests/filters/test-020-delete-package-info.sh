@@ -24,6 +24,8 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
+
 list=${temp}/temp/filter-lists/package-info-files.txt
 
 info="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /package-info.java"
@@ -31,7 +33,7 @@ mkdir -p "$(dirname "${info}")"
 echo "package foo;" > "${info}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/020-delete-package-info.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "all of them were deleted" >/dev/null
+echo "${msg}" | grep "all of them were deleted" > "${stdout}" 2>&1
 test ! -e "${info}"
 test -e "${list}"
 test "$(wc -l < "${list}" | xargs)" = 1

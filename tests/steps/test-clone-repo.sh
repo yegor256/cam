@@ -23,9 +23,11 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 >/dev/null
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 > "${stdout}" 2>&1
 test -e "${TARGET}/github/yegor256/jaxec/pom.xml"
 echo "👍🏻 A repo cloned correctly"
-"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 >/dev/null
+"${LOCAL}/steps/clone-repo.sh" "yegor256/jaxec" . 1 1 > "${stdout}" 2>&1
 echo "👍🏻 A re-clone worked correctly"

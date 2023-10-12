@@ -24,6 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
 
 java="${temp}/Foo long 'weird' name (--).java"
 echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
@@ -33,12 +34,12 @@ echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
     int y() { return 0; }
 }" > "${java}"
 "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
-grep "attrs 1" "${temp}/stdout" >/dev/null
-grep "sattrs 1" "${temp}/stdout" >/dev/null
-grep "mtds 2" "${temp}/stdout" >/dev/null
-grep "impls 2" "${temp}/stdout" >/dev/null
-grep "extnds 1" "${temp}/stdout" >/dev/null
-grep "gnrcs 1" "${temp}/stdout" >/dev/null
-grep "final 1" "${temp}/stdout" >/dev/null
-grep "annts 1" "${temp}/stdout" >/dev/null
+grep "attrs 1" "${temp}/stdout" > "${stdout}" 2>&1
+grep "sattrs 1" "${temp}/stdout" > "${stdout}" 2>&1
+grep "mtds 2" "${temp}/stdout" > "${stdout}" 2>&1
+grep "impls 2" "${temp}/stdout" > "${stdout}" 2>&1
+grep "extnds 1" "${temp}/stdout" > "${stdout}" 2>&1
+grep "gnrcs 1" "${temp}/stdout" > "${stdout}" 2>&1
+grep "final 1" "${temp}/stdout" > "${stdout}" 2>&1
+grep "annts 1" "${temp}/stdout" > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"

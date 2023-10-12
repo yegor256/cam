@@ -23,6 +23,8 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 repo="yegor256/jaxec"
 echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
 rm -rf "${TARGET}/github"
@@ -30,8 +32,8 @@ mkdir -p "${TARGET}/github/${repo}"
 cp -r "${LOCAL}/fixtures/jaxec"/* "${TARGET}/github/${repo}"
 msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
 test "$(echo "${msg}" | grep -c "0 classes, sum is 0")" = 0
-echo "${msg}" | grep "Analyzed ${repo} through jPeek" > /dev/null
-echo "${msg}" | grep ", 2 classes" > /dev/null
+echo "${msg}" | grep "Analyzed ${repo} through jPeek" > "${stdout}" 2>&1
+echo "${msg}" | grep ", 2 classes" > "${stdout}" 2>&1
 mfile=${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD
 test -e "${mfile}"
 value=$(cat "${mfile}")
@@ -45,5 +47,5 @@ repo="foo/bar"
 rm -rf "${TARGET}/github"
 mkdir -p "${TARGET}/temp/jpeek-logs/${repo}"
 msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
-echo "${msg}" | grep "Repo ${repo} already analyzed by jPeek" > /dev/null
+echo "${msg}" | grep "Repo ${repo} already analyzed by jPeek" > "${stdout}" 2>&1
 echo "👍🏻 A duplicate analysis didn't happen"

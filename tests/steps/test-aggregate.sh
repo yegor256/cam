@@ -23,16 +23,18 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 repo="foo/bar test ; "
 dir="${TARGET}/measurements/${repo}/a"
 mkdir -p "${dir}"
 touch "${dir}/Foo.java.m"
 echo "42" > "${dir}/Foo.java.m.loc"
-"${LOCAL}/steps/aggregate.sh" >/dev/null
+"${LOCAL}/steps/aggregate.sh" > "${stdout}" 2>&1
 test -e "${TARGET}/data/${repo}/all.csv"
 test -e "${TARGET}/data/${repo}/loc.csv"
-grep ",42" < "${TARGET}/data/${repo}/loc.csv" >/dev/null
+grep ",42" < "${TARGET}/data/${repo}/loc.csv" > "${stdout}" 2>&1
 test -e "${TARGET}/data/all.csv"
 test -e "${TARGET}/data/loc.csv"
-grep ",42" < "${TARGET}/data/loc.csv" >/dev/null
+grep ",42" < "${TARGET}/data/loc.csv" > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly"

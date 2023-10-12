@@ -24,6 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
 
 cd "${temp}"
 rm -rf ./*
@@ -37,5 +38,5 @@ git add "${java}"
 git config commit.gpgsign false
 git commit --quiet -am start
 "${LOCAL}/git-metrics/authors.sh" "${java}" stdout
-grep "authors 1" stdout >/dev/null
+grep "authors 1" stdout > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"

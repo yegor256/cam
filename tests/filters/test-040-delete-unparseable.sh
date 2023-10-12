@@ -24,6 +24,8 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
+
 list=${temp}/temp/filter-lists/unparseable-files.txt
 
 java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
@@ -33,7 +35,7 @@ another="$(dirname "${java}")/Bar.java"
 echo "class Bar {}" > "${another}"
 rm -f "${list}"
 msg=$("${LOCAL}/filters/040-delete-unparseable.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "1 of them were Java files with broken syntax" >/dev/null
+echo "${msg}" | grep "1 of them were Java files with broken syntax" > "${stdout}" 2>&1
 test ! -e "${java}"
 test -e "${another}"
 test -e "${list}"

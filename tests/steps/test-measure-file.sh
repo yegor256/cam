@@ -24,6 +24,7 @@ set -e
 set -o pipefail
 
 temp=$1
+stdout=$2
 
 java="${temp}/Foo(xls;)';a привет '\".java"
 cat > "${java}" <<EOT
@@ -38,6 +39,7 @@ class Foo extends Boo implements Bar {
 }
 EOT
 msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
+echo "${msg}" > "${stdout}"
 test "$(echo "${msg}" | grep -c "sum=0")" = 0
 test "$(cat "${temp}/m.loc")" = "7"
 test "$(cat "${temp}/m.comments")" = "1"

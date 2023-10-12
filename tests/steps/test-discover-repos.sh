@@ -23,13 +23,15 @@
 set -e
 set -o pipefail
 
+stdout=$2
+
 csv=${TARGET}/foo.csv
 tex=${TARGET}/foo.tex
 
 rm -f "${csv}"
-stdout=$("${LOCAL}/steps/discover-repos.rb" --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
-echo "${stdout}" | grep "Found 3 repositories in page 0" >/dev/null
-echo "${stdout}" | grep "Found 3 total repositories in GitHub" >/dev/null
+msg=$("${LOCAL}/steps/discover-repos.rb" --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
+echo "${msg}" | grep "Found 3 repositories in page 0" > "${stdout}" 2>&1
+echo "${msg}" | grep "Found 3 total repositories in GitHub" > "${stdout}" 2>&1
 test -e "${csv}"
 test -e "${tex}"
 test "$(wc -l < "${csv}" | xargs)" = '4'
