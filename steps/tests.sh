@@ -26,6 +26,8 @@ set -o pipefail
 temp=${LOCAL}/test-zone
 mkdir -p "${temp}"
 
+export CAMTESTS=1
+
 find "${LOCAL}/tests" -name '*.sh' | sort | while IFS= read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
     if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ]; then

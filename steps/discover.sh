@@ -46,13 +46,18 @@ elif [ -n "${REPO}" ]; then
   echo -e "repo,\n${REPO}," > "${csv}"
 elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   echo "Using discover-repos.rb..."
-  ruby "${LOCAL}/steps/discover-repos.rb" \
+  declare -a args=( \
     "--token=${TOKEN}" \
     "--total=${TOTAL}" \
     "--csv=${csv}" \
     "--tex=${TARGET}/temp/repo-details.tex" \
     "--min-stars=400" \
-    "--max-stars=10000"
+    "--max-stars=10000" \
+  )
+  if [ -n "${CAMTESTS}" ]; then
+    args+=('--dry' '--pause=0')
+  fi
+  ruby "${LOCAL}/steps/discover-repos.rb" "${args[@]}"
 else
   echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
   cat "${REPOS}" > "${csv}"
