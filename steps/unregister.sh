@@ -23,25 +23,32 @@
 set -e
 set -o pipefail
 
-stdout=$2
+csv=${TARGET}/repositories.csv
 
-echo -e 'repo,branch\nfoo/bar,master,44,55' > "${TARGET}/repositories.csv"
-rm -rf "${TARGET}/github"
-mkdir -p "${TARGET}/github/foo/bar"
-msg=$("${LOCAL}/steps/polish.sh")
-test -e "${TARGET}/github/foo/bar"
-echo "${msg}" | grep "foo/bar is already here" > "${stdout}" 2>&1
-echo "👍🏻 A correct directory was not deleted"
+if [ ! -e "${csv}" ]; then
+    echo "Nothing to unregister, the CSV is absent: ${csv}"
+    exit
+fi
 
-touch "${TARGET}/repositories.csv"
-rm -rf "${TARGET}/github"
-mkdir -p "${TARGET}/github/foo/bar"
-msg=$("${LOCAL}/steps/polish.sh")
-echo "${msg}" | grep -v "foo/bar is obsolete and was deleted" > "${stdout}" 2>&1
-echo "${msg}" | grep "All 1 repo directories" > "${stdout}" 2>&1
-echo "👍🏻 An obsolete directory was deleted"
+before="${TARGET}/temp/repositories-before-unregister.txt"
+mkdir -p "$(dirname "${before}")"
+tail -n +2 "${csv}" > "${before}"
 
-TARGET=${TARGET}/dir-is-absent
-msg=$("${LOCAL}/steps/polish.sh")
-echo "${msg}" | grep "Nothing to polish, the directory is absent" > "${stdout}" 2>&1
-echo "👍🏻 An empty directory passes filtering"
+head=$(head -1 "${csv}")
+rm -f "${csv}"
+echo ${head} > "${csv}"
+
+declare -i total=0
+declare -i good=0
+while IFS=',' read -r r tag tail; do
+    if [ -z "${r}" ]; then continue; fi
+    total=$((total+1))
+    if [ ! -e "${TARGET}/github/${r}" ]; then
+        echo "The clone of ${r} is absent, unregistered"
+    else
+        printf "%s,%s,%s\n" "${r}" "${tag}" "${tail}" >> "${csv}"
+        good=$((good+1))
+    fi
+done < "${before}"
+echo "All ${total} repositories checked, ${good} are good"
+

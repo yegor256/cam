@@ -65,7 +65,7 @@ define step
 endef
 
 # The main goal
-all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone jpeek filter measure aggregate zip
+all: $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone unregister jpeek filter measure aggregate zip
 	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION)$$("$${LOCAL}/help/tdiff.sh" "$$(cat "$(TARGET)/start.txt")"))!"
 
 install:
@@ -123,6 +123,10 @@ $(TARGET)/repositories.csv: $(TARGET)/temp
 # required repositories.
 polish: $(TARGET)/repositories.csv $(TARGET)/github
 	$(call step,polish)
+
+# Delete directories from the CSV register if their clones are absent.
+unregister: $(TARGET)/repositories.csv $(TARGET)/github
+	$(call step,unregister)
 
 # Clone all necessary repositories.
 # Don't touch those that already have any files in the dirs.

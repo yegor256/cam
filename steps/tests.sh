@@ -42,12 +42,12 @@ find "${LOCAL}/tests" -name '*.sh' | sort | while IFS= read -r test; do
         rm -rf "${tgt}"
     fi
     mkdir -p "${tgt}"
-    stdout=${temp}/${name}.log
+    stdout=${t}/stdout.log
     mkdir -p "$(dirname "${stdout}")"
     touch "${stdout}"
     if ! TARGET="${tgt}" "${test}" "${t}" "${stdout}"; then
         cat "${stdout}"
-        echo "❌ Non-zero exit code"
+        echo "❌ Non-zero exit code (TARGET=${tgt})"
         exit 1
     fi
 done
