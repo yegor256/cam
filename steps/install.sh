@@ -88,7 +88,7 @@ if ! xmlstarlet --version; then
   fi
 fi
 
-tlmgr init-usertree
+tlmgr init-usertree || true
 tlmgr option repository ctan
 tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
@@ -125,6 +125,10 @@ if ! inkscape --version; then
 fi
 
 if ! pmd pmd --version; then
+  if [ ! -e /usr/local ]; then
+    echo "The directory /usr/local must exist"
+    exit 1
+  fi
   pmd_version=6.55.0
   cd /usr/local && \
     wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip && \
@@ -135,17 +139,23 @@ if ! pmd pmd --version; then
 fi
 
 if ! gradle --version; then
+  if [ ! -e /usr/local ]; then
+    echo "The directory /usr/local must exist"
+    exit 1
+  fi
   gradle_version=7.4
-  wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip \
-      && unzip -qq gradle-${gradle_version}-bin.zip -d /opt \
-      && rm gradle-${gradle_version}-bin.zip
-  export GRADLE_LOCAL=/opt/gradle-${gradle_version}
-  export PATH=$PATH:/opt/gradle-${gradle_version}/bin
+  cd /usr/local && \
+    wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
+    unzip -qq gradle-${gradle_version}-bin.zip && \
+    rm gradle-${gradle_version}-bin.zip && \
+    mv gradle-${gradle_version} gradle && \
+  export GRADLE_LOCAL=/usr/local/gradle
+  export PATH=$PATH:/usr/local/gradle/bin
 fi
 
 if [ ! -e "${JPEEK}" ]; then
   jpeek_version=0.32.0
-  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar \
+  wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar /tmp/jpeek.jar \
       && mkdir -p "$(dirname "${JPEEK}")" \
-      && mv jpeek-${jpeek_version}-jar-with-dependencies.jar "${JPEEK}"
+      && mv /tmp/jpeek.jar "${JPEEK}"
 fi
