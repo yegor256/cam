@@ -88,7 +88,9 @@ if ! xmlstarlet --version; then
   fi
 fi
 
-tlmgr init-usertree || true
+if [ ! -e "${HOME}/texmf" ]; then
+  tlmgr init-usertree
+fi
 tlmgr option repository ctan
 tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
