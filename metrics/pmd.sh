@@ -26,8 +26,8 @@ set -o pipefail
 
 java=$1
 output=$2
-tmp=$(mktemp -d)
 
+tmp=$(mktemp -d)
 mkdir -p "${tmp}"
 
 cat <<EOT > "${tmp}/config.xml"
@@ -45,10 +45,10 @@ EOT
 
 cp "${java}" "${tmp}/foo.java"
 
-pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml" 2>/dev/null
+pmd pmd -R "${tmp}/config.xml" -d "${tmp}" -format xml -failOnViolation false > "${tmp}/result.xml"
 
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
-  (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
+  (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - || echo '') | \
   sed -E "s/.*complexity of ([0-9]+).*/\1/" | \
   sed '/^[[:space:]]*$/d' | \
   ruby -e '

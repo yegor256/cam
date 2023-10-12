@@ -33,7 +33,7 @@ echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
     void x() { }
     int y() { return 0; }
 }" > "${java}"
-"${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+"${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
 grep "attrs 1" "${temp}/stdout" > "${stdout}" 2>&1
 grep "sattrs 1" "${temp}/stdout" > "${stdout}" 2>&1
 grep "mtds 2" "${temp}/stdout" > "${stdout}" 2>&1
