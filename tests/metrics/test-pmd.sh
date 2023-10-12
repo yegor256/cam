@@ -28,6 +28,6 @@ stdout=$2
 
 java="${temp}/Foo long 'weird' name (--).java"
 echo "class Foo {}" > "${java}"
-"${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
+"${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout" > "${stdout}" 2>&1
 grep "coc 0" "${temp}/stdout" > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated congitive complexity"
