@@ -24,12 +24,14 @@ FROM yegor256/rultor-image:1.21.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+SHELL ["/bin/bash", "--login", "-c"]
+
 WORKDIR /cam
 COPY Makefile /cam
 COPY requirements.txt /cam
 COPY steps/install.sh /cam/steps/
 COPY help/* /cam/help/
 
-RUN /bin/bash --login -c 'make install'
+RUN make install
 
 COPY . /cam

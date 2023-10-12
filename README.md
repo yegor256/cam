@@ -24,6 +24,8 @@ number of attributes, constructors, methods, and others
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
+* [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip) 
+  (3Gb): 959 repos, 29 metrics, 840K classes
 * [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip) 
   (692Mb): 1000 repos, 15 metrics
 * [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip) 

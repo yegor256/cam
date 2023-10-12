@@ -32,7 +32,7 @@ fi
 
 flake8 --max-line-length=140 "${LOCAL}/"
 
-find "${LOCAL}" -name '*.py' -exec pylint --enable-all-extensions \
+find "${LOCAL}" -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \
@@ -42,12 +42,11 @@ find "${LOCAL}" -name '*.py' -exec pylint --enable-all-extensions \
     --disable=line-too-long \
     --disable=confusing-consecutive-elif \
     --disable=use-set-for-membership \
-    --disable=duplicate-code \
-    {} \;
+    --disable=duplicate-code
 
 rubocop
 
-find "${LOCAL}" -name '*.sh' -type f -exec shellcheck {} \;
+find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --severity=style
 
 mkdir -p "$(dirname "${flag}")"
 date +%s%N > "${flag}"
