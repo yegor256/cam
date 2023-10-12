@@ -39,6 +39,7 @@ if ! parallel --version; then
     apt-get -y install parallel
   else
     echo "Install 'parallel' somehow"
+    exit 1
   fi
 fi
 
@@ -47,6 +48,7 @@ if ! bc -v; then
     apt-get install -y bc
   else
     echo "Install 'GNU bc' somehow"
+    exit 1
   fi
 fi
 
@@ -55,6 +57,7 @@ if ! cloc --version; then
     apt-get install -y cloc
   else
     echo "Install 'cloc' somehow"
+    exit 1
   fi
 fi
 
@@ -63,6 +66,7 @@ if ! shellcheck --version; then
     apt-get install -y shellcheck
   else
     echo "Install 'shellcheck' somehow"
+    exit 1
   fi
 fi
 
@@ -71,6 +75,7 @@ if ! aspell --version; then
     apt-get install -y aspell
   else
     echo "Install 'GNU aspell' somehow"
+    exit 1
   fi
 fi
 
@@ -79,6 +84,7 @@ if ! xmlstarlet --version; then
     apt-get install -y xmlstarlet
   else
     echo "Install 'xmlstarlet' somehow"
+    exit 1
   fi
 fi
 
@@ -97,6 +103,7 @@ if ! pygmentize -V; then
     apt-get install -y python3-pygments
   else
     echo "Install 'python3-pygments' somehow"
+    exit 1
   fi
 fi
 
@@ -113,6 +120,7 @@ if ! inkscape --version; then
       apt-get install -y inkscape
   else
     echo "Install 'inkscape' somehow"
+    exit 1
   fi
 fi
 
