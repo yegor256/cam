@@ -35,7 +35,7 @@
 This report is generated automatically by the script, which you can find in
 the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 
-We found and retrieved \iexec{cat "${TARGET}/repositories.csv" | wc -l}
+We found and retrieved \iexec{cat "${TARGET}/repositories.csv" | wc -l | xargs}
 repositories from GitHub.
 \iexec{cat "${TARGET}/temp/repo-details.tex"}
 The full list of them is in the \ff{repositories.csv} file.
@@ -50,24 +50,21 @@ The structure of the archive:
 
 \begin{itemize}
   \item \ff{data/} is the collection of \ff{.csv} files with the data
-  you are looking for (\iexec{find "$TARGET/data" -name '*.csv' | wc -l} total);
+  you are looking for (\iexec{find "$TARGET/data" -name '*.csv' | wc -l | xargs} total);
 
   \item \ff{github/} is the entire collection of
-  \iexec{find "${TARGET}/github" -name '*.java' | wc -l}
+  \iexec{find "${TARGET}/github" -name '*.java' | wc -l | xargs}
   source files ``as is''
-  (\iexec{du -sh "${TARGET}/github" | cut -f1} total);
-
-  \item \ff{measurements/} is where we keep individual metrics calculated
-  per file, which you may use to verify our algorithms;
+  (\iexec{du -sh "${TARGET}/github" | cut -f1 | xargs} total);
 \end{itemize}
 
-There are \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l} metrics that we use:
+There are \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l | xargs} metrics that we use:
 
 \begin{itemize}
   \input{$TARGET/temp/list-of-metrics.tex}
 \end{itemize}
 
-It took \iexec{ruby -e "printf('\%0.2f', (Time.now.to_i - File.read('$TARGET/start.txt').to_i).to_f / 3600)"} hours
+It took \iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"} hours
 to generate this report.
 
 If any questions or suggestions, just \href{mailto:yegor256@gmail.com}{email me}.

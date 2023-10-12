@@ -34,6 +34,7 @@ git config user.name 'Foo'
 java="Foo long 'weird' name (--).java"
 echo "class Foo {}" > "${java}"
 git add "${java}"
+git config commit.gpgsign false
 git commit --quiet -am start
 "${LOCAL}/git-metrics/authors.sh" "${java}" stdout
 grep "authors 1" stdout >/dev/null
