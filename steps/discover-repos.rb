@@ -94,7 +94,7 @@ loop do
   end
   puts "Found #{json[:items].count} repositories in page ##{page}"
   break if found.count >= opts[:total]
-  puts "Let's sleep for a few seconds to cool off GitHub API \
+  puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
 (already found #{found.count} repos, need #{opts[:total]})..."
   sleep opts[:pause]
   page += 1
