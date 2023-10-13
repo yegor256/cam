@@ -26,14 +26,31 @@ set -o pipefail
 repo=$1
 pos=$2
 total=$3
-all=$4
+metrics=$4
 
 start=$(date +%s%N)
 
 dir=${TARGET}/measurements/${repo}
 ddir=${TARGET}/data/${repo}
 if [ -e "${ddir}" ]; then
-    echo "${repo} already aggregated (${pos}/${total}): ${ddir}"
+    declare -i found=0
+    declare -i missing=0
+    for m in ${metrics}; do
+        if [ -e "${ddir}/${m}.csv" ]; then
+            found=$((found+1))
+        else
+            missing=$((missing+1))
+        fi
+    done
+    if [ "${missing}" = 0 ]; then
+        echo "All ${found} metrics in ${repo} already aggregated (${pos}/${total}): ${ddir}"
+        exit
+    fi
+    echo "Not all $((found+missing)) metrics aggregated in ${repo} (${pos}/${total}), ${missing} missing: ${ddir}"
+fi
+
+if [ ! -e "${dir}" ]; then
+    echo "Nothing to aggregate in ${repo} (${pos}/${total}), no measurements in ${ddir}"
     exit
 fi
 
@@ -55,14 +72,14 @@ find "${dir}" -name '*.m' | {
         mkdir -p "$(dirname "${csv}")"
         if [ ! -e "${csv}" ]; then
             printf 'java_file' > "${csv}"
-            for a in ${all}; do
+            for a in ${metrics}; do
                 printf ",%s" "${a}" >> "${csv}"
             done
             printf '\n' >> "${csv}"
         fi
         java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
         printf '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
-        for a in ${all}; do
+        for a in ${metrics}; do
             if [ -e "${m}.${a}" ]; then
                 value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
                 printf ",%s" "${value}" >> "${csv}"
