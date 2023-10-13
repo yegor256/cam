@@ -2,3 +2,5 @@ javalang==0.13.0
 pygments==2.16.1
 flake8==6.1.0
 pylint==3.0.1
+multimetric=2.0.5
+chardet=5.2.0

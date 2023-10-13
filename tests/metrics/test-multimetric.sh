@@ -22,79 +22,31 @@
 # SOFTWARE.
 set -e
 set -o pipefail
-set -x
 
-echo "TARGET=${TARGET}"
-echo "LOCAL=${LOCAL}"
-echo "SHELL=${SHELL}"
-echo "HOME=${HOME}"
+temp=$1
+stdout=$2
 
-flag=${TARGET}/temp/env-done.txt
+# To make sure it is installed
+multimetric --help >/dev/null
 
-if [ -e "${flag}" ]; then
-    echo "The environment has already been checked"
-    exit
-fi
+java="${temp}/Foo long 'weird' name (--).java"
+cat > "${java}" <<EOT
+class Foo extends Boo implements Bar {
+    // This is static
+    private static int X = 1;
+    private String z;
 
-bash_version=${BASH_VERSINFO:-0}
-if [ "${bash_version}" -lt 5 ]; then
-    "${SHELL}" -version
-    ps -p $$
-    echo "${SHELL} version is older than five: ${bash_version}"
-    exit 1
-fi
-
-ruby -v
-
-if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
-    python3 --version
-    echo "Python must be 3+"
-    exit 1
-fi
-
-flake8 --version
-
-pylint --version
-
-xmlstarlet --version
-
-shellcheck --version
-
-pdflatex --version
-
-aspell --version
-
-jq --version
-
-multimetric --help > /dev/null
-
-rubocop -v
-
-inkscape --version
-
-awk --version
-
-parallel --version
-
-cloc --version
-
-pygmentize -V
-
-pmd pmd --version
-
-nproc --version
-
-# Part of coreutils (by GNU):
-sed --version
-
-# Part of coreutils (by GNU):
-realpath --version
-
-bc -v
-
-java -jar "${JPEEK}" --help
-
-locale
-
-mkdir -p "$(dirname "${flag}")"
-date +%s%N > "${flag}"
+    Foo(String zz) {
+        this.z = zz;
+    }
+    private final boolean boom() { return true; }
+}
+EOT
+{
+    "${LOCAL}/metrics/multimetric.sh" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "hsdif 6.188" "${temp}/stdout"
+    grep "hsef 758.735" "${temp}/stdout"
+    grep "midx 100" "${temp}/stdout"
+} >> "${stdout}" 2>&1
+echo "👍🏻 Correctly counted lines of code"

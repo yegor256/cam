@@ -20,81 +20,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
-set -x
 
-echo "TARGET=${TARGET}"
-echo "LOCAL=${LOCAL}"
-echo "SHELL=${SHELL}"
-echo "HOME=${HOME}"
+java=$1
+output=$2
 
-flag=${TARGET}/temp/env-done.txt
-
-if [ -e "${flag}" ]; then
-    echo "The environment has already been checked"
-    exit
-fi
-
-bash_version=${BASH_VERSINFO:-0}
-if [ "${bash_version}" -lt 5 ]; then
-    "${SHELL}" -version
-    ps -p $$
-    echo "${SHELL} version is older than five: ${bash_version}"
-    exit 1
-fi
-
-ruby -v
-
-if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
-    python3 --version
-    echo "Python must be 3+"
-    exit 1
-fi
-
-flake8 --version
-
-pylint --version
-
-xmlstarlet --version
-
-shellcheck --version
-
-pdflatex --version
-
-aspell --version
-
-jq --version
-
-multimetric --help > /dev/null
-
-rubocop -v
-
-inkscape --version
-
-awk --version
-
-parallel --version
-
-cloc --version
-
-pygmentize -V
-
-pmd pmd --version
-
-nproc --version
-
-# Part of coreutils (by GNU):
-sed --version
-
-# Part of coreutils (by GNU):
-realpath --version
-
-bc -v
-
-java -jar "${JPEEK}" --help
-
-locale
-
-mkdir -p "$(dirname "${flag}")"
-date +%s%N > "${flag}"
+json=$(multimetric "${java}")
+body=$(echo "${json}" | jq '.overall')
+cat <<EOT> "${output}"
+hsdif $(echo "${body}" | jq '.halstead_difficulty') Halstead Difficulty
+hsef $(echo "${body}" | jq '.halstead_effort') Halstead Effort
+midx $(echo "${body}" | jq '.maintainability_index') Maintainability Index
+EOT

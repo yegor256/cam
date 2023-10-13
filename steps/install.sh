@@ -61,6 +61,15 @@ if ! cloc --version 2>/dev/null; then
   fi
 fi
 
+if ! jq --version 2>/dev/null; then
+  if [ -n "${linux}" ]; then
+    apt-get install -y jq
+  else
+    echo "Install 'jq' somehow"
+    exit 1
+  fi
+fi
+
 if ! shellcheck --version 2>/dev/null; then
   if [ -n "${linux}" ]; then
     apt-get install -y shellcheck
