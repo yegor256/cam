@@ -32,5 +32,6 @@ body=$(echo "${json}" | jq '.overall')
 cat <<EOT> "${output}"
 hsdif $(echo "${body}" | jq '.halstead_difficulty') Halstead Difficulty
 hsef $(echo "${body}" | jq '.halstead_effort') Halstead Effort
+hsvol $(echo "${body}" | jq '.halstead_volume') Halstead Volume
 midx $(echo "${body}" | jq '.maintainability_index') Maintainability Index
 EOT

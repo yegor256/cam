@@ -47,6 +47,7 @@ EOT
     cat "${temp}/stdout"
     grep "hsdif 6.188" "${temp}/stdout"
     grep "hsef 758.735" "${temp}/stdout"
+    grep "hsvol 122.624" "${temp}/stdout"
     grep "midx 100" "${temp}/stdout"
 } >> "${stdout}" 2>&1
 echo "👍🏻 Correctly counted lines of code"
