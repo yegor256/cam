@@ -36,20 +36,25 @@ class Foo extends Boo implements Bar {
     Foo(String zz) {
         this.z = zz;
     }
+    private final boolean boom() { return true; }
 }
 EOT
 msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
-echo "${msg}" >> "${stdout}"
-test "$(echo "${msg}" | grep -c "sum=0")" = 0
-test "$(cat "${temp}/m.loc")" = "7"
-test "$(cat "${temp}/m.comments")" = "1"
-test "$(cat "${temp}/m.cc")" = "1"
-test "$(cat "${temp}/m.ncss")" = "5"
-test "$(cat "${temp}/m.smtds")" = "0"
-test "$(cat "${temp}/m.mtds")" = "0"
-test "$(cat "${temp}/m.ctors")" = "1"
-test "$(cat "${temp}/m.extnds")" = "1"
-test "$(cat "${temp}/m.impls")" = "1"
-test "$(cat "${temp}/m.final")" = "0"
-test "$(cat "${temp}/m.blanks")" = "1"
+{
+    set -x
+    echo "${msg}"
+    test "$(echo "${msg}" | grep -c "sum=0")" = 0
+    test "$(cat "${temp}/m.loc")" = "8"
+    test "$(cat "${temp}/m.comments")" = "1"
+    test "$(cat "${temp}/m.cc")" = "1"
+    test "$(cat "${temp}/m.ncss")" = "7"
+    test "$(cat "${temp}/m.smtds")" = "0"
+    test "$(cat "${temp}/m.mtds")" = "1"
+    test "$(cat "${temp}/m.ctors")" = "1"
+    test "$(cat "${temp}/m.extnds")" = "1"
+    test "$(cat "${temp}/m.impls")" = "1"
+    test "$(cat "${temp}/m.final")" = "0"
+    test "$(cat "${temp}/m.blanks")" = "1"
+    set +x
+} >> "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"
