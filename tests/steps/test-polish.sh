@@ -44,4 +44,4 @@ echo "👍🏻 An obsolete directory was deleted"
 TARGET=${TARGET}/dir-is-absent
 msg=$("${LOCAL}/steps/polish.sh")
 echo "${msg}" | grep "Nothing to polish, the directory is absent" >> "${stdout}" 2>&1
-echo "👍🏻 An empty directory passes filtering"
+echo "👍🏻 An empty directory passed filtering"
