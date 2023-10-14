@@ -17,7 +17,8 @@ The latest ZIP archive with the dataset is here:
 There are **29 metrics** calculated for **844,083 Java classes** from **959 GitHub repositories**, including:
 lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for);
-cyclomatic and cognitive complexity;
+[cyclomatic](https://en.wikipedia.org/wiki/Cyclomatic_complexity) and 
+[cognitive complexity](https://en.wikipedia.org/wiki/Cognitive_complexity);
 number of attributes, constructors, methods, and others 
 ([see PDF](http://cam.yegor256.com/cam-2023-10-11.pdf)).
 
