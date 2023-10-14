@@ -29,24 +29,42 @@ if [ ! -e "${dir}" ]; then
     exit
 fi
 
-repos=$(find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \;)
-echo "${repos}" | while IFS= read -r repo; do
-    if [ -z "${repo}" ]; then continue; fi
-    if grep "${repo}," "${TARGET}/repositories.csv"; then
-        echo "Directory of ${repo} is already here"
-    else
-        rm -rf "${dir:?}/${repo}"
-        echo "Directory of ${repo} is obsolete and was deleted"
-    fi
-done
-echo "All $(echo "${repos}" | wc -l | xargs) repo directories inside ${dir} were checked"
+rlist=${TARGET}/temp/repos-to-polish.txt
+mkdir -p "$(dirname "${rlist}")"
+find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \; > "${rlist}"
 
-orgs=$(find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \;)
-echo "${orgs}" | while IFS= read -r org; do
-    if [ "$(find "${dir}/${org}" | wc -l | xargs)" == '0' ]; then
-        rm -rf "${dir:?}/${org}"
-        echo "Organization ${org} is empty and was deleted"
-    fi
-done
-echo "All $(echo "${orgs}" | wc -l | xargs) org directories inside ${dir} were checked"
+if [ -s "${rlist}" ]; then
+    declare -i rtotal=0
+    while IFS= read -r repo; do
+        if grep "${repo}," "${TARGET}/repositories.csv"; then
+            echo "Directory of ${repo} is already here"
+        else
+            rm -rf "${dir:?}/${repo}"
+            echo "Directory of ${repo} is obsolete and was deleted"
+        fi
+        rtotal=$((rtotal+1))
+    done < "${rlist}"
+    echo "All ${rtotal} repo directories inside ${dir} were checked"
+else
+    echo "No repo directories inside ${dir}"
+    exit
+fi
 
+olist=${TARGET}/temp/orgs-to-polish.txt
+mkdir -p "$(dirname "${olist}")"
+find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \; > "${olist}"
+
+if [ -s "${olist}" ]; then
+    declare -i ototal=0
+    while IFS= read -r org; do
+        if [ "$(find "${dir}/${org}" | wc -l | xargs)" == '0' ]; then
+            rm -rf "${dir:?}/${org}"
+            echo "Organization ${org} is empty and was deleted"
+        fi
+        ototal=$((ototal+1))
+    done < "${olist}"
+    echo "All ${ototal} org directories inside ${dir} were checked"
+else
+    echo "No org directories inside ${dir}"
+    exit
+fi
