@@ -13,9 +13,8 @@ This is a more formal explanation of this project:
 
 The latest ZIP archive with the dataset is here:
 [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip) 
-(3Gb, 844,083 Java classes).
-It is the result of the analysis of Java classes in 959 GitHub repositories
-against 29 metrics, including:
+(3Gb).
+There are 29 metrics calculated for 844,083 Java classes from 959 GitHub repositories, including:
 lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for);
 cyclomatic and cognitive complexity;
