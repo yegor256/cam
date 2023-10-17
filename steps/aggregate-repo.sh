@@ -54,7 +54,7 @@ if [ ! -e "${dir}" ]; then
     exit
 fi
 
-find "${dir}" -name '*.m' | {
+find "${dir}" -type f -name '*.m' | {
     sum=0
     declare -i total=0
     while IFS= read -r m; do

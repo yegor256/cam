@@ -26,7 +26,7 @@ set -o pipefail
 stdout=$2
 
 repo="foo /bar test \"; "
-name="dir (with) _ long & and weird ; name /Foo.java"
+name="dir (with) _ long & and weird ; name /hello.java/test.java/Foo.java"
 java="${TARGET}/github/${repo}/${name}"
 mkdir -p "$(dirname "${java}")"
 echo "class Foo {}" > "${java}"

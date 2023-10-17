@@ -57,7 +57,7 @@ find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${di
 if [ -s "${olist}" ]; then
     declare -i ototal=0
     while IFS= read -r org; do
-        if [ "$(find "${dir}/${org}" | wc -l | xargs)" == '0' ]; then
+        if [ "$(find "${dir}/${org}" -type d | wc -l | xargs)" == '0' ]; then
             rm -rf "${dir:?}/${org}"
             echo "Organization ${org} is empty and was deleted"
         fi

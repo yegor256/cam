@@ -25,7 +25,7 @@ set -o pipefail
 
 start=$(date +%s%N)
 
-metrics=$(find "${TARGET}/measurements" -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
+metrics=$(find "${TARGET}/measurements" -type f -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${metrics}" | wc -w | xargs) metrics (in alphanumeric order): ${metrics}"
 
 repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)

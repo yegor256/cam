@@ -27,7 +27,7 @@ start=$(date +%s%N)
 
 echo "Searching for all .java files in ${TARGET}/github (may take some time, stay calm...)"
 
-javas=$(find "${TARGET}/github" -name '*.java' -print)
+javas=$(find "${TARGET}/github" -name '*.java' -type f -print)
 total=$(echo "${javas}" | wc -l | xargs)
 echo "Found ${total} Java files, starting to collect metrics..."
 

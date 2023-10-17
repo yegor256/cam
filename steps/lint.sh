@@ -32,7 +32,7 @@ fi
 
 flake8 --max-line-length=140 "${LOCAL}/"
 
-find "${LOCAL}" -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions \
+find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \

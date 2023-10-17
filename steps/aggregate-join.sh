@@ -30,7 +30,7 @@ total=$4
 
 start=$(date +%s%N)
 
-csvs=$(find "${dir}" -name '*.csv' -maxdepth 1 -exec basename {} \;)
+csvs=$(find "${dir}" -type f -name '*.csv' -maxdepth 1 -exec basename {} \;)
 
 files=$(echo "${csvs}" | wc -l | xargs)
 echo "${csvs}" | while IFS= read -r csv; do
