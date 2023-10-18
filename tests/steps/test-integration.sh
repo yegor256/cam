@@ -1,4 +1,5 @@
-# MIT License
+#!/usr/bin/env bash
+# The MIT License (MIT)
 #
 # Copyright (c) 2021-2023 Yegor Bugayenko
 #
@@ -9,27 +10,26 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
----
-name: cam-action
-description: 'Run full cycle with one repository'
-branding:
-  icon: alert-triangle
-  color: orange
-runs:
-  using: docker
-  image: Dockerfile
-  entrypoint: /bin/bash
-  args:
-    - '--login'
-    - '-c'
-    - 'export HOME=/cam; cd ${HOME}; . /root/.profile; make test'
+set -e
+set -o pipefail
+
+stdout=$2
+
+{
+    make clean "TARGET=${TARGET}"
+    make env
+    make lint
+    make "TARGET=${TARGET}" REPO=yegor256/tojos
+    make validate "TARGET=${TARGET}"
+} > "${stdout}" 2>&1
+echo "👍🏻 A full package processed correctly"

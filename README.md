@@ -103,7 +103,6 @@ before sending us your pull request please run full build:
 ```bash
 $ sudo make install
 $ make test
-$ make REPO=yegor256/tojos
 ```
 
 This should take a few minutes to complete, without errors.
