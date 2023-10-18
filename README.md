@@ -68,11 +68,12 @@ $ make TOTAL=100
 Should work, if you have all the dependencies installed, as suggested in the
 [Dockerfile](https://github.com/yegor256/cam/blob/master/Dockerfile).
 
-In order to analyze just a single repository, do this:
+In order to analyze just a single repository, do this 
+([`yegor256/tojos`](https://github.com/yegor256/tojos) as an example):
 
 ```bash
 $ make wipe
-$ make REPO=yegor256/jpeek
+$ make REPO=yegor256/tojos
 ```
 
 ## How to Calculate Additional Metrics
