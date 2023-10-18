@@ -54,7 +54,7 @@ The structure of the archive is the following:
   (\iexec{find "${TARGET}/data" -type f -name '*.csv' | wc -l}\unskip{} total);
 
   \item \ff{github/} is the entire collection of
-  \iexec{find "${TARGET}/github" -f type -name '*.java' | wc -l}\unskip{}
+  \iexec{find "${TARGET}/github" -type f -name '*.java' | wc -l}\unskip{}
   source files ``as is''
   (\iexec{du -sh "${TARGET}/github" | cut -f1}\unskip{} total).
 
