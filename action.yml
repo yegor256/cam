@@ -32,4 +32,4 @@ runs:
   args:
     - '--login'
     - '-c'
-    - 'export HOME=/cam; cd ${HOME}; . /root/.profile; make test'
+    - 'export HOME=/cam; cd ${HOME}; . /root/.profile; make env lint test'

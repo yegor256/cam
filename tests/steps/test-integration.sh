@@ -26,10 +26,22 @@ set -o pipefail
 stdout=$2
 
 {
+    set -x
     make clean "TARGET=${TARGET}"
-    make env
-    make lint
-    make "TARGET=${TARGET}" REPO=yegor256/tojos
+    log=$(make "TARGET=${TARGET}" "REPO=yegor256/tojos")
+    echo "${log}"
+    echo "${log}" | grep "Using one repo: yegor256/tojos"
+    echo "${log}" | grep "No repo directories inside"
+    echo "${log}" | grep "Cloned 1 repositories"
+    echo "${log}" | grep "All 1 repositories checked"
+    echo "${log}" | grep "All 1 repositories passed through jPeek"
+    echo "${log}" | grep "All metrics calculated"
+    echo "${log}" | grep "All metrics aggregated"
+    echo "${log}" | grep "PDF report generated"
+    echo "${log}" | grep "ZIP archive"
+    echo "${log}" | grep "SUCCESS"
+    echo "${log}" | grep -v "Failed to collect"
     make validate "TARGET=${TARGET}"
+    set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 A full package processed correctly"
