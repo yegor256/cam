@@ -28,14 +28,17 @@ stdout=$2
 
 list=${temp}/temp/filter-lists/non-class-files.txt
 
-java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
-mkdir -p "$(dirname "${java}")"
-echo "interface Foo {}" > "${java}"
-rm -f "${list}"
-msg=$("${LOCAL}/filters/060-delete-non-classes.sh" "${temp}" "${temp}/temp")
-echo "${msg}" | grep "that's why they were deleted" >> "${stdout}" 2>&1
-test ! -e "${java}"
-test -e "${list}"
-test "$(wc -l < "${list}" | xargs)" = 1
+{
+    java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /Foo.java"
+    mkdir -p "$(dirname "${java}")"
+    echo "interface Foo {}" > "${java}"
+    rm -f "${list}"
+    msg=$("${LOCAL}/filters/060-delete-non-classes.sh" "${temp}" "${temp}/temp")
+    echo "${msg}"
+    echo "${msg}" | grep "that's why they were deleted"
+    test ! -e "${java}"
+    test -e "${list}"
+    test "$(wc -l < "${list}" | xargs)" = 1
+} > "${stdout}" 2>&1
 echo "👍🏻 A file with a Java interface was deleted"
 

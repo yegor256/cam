@@ -25,33 +25,37 @@ set -o pipefail
 
 stdout=$2
 
-rm -rf "${TARGET}/github"
-mkdir -p "${TARGET}/github/a/b"
-"${LOCAL}/steps/filter.sh" >> "${stdout}" 2>&1
+{
+    rm -rf "${TARGET}/github"
+    mkdir -p "${TARGET}/github/a/b"
+    "${LOCAL}/steps/filter.sh"
+} > "${stdout}" 2>&1
 echo "👍🏻 A simple filtering ran smoothly"
 
-rm -rf "${TARGET}/github"
-rm -rf "${TARGET}/temp/reports"
-rm -rf "${TARGET}/temp/filter-lists"
-dir=${TARGET}/github
-mkdir -p "${dir}"
-echo "nothing" > "${dir}/package-info.java"
-echo "nothing" > "${dir}/FooTest.java"
-echo "class X {} class Y {} class Z {}" > "${dir}/XYZ.java"
-printf 'class Boom { String x = "a%.0s"; }' {1..5000} > "${dir}/Boom.java"
-ln -s "${dir}/FooTest.java" "${dir}/link.java"
-class="${dir}/foo - '(weird)'/привет/Foo.java"
-    mkdir -p "$(dirname "${class}")"
-    echo "class Foo {}" > "${class}"
-    echo "nothing" > "${class}.bin"
-interface="${dir}/foo/-- \";'/тук тук/Boom.java"
-    mkdir -p "$(dirname "${interface}")"
-    echo "interface Boom {}" > "${interface}"
-broken="${dir}/''foo/;;'\"/вот/так/Broken-файл.java"
-    mkdir -p "$(dirname "${broken}")"
-    echo "broken code совсем" > "${broken}"
-msg=$("${LOCAL}/steps/filter.sh")
-test "$(echo "${msg}" | grep -c "deleted 0 files")" = 0
-test ! -e "${broken}"
-test ! -e "${interface}"
+{
+    rm -rf "${TARGET}/github"
+    rm -rf "${TARGET}/temp/reports"
+    rm -rf "${TARGET}/temp/filter-lists"
+    dir=${TARGET}/github
+    mkdir -p "${dir}"
+    echo "nothing" > "${dir}/package-info.java"
+    echo "nothing" > "${dir}/FooTest.java"
+    echo "class X {} class Y {} class Z {}" > "${dir}/XYZ.java"
+    printf 'class Boom { String x = "a%.0s"; }' {1..5000} > "${dir}/Boom.java"
+    ln -s "${dir}/FooTest.java" "${dir}/link.java"
+    class="${dir}/foo - '(weird)'/привет/Foo.java"
+        mkdir -p "$(dirname "${class}")"
+        echo "class Foo {}" > "${class}"
+        echo "nothing" > "${class}.bin"
+    interface="${dir}/foo/-- \";'/тук тук/Boom.java"
+        mkdir -p "$(dirname "${interface}")"
+        echo "interface Boom {}" > "${interface}"
+    broken="${dir}/''foo/;;'\"/вот/так/Broken-файл.java"
+        mkdir -p "$(dirname "${broken}")"
+        echo "broken code совсем" > "${broken}"
+    msg=$("${LOCAL}/steps/filter.sh")
+    test "$(echo "${msg}" | grep -c "deleted 0 files")" = 0
+    test ! -e "${broken}"
+    test ! -e "${interface}"
+} > "${stdout}" 2>&1
 echo "👍🏻 A more complex filtering ran smoothly"

@@ -28,14 +28,14 @@ stdout=$2
 csv=${TARGET}/foo.csv
 tex=${TARGET}/foo.tex
 
-rm -f "${csv}"
-msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
 {
+    rm -f "${csv}"
+    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
     echo "${msg}"
     echo "${msg}" | grep "Found 1 repositories in page #0"
     echo "${msg}" | grep "Found 3 total repositories in GitHub"
-} >> "${stdout}" 2>&1
-test -e "${csv}"
-test -e "${tex}"
-test "$(wc -l < "${csv}" | xargs)" = '4'
+    test -e "${csv}"
+    test -e "${tex}"
+    test "$(wc -l < "${csv}" | xargs)" = '4'
+} > "${stdout}" 2>&1
 echo "👍🏻 A few repositories discovered correctly"

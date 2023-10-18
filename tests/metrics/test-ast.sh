@@ -26,14 +26,14 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-java="${temp}/Foo long 'weird' name (--).java"
-echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
-    final File a;
-    static String Z;
-    void x() { }
-    int y() { return 0; }
-}" > "${java}"
 {
+    java="${temp}/Foo long 'weird' name (--).java"
+    echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
+        final File a;
+        static String Z;
+        void x() { }
+        int y() { return 0; }
+    }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
     grep "attrs 1" "${temp}/stdout"
     grep "sattrs 1" "${temp}/stdout"
@@ -43,5 +43,5 @@ echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
     grep "gnrcs 1" "${temp}/stdout"
     grep "final 1" "${temp}/stdout"
     grep "annts 1" "${temp}/stdout"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"

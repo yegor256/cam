@@ -26,21 +26,21 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-java="${temp}/Foo(xls;)';a привет '\".java"
-cat > "${java}" <<EOT
-class Foo extends Boo implements Bar {
-    // This is static
-    private static int X = 1;
-    private String z;
-
-    Foo(String zz) {
-        this.z = zz;
-    }
-    private final boolean boom() { return true; }
-}
-EOT
-msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
 {
+    java="${temp}/Foo(xls;)';a привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
     set -x
     echo "${msg}"
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
@@ -56,5 +56,5 @@ msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
     test "$(cat "${temp}/m.final")" = "0"
     test "$(cat "${temp}/m.blanks")" = "1"
     set +x
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"

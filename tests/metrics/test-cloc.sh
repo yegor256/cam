@@ -26,10 +26,10 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-java="${temp}/Foo long 'weird' name (--).java"
-echo "class Foo {}" > "${java}"
 {
+    java="${temp}/Foo long 'weird' name (--).java"
+    echo "class Foo {}" > "${java}"
     "${LOCAL}/metrics/cloc.sh" "${java}" "${temp}/stdout"
     grep "loc 1" "${temp}/stdout"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted lines of code"

@@ -25,16 +25,16 @@ set -o pipefail
 
 stdout=$2
 
-repo="foo /bar test \"; "
-name="dir (with) _ long & and weird ; name /hello.java/test.java/Foo.java"
-java="${TARGET}/github/${repo}/${name}"
-mkdir -p "$(dirname "${java}")"
-echo "class Foo {}" > "${java}"
-msg=$("${LOCAL}/steps/measure.sh")
 {
+    repo="foo /bar test \"; "
+    name="dir (with) _ long & and weird ; name /hello.java/test.java/Foo.java"
+    java="${TARGET}/github/${repo}/${name}"
+    mkdir -p "$(dirname "${java}")"
+    echo "class Foo {}" > "${java}"
+    msg=$("${LOCAL}/steps/measure.sh")
     echo "${msg}" | grep "for Foo.java (1/1)"
     echo "${msg}" | grep "All metrics calculated in 1 files"
     test -e "${TARGET}/measurements/${repo}/${name}.m"
     test ! -e "${TARGET}/measurements/${repo}/${name}.m.NHD"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 Measured metrics correctly"
