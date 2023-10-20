@@ -25,17 +25,17 @@ set -o pipefail
 
 stdout=$2
 
-repo="foo/bar test ; "
-dir="${TARGET}/measurements/${repo}/a"
-mkdir -p "${dir}"
-touch "${dir}/Foo,Bar.java.m"
-echo ".75" > "${dir}/Foo,Bar.java.m.nhd"
-echo "42" > "${dir}/Foo,Bar.java.m.loc"
-msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
-test "$(echo "${msg}" | grep -c "sum=0")" == 0
-test "$(echo "${msg}" | grep -c "files=0")" == 0
-test -e "${TARGET}/data/${repo}/all.csv"
 {
+    repo="foo/bar test ; "
+    dir="${TARGET}/measurements/${repo}/a"
+    mkdir -p "${dir}"
+    touch "${dir}/Foo,Bar.java.m"
+    echo ".75" > "${dir}/Foo,Bar.java.m.nhd"
+    echo "42" > "${dir}/Foo,Bar.java.m.loc"
+    msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
+    test "$(echo "${msg}" | grep -c "sum=0")" == 0
+    test "$(echo "${msg}" | grep -c "files=0")" == 0
+    test -e "${TARGET}/data/${repo}/all.csv"
     grep "/a/Foo\\\\,Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv"
     grep "java_file,loc,nhd" "${TARGET}/data/${repo}/all.csv"
     test -e "${TARGET}/data/${repo}/loc.csv"
@@ -43,15 +43,15 @@ test -e "${TARGET}/data/${repo}/all.csv"
     grep "/a/Foo\\\\,Bar.java,42" "${TARGET}/data/${repo}/loc.csv"
     test -e "${TARGET}/data/${repo}/nhd.csv"
     grep ",42" "${TARGET}/data/${repo}/loc.csv"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 A repo aggregated correctly"
 
-repo="dog/cat"
-dir="${TARGET}/data/${repo}"
-mkdir -p "${dir}"
-touch "${dir}/loc.csv"
-msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
 {
+    repo="dog/cat"
+    dir="${TARGET}/data/${repo}"
+    mkdir -p "${dir}"
+    touch "${dir}/loc.csv"
+    msg=$("${LOCAL}/steps/aggregate-repo.sh" "${repo}" 1 1 'loc nhd')
     echo "${msg}" | grep "Not all 2 metrics aggregated"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 A partially aggregated repo processed correctly"

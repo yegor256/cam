@@ -36,16 +36,20 @@ git add .
 git config commit.gpgsign false
 git commit --quiet -am test
 
-echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
-rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >> "${stdout}" 2>&1
-test -e "${TARGET}/github/files/foo!/test.txt"
+{
+    echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
+    rm -rf "${TARGET}/github"
+    "${LOCAL}/steps/clone.sh"
+    test -e "${TARGET}/github/files/foo!/test.txt"
+} > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly"
 
-TARGET="${TARGET}/another/ж\"'  () привет /t"
-mkdir -p "${TARGET}"
-echo -e "name\n${uri}" > "${TARGET}/repositories.csv"
-rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone.sh" >> "${stdout}" 2>&1
-test -e "${TARGET}/github/files/foo!/test.txt"
+{
+    TARGET="${TARGET}/another/ж\"'  () привет /t"
+    mkdir -p "${TARGET}"
+    echo -e "name\n${uri}" > "${TARGET}/repositories.csv"
+    rm -rf "${TARGET}/github"
+    "${LOCAL}/steps/clone.sh"
+    test -e "${TARGET}/github/files/foo!/test.txt"
+} > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly into weird directory"

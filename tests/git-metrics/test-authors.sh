@@ -26,17 +26,19 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-cd "${temp}"
-rm -rf ./*
-rm -rf .git
-git init --quiet .
-git config user.email 'foo@example.com'
-git config user.name 'Foo'
-java="Foo long 'weird' name (--).java"
-echo "class Foo {}" > "${java}"
-git add "${java}"
-git config commit.gpgsign false
-git commit --quiet -am start
-"${LOCAL}/git-metrics/authors.sh" "${java}" stdout >> "${stdout}" 2>&1
-grep "authors 1" stdout >> "${stdout}" 2>&1
+{
+    cd "${temp}"
+    rm -rf ./*
+    rm -rf .git
+    git init --quiet .
+    git config user.email 'foo@example.com'
+    git config user.name 'Foo'
+    java="Foo long 'weird' name (--).java"
+    echo "class Foo {}" > "${java}"
+    git add "${java}"
+    git config commit.gpgsign false
+    git commit --quiet -am start
+    "${LOCAL}/git-metrics/authors.sh" "${java}" stdout
+    grep "authors 1" stdout
+} > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"

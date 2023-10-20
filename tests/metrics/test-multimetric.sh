@@ -29,25 +29,25 @@ stdout=$2
 # To make sure it is installed
 multimetric --help >/dev/null
 
-java="${temp}/Foo long 'weird' name (--).java"
-cat > "${java}" <<EOT
-class Foo extends Boo implements Bar {
-    // This is static
-    private static int X = 1;
-    private String z;
-
-    Foo(String zz) {
-        this.z = zz;
-    }
-    private final boolean boom() { return true; }
-}
-EOT
 {
+    java="${temp}/Foo long 'weird' name (--).java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
     "${LOCAL}/metrics/multimetric.sh" "${java}" "${temp}/stdout"
     cat "${temp}/stdout"
     grep "hsdif 6.188" "${temp}/stdout"
     grep "hsef 758.735" "${temp}/stdout"
     grep "hsvol 122.624" "${temp}/stdout"
     grep "midx 100" "${temp}/stdout"
-} >> "${stdout}" 2>&1
+} > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted lines of code"

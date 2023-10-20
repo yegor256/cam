@@ -36,9 +36,11 @@ git add .
 git config commit.gpgsign false
 git commit --quiet -am test
 
-rm -rf "${TARGET}/github"
-"${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1 >> "${stdout}" 2>&1
-test -e "${TARGET}/github/files/foo!/test.txt"
-echo "👍🏻 A repo cloned correctly"
-"${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1 >> "${stdout}" 2>&1
+{
+    rm -rf "${TARGET}/github"
+    "${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1
+    test -e "${TARGET}/github/files/foo!/test.txt"
+    echo "👍🏻 A repo cloned correctly"
+    "${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1
+} > "${stdout}" 2>&1
 echo "👍🏻 A re-clone worked correctly"
