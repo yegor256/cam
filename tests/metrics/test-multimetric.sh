@@ -47,6 +47,7 @@ multimetric --help >/dev/null
     }
 EOT
     "${LOCAL}/metrics/multimetric.sh" "${java}" "${temp}/stdout"
+    cat "${TARGET}/temp/multimetric.json"
     cat "${temp}/stdout"
     grep "hsdif 6.0" "${temp}/stdout"
     grep "hsef 1133.218" "${temp}/stdout"
@@ -54,4 +55,4 @@ EOT
     grep "midx 100" "${temp}/stdout"
     grep "fout 2" "${temp}/stdout"
 } > "${stdout}" 2>&1
-echo "👍🏻 Correctly counted lines of code"
+echo "👍🏻 Correctly counted a few metrics"

@@ -29,6 +29,9 @@ output=$2
 
 json=$(multimetric "${java}")
 body=$(echo "${json}" | jq '.overall')
+temp="${TARGET}/temp/multimetric.json"
+mkdir -p "$(dirname "${temp}")"
+echo "${body}" > "${temp}"
 cat <<EOT> "${output}"
 hsdif $(echo "${body}" | jq '.halstead_difficulty') Halstead Difficulty
 hsef $(echo "${body}" | jq '.halstead_effort') Halstead Effort
