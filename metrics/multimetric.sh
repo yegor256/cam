@@ -33,9 +33,9 @@ temp="${TARGET}/temp/multimetric.json"
 mkdir -p "$(dirname "${temp}")"
 echo "${body}" > "${temp}"
 cat <<EOT> "${output}"
-hsdif $(echo "${body}" | jq '.halstead_difficulty') Halstead Difficulty
-hsef $(echo "${body}" | jq '.halstead_effort') Halstead Effort
-hsvol $(echo "${body}" | jq '.halstead_volume') Halstead Volume
-midx $(echo "${body}" | jq '.maintainability_index') Maintainability Index
-fout $(echo "${body}" | jq '.fanout_external') Fan-Out
+hsdif $(echo "${body}" | jq '.halstead_difficulty' | "${LOCAL}/help/float.sh") Halstead Difficulty
+hsef $(echo "${body}" | jq '.halstead_effort' | "${LOCAL}/help/float.sh") Halstead Effort
+hsvol $(echo "${body}" | jq '.halstead_volume' | "${LOCAL}/help/float.sh") Halstead Volume
+midx $(echo "${body}" | jq '.maintainability_index' | "${LOCAL}/help/float.sh") Maintainability Index
+fout $(echo "${body}" | jq '.fanout_external' | "${LOCAL}/help/float.sh") Fan-Out
 EOT
