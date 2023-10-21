@@ -160,28 +160,28 @@ if __name__ == '__main__':
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
             with open(METRICS, 'a', encoding='utf-8') as metric:
-                metric.write(f'attrs {attrs(tree_class)} '
-                             f'Number of Non-Static Attributes\n')
-                metric.write(f'sattrs {sattrs(tree_class)} '
+                metric.write(f'nooa {attrs(tree_class)} '
+                             f'Number of Non-Static (Object) Attributes\n')
+                metric.write(f'nosa {sattrs(tree_class)} '
                              f'Number of Static Attributes\n')
-                metric.write(f'ctors {ctors(tree_class)} '
-                             f'Number of Constructors\n')
-                metric.write(f'mtds {methods(tree_class)} '
-                             f'Number of Non-Static Methods\n')
-                metric.write(f'smtds {smethods(tree_class)} '
-                             f'Number of Static Methods\n')
+                metric.write(f'nocc {ctors(tree_class)} '
+                             f'Number of Class Constructors\n')
+                metric.write(f'noom {methods(tree_class)} '
+                             f'Number of Non-Static (Object) Methods\n')
+                metric.write(f'nocm {smethods(tree_class)} '
+                             f'Number of Static (Class) Methods\n')
                 metric.write(f'ncss {ncss(raw)} '
                              f'Non-Commenting Source Statements (NCSS)\n')
-                metric.write(f'impls {impls(tree_class)} '
+                metric.write(f'noii {impls(tree_class)} '
                              f'Number of Implemented Interfaces\n')
-                metric.write(f'extnds {extnds(tree_class)} '
-                             f'Number of Extended Classes\n')
-                metric.write(f'gnrcs {gnrcs(tree_class)} '
-                             f'Number of Type Parameters (generics)\n')
+                metric.write(f'napc {extnds(tree_class)} '
+                             f'Number of Ancestor (Parent) Classes\n')
+                metric.write(f'notp {gnrcs(tree_class)} '
+                             f'Number of Type Parameters (Generics)\n')
                 metric.write(f'final {final(tree_class)} '
                              f'Class is Final\n')
-                metric.write(f'annts {annts(tree_class)} '
-                             f'Number of Annotations\n')
+                metric.write(f'noca {annts(tree_class)} '
+                             f'Number of Class Annotations\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)

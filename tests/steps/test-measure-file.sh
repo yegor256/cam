@@ -44,15 +44,16 @@ EOT
     set -x
     echo "${msg}"
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
+    test "$(find "${temp}" -name 'm.*' -type f | wc -l | xargs)" = "34"
     test "$(cat "${temp}/m.loc")" = "8"
     test "$(cat "${temp}/m.comments")" = "1"
     test "$(cat "${temp}/m.cc")" = "1"
     test "$(cat "${temp}/m.ncss")" = "7"
-    test "$(cat "${temp}/m.smtds")" = "0"
-    test "$(cat "${temp}/m.mtds")" = "1"
-    test "$(cat "${temp}/m.ctors")" = "1"
-    test "$(cat "${temp}/m.extnds")" = "1"
-    test "$(cat "${temp}/m.impls")" = "1"
+    test "$(cat "${temp}/m.nocm")" = "0"
+    test "$(cat "${temp}/m.noom")" = "1"
+    test "$(cat "${temp}/m.nocc")" = "1"
+    test "$(cat "${temp}/m.napc")" = "1"
+    test "$(cat "${temp}/m.noii")" = "1"
     test "$(cat "${temp}/m.final")" = "0"
     test "$(cat "${temp}/m.blanks")" = "1"
     set +x
