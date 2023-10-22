@@ -41,12 +41,17 @@ stdout=$2
     }
 EOT
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
-    set -x
     echo "${msg}"
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
-    test "$(find "${temp}" -name 'm.*' -type f | wc -l | xargs)" = "34"
+    all=$(find "${temp}" -name 'm.*' -type f -exec basename {} \;)
+    test "$(echo "${all}" | wc -l | xargs)" = "34"
+    echo "${all}" | sort | while IFS= read -r m; do
+        metric=${m//m\./}
+        echo "${metric}: $(cat "${temp}/${m}")"
+    done
+    set -x
     test "$(cat "${temp}/m.loc")" = "8"
-    test "$(cat "${temp}/m.comments")" = "1"
+    test "$(cat "${temp}/m.nocl")" = "1"
     test "$(cat "${temp}/m.cc")" = "1"
     test "$(cat "${temp}/m.ncss")" = "7"
     test "$(cat "${temp}/m.nocm")" = "0"
@@ -54,8 +59,15 @@ EOT
     test "$(cat "${temp}/m.nocc")" = "1"
     test "$(cat "${temp}/m.napc")" = "1"
     test "$(cat "${temp}/m.noii")" = "1"
+    test "$(cat "${temp}/m.notp")" = "0"
     test "$(cat "${temp}/m.final")" = "0"
-    test "$(cat "${temp}/m.blanks")" = "1"
+    test "$(cat "${temp}/m.nobl")" = "1"
+    test "$(cat "${temp}/m.hsd")" = "6.188"
+    test "$(cat "${temp}/m.hsv")" = "122.624"
+    test "$(cat "${temp}/m.hse")" = "758.735"
+    test "$(cat "${temp}/m.coco")" = "0"
+    test "$(cat "${temp}/m.fout")" = "0"
+    test "$(cat "${temp}/m.LCOM5")" = "0"
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"

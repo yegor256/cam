@@ -49,9 +49,9 @@ EOT
     "${LOCAL}/metrics/multimetric.sh" "${java}" "${temp}/stdout"
     cat "${TARGET}/temp/multimetric.json"
     cat "${temp}/stdout"
-    grep "hsdif 6" "${temp}/stdout"
-    grep "hsef 1133.218" "${temp}/stdout"
-    grep "hsvol 188.87" "${temp}/stdout"
+    grep "hsd 6" "${temp}/stdout"
+    grep "hse 1133.218" "${temp}/stdout"
+    grep "hsv 188.87" "${temp}/stdout"
     grep "midx 100" "${temp}/stdout"
     grep "fout 2" "${temp}/stdout"
 } > "${stdout}" 2>&1
