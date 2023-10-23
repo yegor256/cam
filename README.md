@@ -12,15 +12,17 @@ This is a more formal explanation of this project:
 [in PDF](https://github.com/yegor256/cam/blob/gh-pages/paper.pdf).
 
 The latest ZIP archive with the dataset is here:
-[cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip) 
-(3Gb).
-There are **29 metrics** calculated for **844,083 Java classes** from **959 GitHub repositories**, including:
+[cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip) 
+(2.19Gb).
+There are **33 metrics** calculated for **862,517 Java classes** from **1000 GitHub repositories**, including:
 lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for);
 [cyclomatic](https://en.wikipedia.org/wiki/Cyclomatic_complexity) and 
 [cognitive complexity](https://en.wikipedia.org/wiki/Cognitive_complexity) (by [PMD](https://pmd.github.io/));
+[Halstead](https://en.wikipedia.org/wiki/Halstead_complexity_measures) volume, effort, and difficulty;
+[maintainability index](https://ieeexplore.ieee.org/abstract/document/303623);
 number of attributes, constructors, methods; 
-and others ([see PDF](http://cam.yegor256.com/cam-2023-10-11.pdf)).
+and others ([see PDF](http://cam.yegor256.com/cam-2023-10-22.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
