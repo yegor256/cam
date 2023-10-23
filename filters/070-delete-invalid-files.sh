@@ -45,20 +45,20 @@ mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 py=${LOCAL}/filters/delete-invalid-files.py
 while IFS= read -r f; do
-    "${LOCAL}/help/printf.sh" "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
+    printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    "${LOCAL}/help/printf.sh" "%'d files out of %'d with more than one Java class inside were deleted" \
+    printf "%'d files out of %'d with more than one Java class inside were deleted" \
         "$(wc -l < "${list}")" "${total}"
 else
     if [ "${total}" -eq 0 ]; then
-        "${LOCAL}/help/printf.sh" "There were no Java classes, nothing to delete"
+        printf "There were no Java classes, nothing to delete"
     else
-        "${LOCAL}/help/printf.sh" "All %'d files are Java classes, nothing to delete" \
+        printf "All %'d files are Java classes, nothing to delete" \
             "${total}"
     fi
 fi

@@ -44,7 +44,7 @@ while IFS=',' read -r r tag tail; do
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here (${tail})"
     else
-        "${LOCAL}/help/printf.sh" "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+        printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
 done < "${repos}"
 

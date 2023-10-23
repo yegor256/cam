@@ -97,7 +97,7 @@ mkdir -p "$(dirname "${values}")"
 echo > "${values}"
 files=${TARGET}/temp/jpeek-files/${repo}.txt
 mkdir -p "$(dirname "${files}")"
-"${LOCAL}/help/printf.sh" '' > "${files}"
+printf '' > "${files}"
 for type in all cvc; do
     dir=${TARGET}/temp/jpeek/${type}/${repo}
     if [ ! -e "${dir}" ]; then

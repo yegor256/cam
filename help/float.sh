@@ -26,8 +26,8 @@ set -o pipefail
 num=$(cat)
 
 if [ "${num}" == 'NaN' ]; then
-    "${LOCAL}/help/printf.sh" '%s' "${num}"
+    printf '%s' "${num}"
     exit
 fi
 
-("${LOCAL}/help/printf.sh" '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
+(printf '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'

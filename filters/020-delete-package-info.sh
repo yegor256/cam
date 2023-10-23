@@ -39,8 +39,8 @@ while IFS= read -r f; do
 done < "${list}"
 
 if [ -s "${list}" ]; then
-    "${LOCAL}/help/printf.sh" "%'d files named as \\\ff{package-info.java} were deleted" \
+    printf "%'d files named as \\\ff{package-info.java} were deleted" \
         "$(wc -l < "${list}" | xargs)"
 else
-    "${LOCAL}/help/printf.sh" "There were no files named \\\ff{package-info.java}, nothing to delete"
+    printf "There were no files named \\\ff{package-info.java}, nothing to delete"
 fi

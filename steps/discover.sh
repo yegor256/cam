@@ -34,10 +34,10 @@ if [ -e "${csv}" ]; then
     echo "Before using REPO environment variable you should delete the ${csv} file ($(wc -l < "${csv}" | xargs) lines)"
     clones=${TARGET}/github
     if [ -e "${clones}" ]; then
-      "${LOCAL}/help/printf.sh" "ATTENTION: If you do this (delete the CSV file), and then run 'make' again, all cloned repositories in the '%s' directory will be deleted (%d directories). " \
+      printf "ATTENTION: If you do this (delete the CSV file), and then run 'make' again, all cloned repositories in the '%s' directory will be deleted (%d directories). " \
         "${TARGET}/github/" "$(find "${clones}" -type d -depth 2 | wc -l | xargs)"
-      "${LOCAL}/help/printf.sh" "After this, the dataset will not be suitable for further analysis! "
-      "${LOCAL}/help/printf.sh" "Think twice! If you just want to analyze one repository, do it in a different directory.\n"
+      printf "After this, the dataset will not be suitable for further analysis! "
+      printf "Think twice! If you just want to analyze one repository, do it in a different directory.\n"
     fi
     exit 1
   fi

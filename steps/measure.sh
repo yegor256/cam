@@ -47,7 +47,7 @@ echo "${javas}" | while IFS= read -r java; do
         echo "Metrics already exist for $(basename "${java}") (${file}/${total})"
         continue
     fi
-    "${LOCAL}/help/printf.sh" "%s %s %s %s %s\n" "${sh@Q}" "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${java@Q}" "${javam@Q}" "${file@Q}" "${total@Q}" >> "${jobs}"
     if [ "${file: -4}" = '0000' ]; then
         echo "Prepared ${file} jobs out of ${total}$("${LOCAL}/help/tdiff.sh" "${pstart}")..."
         pstart=$(date +%s%N)

@@ -45,16 +45,16 @@ mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 py=${LOCAL}/filters/delete-unparseable.py
 while IFS= read -r f; do
-    "${LOCAL}/help/printf.sh" "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
+    printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    "${LOCAL}/help/printf.sh" "%'d files out of %'d with broken Java syntax were deleted" \
+    printf "%'d files out of %'d with broken Java syntax were deleted" \
         "$(wc -l < "${list}" | xargs)" "${total}"
 else
-    "${LOCAL}/help/printf.sh" "No files out of %'d had broken Java syntax" \
+    printf "No files out of %'d had broken Java syntax" \
         "${total}"
 fi

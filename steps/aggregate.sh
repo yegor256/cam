@@ -40,7 +40,7 @@ declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
 echo "${repos}" | while IFS= read -r r; do
     repo=$((repo+1))
-    "${LOCAL}/help/printf.sh" "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${metrics@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${metrics@Q}" >> "${jobs}"
 done
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
@@ -48,11 +48,11 @@ wait
 mkdir -p "${TARGET}/data"
 rm -rf "${TARGET}/data/*.csv"
 all=${TARGET}/data/all.csv
-"${LOCAL}/help/printf.sh" "repository,file" >> "${all}"
+printf "repository,file" >> "${all}"
 echo "${metrics}" | while IFS= read -r a; do
-    "${LOCAL}/help/printf.sh" ',%s' "${a}" >> "${all}"
+    printf ',%s' "${a}" >> "${all}"
 done
-"${LOCAL}/help/printf.sh" "\n" >> "${all}"
+printf "\n" >> "${all}"
 
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
@@ -64,7 +64,7 @@ repos=$(find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print)
 echo "${repos}" | while IFS= read -r d; do
     r=$(realpath --relative-to="${TARGET}/data" "${d}" )
     repo=$((repo+1))
-    "${LOCAL}/help/printf.sh" "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${d@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${d@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
  done
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait

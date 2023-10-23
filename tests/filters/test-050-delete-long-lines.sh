@@ -45,7 +45,7 @@ echo "👍🏻 A Java file with short lines wasn't deleted"
 {
     java="${temp}/foo/bb/Привет.java"
     mkdir -p "$(dirname "${java}")"
-    "${LOCAL}/help/printf.sh" 'a%.0s' {1..5000} > "${java}"
+    printf 'a%.0s' {1..5000} > "${java}"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
@@ -60,7 +60,7 @@ echo "👍🏻 A Java file with a long line was deleted"
     # see https://stackoverflow.com/questions/77169978/how-to-reproduce-awk-warning-invalid-multibyte-data-detected
     java="${temp}/foo/bb/привет/Привет.java"
     mkdir -p "$(dirname "${java}")"
-    "${LOCAL}/help/printf.sh" '\xC0\x80' > "${java}"
+    printf '\xC0\x80' > "${java}"
     rm -f "${list}"
     msg=$(LC_ALL=en_US.UTF-8 "${LOCAL}/filters/050-delete-long-lines.sh" "$(dirname "${java}")" "${temp}/temp" 2>&1)
     test "$(echo "${msg}" | grep -c "Invalid multibyte data detected")" = 0

@@ -64,33 +64,33 @@ find "${dir}" -type f -name '*.m' | {
             csv=${ddir}/${metric}.csv
             mkdir -p "$(dirname "${csv}")"
             if [ ! -e "${csv}" ]; then
-                "${LOCAL}/help/printf.sh" 'java_file,%s\n' "${metric}" > "${csv}"
+                printf 'java_file,%s\n' "${metric}" > "${csv}"
             fi
-            "${LOCAL}/help/printf.sh" '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
+            printf '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
         done
         csv=${ddir}/all.csv
         mkdir -p "$(dirname "${csv}")"
         if [ ! -e "${csv}" ]; then
-            "${LOCAL}/help/printf.sh" 'java_file' > "${csv}"
+            printf 'java_file' > "${csv}"
             for a in ${metrics}; do
-                "${LOCAL}/help/printf.sh" ",%s" "${a}" >> "${csv}"
+                printf ",%s" "${a}" >> "${csv}"
             done
-            "${LOCAL}/help/printf.sh" '\n' >> "${csv}"
+            printf '\n' >> "${csv}"
         fi
         java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-        "${LOCAL}/help/printf.sh" '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
+        printf '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
         for a in ${metrics}; do
             if [ -e "${m}.${a}" ]; then
                 value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
-                "${LOCAL}/help/printf.sh" ",%s" "${value}" >> "${csv}"
+                printf ",%s" "${value}" >> "${csv}"
                 if [ ! "${value}" = "NaN" ]; then
                     sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
                 fi
             else
-                "${LOCAL}/help/printf.sh" ',-' >> "${csv}"
+                printf ',-' >> "${csv}"
             fi
         done
-        "${LOCAL}/help/printf.sh" '\n' >> "${csv}"
+        printf '\n' >> "${csv}"
         total=$((total+1))
     done
     echo "${repo} (${pos}/${total}) aggregated (files=${total}, sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"

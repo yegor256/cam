@@ -38,7 +38,7 @@ jobs=${TARGET}/jobs-2.txt
 q=0
 while [[ q -lt 1000 ]]; do
     q=$(( q + 1 ))
-    echo '"${LOCAL}/help/printf.sh" ""' >> "${jobs}"
+    echo 'printf ""' >> "${jobs}"
 done
 test "$("${LOCAL}/help/parallel.sh" "${jobs}")" = ''
 echo "👍🏻 Correctly ran parallel with large input"

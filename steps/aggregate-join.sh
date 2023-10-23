@@ -39,9 +39,9 @@ echo "${csvs}" | while IFS= read -r csv; do
     mkdir -p "$(dirname "${join}")"
     while IFS= read -r t; do
         if [ ! -e "${join}" ]; then
-            "${LOCAL}/help/printf.sh" 'repo,%s\n' "${t}" > "${join}"
+            printf 'repo,%s\n' "${t}" > "${join}"
         else
-            "${LOCAL}/help/printf.sh" '%s,%s\n' "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "${t}" >> "${join}"
+            printf '%s,%s\n' "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "${t}" >> "${join}"
         fi
     done < "${dir}/${csv}"
 done
