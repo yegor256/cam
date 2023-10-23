@@ -52,7 +52,7 @@ wait
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    printf "%d out of %d files were not Java classes but interfaces or enums, that's why they were deleted" \
+    printf "%'d files out of %'d with interfaces or enums (instead of classes) inside were deleted" \
         "$(wc -l < "${list}" | xargs)" "${total}"
 else
     printf "All %d files are Java classes, nothing to delete" \

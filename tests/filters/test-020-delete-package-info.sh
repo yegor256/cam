@@ -33,7 +33,8 @@ stdout=$2
     echo "package foo;" > "${info}"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/020-delete-package-info.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "all of them were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "1 files named as \\\ff{package-info.java} were deleted"
     test ! -e "${info}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1

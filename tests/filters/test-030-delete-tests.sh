@@ -33,7 +33,8 @@ stdout=$2
     echo "class FooTest {}" > "${java}"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/030-delete-tests.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "that's why they were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "1 files out of 2 with \\\ff{Test} or \\\ff{ITCase} suffixes were deleted"
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1

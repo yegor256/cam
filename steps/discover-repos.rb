@@ -111,9 +111,9 @@ File.write(
   opts[:tex],
   [
     'The following search criteria have been used:',
-    "at least #{opts['min-stars']},",
+    "``at least #{opts['min-stars']},",
     "at most #{opts['max-stars']} stars,",
-    "at least #{opts['min-size']}Kb size of Git repo.",
+    "at least #{opts['min-size']}Kb size of Git repo.''",
     "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
   ].join(' ')
 )

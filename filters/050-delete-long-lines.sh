@@ -50,9 +50,9 @@ done < "${candidates}"
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    printf "%d out of %d files had at least one line longer than %d characters, which most probably is a symptom of an auto-generated code; that's why they all were deleted" \
+    printf "%'d files out of %'d with at least one line longer than %'d characters, which most probably is a symptom of an auto-generated code, were deleted" \
         "$(wc -l < "${list}" | xargs)" "${total}" "${max}"
 else
-    printf "There were no files among %d total with lines longer than %d characters" \
+    printf "No files out of %'d had lines longer than %'d characters" \
         "${total}" "${max}"
 fi

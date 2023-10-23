@@ -35,7 +35,7 @@ list=${temp}/temp/filter-lists/non-class-files.txt
     rm -f "${list}"
     msg=$("${LOCAL}/filters/060-delete-non-classes.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "that's why they were deleted"
+    echo "${msg}" | grep "1 files out of 1 with interfaces or enums (instead of classes) inside were deleted"
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1

@@ -34,7 +34,8 @@ stdout=$2
     java=${full}/Foo.java
     touch "${java}"
     msg=$("${LOCAL}/filters/090-delete-empty-directories.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "all of them were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "6 empty directories were deleted"
     test ! -e "${empty}"
     test -e "${full}"
     test -e "${java}"
@@ -44,7 +45,8 @@ echo "👍🏻 A empty directory was deleted"
 {
     mkdir -p "${temp}/bar/a/b/c/d/e/f"
     msg=$("${LOCAL}/filters/090-delete-empty-directories.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "all of them were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "13 empty directories were deleted"
     test ! -e "${temp}/bar"
 } > "${stdout}" 2>&1
 echo "👍🏻 All empty directories deleted recursively"

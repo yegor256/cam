@@ -42,9 +42,9 @@ while IFS= read -r f; do
 done < "${list}"
 
 if [ -s "${list}" ]; then
-    printf "There were %d files total, %d of them were \\\ff{.java} files; all other files, which were not \\\ff{.java}, have been deleted: %d total" \
-        "${total}" "${java}" "$(wc -l < "${list}" | xargs)"
+    printf "%'d files out of %'d without the \\\ff{.java} extension were deleted" \
+        "$(wc -l < "${list}" | xargs)" "${total}"
 else
-    printf "All %d files were \\\ff{.java} files, nothing to delete" \
+    printf "%'d files were \\\ff{.java} files, nothing was deleted" \
         "${total}"
 fi

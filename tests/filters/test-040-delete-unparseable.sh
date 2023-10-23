@@ -36,7 +36,7 @@ stdout=$2
     rm -f "${list}"
     msg=$("${LOCAL}/filters/040-delete-unparseable.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "1 out of 2 files were Java files with broken syntax"
+    echo "${msg}" | grep "1 files out of 2 with broken Java syntax were deleted"
     test ! -e "${java}"
     test -e "${another}"
     test -e "${list}"

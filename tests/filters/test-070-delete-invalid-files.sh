@@ -34,7 +34,8 @@ list=${temp}/temp/filter-lists/invalid-files.txt
     echo "class Foo{} class Bar{}" > "${java}"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "that's why were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "1 files out of 1 with more than one Java class inside were deleted"
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1
@@ -45,7 +46,8 @@ echo "👍🏻 An invalid Java file was deleted"
     rm -f "${list}"
     mkdir -p "${temp}/empty"
     msg=$("${LOCAL}/filters/070-delete-invalid-files.sh" "${temp}/empty" "${temp}/temp")
-    echo "${msg}" | grep "There are no Java classes, nothing to delete"
+    echo "${msg}"
+    echo "${msg}" | grep "There were no Java classes, nothing to delete"
 } > "${stdout}" 2>&1
 echo "👍🏻 A empty directory didn't fail the script"
 

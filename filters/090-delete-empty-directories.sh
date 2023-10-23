@@ -44,6 +44,6 @@ total=$(wc -l < "${list}" | xargs)
 if [ "${total}" -eq 0 ]; then
     printf "There were no empty directories"
 else
-    printf "There were %d empty directories total; all of them were deleted" "${total}"
+    printf "%'d empty directories were deleted" "${total}"
 fi
 

@@ -35,7 +35,7 @@ list=${temp}/temp/filter-lists/files-with-long-lines.txt
     rm -f "${list}"
     msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "no files among 1 total"
+    echo "${msg}" | grep "No files out of 1 had lines longer than 1024 characters"
     test -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 0
@@ -49,7 +49,7 @@ echo "👍🏻 A Java file with short lines wasn't deleted"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "1 out of 2 files had at least one line longer than 1024 characters"
+    echo "${msg}" | grep "1 files out of 2 with at least one line longer than 1024 characters, which most probably is a symptom of an auto-generated code, were deleted"
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1

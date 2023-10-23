@@ -34,10 +34,11 @@ stdout=$2
     mkdir -p "$(dirname "${list}")"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/010-delete-non-java-files.sh" "${temp}/foo" "${temp}/temp")
-    echo "${msg}" | grep "have been deleted: 1 total"
+    echo "${msg}"
+    echo "${msg}" | grep "1 files out of 1 without the \\\ff{.java} extension were deleted"
     test ! -e "${png}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1
 } > "${stdout}" 2>&1
-echo "👍🏻 A binanry non-Java file was deleted"
+echo "👍🏻 A binary non-Java file was deleted"
 

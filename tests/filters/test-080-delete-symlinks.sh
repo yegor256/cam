@@ -34,7 +34,8 @@ stdout=$2
     echo > "${file}"
     ln -s "${file}" "${link}"
     msg=$("${LOCAL}/filters/080-delete-symlinks.sh" "${temp}" "${temp}/temp")
-    echo "${msg}" | grep "all of them were deleted"
+    echo "${msg}"
+    echo "${msg}" | grep "1 symlinks were deleted"
     test ! -e "${link}"
     test -e "${file}"
 } > "${stdout}" 2>&1
