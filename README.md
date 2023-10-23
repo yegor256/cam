@@ -26,6 +26,8 @@ and others ([see PDF](http://cam.yegor256.com/cam-2023-10-22.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
+* [cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip) 
+  (2.19Gb): 1000 repos, 33 metrics, 863K classes
 * [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip) 
   (3Gb): 959 repos, 29 metrics, 840K classes
 * [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip) 
