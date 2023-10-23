@@ -49,7 +49,7 @@ echo "👍🏻 A Java file with short lines wasn't deleted"
     rm -f "${list}"
     msg=$("${LOCAL}/filters/050-delete-long-lines.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "1 of them had at least one line longer than 1024 characters"
+    echo "${msg}" | grep "1 out of 2 files had at least one line longer than 1024 characters"
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1

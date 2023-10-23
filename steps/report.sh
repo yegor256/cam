@@ -23,7 +23,8 @@
 set -e
 set -o pipefail
 
-rm -f "${TARGET}/temp/list-of-metrics.tex"
+list=${TARGET}/temp/list-of-metrics.tex
+rm -f "${list}"
 
 java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
@@ -32,7 +33,7 @@ find "${LOCAL}/metrics" -type f -exec basename {} \; | while IFS= read -r m; do
     metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"
     "${LOCAL}/metrics/${m}" "${java}" "${metric}"
-    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${TARGET}/temp/list-of-metrics.tex"
+    awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${list}"
     echo "$(wc -l < "${metric}" | xargs) metrics from ${m}"
 done
 

@@ -52,8 +52,8 @@ wait
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    printf "There were %s files total; %d of them had more than 1 Java class, that's why were deleted" \
-        "${total}" "$(wc -l < "${list}")"
+    printf "%d out of %d files had more than one Java class inside, that's why were deleted" \
+        "$(wc -l < "${list}")" "${total}"
 else
     if [ "${total}" -eq 0 ]; then
         printf "There are no Java classes, nothing to delete"

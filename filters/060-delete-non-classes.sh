@@ -50,10 +50,11 @@ done < "${candidates}"
 "${LOCAL}/help/parallel.sh" "${jobs}"
 wait
 
+total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    printf "There were %d files total. %d of them were not Java classes but interfaces or enums, that's why they were deleted" \
-        "$(wc -l < "${candidates}" | xargs)" "$(wc -l < "${list}" | xargs)"
+    printf "%d out of %d files were not Java classes but interfaces or enums, that's why they were deleted" \
+        "$(wc -l < "${list}" | xargs)" "${total}"
 else
     printf "All %d files are Java classes, nothing to delete" \
-        "$(wc -l < "${candidates}" | xargs)"
+        "${total}"
 fi

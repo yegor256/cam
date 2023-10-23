@@ -47,8 +47,8 @@ while IFS= read -r f; do
 done < "${list}"
 
 if [ -s "${list}" ]; then
-    printf "There were %d files total; %d of them were test files with \\\ff{Test} or \\\ff{ITCase} suffixes and that's why they were deleted" \
-        "${total}" "$(wc -l < "${list}" | xargs)"
+    printf "%d out of %d files were tests with \\\ff{Test} or \\\ff{ITCase} suffixes and that's why they were deleted" \
+        "$(wc -l < "${list}" | xargs)" "${total}"
 else
     printf "There were no test files among %d files seen" "${total}"
 fi
