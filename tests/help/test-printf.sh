@@ -23,11 +23,11 @@
 set -e
 set -o pipefail
 
-num=$(cat)
+stdout=$2
 
-if [ "${num}" == 'NaN' ]; then
-    "${LOCAL}/help/printf.sh" '%s' "${num}"
-    exit
-fi
-
-("${LOCAL}/help/printf.sh" '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
+{
+    txt=$("${LOCAL}/help/printf.sh" "Big Number: %'d" 65536)
+    echo "${txt}"
+    test "${txt}" = "Big Number: 65536"
+} > "${stdout}" 2>&1
+echo "👍🏻 Printed big number with decimal point"

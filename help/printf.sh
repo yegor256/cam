@@ -23,11 +23,9 @@
 set -e
 set -o pipefail
 
-num=$(cat)
+fmt=$1
+args=("$@")
 
-if [ "${num}" == 'NaN' ]; then
-    "${LOCAL}/help/printf.sh" '%s' "${num}"
-    exit
-fi
+unset 'args[0]'
 
-("${LOCAL}/help/printf.sh" '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
+printf "${fmt}" "${args[@]}"

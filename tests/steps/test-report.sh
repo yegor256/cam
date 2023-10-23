@@ -28,7 +28,7 @@ stdout=$2
 {
     date +%s%N > "${TARGET}/start.txt"
     mkdir -p "${TARGET}/temp"
-    printf '%s' "repo,branch\nyegor256/jaxec,master" > "${TARGET}/repositories.csv"
+    "${LOCAL}/help/printf.sh" '%s' "repo,branch\nyegor256/jaxec,master" > "${TARGET}/repositories.csv"
     echo "nothing" > "${TARGET}/temp/repo-details.tex"
     mkdir -p "${TARGET}/temp/reports"
     mkdir -p "${TARGET}/data"

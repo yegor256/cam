@@ -46,7 +46,7 @@ while IFS=',' read -r r tag tail; do
     if [ ! -e "${TARGET}/github/${r}" ]; then
         echo "The clone of ${r} is absent, unregistered"
     else
-        printf "%s,%s,%s\n" "${r}" "${tag}" "${tail}" >> "${csv}"
+        "${LOCAL}/help/printf.sh" "%s,%s,%s\n" "${r}" "${tag}" "${tail}" >> "${csv}"
         good=$((good+1))
     fi
 done < "${before}"

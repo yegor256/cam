@@ -41,7 +41,7 @@ sh="$(dirname "$0")/jpeek-repo.sh"
 for d in ${repos}; do
     r=$(realpath --relative-to="${TARGET}/github" "${d}" )
     repo=$((repo+1))
-    printf "timeout 1h %s %s %s %s || true\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+    "${LOCAL}/help/printf.sh" "timeout 1h %s %s %s %s || true\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done
 
 "${LOCAL}/help/parallel.sh" "${jobs}"

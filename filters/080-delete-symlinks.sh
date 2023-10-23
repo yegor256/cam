@@ -42,8 +42,8 @@ done
 
 total=$(wc -l < "${list}" | xargs)
 if [ "${total}" -eq 0 ]; then
-    printf "There were no symlinks"
+    "${LOCAL}/help/printf.sh" "There were no symlinks"
 else
-    printf "%'d symlinks were deleted" "${total}"
+    "${LOCAL}/help/printf.sh" "%'d symlinks were deleted" "${total}"
 fi
 

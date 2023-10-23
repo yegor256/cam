@@ -34,17 +34,17 @@ mks=$(echo "($(date +%s%N) - ${start}) / 1000" | bc)
 if ((mks < 100)); then
     exit
 elif ((mks < 1000)); then
-    printf '%s%dμs' "${pfx}" "${mks}"
+    "${LOCAL}/help/printf.sh" '%s%dμs' "${pfx}" "${mks}"
 elif ((mks < 1000 * 1000)); then
-    printf '%s%dms' "${pfx}" "$((mks / 1000))"
+    "${LOCAL}/help/printf.sh" '%s%dms' "${pfx}" "$((mks / 1000))"
 elif ((mks < 60 * 1000 * 1000)); then
-    printf '%s%ds' "${pfx}" "$((mks / (1000 * 1000)))"
+    "${LOCAL}/help/printf.sh" '%s%ds' "${pfx}" "$((mks / (1000 * 1000)))"
 elif ((mks < 60 * 60 * 1000 * 1000)); then
     minutes=$((mks / (60 * 1000 * 1000)))
     seconds=$(((mks - minutes * 60 * 1000 * 1000) / (1000 * 1000)))
-    printf '%s%dm%ds' "${pfx}" "${minutes}" "${seconds}"
+    "${LOCAL}/help/printf.sh" '%s%dm%ds' "${pfx}" "${minutes}" "${seconds}"
 else
     hours=$((mks / (60 * 60 * 1000 * 1000)))
     minutes=$(((mks - hours * 60 * 60 * 1000 * 1000) / (60 * 1000 * 1000)))
-    printf '%s%dh%dm' "${pfx}" "${hours}" "${minutes}"
+    "${LOCAL}/help/printf.sh" '%s%dh%dm' "${pfx}" "${hours}" "${minutes}"
 fi

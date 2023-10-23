@@ -64,8 +64,8 @@ done
 
 hashes=${TARGET}/hashes.csv
 if [ ! -e "${hashes}" ]; then
-    printf "repo,hash\n" > "${hashes}"
+    "${LOCAL}/help/printf.sh" "repo,hash\n" > "${hashes}"
 fi
-printf "%s,%s\n" "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "$(git --git-dir "${dir}/.git" rev-parse HEAD)" >> "${hashes}"
+"${LOCAL}/help/printf.sh" "%s,%s\n" "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "$(git --git-dir "${dir}/.git" rev-parse HEAD)" >> "${hashes}"
 
 echo "${repo} cloned (${pos}/${total}), $(du -sh "${dir}" | cut -f1 | xargs)$("${LOCAL}/help/tdiff.sh" "${start}")"
