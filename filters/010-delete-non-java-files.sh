@@ -28,7 +28,6 @@ home=$1
 temp=$2
 
 total=$(find "${home}" -type f | wc -l)
-java=$(find "${home}" -type f -a -name '*.java' | wc -l | xargs)
 
 list=${temp}/filter-lists/non-java-files.txt
 if [ -e "${list}" ]; then
