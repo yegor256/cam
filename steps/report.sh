@@ -37,6 +37,8 @@ find "${LOCAL}/metrics" -type f -exec basename {} \; | while IFS= read -r m; do
     echo "$(wc -l < "${metric}" | xargs) metrics from ${m}"
 done
 
+sort -o "${list}" "${list}"
+
 # It's important to make sure the path is absolute, for LaTeX
 t=$(realpath "${TARGET}")
 

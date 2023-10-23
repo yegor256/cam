@@ -115,7 +115,7 @@ File.write(
     "at most #{opts['max-stars']} stars,",
     "at least #{opts['min-size']}Kb size of Git repo.",
     "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
-  ].join
+  ].join(' ')
 )
 
 path = File.expand_path(opts[:csv])
