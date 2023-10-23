@@ -58,7 +58,7 @@ if __name__ == '__main__':
             for path, node in ast:
                 complexity += branches(node)
             with open(METRICS, 'a', encoding='utf-8') as m:
-                m.write(f'cc {complexity} Cyclomatic Complexity\n')
+                m.write(f'cc {complexity} Total Cyclomatic Complexity of all methods\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
