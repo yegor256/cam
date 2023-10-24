@@ -25,11 +25,25 @@ set -o pipefail
 
 start=$(date +%s%N)
 
-zip=cam-$(date +%Y-%m-%d).zip
+name=cam-$(date +%Y-%m-%d)
+
+zip=${TARGET}/temp/${name}.zip
+mkdir -p "$(dirname "${zip}")"
+
+if [ -e "${zip}" ]; then
+    echo "Zip archive already exists: ${zip}"
+    exit
+fi
+
+if [ -e "${TARGET}/github" ]; then
+    echo "Deleting .git directories (may take some time) ..."
+    find "${TARGET}/github" -maxdepth 3 -mindepth 3 -type d -name '.git' -exec rm -rf {} \;
+fi
 
 echo "Archiving the data into ${zip} (may take some time) ..."
+cd "${TARGET}"
+zip -qq -x "temp/*" -x "measurements/*" -r "${zip}" .
 
-zip -qq -x "${TARGET}/temp/*" -x "${TARGET}/measurements/*" -r "${zip}" "${TARGET}"
 mv "${zip}" "${TARGET}"
 
-echo "ZIP archive ${zip} ($(du -k "${TARGET}/${zip}" | cut -f1) Kb) created at ${TARGET}$("${LOCAL}/help/tdiff.sh" "${start}")"
+echo "ZIP archive created at ${zip} ($(du -k "${TARGET}/${name}.zip" | cut -f1) Kb)$("${LOCAL}/help/tdiff.sh" "${start}")"
