@@ -27,6 +27,14 @@ temp=$1
 stdout=$2
 
 {
+    mkdir -p "${temp}/foo"
+    msg=$("${LOCAL}/filters/010-delete-non-java-files.sh" "${temp}/foo" "${temp}/temp")
+    echo "${msg}"
+    echo "${msg}" | grep "nothing was deleted"
+} > "${stdout}" 2>&1
+echo "👍🏻 An empty directory didn't crash it"
+
+{
     list=${temp}/temp/filter-lists/non-java-files.txt
     png="${temp}/foo/dir (with) _ long & and 'java' \"name\" /test.png"
     mkdir -p "$(dirname "${png}")"
