@@ -27,14 +27,18 @@ set -o pipefail
 home=$1
 temp=$2
 
+if [ ! -e "${TARGET}/github" ]; then exit; fi
+
 repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \;)
 gits=${temp}/gits
 
 mkdir -p "${gits}"
 
-echo "${repos}" | while IFS= read -r repo; do
-    src=${TARGET}/github/${repo}/.git
-    if [ ! -e "${src}" ]; then continue; fi
-    mkdir -p "$(dirname "${gits}/${repo}")"
-    mv "${src}" "${gits}/${repo}"
-done
+if [ -n "${repos}" ]; then
+    echo "${repos}" | while IFS= read -r repo; do
+        src=${TARGET}/github/${repo}/.git
+        if [ ! -e "${src}" ]; then continue; fi
+        mkdir -p "$(dirname "${gits}/${repo}")"
+        mv "${src}" "${gits}/${repo}"
+    done
+fi

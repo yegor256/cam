@@ -28,7 +28,8 @@ stdout=$2
 {
     rm -rf "${TARGET}/github"
     mkdir -p "${TARGET}/github/a/b"
-    "${LOCAL}/steps/filter.sh"
+    msg=$("${LOCAL}/steps/filter.sh")
+    echo "${msg}"
 } > "${stdout}" 2>&1
 echo "👍🏻 A simple filtering ran smoothly"
 
@@ -45,7 +46,7 @@ echo "👍🏻 A simple filtering ran smoothly"
     echo "class X {} class Y {} class Z {}" > "${dir}/XYZ.java"
     printf 'class Boom { String x = "a%.0s"; }' {1..5000} > "${dir}/Boom.java"
     ln -s "${dir}/FooTest.java" "${dir}/link.java"
-    class="${dir}/foo - '(weird)'/привет/Foo.java"
+    class="${dir}/a/b/foo - '(weird)'/привет/Foo.java"
         mkdir -p "$(dirname "${class}")"
         echo "class Foo {}" > "${class}"
         echo "nothing" > "${class}.bin"
@@ -57,7 +58,7 @@ echo "👍🏻 A simple filtering ran smoothly"
         echo "broken code совсем" > "${broken}"
     msg=$("${LOCAL}/steps/filter.sh")
     echo "${msg}"
-    test "$(echo "${msg}" | grep -c "deleted 0 files")" = 0
+    test "$(echo "${msg}" | grep -c "didn't touch any files")" = 0
     test ! -e "${broken}"
     test ! -e "${interface}"
 } > "${stdout}" 2>&1

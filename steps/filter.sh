@@ -29,7 +29,7 @@ find "${LOCAL}/filters" -type f -name '*.sh' -exec realpath --relative-to="${LOC
     if [ -e "${tex}" ]; then
         echo "The ${filter} filter was already completed earlier, see report in '${tex}'"
     else
-        before=$(find "${TARGET}/github" -type f -o -type l -o -type d | wc -l | xargs)
+        before=$(find "${TARGET}/github" -name '*' -type f -o -type l -o -type d | wc -l | xargs)
         echo "Running filter ${filter}... (may take some time)"
         start=$(date +%s%N)
         "${LOCAL}/filters/${filter}" "${TARGET}/github" "${TARGET}/temp" |\
@@ -37,9 +37,15 @@ find "${LOCAL}/filters" -type f -name '*.sh' -exec realpath --relative-to="${LOC
             sed "s/^/\\\\item /" |\
             sed "s/$/;/" \
             > "${tex}"
-        after=$(find "${TARGET}/github" -type f -o -type l -o -type d | wc -l | xargs)
-        echo "Filter ${filter} finished$("${LOCAL}/help/tdiff.sh" "${start}"), \
-deleted $(echo "${before} - ${after}" | bc) files \
+        after=$(find "${TARGET}/github" -name '*' -type f -o -type l -o -type d | wc -l | xargs)
+        if [ "${after}" -lt "${before}" ]; then
+            diff="deleted $(echo "${before} - ${after}" | bc) files"
+        elif [ "${after}" -gt "${before}" ]; then
+            diff="added $(echo "${after} - ${before}" | bc) files"
+        else
+            diff="didn't touch any files"
+        fi
+        echo "Filter ${filter} finished$("${LOCAL}/help/tdiff.sh" "${start}"), ${diff} \
 and published its results to ${TARGET}/temp/reports/${filter}.tex "
     fi
 done

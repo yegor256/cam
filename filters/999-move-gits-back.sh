@@ -24,32 +24,17 @@
 set -e
 set -o pipefail
 
-temp=$1
-stdout=$2
+home=$1
+temp=$2
 
-{
-    rm -rf "${TARGET}/github"
-    msg=$("${LOCAL}/filters/001-move-gits-to-temp.sh" "${temp}" "${temp}")
-    echo "${msg}"
-} > "${stdout}" 2>&1
-echo "👍🏻 An empty directory didn't crash it"
+if [ ! -e "${temp}/gits" ]; then exit; fi
 
-{
-    rm -rf "${TARGET}/github"
-    mkdir -p "${TARGET}/github/foo/bar"
-    msg=$("${LOCAL}/filters/001-move-gits-to-temp.sh" "${temp}" "${temp}")
-    echo "${msg}"
-} > "${stdout}" 2>&1
-echo "👍🏻 An empty repo directory didn't crash it"
+repos=$(find "${temp}/gits" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${temp}/gits" {} \;)
 
-{
-    repo=foo/bar
-    mkdir -p "${TARGET}/github/${repo}/.git/test.txt"
-    msg=$("${LOCAL}/filters/001-move-gits-to-temp.sh" "${temp}" "${temp}")
-    echo "${msg}"
-    ls -al "${TARGET}/github/${repo}"
-    test ! -e "${TARGET}/github/${repo}/.git"
-    ls -al "${temp}/gits/${repo}"
-    test -e "${temp}/gits/${repo}/test.txt"
-} > "${stdout}" 2>&1
-echo "👍🏻 A git repository was moved to temp dir"
+if [ -n "${repos}" ]; then
+    echo "${repos}" | while IFS= read -r repo; do
+        target=${TARGET}/github/${repo}
+        if [ ! -e "${target}" ]; then continue; fi
+        mv "${temp}/gits/${repo}" "${target}/.git"
+    done
+fi

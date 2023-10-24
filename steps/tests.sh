@@ -30,7 +30,7 @@ export CAMTESTS=1
 
 find "${LOCAL}/tests" -type f -name '*.sh' | sort | while IFS= read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
-    if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ]; then
+    if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ] && [ ! "${TEST}" = "tests/${name}" ]; then
         continue
     fi
     echo -e "\n${name}:"
