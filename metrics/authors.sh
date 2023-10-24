@@ -29,4 +29,4 @@ output=$(realpath "$2")
 
 cd "$(dirname "${java}")"
 noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
-echo "nogc ${noca} Number of Git Committers (Class Authors)" > "${output}"
+echo "noga ${noca} Number of Git Authors (Different Committers)" > "${output}"

@@ -39,6 +39,6 @@ stdout=$2
     git config commit.gpgsign false
     git commit --quiet -am start
     "${LOCAL}/metrics/authors.sh" "${java}" stdout
-    grep "nogc 1" stdout
+    grep "noga 1" stdout
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"
