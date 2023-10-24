@@ -24,9 +24,17 @@
 set -e
 set -o pipefail
 
-java=$1
-output=$(realpath "$2")
+home=$1
+temp=$2
 
-cd "$(dirname "${java}")"
-noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
-echo "authors ${noca} Number of Committers/Authors" > "${output}"
+repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \;)
+gits=${temp}/gits
+
+mkdir -p "${gits}"
+
+echo "${repos}" | while IFS= read -r repo; do
+    src=${TARGET}/github/${repo}/.git
+    if [ ! -e "${src}" ]; then continue; fi
+    mkdir -p "$(dirname "${gits}/${repo}")"
+    mv "${src}" "${gits}/${repo}"
+done

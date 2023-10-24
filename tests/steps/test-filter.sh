@@ -38,6 +38,8 @@ echo "👍🏻 A simple filtering ran smoothly"
     rm -rf "${TARGET}/temp/filter-lists"
     dir=${TARGET}/github
     mkdir -p "${dir}"
+    mkdir -p "${dir}/a/b/.git"
+    touch "${dir}/a/b/.git/boom"
     echo "nothing" > "${dir}/package-info.java"
     echo "nothing" > "${dir}/FooTest.java"
     echo "class X {} class Y {} class Z {}" > "${dir}/XYZ.java"
@@ -54,6 +56,7 @@ echo "👍🏻 A simple filtering ran smoothly"
         mkdir -p "$(dirname "${broken}")"
         echo "broken code совсем" > "${broken}"
     msg=$("${LOCAL}/steps/filter.sh")
+    echo "${msg}"
     test "$(echo "${msg}" | grep -c "deleted 0 files")" = 0
     test ! -e "${broken}"
     test ! -e "${interface}"
