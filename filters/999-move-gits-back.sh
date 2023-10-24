@@ -24,7 +24,6 @@
 set -e
 set -o pipefail
 
-home=$1
 temp=$2
 
 if [ ! -e "${temp}/gits" ]; then exit; fi
@@ -33,8 +32,8 @@ repos=$(find "${temp}/gits" -maxdepth 2 -mindepth 2 -type d -exec realpath --rel
 
 if [ -n "${repos}" ]; then
     echo "${repos}" | while IFS= read -r repo; do
-        target=${TARGET}/github/${repo}
-        if [ ! -e "${target}" ]; then continue; fi
-        mv "${temp}/gits/${repo}" "${target}/.git"
+        dest=${TARGET}/github/${repo}
+        if [ ! -e "${dest}" ]; then continue; fi
+        mv "${temp}/gits/${repo}" "${dest}/.git"
     done
 fi

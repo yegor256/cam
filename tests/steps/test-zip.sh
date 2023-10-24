@@ -39,8 +39,8 @@ echo "👍🏻 A zip archive generated correctly"
     "${LOCAL}/steps/zip.sh"
     list=$(unzip -l "${zip}")
     echo "${list}"
-    test $(echo "${list}" | grep "baam.m.cloc" | wc -l | xargs) = '0'
-    test $(echo "${list}" | grep "hello.txt" | wc -l | xargs) = '0'
+    test "$(echo "${list}" | grep -c "baam.m.cloc")" = '0'
+    test "$(echo "${list}" | grep -c "hello.txt")" = '0'
 } > "${stdout}" 2>&1
 echo "👍🏻 A zip archive doesn't contain measurements/ and temp/"
 
@@ -49,12 +49,11 @@ echo "👍🏻 A zip archive doesn't contain measurements/ and temp/"
     touch "${TARGET}/github/a/b/hello"
     mkdir -p "${TARGET}/github/a/b/legal/.git/place"
     zip=${TARGET}/cam-$(date +%Y-%m-%d).zip
-    tgz=${TARGET}/cam-$(date +%Y-%m-%d).tgz
     "${LOCAL}/steps/zip.sh"
     list=$(unzip -l "${zip}")
     echo "${list}"
     echo "${list}" | grep "hello" > /dev/null
-    test $(echo "${list}" | grep "boom" | wc -l | xargs) = '0'
-    test $(echo "${list}" | grep "place" | wc -l | xargs) = '1'
+    test "$(echo "${list}" | grep -c "boom")" = '0'
+    test "$(echo "${list}" | grep -c "place")" = '1'
 } > "${stdout}" 2>&1
 echo "👍🏻 A zip archive generated without .git directories inside"

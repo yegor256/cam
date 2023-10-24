@@ -24,7 +24,6 @@
 set -e
 set -o pipefail
 
-home=$1
 temp=$2
 
 if [ ! -e "${TARGET}/github" ]; then exit; fi
