@@ -38,3 +38,11 @@ stdout=$2
     test -e "${TARGET}/report.pdf"
 } > "${stdout}" 2>&1
 echo "👍🏻 A PDF report generated correctly"
+
+{
+    while IFS= read -r t; do
+        metric=$(echo "${t}" | cut -f1 -d' ')
+        echo "${metric}" | grep '^\\item\\ff{[a-zA-Z0-9-]\+}:$' > /dev/null
+    done < "${TARGET}/temp/list-of-metrics.tex"
+} > "${stdout}" 2>&1
+echo "👍🏻 A list of metrics is properly formatted"
