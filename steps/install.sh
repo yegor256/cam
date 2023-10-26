@@ -21,20 +21,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -x
 set -e
 set -o pipefail
+
+if [ ! "$(id -u)" = 0 ]; then
+  echo "You should run it as root: 'sudo make install'"
+  exit -1
+fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   linux=yes
 fi
+set -x
 
 if [ -n "${linux}" ]; then
   apt-get -y update
   apt-get install -y coreutils
 fi
 
-if ! parallel --version 2>/dev/null; then
+if ! parallel --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get -y install parallel
   else
@@ -43,7 +48,7 @@ if ! parallel --version 2>/dev/null; then
   fi
 fi
 
-if ! bc -v 2>/dev/null; then
+if ! bc -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y bc
   else
@@ -52,7 +57,7 @@ if ! bc -v 2>/dev/null; then
   fi
 fi
 
-if ! cloc --version 2>/dev/null; then
+if ! cloc --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y cloc
   else
@@ -61,7 +66,7 @@ if ! cloc --version 2>/dev/null; then
   fi
 fi
 
-if ! jq --version 2>/dev/null; then
+if ! jq --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y jq
   else
@@ -70,7 +75,7 @@ if ! jq --version 2>/dev/null; then
   fi
 fi
 
-if ! shellcheck --version 2>/dev/null; then
+if ! shellcheck --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y shellcheck
   else
@@ -79,7 +84,7 @@ if ! shellcheck --version 2>/dev/null; then
   fi
 fi
 
-if ! aspell --version 2>/dev/null; then
+if ! aspell --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y aspell
   else
@@ -88,7 +93,7 @@ if ! aspell --version 2>/dev/null; then
   fi
 fi
 
-if ! xmlstarlet --version 2>/dev/null; then
+if ! xmlstarlet --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y xmlstarlet
   else
@@ -109,7 +114,7 @@ declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
 tlmgr --verify-repo=none install "${packages[@]}"
 tlmgr --verify-repo=none update "${packages[@]}"
 
-if ! pygmentize -V 2>/dev/null; then
+if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y python3-pygments
   else
@@ -124,7 +129,7 @@ gem install --no-document rubocop -v 1.56.3
 gem install --no-document octokit -v 4.21.0
 gem install --no-document slop -v 4.9.1
 
-if ! inkscape --version 2>/dev/null; then
+if ! inkscape --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     add-apt-repository -y ppa:inkscape.dev/stable && \
       apt-get update -y && \
@@ -135,7 +140,7 @@ if ! inkscape --version 2>/dev/null; then
   fi
 fi
 
-if ! pmd pmd --version 2>/dev/null; then
+if ! pmd pmd --version >/dev/null 2>&1; then
   if [ ! -e /usr/local ]; then
     echo "The directory /usr/local must exist"
     exit 1
@@ -149,7 +154,7 @@ if ! pmd pmd --version 2>/dev/null; then
     ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 fi
 
-if ! gradle --version 2>/dev/null; then
+if ! gradle --version >/dev/null 2>&1; then
   if [ ! -e /usr/local ]; then
     echo "The directory /usr/local must exist"
     exit 1
@@ -171,3 +176,6 @@ if [ ! -e "${JPEEK}" ]; then
     mkdir -p "$(dirname "${JPEEK}")" && \
     mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
 fi
+
+set +x
+echo "All dependencies are installed and up to date! Now you can run 'make' and build the dataset."

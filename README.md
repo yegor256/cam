@@ -90,7 +90,7 @@ metrics on top of it. It should be easy:
   * Unpack it to the `cam/dataset/` directory
   * Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
   * Delete all other files except yours from the `cam/metrics/` directory
-  * Run [`make`](https://www.gnu.org/software/make/) in the `cam/` directory
+  * Run [`make`](https://www.gnu.org/software/make/) in the `cam/` directory: `sudo make install; make all`
 
 The `make` should understand that a new metric was added. It will apply this new metric
 to all `.java` files, generate new `.csv` reports, aggregate them with existing
