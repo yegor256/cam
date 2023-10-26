@@ -27,6 +27,13 @@ temp=$1
 stdout=$2
 
 {
+    tmp=$(mktemp -d /tmp/XXXX)
+    "${LOCAL}/metrics/authors.sh" "${tmp}" "${temp}/stdout"
+    grep "noga 0" "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Didn't fail in non-git directory"
+
+{
     cd "${temp}"
     rm -rf ./*
     rm -rf .git

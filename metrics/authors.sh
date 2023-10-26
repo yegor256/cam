@@ -28,5 +28,11 @@ java=$1
 output=$(realpath "$2")
 
 cd "$(dirname "${java}")"
-noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
+
+if git status > /dev/null 2>&1; then
+    noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
+else
+    noca=0
+fi
+
 echo "noga ${noca} Number of Git Authors (Different Committers)" > "${output}"
