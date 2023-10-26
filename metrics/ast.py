@@ -145,6 +145,15 @@ def annts(tlist) -> int:
     """
     return len(tlist[0][1].annotations or [])
 
+def nulls(tlist) -> int:
+    """Return number of null references used in the class.
+    r:type: int
+    """
+    null_count = 0
+    for _, node in tlist[0][1].filter(javalang.tree.Literal):
+        if str(node.value) == 'null':
+            null_count += 1
+    return null_count
 
 class NotClassError(Exception):
     """If it's not a class"""
@@ -182,6 +191,9 @@ if __name__ == '__main__':
                              f'Class is Final\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
+                metric.write(f'nulls {nulls(tree_class)} '
+                             f'Number of Null References\n')
+
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
