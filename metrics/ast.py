@@ -145,17 +145,18 @@ def annts(tlist) -> int:
     """
     return len(tlist[0][1].annotations or [])
 
-def varcomp(parser_class) -> int:
+
+def varcomp(tlist) -> int:
     """Return average number of parts in variable names in class.
     r:type: int
     """
     sum, count = 0, 0
-    for path, node in parser_class:
-        del path
-        node_type = str(type(node.name))
-        if node_type == 'VariableDeclarator':
+    for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
+        name = node.name
+        if name != "":
             count += 1
-            for letter in node.name:
+            sum += 1
+            for letter in name[1:]:
                 if letter == letter.upper():
                     sum += 1
 
@@ -163,13 +164,14 @@ def varcomp(parser_class) -> int:
         return 0
     return sum / count
 
+
 class NotClassError(Exception):
     """If it's not a class"""
 
 
 if __name__ == '__main__':
-    JAVA = sys.argv[1]
-    METRICS = sys.argv[2]
+    JAVA = "Server.java"
+    METRICS = "metr"
     with open(JAVA, encoding='utf-8', errors='ignore') as file:
         try:
             raw = javalang.parse.parse(file.read())
@@ -199,7 +201,7 @@ if __name__ == '__main__':
                              f'Class is Final\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
-                metric.write(f'varcomp {varcomp(raw)} '
+                metric.write(f'varcomp {varcomp(tree_class)} '
                              f'Average number of parts in variable names\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
