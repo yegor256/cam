@@ -145,6 +145,23 @@ def annts(tlist) -> int:
     """
     return len(tlist[0][1].annotations or [])
 
+def varcomp(parser_class) -> int:
+    """Return average number of parts in variable names in class.
+    r:type: int
+    """
+    sum, count = 0, 0
+    for path, node in parser_class:
+        del path
+        node_type = str(type(node.name))
+        if node_type == 'VariableDeclarator':
+            count += 1
+            for letter in node.name:
+                if letter == letter.upper():
+                    sum += 1
+
+    if count == 0:
+        return 0
+    return sum / count
 
 class NotClassError(Exception):
     """If it's not a class"""
@@ -182,6 +199,8 @@ if __name__ == '__main__':
                              f'Class is Final\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
+                metric.write(f'varcomp {varcomp(raw)} '
+                             f'Average number of parts in variable names\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
