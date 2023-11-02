@@ -146,9 +146,9 @@ def annts(tlist) -> int:
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist) -> int:
+def varcomp(tlist) -> float:
     """Return average number of parts in variable names in class.
-    r:type: int
+    r:type: float
     """
     sum, count = 0, 0
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
