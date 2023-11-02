@@ -170,8 +170,8 @@ class NotClassError(Exception):
 
 
 if __name__ == '__main__':
-    JAVA = "Server.java"
-    METRICS = "metr"
+    JAVA = sys.argv[1]
+    METRICS = sys.argv[2]
     with open(JAVA, encoding='utf-8', errors='ignore') as file:
         try:
             raw = javalang.parse.parse(file.read())
