@@ -150,19 +150,18 @@ def varcomp(tlist) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
-    sum, count = 0, 0
+    parts, variables = 0, 0
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
-        name = node.name
-        if name != "":
-            count += 1
-            sum += 1
+        if (name := node.name) != '':
+            variables += 1
+            parts += 1
             for letter in name[1:]:
                 if letter == letter.upper():
-                    sum += 1
+                    parts += 1
 
-    if count == 0:
+    if variables == 0:
         return 0
-    return sum / count
+    return parts / variables
 
 
 class NotClassError(Exception):
