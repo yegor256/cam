@@ -43,5 +43,6 @@ stdout=$2
     grep "notp 1" "${temp}/stdout"
     grep "final 1" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
+    grep "varcomp 1.0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
