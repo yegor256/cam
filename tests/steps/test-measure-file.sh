@@ -42,6 +42,7 @@ stdout=$2
 EOT
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
     echo "${msg}"
+    set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm.*' -type f -exec basename {} \;)
     test "$(echo "${all}" | wc -l | xargs)" = "35"
@@ -49,7 +50,6 @@ EOT
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
     done
-    set -x
     test "$(cat "${temp}/m.loc")" = "8"
     test "$(cat "${temp}/m.nocl")" = "1"
     test "$(cat "${temp}/m.cc")" = "1"
