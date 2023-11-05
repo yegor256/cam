@@ -7,11 +7,7 @@ install: |
 merge:
   script: |
     sudo make install -f "$(pwd)/Makefile"
-    make env
-    make lint
-    make REPO=yegor256/tojos
-    make validate
-    make test
+    make env lint test
 release:
   script: |
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
@@ -19,6 +15,6 @@ release:
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
-    sudo docker run --rm "${repo}:${tag}" 'make env lint test'
+    sudo docker run --rm "${repo}:${tag}" 'make install env lint test'
     cat ../docker-password | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"

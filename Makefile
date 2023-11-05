@@ -164,8 +164,3 @@ $(TARGET)/measurements:
 
 $(TARGET)/temp:
 	mkdir -p "$(TARGET)/temp"
-
-# Check that all files that are supposed to be in place, actually
-# are there. This goal must be run only during testing, when REPO is specified.
-validate:
-	$(call step,validate)

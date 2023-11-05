@@ -28,7 +28,8 @@ stdout=$2
 {
     set -x
     make clean "TARGET=${TARGET}"
-    log=$(make "TARGET=${TARGET}" "REPO=yegor256/tojos")
+    repo=yegor256/tojos
+    log=$(make "TARGET=${TARGET}" "REPO=${repo}")
     echo "${log}"
     echo "${log}" | grep "Using one repo: yegor256/tojos"
     echo "${log}" | grep "No repo directories inside"
@@ -41,7 +42,31 @@ stdout=$2
     echo "${log}" | grep "ZIP archive"
     echo "${log}" | grep "SUCCESS"
     echo "${log}" | grep -v "Failed to collect"
-    make validate "TARGET=${TARGET}"
+    test -d "${TARGET}"
+    for f in start.txt hashes.csv report.pdf repositories.csv; do
+        test -f "${TARGET}/${f}"
+    done
+    test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 10
+    test -f "${TARGET}/data/${repo}/ncss.csv"
+    test -f "${TARGET}/data/${repo}/NHD.csv"
+    test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"
+    test -f "${TARGET}/data/ncss.csv"
+    test -f "${TARGET}/data/NHD.csv"
+    test -f "${TARGET}/data/SCOM-cvc.csv"
+    test -d "${TARGET}/measurements/${repo}/src/main/java"
+    test -d "${TARGET}/temp/jpeek/all/${repo}"
+    test -d "${TARGET}/temp/jpeek/cvc/${repo}"
+    test -f "${TARGET}/temp/reports/010-delete-non-java-files.sh.tex"
+    test -f "${TARGET}/temp/pdf-report/report.tex"
+    test -f "${TARGET}"/*.zip
+    test -f "${TARGET}/hashes.csv"
+    test -f "${TARGET}/repositories.csv"
+    test -f "${TARGET}/start.txt"
+    test -f "${TARGET}/report.pdf"
+    if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
+        echo "NaN found in jpeek report"
+        exit 1
+    fi
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 A full package processed correctly"
