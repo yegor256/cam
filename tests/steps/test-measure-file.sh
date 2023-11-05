@@ -45,7 +45,7 @@ EOT
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm.*' -type f -exec basename {} \;)
-    test "$(echo "${all}" | wc -l | xargs)" = "35"
+    test "$(echo "${all}" | wc -l | xargs)" = "36"
     echo "${all}" | sort | while IFS= read -r m; do
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
