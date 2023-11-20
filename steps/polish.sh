@@ -31,6 +31,7 @@ fi
 
 rlist=${TARGET}/temp/repos-to-polish.txt
 mkdir -p "$(dirname "${rlist}")"
+echo "Wait a bit, searching for repos..."
 find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \; > "${rlist}"
 
 if [ -s "${rlist}" ]; then
@@ -52,6 +53,7 @@ fi
 
 olist=${TARGET}/temp/orgs-to-polish.txt
 mkdir -p "$(dirname "${olist}")"
+echo "Wait a bit, searching for orgs..."
 find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec realpath --relative-to="${dir}" {} \; > "${olist}"
 
 if [ -s "${olist}" ]; then
