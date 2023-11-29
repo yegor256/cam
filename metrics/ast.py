@@ -90,6 +90,25 @@ def smethods(tlist) -> int:
     return found
 
 
+def mhf(tlist) -> int:
+    """Calculate Method Hiding Factor (MHF), which is the ratio
+    between private+protected methods and all methods.
+    :rtype: float
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    hidden = 0
+    total = 0
+    for path, node in mlist:
+        del path
+        if 'public' not in node.modifiers:
+            hidden += 1
+        total += 1
+    if total == 0:
+        return 0
+    return hidden / total
+
+
 def ncss(parser_class) -> int:
     """Count the NCSS (non-commenting source statement) lines.
     :rtype: int
@@ -202,6 +221,8 @@ if __name__ == '__main__':
                              f'Number of Class Annotations\n')
                 metric.write(f'varcomp {varcomp(tree_class)} '
                              f'Average number of parts in variable names\n')
+                metric.write(f'mhf {mhf(tree_class)} '
+                             f'Method Hiding Factor (MHF)\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)

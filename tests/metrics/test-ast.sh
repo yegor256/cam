@@ -35,6 +35,7 @@ stdout=$2
         int y() { return 0; }
     }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
     grep "nooa 1" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
     grep "noom 2" "${temp}/stdout"
@@ -44,5 +45,6 @@ stdout=$2
     grep "final 1" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
     grep "varcomp 1.0" "${temp}/stdout"
+    grep "mhf 1.0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
