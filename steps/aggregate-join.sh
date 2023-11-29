@@ -20,6 +20,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# This script is executed for every repository that look like `data/<org>/<repo>` directories.
+# The script should find all `.csv` files available and join them with the
+# files in the `data/` directory. For example, the content of the `data/yegor256/jaxec/LCOM5.csv` file
+# will be appended to the content of the `data/LCOM5.csv` file.
+#
+# It is expected that the content of the "data/yegor256/jaxec/LCOM5.csv" looks like this (the first
+# line is the CSV header):
+#
+# ```
+# java_file,LCOM5
+# /src/main/java/foo/Hello.java,32
+# /src/main/java/bar/test/Another.java,14
+# ```
+#
+# The content of the "data/LCOM5.csv" file should look like this (again, the first line
+# is the CSV header):
+#
+# ```
+# repo,java_file,LCOM5
+# yegor256/jaxec,/src/main/java/foo/Hello.java,32
+# yegor256/jaxec,/src/main/java/bar/test/Another.java,14
+# ```
+
 set -e
 set -o pipefail
 
@@ -32,18 +56,16 @@ start=$(date +%s%N)
 
 csvs=$(find "${dir}" -type f -name '*.csv' -maxdepth 1 -exec basename {} \;)
 
-files=$(echo "${csvs}" | wc -l | xargs)
 echo "${csvs}" | while IFS= read -r csv; do
     join=${TARGET}/data/${csv}
-    rm -rf "${join}"
     mkdir -p "$(dirname "${join}")"
-    while IFS= read -r t; do
-        if [ ! -e "${join}" ]; then
-            printf 'repo,%s\n' "${t}" > "${join}"
-        else
-            printf '%s,%s\n' "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "${t}" >> "${join}"
-        fi
-    done < "${dir}/${csv}"
+    if [ ! -e "${join}" ]; then
+        printf 'repo,%s\n' "$(head -1 "${dir}/${csv}")" > "${join}"
+    fi
+    tail -n +2 "${dir}/${csv}" | while IFS= read -r t; do
+        printf '%s,%s\n' "$(echo "${repo}" | "${LOCAL}/help/to-csv.sh")" "${t}" >> "${join}"
+    done
 done
 
-echo "${files} metrics added to the CSV aggregate of ${repo} (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+files=$(echo "${csvs}" | wc -l | xargs)
+echo "${files} metrics of ${repo} aggregated (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"

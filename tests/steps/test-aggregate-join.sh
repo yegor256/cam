@@ -38,3 +38,25 @@ stdout=$2
     grep "foo/bar\\\\,1,Foo.java,42" "${TARGET}/data/loc.csv"
 } > "${stdout}" 2>&1
 echo "👍🏻 A data joined correctly"
+
+{
+    dir1="${TARGET}/data/first/a"
+    mkdir -p "${dir1}"
+    dir2="${TARGET}/data/second/b"
+    mkdir -p "${dir2}"
+    dir3="${TARGET}/data/third/c"
+    mkdir -p "${dir3}"
+    echo -e "java_file,LCOM5\nFirst.java,42" > "${dir1}/LCOM5.csv"
+    echo -e "java_file,LCOM5\nSecond.java,256" > "${dir2}/LCOM5.csv"
+    echo -e "java_file,LCOM5\nThird.java,0" > "${dir3}/LCOM5.csv"
+    msg=$("${LOCAL}/steps/aggregate-join.sh" first/a "${dir1}" 1 1)
+    echo "${msg}" >> "${stdout}"
+    msg=$("${LOCAL}/steps/aggregate-join.sh" second/b "${dir2}" 1 1)
+    echo "${msg}" >> "${stdout}"
+    msg=$("${LOCAL}/steps/aggregate-join.sh" third/c "${dir3}" 1 1)
+    echo "${msg}" >> "${stdout}"
+    grep "first/a,First.java" "${TARGET}/data/LCOM5.csv"
+    grep "second/b,Second.java" "${TARGET}/data/LCOM5.csv"
+    grep "third/c,Third.java" "${TARGET}/data/LCOM5.csv"
+} > "${stdout}" 2>&1
+echo "👍🏻 A data joined into existing file correctly"
