@@ -46,5 +46,6 @@ stdout=$2
     grep "noca 1" "${temp}/stdout"
     grep "varcomp 1.0" "${temp}/stdout"
     grep "mhf 1.0" "${temp}/stdout"
+    grep "smhf 0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"

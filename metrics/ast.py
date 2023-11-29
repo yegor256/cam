@@ -109,6 +109,27 @@ def mhf(tlist) -> int:
     return hidden / total
 
 
+def smhf(tlist) -> int:
+    """Calculate Static Method Hiding Factor (MHF), which is the ratio
+    between private+protected methods and all methods (which are static).
+    :rtype: float
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    hidden = 0
+    total = 0
+    for path, node in mlist:
+        del path
+        if 'static' not in node.modifiers:
+            continue
+        if 'public' not in node.modifiers:
+            hidden += 1
+        total += 1
+    if total == 0:
+        return 0
+    return hidden / total
+
+
 def ncss(parser_class) -> int:
     """Count the NCSS (non-commenting source statement) lines.
     :rtype: int
@@ -223,6 +244,8 @@ if __name__ == '__main__':
                              f'Average number of parts in variable names\n')
                 metric.write(f'mhf {mhf(tree_class)} '
                              f'Method Hiding Factor (MHF)\n')
+                metric.write(f'smhf {smhf(tree_class)} '
+                             f'Static Method Hiding Factor (MHF)\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
