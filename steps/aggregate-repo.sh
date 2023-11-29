@@ -54,44 +54,47 @@ if [ ! -e "${dir}" ]; then
     exit
 fi
 
-find "${dir}" -type f -name '*.m' | {
-    sum=0
-    declare -i total=0
-    while IFS= read -r m; do
-        find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
-            java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
-            metric=${v//${dir}${java}\.m\./}
-            csv=${ddir}/${metric}.csv
-            mkdir -p "$(dirname "${csv}")"
-            if [ ! -e "${csv}" ]; then
-                printf 'java_file,%s\n' "${metric}" > "${csv}"
-            fi
-            printf '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
-        done
-        csv=${ddir}/all.csv
+mfiles=${TARGET}/temp/mfiles/${repo}.txt
+mkdir -p "$(dirname "${mfiles}")"
+find "${dir}" -type f -name '*.m' > "${mfiles}"
+
+sum=0
+declare -i files=0
+while IFS= read -r m; do
+    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
+        java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
+        metric=${v//${dir}${java}\.m\./}
+        csv=${ddir}/${metric}.csv
         mkdir -p "$(dirname "${csv}")"
         if [ ! -e "${csv}" ]; then
-            printf 'java_file' > "${csv}"
-            for a in ${metrics}; do
-                printf ",%s" "${a}" >> "${csv}"
-            done
-            printf '\n' >> "${csv}"
+            printf 'java_file,%s\n' "${metric}" > "${csv}"
         fi
-        java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
-        printf '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
+        printf '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
+    done
+    csv=${ddir}/all.csv
+    mkdir -p "$(dirname "${csv}")"
+    if [ ! -e "${csv}" ]; then
+        printf 'java_file' > "${csv}"
         for a in ${metrics}; do
-            if [ -e "${m}.${a}" ]; then
-                value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
-                printf ",%s" "${value}" >> "${csv}"
-                if [ ! "${value}" = "NaN" ]; then
-                    sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
-                fi
-            else
-                printf ',-' >> "${csv}"
-            fi
+            printf ",%s" "${a}" >> "${csv}"
         done
         printf '\n' >> "${csv}"
-        total=$((total+1))
+    fi
+    java=$(echo "${m}" | sed "s|${dir}||" | sed "s|\.m$||")
+    printf '%s' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" >> "${csv}"
+    for a in ${metrics}; do
+        if [ -e "${m}.${a}" ]; then
+            value=$("${LOCAL}/help/float.sh" < "${m}.${a}")
+            printf ",%s" "${value}" >> "${csv}"
+            if [ ! "${value}" = "NaN" ]; then
+                sum=$(echo "${sum} + ${value}" | bc | "${LOCAL}/help/float.sh")
+            fi
+        else
+            printf ',-' >> "${csv}"
+        fi
     done
-    echo "${repo} (${pos}/${total}) aggregated (files=${total}, sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"
-}
+    printf '\n' >> "${csv}"
+    files=$((files+1))
+done < "${mfiles}"
+
+echo "${repo} (${pos}/${total}) aggregated (.m files=${files}, sum=${sum})$("${LOCAL}/help/tdiff.sh" "${start}")"

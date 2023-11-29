@@ -68,4 +68,4 @@ echo "${csvs}" | while IFS= read -r csv; do
 done
 
 files=$(echo "${csvs}" | wc -l | xargs)
-echo "${files} metrics of ${repo} aggregated (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+echo "${files} .csv files of ${repo} joined into data/.csv (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
