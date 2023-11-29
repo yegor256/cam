@@ -30,7 +30,8 @@ stdout=$2
     dir="${TARGET}/data/${repo}"
     mkdir -p "${dir}"
     echo -e "java_file,loc\nFoo.java,42\nBar.java,256" > "${dir}/loc.csv"
-    "${LOCAL}/steps/aggregate-join.sh" "${repo}" "${dir}" 1 1
+    msg=$("${LOCAL}/steps/aggregate-join.sh" "${repo}" "${dir}" 1 1)
+    echo "${msg}"
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     test -e "${TARGET}/data/loc.csv"
     grep "repo,java_file,loc" "${TARGET}/data/loc.csv"
