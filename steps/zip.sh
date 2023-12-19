@@ -27,7 +27,7 @@ start=$(date +%s%N)
 
 name=cam-$(date +%Y-%m-%d)
 
-zip=${TARGET}/temp/${name}.zip
+zip=$(realpath "${TARGET}/temp/${name}.zip")
 mkdir -p "$(dirname "${zip}")"
 
 if [ -e "${zip}" ]; then
