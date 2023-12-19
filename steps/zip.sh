@@ -27,8 +27,9 @@ start=$(date +%s%N)
 
 name=cam-$(date +%Y-%m-%d)
 
-zip=$(realpath "${TARGET}/temp/${name}.zip")
+zip=${TARGET}/temp/${name}.zip
 mkdir -p "$(dirname "${zip}")"
+zip=$(readlink -f "$(dirname "${zip}")")/$(basename "${zip}")
 
 if [ -e "${zip}" ]; then
     echo "Zip archive already exists: ${zip}"
