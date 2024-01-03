@@ -71,3 +71,17 @@ EOT
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"
+
+{
+    java=${temp}/bad.java
+    echo "this is not Java, but a broken syntax" > "${java}"
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
+    echo "${msg}"
+    echo "${msg}" | grep "Failed to collect ast.py"
+    echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
+    test -e "${temp}/m.coco"
+    test -e "${temp}/m.loc"
+    test ! -e "${temp}/m.cc"
+} > "${stdout}" 2>&1
+echo "👍🏻 Broken syntax measured and error log created"
+
