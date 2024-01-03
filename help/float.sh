@@ -30,4 +30,4 @@ if [ "${num}" == 'NaN' ]; then
     exit
 fi
 
-(printf '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
+(LC_NUMERIC=C printf '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
