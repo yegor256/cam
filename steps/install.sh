@@ -24,6 +24,11 @@
 set -e
 set -o pipefail
 
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  linux=yes
+fi
+set -x
+
 if [ -n "${linux}" ]; then
   SUDO=
 else
@@ -36,11 +41,6 @@ if [ -n "${linux}" ]; then
     exit 1
   fi
 fi
-
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
-set -x
 
 if [ -n "${linux}" ]; then
   apt-get -y update
@@ -111,7 +111,7 @@ if ! xmlstarlet --version >/dev/null 2>&1; then
 fi
 
 if [ ! -e "${HOME}/texmf" ]; then
-  tlmgr init-usertree
+  $SUDO tlmgr init-usertree
 fi
 $SUDO tlmgr option repository ctan
 $SUDO tlmgr --verify-repo=none update --self
