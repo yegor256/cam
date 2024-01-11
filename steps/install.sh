@@ -24,9 +24,17 @@
 set -e
 set -o pipefail
 
-if [ ! "$(id -u)" = 0 ]; then
-  echo "You should run it as root: 'sudo make install'"
-  exit 1
+if [ -n "${linux}" ]; then
+  SUDO=
+else
+  SUDO=sudo
+fi
+
+if [ -n "${linux}" ]; then
+  if [ ! "$(id -u)" = 0 ]; then
+    echo "You should run it as root: 'sudo make install'"
+    exit 1
+  fi
 fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -105,14 +113,14 @@ fi
 if [ ! -e "${HOME}/texmf" ]; then
   tlmgr init-usertree
 fi
-tlmgr option repository ctan
-tlmgr --verify-repo=none update --self
+$SUDO tlmgr option repository ctan
+$SUDO tlmgr --verify-repo=none update --self
 declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   libertine paralist makecell footmisc currfile enumitem wrapfig \
   lastpage biblatex titling svg catchfile transparent textpos fvextra \
   xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
-tlmgr --verify-repo=none install "${packages[@]}"
-tlmgr --verify-repo=none update "${packages[@]}"
+$SUDO tlmgr --verify-repo=none install "${packages[@]}"
+$SUDO tlmgr --verify-repo=none update "${packages[@]}"
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -123,7 +131,7 @@ if ! pygmentize -V >/dev/null 2>&1; then
   fi
 fi
 
-python3 -m pip install -r "${LOCAL}/requirements.txt"
+$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
 
 gem install --no-document rubocop -v 1.56.3
 gem install --no-document octokit -v 4.21.0
