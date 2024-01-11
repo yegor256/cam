@@ -46,7 +46,7 @@ EOT
 
 cp "${java}" "${tmp}/foo.java"
 
-pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --cache "${TARGET}/temp/pmd-cache" --format xml --fail-on-violation false > "${tmp}/result.xml" 2>/dev/null
+pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --cache "${TARGET}/temp/pmd-cache" --format xml --fail-on-violation false > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
