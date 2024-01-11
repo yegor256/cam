@@ -40,34 +40,34 @@ stdout=$2
         private final boolean boom() { return true; }
     }
 EOT
-    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
     echo "${msg}"
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
-    all=$(find "${temp}" -name 'm.*' -type f -exec basename {} \;)
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \;)
     test "$(echo "${all}" | wc -l | xargs)" = "38"
     echo "${all}" | sort | while IFS= read -r m; do
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
     done
-    test "$(cat "${temp}/m.loc")" = "8"
-    test "$(cat "${temp}/m.nocl")" = "1"
-    test "$(cat "${temp}/m.cc")" = "1"
-    test "$(cat "${temp}/m.ncss")" = "7"
-    test "$(cat "${temp}/m.nocm")" = "0"
-    test "$(cat "${temp}/m.noom")" = "1"
-    test "$(cat "${temp}/m.nocc")" = "1"
-    test "$(cat "${temp}/m.napc")" = "1"
-    test "$(cat "${temp}/m.noii")" = "1"
-    test "$(cat "${temp}/m.notp")" = "0"
-    test "$(cat "${temp}/m.final")" = "0"
-    test "$(cat "${temp}/m.nobl")" = "1"
-    test "$(cat "${temp}/m.hsd")" = "6.188"
-    test "$(cat "${temp}/m.hsv")" = "122.624"
-    test "$(cat "${temp}/m.hse")" = "758.735"
-    test "$(cat "${temp}/m.coco")" = "0"
-    test "$(cat "${temp}/m.fout")" = "0"
-    test "$(cat "${temp}/m.LCOM5")" = "0"
+    test "$(cat "${temp}/m1.loc")" = "8"
+    test "$(cat "${temp}/m1.nocl")" = "1"
+    test "$(cat "${temp}/m1.cc")" = "1"
+    test "$(cat "${temp}/m1.ncss")" = "7"
+    test "$(cat "${temp}/m1.nocm")" = "0"
+    test "$(cat "${temp}/m1.noom")" = "1"
+    test "$(cat "${temp}/m1.nocc")" = "1"
+    test "$(cat "${temp}/m1.napc")" = "1"
+    test "$(cat "${temp}/m1.noii")" = "1"
+    test "$(cat "${temp}/m1.notp")" = "0"
+    test "$(cat "${temp}/m1.final")" = "0"
+    test "$(cat "${temp}/m1.nobl")" = "1"
+    test "$(cat "${temp}/m1.hsd")" = "6.188"
+    test "$(cat "${temp}/m1.hsv")" = "122.624"
+    test "$(cat "${temp}/m1.hse")" = "758.735"
+    test "$(cat "${temp}/m1.coco")" = "0"
+    test "$(cat "${temp}/m1.fout")" = "0"
+    test "$(cat "${temp}/m1.LCOM5")" = "0"
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"
@@ -75,13 +75,13 @@ echo "👍🏻 Single file measured correctly"
 {
     java=${temp}/bad.java
     echo "this is not Java, but a broken syntax" > "${java}"
-    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m")
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m2")
     echo "${msg}"
     echo "${msg}" | grep "Failed to collect ast.py"
     echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
-    test -e "${temp}/m.coco"
-    test -e "${temp}/m.loc"
-    test ! -e "${temp}/m.cc"
+    test -e "${temp}/m2.coco"
+    test -e "${temp}/m2.loc"
+    test ! -e "${temp}/m2.cc"
 } > "${stdout}" 2>&1
 echo "👍🏻 Broken syntax measured and error log created"
 
