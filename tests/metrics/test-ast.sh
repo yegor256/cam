@@ -47,5 +47,12 @@ stdout=$2
     grep "varcomp 1.0" "${temp}/stdout"
     grep "mhf 1.0" "${temp}/stdout"
     grep "smhf 0" "${temp}/stdout"
+    grep "ahf 0" "${temp}/stdout"
+    grep "sahf 0" "${temp}/stdout"
+    grep "nomp 0" "${temp}/stdout"
+    grep "nosmp 0" "${temp}/stdout"
+    grep "mxnomp 0" "${temp}/stdout"
+    grep "mxnosmp 0" "${temp}/stdout"
+    grep "nom 0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"

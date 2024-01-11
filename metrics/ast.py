@@ -25,6 +25,116 @@ import sys
 import javalang
 
 
+def ahf(tlist) -> int:
+    """Ratio of private/protected attributes to all attributes in a class.
+    :rtype: float
+    """
+    declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    fields = list(field for field in declaration)
+    hidden = 0
+    total = 0
+    for path, node in fields:
+        del path
+        if 'private' in node.modifiers or 'protected' in node.modifiers:
+            hidden += 1
+        total += 1
+    if total == 0:
+        return 0
+    return hidden / total
+
+
+def sahf(tlist) -> int:
+    """Ratio of private/protected attributes to static attributes in a class.
+    :rtype: float
+    """
+    declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    fields = list(field for field in declaration)
+    hidden = 0
+    total = 0
+    for path, node in fields:
+        del path
+        if 'static' not in node.modifiers:
+            continue
+        if 'private' in node.modifiers or 'protected' in node.modifiers:
+            hidden += 1
+        total += 1
+    if total == 0:
+        return 0
+    return hidden / total
+
+
+def nomp(tlist) -> int:
+    """Total number of parameters in all class methods.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    total = 0
+    for path, node in mlist:
+        del path
+        total += len(node.parameters)
+    return total
+
+
+def nosmp(tlist) -> int:
+    """Total number of parameters in static class methods.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    total = 0
+    for path, node in mlist:
+        del path
+        if 'static' not in node.modifiers:
+            continue
+        total += len(node.parameters)
+    return total
+
+
+def mxnomp(tlist) -> int:
+    """Maximum number of parameters in all class methods.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    maximum = 0
+    for path, node in mlist:
+        del path
+        maximum = max(maximum, len(node.parameters))
+    return maximum
+
+
+def mxnosmp(tlist) -> int:
+    """Maximum number of parameters in static class methods.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    maximum = 0
+    for path, node in mlist:
+        del path
+        if 'static' not in node.modifiers:
+            continue
+        maximum = max(maximum, len(node.parameters))
+    return maximum
+
+
+def nom(tlist) -> int:
+    """Number of methods that are annotated with @Override.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    mlist = list(method for method in declaration)
+    total = 0
+    for path, node in mlist:
+        del path
+        annotations = list(annotation.name for annotation in node.annotations)
+        if 'Override' in annotations:
+            total += 1
+            continue
+    return total
+
+
 def attrs(tlist) -> int:
     """Count non-static attributes.
     :rtype: int
@@ -246,6 +356,20 @@ if __name__ == '__main__':
                              f'Method Hiding Factor (MHF)\n')
                 metric.write(f'smhf {smhf(tree_class)} '
                              f'Static Method Hiding Factor (MHF)\n')
+                metric.write(f'ahf {ahf(tree_class)} '
+                             f'Method Attribute Factor (AHF)\n')
+                metric.write(f'sahf {sahf(tree_class)} '
+                             f'Static Attribute Hiding Factor (SAHF)\n')
+                metric.write(f'nomp {nomp(tree_class)} '
+                             f'Number of Method Parameters (NOMP)\n')
+                metric.write(f'nosmp {nosmp(tree_class)} '
+                             f'Number of Static Method Parameters (NOSMP)\n')
+                metric.write(f'mxnomp {mxnomp(tree_class)} '
+                             f'Maximum of Method Parameters (MxNOMP)\n')
+                metric.write(f'mxnosmp {mxnosmp(tree_class)} '
+                             f'Maximum of Static Method Parameters (MxNOSMP)\n')
+                metric.write(f'nom {nom(tree_class)} '
+                             f'Number of Overriding Methods (NOM)\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
