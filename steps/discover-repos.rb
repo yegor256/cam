@@ -120,7 +120,8 @@ File.write(
 
 path = File.expand_path(opts[:csv])
 FileUtils.mkdir_p(File.dirname(path))
-lines = [found.first[1].keys.join(',')] + found.map { |pair| pair[1].values.join(',') }
+lines = [found.first[1].keys.join(',')] + found.values.map { |m| m.values.join(',') }
+# lines = [found.first[1].keys.join(',')] + found.map { |pair| pair[1].values.join(',') }
 lines << ''
 File.write(path, lines.join("\n"))
 puts "The list of #{found.count} repos saved into #{path}"
