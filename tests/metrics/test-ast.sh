@@ -31,20 +31,24 @@ stdout=$2
     echo "@Demo public final class Foo<T> extends Bar implements Boom, Hello {
         final File a;
         static String Z;
+        static float MY_CONSTANT_PI_WITH_LONG_NAME = 3.14159;
+        private int camelCase123;
         void x() { }
         int y() { return 0; }
+        void camelCaseMethod() { }
     }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
     cat "${temp}/stdout"
-    grep "nooa 1" "${temp}/stdout"
+    grep "nooa 2" "${temp}/stdout"
+    grep "nosa 2" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
-    grep "noom 2" "${temp}/stdout"
+    grep "noom 3" "${temp}/stdout"
     grep "noii 2" "${temp}/stdout"
     grep "napc 1" "${temp}/stdout"
     grep "notp 1" "${temp}/stdout"
     grep "final 1" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
-    grep "varcomp 1.0" "${temp}/stdout"
+    grep "varcomp 2.75" "${temp}/stdout"
     grep "mhf 1.0" "${temp}/stdout"
     grep "smhf 0" "${temp}/stdout"
     grep "ahf 0" "${temp}/stdout"
