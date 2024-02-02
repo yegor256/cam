@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import re
 import sys
 import javalang
 
@@ -300,18 +301,33 @@ def varcomp(tlist) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
-    parts, variables = 0, 0
+    parts = 0
+    variables = 0
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
-        if (name := node.name) != '':
-            variables += 1
-            parts += 1
-            for letter in name[1:]:
-                if letter == letter.upper():
-                    parts += 1
+        if (name := node.name) == '':
+            continue
 
-    if variables == 0:
-        return 0
-    return parts / variables
+        variables += 1
+
+        # Java only allows "$" and "_" as special symbols in variable names.
+        # Split by them to only count words ans numbers.
+        components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
+
+        if len(components) == 0:
+            parts += 1
+            continue
+
+        for component in components:
+            parts += 1
+            prev_char = component[:1]
+            for char in component[1:]:
+                if prev_char.isdigit() != char.isdigit():
+                    parts += 1
+                elif prev_char.islower() and char.isupper():
+                    parts += 1
+                prev_char = char
+
+    return (parts / variables) if variables != 0 else 0
 
 
 class NotClassError(Exception):
