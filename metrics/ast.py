@@ -310,7 +310,7 @@ def varcomp(tlist) -> float:
         variables += 1
 
         # Java only allows "$" and "_" as special symbols in variable names.
-        # Split by them to only count words ans numbers.
+        # Split variable name by them to only count words and numbers.
         components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
 
         if len(components) == 0:
