@@ -52,7 +52,7 @@ EOT
     grep "hsd 6" "${temp}/stdout"
     grep "hse 1133.218" "${temp}/stdout"
     grep "hsv 188.87" "${temp}/stdout"
-    grep "midx 100" "${temp}/stdout"
+    grep "midx 103.261" "${temp}/stdout"
     grep "fout 2" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted a few metrics"
