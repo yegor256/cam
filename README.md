@@ -45,7 +45,7 @@ your [personal access token](https://docs.github.com/en/github/authenticating-to
 ```bash
 $ docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
-  yegor256/cam:0.8.1 "make -e >/dataset/make.log 2>&1"
+  yegor256/cam:0.9.0 "make -e >/dataset/make.log 2>&1"
 ```
 
 This command will create a new Docker container, running in the background.
