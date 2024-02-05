@@ -51,6 +51,7 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
     "--total=${TOTAL}" \
     "--csv=${csv}" \
     "--tex=${TARGET}/temp/repo-details.tex" \
+    "--pause=2" \
     "--min-stars=400" \
     "--max-stars=10000" \
   )
