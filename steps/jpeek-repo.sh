@@ -69,11 +69,13 @@ build() {
     fi
 }
 
+JVM_MEMORY_LIMIT=512m
+
 collect() {
-    timeout 1h java -jar "${JPEEK}" --overwrite --include-ctors --include-static-methods \
+    timeout 1h java "-Xmx${JVM_MEMORY_LIMIT}" -jar "${JPEEK}" --overwrite --include-ctors --include-static-methods \
         --include-private-methods --sources "${project}" \
         --target "${TARGET}/temp/jpeek/all/${repo}" > "${logs}/jpeek-all.log" 2>&1
-    timeout 1h java -jar "${JPEEK}" --overwrite --sources "${project}" \
+    timeout 1h java "-Xmx${JVM_MEMORY_LIMIT}" -jar "${JPEEK}" --overwrite --sources "${project}" \
         --target "${TARGET}/temp/jpeek/cvc/${repo}" > "${logs}/jpeek-cvc.log" 2>&1
 }
 
