@@ -22,7 +22,7 @@
 
 .SHELLFLAGS: -e -o pipefail -c
 .ONESHELL:
-.PHONY: clone filter measure cleanup env lint zip wipe clean
+.PHONY: clone filter measure cleanup env lint zip wipe clean jpeek aggregate
 .SILENT:
 
 # Our version.
