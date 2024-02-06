@@ -52,6 +52,9 @@ LOCAL := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 # Location of jpeek JAR file
 JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
 
+# Options for all Java processes
+JAVA_OPTS=-Xmx4g
+
 # Make all variables from this Makefile visible in all steps/*.sh
 export
 
