@@ -60,10 +60,12 @@ maybe a few days!), and a `.zip` archive will also be there. Docker container
 will run in the background: you can safely close the console and come back when the
 dataset is ready and the container is deleted.
 
-Make sure your server has enough **swap memory** (at least 32Gb) and **free disk space** (at least 512Gb)
+Make sure your server has enough 
+[**swap memory**](https://askubuntu.com/questions/178712/how-to-increase-swap-space) 
+(at least 32Gb) and **free disk space** (at least 512Gb)
 — without this, the dataset will have many errors.
-It's better to have multiple CPUs, since the entire build process is highly parallel: all
-CPUs will be utilized.
+It's better to have multiple CPUs, since the entire build process is highly parallel: 
+all CPUs will be utilized.
 
 If the script fails at some point, you can restart it again, without deleting previously
 created files. The process is incremental --- it will understand where it stopped before.
