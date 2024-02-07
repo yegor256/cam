@@ -68,7 +68,7 @@ It's better to have multiple CPUs, since the entire build process is highly para
 all CPUs will be utilized.
 
 If the script fails at some point, you can restart it again, without deleting previously
-created files. The process is incremental --- it will understand where it stopped before.
+created files. The process is incremental — it will understand where it stopped before.
 In order to restart an entire "step," delete the following directory:
 
   * `github` to rerun `clone`
