@@ -71,9 +71,9 @@ If the script fails at some point, you can restart it again, without deleting pr
 created files. The process is incremental — it will understand where it stopped before.
 In order to restart an entire "step," delete the following directory:
 
-  * `github` to rerun `clone`
-  * `temp/jpeek-logs` to rerun `jpeek`
-  * `measurements` to rerun `measure`
+  * `github/` to rerun `clone`
+  * `temp/jpeek-logs/` to rerun `jpeek`
+  * `measurements/` to rerun `measure`
 
 You can also run it without Docker:
 
