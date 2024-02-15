@@ -120,7 +120,7 @@ declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
   lastpage biblatex titling svg catchfile transparent textpos fvextra \
   xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
 $SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none update "${packages[@]}"
+$SUDO tlmgr --verify-repo=none update "${packages[@]}" || echo 'Failed to update'
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
