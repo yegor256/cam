@@ -6,8 +6,6 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-LOCAL="$PWD"
-
 {
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
