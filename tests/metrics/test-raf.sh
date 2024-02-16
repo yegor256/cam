@@ -56,8 +56,8 @@ echo "👍🏻 Didn't fail in non-git directory"
   "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
   sleep 1
   "${LOCAL}/metrics/raf.sh" "${file2}" "t3"
-  grep "raf 0.0" "t1" # File is created with repo
-  grep "raf 1.0" "t2" # File a second after repo
+  grep "raf 1.0" "t1" # File is created with repo
+  grep "raf 0.0" "t2" # File a second after repo
   grep "raf 0.5" "t3" # File created exactly in the middle
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"
