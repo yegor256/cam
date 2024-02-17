@@ -115,12 +115,9 @@ if [ ! -e "${HOME}/texmf" ]; then
 fi
 $SUDO tlmgr option repository ctan
 $SUDO tlmgr --verify-repo=none update --self
-declare -a packages=(href-ul huawei ffcode latexmk fmtcount trimspaces \
-  libertine paralist makecell footmisc currfile enumitem wrapfig \
-  lastpage biblatex titling svg catchfile transparent textpos fvextra \
-  xstring framed environ iexec anyfontsize changepage titlesec upquote hyperxmp biber)
-$SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none --no-auto-remove update "${packages[@]}" || echo 'Failed to update'
+root=$(dirname "$0")
+$SUDO tlmgr --verify-repo=none install $(cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq)
+$SUDO tlmgr --verify-repo=none --no-auto-update update $(cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq) || echo 'Failed to update'
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then

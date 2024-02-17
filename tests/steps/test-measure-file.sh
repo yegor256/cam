@@ -45,7 +45,7 @@ EOT
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \;)
-    test "$(echo "${all}" | wc -l | xargs)" = "45"
+    test "$(echo "${all}" | wc -l | xargs)" = "46"
     echo "${all}" | sort | while IFS= read -r m; do
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
@@ -68,6 +68,7 @@ EOT
     test "$(cat "${temp}/m1.coco")" = "0"
     test "$(cat "${temp}/m1.fout")" = "0"
     test "$(cat "${temp}/m1.LCOM5")" = "0"
+    test "$(cat "${temp}/m1.raf")" = "0"
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"
