@@ -116,8 +116,9 @@ fi
 $SUDO tlmgr option repository ctan
 $SUDO tlmgr --verify-repo=none update --self
 root=$(dirname "$0")
-$SUDO tlmgr --verify-repo=none install $(cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq)
-$SUDO tlmgr --verify-repo=none --no-auto-update update $(cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq) || echo 'Failed to update'
+packages=( "$(cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq)" )
+$SUDO tlmgr --verify-repo=none install "${packages[@]}"
+$SUDO tlmgr --verify-repo=none --no-auto-update update "${packages[@]}" || echo 'Failed to update'
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
