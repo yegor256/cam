@@ -30,6 +30,7 @@ stdout=$2
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
   touch "temp_file"
+  mkdir -p "${LOCAL}/${temp}"
   "${LOCAL}/metrics/raf.sh" "temp_file" "${LOCAL}/${temp}/stdout"
   grep "raf 0" "${LOCAL}/${temp}/stdout"
 } > "${stdout}" 2>&1
