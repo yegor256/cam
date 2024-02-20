@@ -37,7 +37,8 @@ stdout=$2
 echo "👍🏻 Didn't fail in non-git directory"
 
 {
-  cd "${temp}"
+  tmp=$(mktemp -d /tmp/XXXX)
+  cd "${tmp}"
   rm -rf ./*
   rm -rf .git
   git init --quiet .
