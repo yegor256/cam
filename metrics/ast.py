@@ -330,6 +330,26 @@ def varcomp(tlist) -> float:
     return (parts / variables) if variables != 0 else 0
 
 
+def nop(tlist) -> int:
+    """Return number of polymorphic methods in main class.
+    Methods of nested classes are skipped.
+    r:type: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    methods_count = {}
+
+    for path, node in declaration:
+        # Methods of nested classe has path > 2.
+        if len(path) > 2:
+            continue
+        if node.name in methods_count:
+            methods_count[node.name] += 1
+            continue
+        methods_count[node.name] = 1
+
+    return sum(1 for count in methods_count.values() if count > 1)
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -386,6 +406,8 @@ if __name__ == '__main__':
                              f'Maximum of Static Method Parameters (MxNOSMP)\n')
                 metric.write(f'nom {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM)\n')
+                metric.write(f'nop {nop(tree_class)} '
+                             f'Number of Polymorphic Methods (NOP)\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
