@@ -86,7 +86,7 @@ done
 start=$(date +%s%N)
 
 if ! collect; then
-    echo "Failed to calculate jpeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error$("${LOCAL}/help/tdiff.sh" "${start}")"
+    echo "Failed to calculate jPeek metrics in ${repo} (${pos}/${total}) due to jpeek.jar error$("${LOCAL}/help/tdiff.sh" "${start}")"
     exit
 fi
 
