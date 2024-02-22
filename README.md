@@ -123,3 +123,35 @@ $ make test
 ```
 
 This should take a few minutes to complete, without errors.
+
+## How to Build a New Archive
+
+When it's time to build a new archive, create a new `t3.xlarge`
+server (16Gb RAM + 4CPU) with Ubuntu 22.04 in AWS. 
+
+Then, install Docker into it:
+
+```
+$ sudo apt update -y
+$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+$ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+$ sudo apt update -y
+$ sudo apt-cache policy docker-ce
+$ sudo apt install -y docker-ce
+$ sudo systemctl status docker
+$ sudo usermod -aG docker ${USER}
+```
+
+Then, add swap memory of 16Gb:
+
+```
+$ sudo dd if=/dev/zero of=/swapfile bs=1048576 count=16384
+$ sudo chmod 600 /swapfile
+$ sudo mkswap /swapfile
+$ sudo swapon /swapfile 
+```
+
+Then, create a [personal access token](https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) 
+in GitHub, and run Docker as explained above.
+
