@@ -31,7 +31,7 @@ fi
 
 rlist=${TARGET}/temp/repos-to-polish.txt
 mkdir -p "$(dirname "${rlist}")"
-echo "Wait a bit, searching for repos..."
+echo "Wait a bit, searching for repos in '${dir}'..."
 find "${dir}" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${dir}" {} \; > "${rlist}"
 
 if [ -s "${rlist}" ]; then
