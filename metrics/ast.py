@@ -350,6 +350,17 @@ def nop(tlist) -> int:
     return sum(1 for count in methods_count.values() if count > 1)
 
 
+def nulls(tlist) -> int:
+    """Return number of null references used in the class.
+    r:type: int
+    """
+    null_count = 0
+    for _, node in tlist[0][1].filter(javalang.tree.Literal):
+        if str(node.value) == 'null':
+            null_count += 1
+    return null_count
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -408,6 +419,8 @@ if __name__ == '__main__':
                              f'Number of Overriding Methods (NOM)\n')
                 metric.write(f'nop {nop(tree_class)} '
                              f'Number of Polymorphic Methods (NOP)\n')
+                metric.write(f'nulls {nulls(tree_class)} '
+                             f'Number of NULL References\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)

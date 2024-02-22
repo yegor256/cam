@@ -61,3 +61,15 @@ stdout=$2
     grep "nop 0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
+
+{
+    java="${temp}/Hello.java"
+    echo "class Hello {
+        String x() { return null; }
+        String y() { return \"null\"; }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "nulls 1" "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly counted NULL references"
