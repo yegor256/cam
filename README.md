@@ -131,6 +131,7 @@ server (8 CPU, 32Gb RAM, 512Gb disk) with Ubuntu 22.04 in AWS.
 
 Then, install Docker into it:
 
+
 ```
 $ sudo apt update -y
 $ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
@@ -139,7 +140,6 @@ $ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/doc
 $ sudo apt update -y
 $ sudo apt-cache policy docker-ce
 $ sudo apt install -y docker-ce
-$ sudo systemctl status docker
 $ sudo usermod -aG docker ${USER}
 ```
 
