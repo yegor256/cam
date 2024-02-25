@@ -32,7 +32,7 @@ args=(
   '--halt-on-error=now,fail=1'
   '--halt=now,fail=1'
   '--retries=3'
-  "--load=${cores}"
+  "--load=8"
   "--max-procs=${cores}"
 )
 
