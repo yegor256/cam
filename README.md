@@ -126,8 +126,8 @@ This should take a few minutes to complete, without errors.
 
 ## How to Build a New Archive
 
-When it's time to build a new archive, create a new `t3.xlarge`
-server (16Gb RAM + 4CPU) with Ubuntu 22.04 in AWS. 
+When it's time to build a new archive, create a new `m7i.2xlarge`
+server (8 CPU, 32Gb RAM, 512Gb disk) with Ubuntu 22.04 in AWS. 
 
 Then, install Docker into it:
 
