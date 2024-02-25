@@ -40,7 +40,7 @@ fi
 dir=${TARGET}/github/${repo}
 
 if [ -e "${dir}" ]; then
-    echo "The repo directory #${pos}/${total} is already here: ${dir}"
+    echo "The repo directory #${pos}/${total} is already here: ${dir} ($(du -sh "${dir}" | cut -f1 | xargs))"
     exit
 fi
 
