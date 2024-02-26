@@ -37,7 +37,7 @@ echo "👍🏻 A Java file with a broken syntax inside was deleted correctly"
 
 {
     fixtures=$(realpath "$(dirname "$0")/../../fixtures/filters/unparseable")
-    for f in $(find "${fixtures}" -name '*.java'); do
+    find "${fixtures}" -name '*.java' | while IFS= read -r f; do
         java="${temp}/$(basename "${f}")"
         cp "${f}" "${java}"
         "${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/deleted.txt"
