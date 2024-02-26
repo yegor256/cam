@@ -31,7 +31,9 @@ if __name__ == '__main__':
     try:
         with open(JAVA, encoding='utf-8') as f:
             try:
-                javalang.parse.parse(f.read())
+                raw = javalang.parse.parse(f.read())
+                tree = raw.filter(javalang.tree.ClassDeclaration)
+                list((value for value in tree))
             except Exception:
                 os.remove(JAVA)
                 with open(LST, 'a+', encoding='utf-8') as others:

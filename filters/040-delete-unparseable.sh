@@ -52,9 +52,9 @@ wait
 
 total=$(wc -l < "${candidates}" | xargs)
 if [ -s "${list}" ]; then
-    printf "%'d files out of %'d with broken Java syntax were deleted" \
+    printf "%'d files out of %'d with an unparseable Java syntax were deleted" \
         "$(wc -l < "${list}" | xargs)" "${total}"
 else
-    printf "No files out of %'d had broken Java syntax" \
+    printf "No files out of %'d had an unparseable Java syntax" \
         "${total}"
 fi
