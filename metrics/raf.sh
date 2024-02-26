@@ -23,17 +23,15 @@
 set -e
 set -o pipefail
 
-file=$1
+java=$1
 output=$(realpath "$2")
 
-# To make sure that python is installed
-python --version > /dev/null
+cd "$(dirname "${java}")"
+base=$(basename "${java}")
 
 # To check that file was added in commit any time
-
-
-if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${file}")"; then
-    file_creation=$(git log --pretty=format:"%ci" --date=default -- "${file}" | tail -n 1)
+if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
+    file_creation=$(git log --pretty=format:"%ci" --date=default -- "${base}" | tail -n 1)
     repo_creation=$(git log --reverse --format="format:%ci" | sed -n 1p)
     current_time=$(date "+%Y-%m-%d %H:%M:%S %z")
     file_creation_timestamp=$(date -d "$file_creation" +%s)
