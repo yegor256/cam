@@ -46,17 +46,15 @@ echo "👍🏻 Didn't fail in non-git directory"
   git config user.name 'Foo'
   file="temp_file"
   file2="temp_file1"
-  touch "${file}"
+  touch -d "1 second ago" "${file}"
   git add "${file}"
   git config commit.gpgsign false
   git commit --quiet -m "first"
   "${LOCAL}/metrics/raf.sh" "${file}" "t1"
-  sleep 1
-  touch "${file2}"
+  touch -d "1 second ago" "${file2}"
   git add "${file2}"
   git commit --quiet -m "second"
   "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
-  sleep 1
   "${LOCAL}/metrics/raf.sh" "${file2}" "t3"
   # The following lines are disabled b/c the test is not stable, see: https://github.com/yegor256/cam/issues/165
   # grep "raf 1.0" "t1" # File is created with repo
