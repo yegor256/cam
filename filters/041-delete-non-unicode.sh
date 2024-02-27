@@ -20,7 +20,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
 
-find . -name "*.java" -exec file -I {} \; | grep -v "utf-8" | awk -F: '{print $1; system("rm " $1)}'
+home=$1
+temp=$2
+
+total=$(find "${home}" -type f | wc -l)
+
+list=${temp}/filter-lists/non-unicode-files.txt
+if [ -e "${list}" ]; then
+    exit
+fi
+
+mkdir -p "$(dirname "${list}")"
+find "${home}" -type f -not -name '*.java' -print > "${list}"
+while IFS= read -r f; do
+    rm -f "${f}"
+done < "${list}"
+
+if [ -s "${list}" ]; then
+    printf "%'d files out of %'d without the .java extension were deleted\n" \
+        "$(wc -l < "${list}" | xargs)" "${total}"
+else
+    printf "%'d files were .java files, nothing was deleted\n" \
+        "${total}"
+fi
