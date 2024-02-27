@@ -58,8 +58,7 @@ docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
 This command will create a new Docker container, running in the background.
 (run `docker ps -a`, in order to see it).
 If you want to run docker interactively and see all the logs,
-you can just disable
-[detached mode](https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode)
+you can just disable [detached mode][detached]
 by removing the `--detach` option from the command.
 
 The dataset will be created in the current directory (may take some time,
@@ -165,5 +164,8 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 ```
 
-Then, create a [personal access token](https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
-in GitHub, and run Docker as explained above.
+Then, create a [personal access token][PAT] in GitHub,
+and run Docker as explained above.
+
+[PAT]: https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+[detached]: https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode
