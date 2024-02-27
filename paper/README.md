@@ -1,9 +1,11 @@
+# Introduction Paper about CaM
+
 [![make](https://github.com/yegor256/cam/actions/workflows/latexmk.yml/badge.svg)](https://github.com/yegor256/cam/actions/workflows/latexmk.yml)
 
 To build it, just run:
 
 ```bash
-$ make
+make
 ```
 
 You need to have
