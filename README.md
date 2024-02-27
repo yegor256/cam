@@ -143,8 +143,7 @@ server (8 CPU, 32Gb RAM, 512Gb disk) with Ubuntu 22.04 in AWS.
 
 Then, install Docker into it:
 
-
-```
+```bash
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -157,7 +156,7 @@ sudo usermod -aG docker ${USER}
 
 Then, add swap memory of 16Gb:
 
-```
+```bash
 sudo dd if=/dev/zero of=/swapfile bs=1048576 count=16384
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
