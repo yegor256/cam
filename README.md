@@ -1,3 +1,5 @@
+# Classes and Metrics (CaM)
+
 [![make](https://github.com/yegor256/cam/actions/workflows/make.yml/badge.svg?branch=master)](https://github.com/yegor256/cam/actions/workflows/make.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
@@ -43,7 +45,7 @@ and `XXX` is
 your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```bash
-$ docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
+docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
   --oom-kill-disable --memory=16g --memory-swap=16g \
   yegor256/cam:0.9.1 "make -e >/dataset/make.log 2>&1"
@@ -71,15 +73,15 @@ If the script fails at some point, you can restart it again, without deleting pr
 created files. The process is incremental — it will understand where it stopped before.
 In order to restart an entire "step," delete the following directory:
 
-  * `github/` to rerun `clone`
-  * `temp/jpeek-logs/` to rerun `jpeek`
-  * `measurements/` to rerun `measure`
+* `github/` to rerun `clone`
+* `temp/jpeek-logs/` to rerun `jpeek`
+* `measurements/` to rerun `measure`
 
 You can also run it without Docker:
 
 ```bash
-$ make wipe
-$ make TOTAL=100
+make wipe
+make TOTAL=100
 ```
 
 Should work, if you have all the dependencies installed, as suggested in the
@@ -89,8 +91,8 @@ In order to analyze just a single repository, do this
 ([`yegor256/tojos`](https://github.com/yegor256/tojos) as an example):
 
 ```bash
-$ make wipe
-$ make REPO=yegor256/tojos
+make wipe
+make REPO=yegor256/tojos
 ```
 
 ## How to Calculate Additional Metrics
@@ -98,12 +100,12 @@ $ make REPO=yegor256/tojos
 You may want to use this dataset as a basis, with an intend of adding your own
 metrics on top of it. It should be easy:
 
-  * Clone this repo into `cam/` directory
-  * Download ZIP archive
-  * Unpack it to the `cam/dataset/` directory
-  * Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
-  * Delete all other files except yours from the `cam/metrics/` directory
-  * Run [`make`](https://www.gnu.org/software/make/) in the `cam/` directory: `sudo make install; make all`
+* Clone this repo into `cam/` directory
+* Download ZIP archive
+* Unpack it to the `cam/dataset/` directory
+* Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
+* Delete all other files except yours from the `cam/metrics/` directory
+* Run [`make`](https://www.gnu.org/software/make/) in the `cam/` directory: `sudo make install; make all`
 
 The `make` should understand that a new metric was added. It will apply this new metric
 to all `.java` files, generate new `.csv` reports, aggregate them with existing
@@ -118,8 +120,8 @@ provided they don't violate our quality standards. To avoid frustration,
 before sending us your pull request please run full build:
 
 ```bash
-$ sudo make install
-$ make test
+sudo make install
+make test
 ```
 
 This should take a few minutes to complete, without errors.
@@ -133,25 +135,24 @@ Then, install Docker into it:
 
 
 ```
-$ sudo apt update -y
-$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-$ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-$ sudo apt update -y
-$ sudo apt-cache policy docker-ce
-$ sudo apt install -y docker-ce
-$ sudo usermod -aG docker ${USER}
+sudo apt update -y
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update -y
+sudo apt-cache policy docker-ce
+sudo apt install -y docker-ce
+sudo usermod -aG docker ${USER}
 ```
 
 Then, add swap memory of 16Gb:
 
 ```
-$ sudo dd if=/dev/zero of=/swapfile bs=1048576 count=16384
-$ sudo chmod 600 /swapfile
-$ sudo mkswap /swapfile
-$ sudo swapon /swapfile 
+sudo dd if=/dev/zero of=/swapfile bs=1048576 count=16384
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 ```
 
 Then, create a [personal access token](https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) 
 in GitHub, and run Docker as explained above.
-
