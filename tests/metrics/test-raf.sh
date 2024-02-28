@@ -41,26 +41,37 @@ echo "👍🏻 Didn't fail in non-git directory"
   cd "${tmp}"
   rm -rf ./*
   rm -rf .git
+
   git init --quiet .
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
-  file="temp_file"
-  file2="temp_file1"
-  touch "${file}"
-  git add "${file}"
+
+  file1="temp_file1"
+  file2="temp_file2"
+  file3="temp_file3"
+
+  # File 1
+  touch "${file1}"
+  git add "${file1}"
   git config commit.gpgsign false
   git commit --quiet -m "first"
-  "${LOCAL}/metrics/raf.sh" "${file}" "t1"
-  sleep 1
-  touch "${file2}"
+  "${LOCAL}/metrics/raf.sh" "${file1}" "t1"
+
+  # File 2
+  touch -d "1 month ago" "${file2}"
   git add "${file2}"
   git commit --quiet -m "second"
   "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
-  sleep 1
-  "${LOCAL}/metrics/raf.sh" "${file2}" "t3"
-  # The following lines are disabled b/c the test is not stable, see: https://github.com/yegor256/cam/issues/165
-  # grep "raf 1.0" "t1" # File is created with repo
-  # grep "raf 0.0" "t2" # File a second after repo
-  # grep "raf 0.5" "t3" # File created exactly in the middle
+
+  # File 3
+  touch -d "1 year ago" "${file3}"
+  git add "${file3}"
+  git commit --quiet -m "third"
+  "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
+  
+  grep "raf 0" "t1"
+  grep "raf 2678" "t2"
+  grep "raf 31536" "t3"
+
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"
