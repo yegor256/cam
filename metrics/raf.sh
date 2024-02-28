@@ -31,7 +31,7 @@ base=$(basename "${java}")
 
 # To check that file was added in commit any time
 if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
-    file_creation=$(stat "$base" | awk "/Modify/{print $2, $3}")
+    file_creation=$(stat "$base" | awk '/Modify/{print $2, $3}')
     repo_creation=$(git log --reverse --format="format:%ci" | sed -n 1p)
     current_time=$(date "+%Y-%m-%d %H:%M:%S %z")
     file_creation_timestamp=$(date -d "$file_creation" +%s)
