@@ -26,7 +26,7 @@ import sys
 import javalang
 
 
-def ahf(tlist) -> int:
+def ahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Ratio of private/protected attributes to all attributes in a class.
     :rtype: float
     """
@@ -44,7 +44,7 @@ def ahf(tlist) -> int:
     return hidden / total
 
 
-def sahf(tlist) -> int:
+def sahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Ratio of private/protected attributes to static attributes in a class.
     :rtype: float
     """
@@ -64,7 +64,7 @@ def sahf(tlist) -> int:
     return hidden / total
 
 
-def nomp(tlist) -> int:
+def nomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Total number of parameters in all class methods.
     :rtype: int
     """
@@ -77,7 +77,7 @@ def nomp(tlist) -> int:
     return total
 
 
-def nosmp(tlist) -> int:
+def nosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Total number of parameters in static class methods.
     :rtype: int
     """
@@ -92,7 +92,7 @@ def nosmp(tlist) -> int:
     return total
 
 
-def mxnomp(tlist) -> int:
+def mxnomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in all class methods.
     :rtype: int
     """
@@ -105,7 +105,7 @@ def mxnomp(tlist) -> int:
     return maximum
 
 
-def mxnosmp(tlist) -> int:
+def mxnosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in static class methods.
     :rtype: int
     """
@@ -120,7 +120,7 @@ def mxnosmp(tlist) -> int:
     return maximum
 
 
-def nom(tlist) -> int:
+def nom(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Number of methods that are annotated with @Override.
     :rtype: int
     """
@@ -136,7 +136,7 @@ def nom(tlist) -> int:
     return total
 
 
-def attrs(tlist) -> int:
+def attrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count non-static attributes.
     :rtype: int
     """
@@ -150,7 +150,7 @@ def attrs(tlist) -> int:
     return found
 
 
-def sattrs(tlist) -> int:
+def sattrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count static attributes.
     :rtype: int
     """
@@ -164,7 +164,7 @@ def sattrs(tlist) -> int:
     return found
 
 
-def ctors(tlist) -> int:
+def ctors(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count constructors.
     :rtype: int
     """
@@ -173,7 +173,7 @@ def ctors(tlist) -> int:
     return len(clist)
 
 
-def methods(tlist) -> int:
+def methods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count non-static methods.
     :rtype: int
     """
@@ -187,7 +187,7 @@ def methods(tlist) -> int:
     return found
 
 
-def smethods(tlist) -> int:
+def smethods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count static methods.
     :rtype: int
     """
@@ -201,7 +201,7 @@ def smethods(tlist) -> int:
     return found
 
 
-def mhf(tlist) -> int:
+def mhf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Calculate Method Hiding Factor (MHF), which is the ratio
     between private+protected methods and all methods.
     :rtype: float
@@ -220,7 +220,7 @@ def mhf(tlist) -> int:
     return hidden / total
 
 
-def smhf(tlist) -> int:
+def smhf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Calculate Static Method Hiding Factor (MHF), which is the ratio
     between private+protected methods and all methods (which are static).
     :rtype: float
@@ -241,7 +241,7 @@ def smhf(tlist) -> int:
     return hidden / total
 
 
-def ncss(parser_class) -> int:
+def ncss(parser_class: javalang.tree.CompilationUnit) -> int:
     """Count the NCSS (non-commenting source statement) lines.
     :rtype: int
     """
@@ -262,42 +262,42 @@ def ncss(parser_class) -> int:
     return value
 
 
-def impls(tlist) -> int:
+def impls(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of interfaces the class implements.
     r:type: int
     """
     return len(tlist[0][1].implements or [])
 
 
-def extnds(tlist) -> int:
+def extnds(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of classes this class extends (0 or 1).
     r:type: int
     """
     return 0 if tlist[0][1].extends is None else 1
 
 
-def final(tlist) -> int:
+def final(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Return 1 if the class is final, zero otherwise.
     r:type: int
     """
     return 1 if 'final' in tlist[0][1].modifiers else 0
 
 
-def gnrcs(tlist) -> int:
+def gnrcs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of type parameters (generics).
     r:type: int
     """
     return len(tlist[0][1].type_parameters or [])
 
 
-def annts(tlist) -> int:
+def annts(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of annotations of the class.
     r:type: int
     """
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist) -> float:
+def varcomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
@@ -330,7 +330,7 @@ def varcomp(tlist) -> float:
     return (parts / variables) if variables != 0 else 0
 
 
-def nop(tlist) -> int:
+def nop(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of polymorphic methods in main class.
     Methods of nested classes are skipped.
     r:type: int
@@ -350,7 +350,7 @@ def nop(tlist) -> int:
     return sum(1 for count in methods_count.values() if count > 1)
 
 
-def nulls(tlist) -> int:
+def nulls(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of null references used in the class.
     r:type: int
     """
@@ -366,6 +366,10 @@ class NotClassError(Exception):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python ast.py <path to the .java file> <output file with metrics>")
+        exit(1)
+
     JAVA = sys.argv[1]
     METRICS = sys.argv[2]
     with open(JAVA, encoding='utf-8', errors='ignore') as file:
