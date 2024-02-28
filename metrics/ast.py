@@ -366,6 +366,10 @@ class NotClassError(Exception):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python ast.py <path to the .java file> <output file with metrics>")
+        exit(1)
+
     JAVA = sys.argv[1]
     METRICS = sys.argv[2]
     with open(JAVA, encoding='utf-8', errors='ignore') as file:
