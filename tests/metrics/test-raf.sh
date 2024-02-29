@@ -41,37 +41,29 @@ echo "👍🏻 Didn't fail in non-git directory"
   cd "${tmp}"
   rm -rf ./*
   rm -rf .git
-
+  sudo date --set="$(date -d "100 seconds ago")" > /dev/null
   git init --quiet .
+  sudo date --set="$(date -d "100 seconds")" > /dev/null
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
-
   file1="temp_file1"
   file2="temp_file2"
   file3="temp_file3"
-
-  # File 1
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  git commit --quiet -m "first"
+  GIT_COMMITTER_DATE="$(date -d "100 seconds ago")" git commit --date "100 seconds ago" --quiet -m "first"
   "${LOCAL}/metrics/raf.sh" "${file1}" "t1"
-
-  # File 2
-  touch -d "1 month ago" "${file2}"
+  touch "${file2}"
   git add "${file2}"
-  git commit --quiet -m "second"
+  GIT_COMMITTER_DATE="$(date -d "50 seconds ago")" git commit --date "50 seconds ago" --quiet -m "second"
   "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
-
-  # File 3
-  touch -d "1 year ago" "${file3}"
+  touch "${file3}"
   git add "${file3}"
   git commit --quiet -m "third"
   "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
-  
-  grep "raf 0" "t1"
-  grep "raf 2678" "t2"
-  grep "raf 31536" "t3"
-
+  grep "raf 1.0" "t1" # File is created with repo
+  grep "raf 0.5" "t2" # File created right now
+  grep "raf 0.0" "t3" # File created exactly in the middle
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"
