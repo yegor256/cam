@@ -41,9 +41,7 @@ echo "👍🏻 Didn't fail in non-git directory"
   cd "${tmp}"
   rm -rf ./*
   rm -rf .git
-  # sudo date --set="$(date -d "100 seconds ago")" > /dev/null
   git init --quiet .
-  # sudo date --set="$(date -d "100 seconds")" > /dev/null
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
   file1="temp_file1"
