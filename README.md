@@ -27,6 +27,7 @@ lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 volume, effort, and difficulty;
 [maintainability index](https://ieeexplore.ieee.org/abstract/document/303623);
 number of attributes, constructors, methods;
+number of Git authors;
 and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
