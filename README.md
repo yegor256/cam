@@ -14,9 +14,9 @@ This is a more formal explanation of this project:
 [in PDF](https://github.com/yegor256/cam/blob/gh-pages/paper.pdf).
 
 The latest ZIP archive with the dataset is here:
-[cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip)
-(2.19Gb).
-There are **33 metrics** calculated for **862,517 Java classes** from
+[cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
+(2.22Gb).
+There are **48 metrics** calculated for **532,394 Java classes** from
 **1000 GitHub repositories**, including:
 lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 [NCSS](https://stackoverflow.com/questions/5486983/what-does-ncss-stand-for);
@@ -27,10 +27,12 @@ lines of code (reported by [cloc](https://github.com/AlDanial/cloc));
 volume, effort, and difficulty;
 [maintainability index](https://ieeexplore.ieee.org/abstract/document/303623);
 number of attributes, constructors, methods;
-and others ([see PDF](http://cam.yegor256.com/cam-2023-10-22.pdf)).
+and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
+* [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2023-03-02.zip)
+  (2.22Gb): 1000 repos, 48 metrics, 532K classes
 * [cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip)
   (2.19Gb): 1000 repos, 33 metrics, 863K classes
 * [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip)
