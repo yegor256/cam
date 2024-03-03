@@ -56,7 +56,7 @@ echo -n "${metrics}" | while IFS= read -r a; do
 done
 printf "\n" >> "${all}"
 
-echo "All $(wc -l "${all}" | xargs) projects aggregated("${LOCAL}/help/tdiff.sh" "${start}")"
+echo "All $(wc -l "${all}" | xargs) projects aggregated$("${LOCAL}/help/tdiff.sh" "${start}")"
 printf "\n"
 
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
