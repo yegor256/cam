@@ -23,10 +23,8 @@
 set -e
 set -o pipefail
 
-stdout=$2
-
-test "$(echo 'a b c' | "${LOCAL}/help/to-csv.sh")" = 'a b c' > "${stdout}"
+test "$(echo 'a b c' | "${LOCAL}/help/to-csv.sh")" = 'a b c'
 echo "👍🏻 Correctly formatted simple text"
 
-test "$(echo 'a,b,c' | "${LOCAL}/help/to-csv.sh")" = 'a\,b\,c' > "${stdout}"
+test "$(echo 'a,b,c' | "${LOCAL}/help/to-csv.sh")" = 'a\,b\,c'
 echo "👍🏻 Correctly formatted commas"
