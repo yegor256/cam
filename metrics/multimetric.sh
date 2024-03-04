@@ -33,9 +33,9 @@ temp="${TARGET}/temp/multimetric.json"
 mkdir -p "$(dirname "${temp}")"
 echo "${body}" > "${temp}"
 cat <<EOT> "${output}"
-hsd $(echo "${body}" | jq '.halstead_difficulty' | "${LOCAL}/help/float.sh") Halstead Difficulty
-hse $(echo "${body}" | jq '.halstead_effort' | "${LOCAL}/help/float.sh") Halstead Effort
-hsv $(echo "${body}" | jq '.halstead_volume' | "${LOCAL}/help/float.sh") Halstead Volume
-midx $(echo "${body}" | jq '.maintainability_index' | "${LOCAL}/help/float.sh") Maintainability Index
-fout $(echo "${body}" | jq '.fanout_external' | "${LOCAL}/help/float.sh") Fan-Out
+hsd $(echo "${body}" | jq '.halstead_difficulty' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Difficulty}
+hse $(echo "${body}" | jq '.halstead_effort' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Effort}
+hsv $(echo "${body}" | jq '.halstead_volume' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Volume}
+midx $(echo "${body}" | jq '.maintainability_index' | "${LOCAL}/help/float.sh") \href{https://ieeexplore.ieee.org/abstract/document/303623/}{Maintainability Index}
+fout $(echo "${body}" | jq '.fanout_external' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Fan-out_(software)}{Fan-Out}
 EOT

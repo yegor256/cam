@@ -418,7 +418,7 @@ if __name__ == '__main__':
                              amount of parameters in some static method in a class\n')
                 metric.write(f'nom {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM), which is the number of methods \
-                             with the \\text{{@Override}} annotation\n')
+                             with the \\texttt{{@Override}} annotation\n')
                 metric.write(f'nop {nop(tree_class)} '
                              f'Number of Polymorphic Methods (NOP), which is the count of methods \
                              that are overloaded at least once --- have similar names but different parameters\n')

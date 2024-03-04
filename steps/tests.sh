@@ -28,9 +28,13 @@ mkdir -p "${temp}"
 
 export CAMTESTS=1
 
-find "${LOCAL}/tests" -type f -name '*.sh' | sort | while IFS= read -r test; do
+dir="${LOCAL}/tests"
+tests=$(find "${dir}" -type f -name '*.sh' | sort)
+echo "There are $(echo "${tests}" | wc -l | xargs) tests in ${dir}"
+echo "${tests}" | while IFS= read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
     if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ] && [ ! "${TEST}" = "tests/${name}" ]; then
+        echo "Skipped ${name}"
         continue
     fi
     echo -e "\n${name}:"
