@@ -50,7 +50,7 @@ find "${LOCAL}/tests" -type f -name '*.sh' | sort | while IFS= read -r test; do
     if ! TARGET="${tgt}" "${test}" "${t}" "${stdout}"; then
         cat "${stdout}"
         echo "❌ Non-zero exit code (TARGET=${tgt})"
-        echo "You can run this particular test in isolation: make test TEST=${name}"
+        echo "You can run this particular test in isolation: make test TEST=tests/${name}"
         exit 1
     fi
 done
