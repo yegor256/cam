@@ -85,7 +85,6 @@ fi
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
-    apt-get purge -y build
     apt-get install -y libpoppler-dev
   else
     echo "Install 'poppler' somehow"
