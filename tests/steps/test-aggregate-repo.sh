@@ -26,8 +26,8 @@ set -o pipefail
 stdout=$2
 
 {
-    repo="foo/bar test ; "
-    dir="${TARGET}/measurements/${repo}/a"
+    repo="foo/bar test, ; "
+    dir="${TARGET}/measurements/${repo}/a, ; -"
     mkdir -p "${dir}"
     m="Foo,- ;Bar.java.m"
     touch "${dir}/${m}"
@@ -37,11 +37,11 @@ stdout=$2
     test "$(echo "${msg}" | grep -c "sum=0")" == 0
     test "$(echo "${msg}" | grep -c "files=0")" == 0
     test -e "${TARGET}/data/${repo}/all.csv"
-    grep "/a/Foo\\\\,- ;Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv"
+    grep "/a\\\\, ; -/Foo\\\\,- ;Bar.java,42,0.75" "${TARGET}/data/${repo}/all.csv"
     grep "java_file,loc,nhd" "${TARGET}/data/${repo}/all.csv"
     test -e "${TARGET}/data/${repo}/loc.csv"
     grep "java_file,loc" "${TARGET}/data/${repo}/loc.csv"
-    grep "/a/Foo\\\\,- ;Bar.java,42" "${TARGET}/data/${repo}/loc.csv"
+    grep "/a\\\\, ; -/Foo\\\\,- ;Bar.java,42" "${TARGET}/data/${repo}/loc.csv"
     test -e "${TARGET}/data/${repo}/nhd.csv"
     grep ",42" "${TARGET}/data/${repo}/loc.csv"
 } > "${stdout}" 2>&1

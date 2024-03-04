@@ -23,8 +23,10 @@
 set -e
 set -o pipefail
 
-# Take the STDIN and send it to STDOUT, while making it
-# suitable for CSV: replacing commas.
+stdout=$2
 
-data=$(cat)
-printf '%s' "${data}" | sed 's/,/\\,/g'
+test "$(echo 'a b c' | "${LOCAL}/help/to-csv.sh")" = 'a b c' > "${stdout}"
+echo "👍🏻 Correctly formatted simple text"
+
+test "$(echo 'a,b,c' | "${LOCAL}/help/to-csv.sh")" = 'a\,b\,c' > "${stdout}"
+echo "👍🏻 Correctly formatted commas"
