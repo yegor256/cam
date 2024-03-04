@@ -6,3 +6,9 @@ Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Metrics/BlockLength:
   Max: 30
+Layout/ElseAlignment:
+  Enabled: false
+Layout/EndAlignment:
+  Enabled: false
+Layout/IndentationWidth:
+  Enabled: false
