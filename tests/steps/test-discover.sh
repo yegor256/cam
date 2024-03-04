@@ -40,6 +40,7 @@ echo "👍🏻 A few repositories discovered correctly"
     rm -f "${csv}"
     REPO=yegor256/jaxec "${LOCAL}/steps/discover.sh"
     test -e "${csv}"
+    test -s "${TARGET}/temp/repo-details.tex"
     test "$(wc -l < "${csv}" | xargs)" = '2'
 } > "${stdout}" 2>&1
 echo "👍🏻 A single repository discovered correctly"
