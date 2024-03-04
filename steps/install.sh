@@ -83,6 +83,15 @@ if ! jq --version >/dev/null 2>&1; then
   fi
 fi
 
+if ! pdftotext -v >/dev/null 2>&1; then
+  if [ -n "${linux}" ]; then
+    apt-get install -y poppler
+  else
+    echo "Install 'poppler' somehow"
+    exit 1
+  fi
+fi
+
 if ! shellcheck --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y shellcheck
@@ -132,6 +141,7 @@ if ! pygmentize -V >/dev/null 2>&1; then
   fi
 fi
 
+$SUDO python3 -m pip install --upgrade pip
 $SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
 
 gem install --no-document rubocop -v 1.56.3

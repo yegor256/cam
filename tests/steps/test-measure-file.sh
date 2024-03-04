@@ -44,8 +44,13 @@ EOT
     echo "${msg}"
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
-    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \;)
-    test "$(echo "${all}" | wc -l | xargs)" = "48"
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=48
+    actual=$(echo "${all}" | wc -l | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} metrics were expected, but ${actual} were actually collected"
+        exit 1
+    fi
     echo "${all}" | sort | while IFS= read -r m; do
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
@@ -62,9 +67,9 @@ EOT
     test "$(cat "${temp}/m1.notp")" = "0"
     test "$(cat "${temp}/m1.final")" = "0"
     test "$(cat "${temp}/m1.nobl")" = "1"
-    test "$(cat "${temp}/m1.hsd")" = "6.188"
-    test "$(cat "${temp}/m1.hsv")" = "122.624"
-    test "$(cat "${temp}/m1.hse")" = "758.735"
+    test "$(cat "${temp}/m1.hsd")" = "6.1875"
+    test "$(cat "${temp}/m1.hsv")" = "122.62388524"
+    test "$(cat "${temp}/m1.hse")" = "758.73528991"
     test "$(cat "${temp}/m1.coco")" = "0"
     test "$(cat "${temp}/m1.fout")" = "0"
     test "$(cat "${temp}/m1.LCOM5")" = "0"
