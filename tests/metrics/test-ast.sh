@@ -73,3 +73,14 @@ echo "👍🏻 Correctly collected AST metrics"
     grep "nulls 1" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted NULL references"
+
+{
+    if ! "${LOCAL}/metrics/ast.py" > "${temp}/stdout"; then
+        grep "Usage: python ast.py <path to the .java file> <output file with metrics>" "${temp}/stdout"
+    fi
+
+    if ! "${LOCAL}/metrics/ast.py" "${java}" > "${temp}/stdout"; then
+        grep "Usage: python ast.py <path to the .java file> <output file with metrics>" "${temp}/stdout"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"
