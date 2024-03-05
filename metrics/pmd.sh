@@ -50,18 +50,19 @@ export PMD_JAVA_OPTS=${JVM_OPTS}
 # We don't use --cache here, because it becomes too big and leads to "Out Of Memory" error
 pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --format xml --fail-on-violation false > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
+tail='\\href{https://en.wikipedia.org/wiki/Cognitive_complexity}{Cognitive Complexity} values for all methods in a class'
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
   sed -E "s/.*complexity of ([0-9]+).*/\1/" | \
   sed '/^[[:space:]]*$/d' | \
-  ruby -e '
-    a = STDIN.read.split(" ").map(&:to_i)
+  ruby -e "
+    a = STDIN.read.split(' ').map(&:to_i)
     sum = a.inject(&:+)
-    puts "coco #{a.empty? ? 0 : sum} Total Cognitive Complexity of All Methods"
-    puts "acoco #{a.empty? ? 0 : sum / a.count} Average Cognitive Complexity of a Method"
-    puts "mxcoco #{a.empty? ? 0 : a.max} Max Cognitive Complexity of a Method"
-    puts "mncoco #{a.empty? ? 0 : a.min} Min Cognitive Complexity of a Method"
-  ' > "${output}"
+    puts \"coco #{a.empty? ? 0 : sum} Summary of ${tail}\"
+    puts \"acoco #{a.empty? ? 0 : sum / a.count} Average of ${tail}\"
+    puts \"mxcoco #{a.empty? ? 0 : a.max} Maximum ${tail}\"
+    puts \"mncoco #{a.empty? ? 0 : a.min} Minimum ${tail}\"
+  " > "${output}"
 
 rm -rf "${tmp}"
 

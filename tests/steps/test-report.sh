@@ -36,6 +36,9 @@ stdout=$2
     echo "\\item foo" > "${TARGET}/temp/reports/foo.tex"
     "${LOCAL}/steps/report.sh"
     test -e "${TARGET}/report.pdf"
+    pdftotext "${TARGET}/report.pdf" "${TARGET}/report.txt"
+    txt=$(cat "${TARGET}/report.txt")
+    echo "${txt}" | grep "yegor256/cam"
 } > "${stdout}" 2>&1
 echo "👍🏻 A PDF report generated correctly"
 

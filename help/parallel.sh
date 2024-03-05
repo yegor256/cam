@@ -32,7 +32,6 @@ args=(
   '--halt-on-error=now,fail=1'
   '--halt=now,fail=1'
   '--retries=3'
-  '--timeout=1h'
   "--load=8"
   "--joblog=${jobs}.log"
   "--max-procs=${cores}"
