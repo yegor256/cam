@@ -221,7 +221,7 @@ def mhf(tlist) -> int:
 
 
 def smhf(tlist) -> int:
-    """Calculate Static Method Hiding Factor (MHF), which is the ratio
+    """Calculate Static Method Hiding Factor (SMHF), which is the ratio
     between private+protected methods and all methods (which are static).
     :rtype: float
     """
@@ -306,17 +306,13 @@ def varcomp(tlist) -> float:
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
         if (name := node.name) == '':
             continue
-
         variables += 1
-
         # Java only allows "$" and "_" as special symbols in variable names.
         # Split variable name by them to only count words and numbers.
         components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
-
         if len(components) == 0:
             parts += 1
             continue
-
         for component in components:
             parts += 1
             prev_char = component[:1]
@@ -326,7 +322,6 @@ def varcomp(tlist) -> float:
                 elif prev_char.islower() and char.isupper():
                     parts += 1
                 prev_char = char
-
     return (parts / variables) if variables != 0 else 0
 
 
@@ -337,16 +332,14 @@ def nop(tlist) -> int:
     """
     declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
     methods_count = {}
-
     for path, node in declaration:
-        # Methods of nested classe has path > 2.
+        # Methods of nested classes has path > 2.
         if len(path) > 2:
             continue
         if node.name in methods_count:
             methods_count[node.name] += 1
             continue
         methods_count[node.name] = 1
-
     return sum(1 for count in methods_count.values() if count > 1)
 
 
@@ -394,31 +387,41 @@ if __name__ == '__main__':
                 metric.write(f'notp {gnrcs(tree_class)} '
                              f'Number of Type Parameters (Generics)\n')
                 metric.write(f'final {final(tree_class)} '
-                             f'Class is Final\n')
+                             f'Class is ``final\'\' (1) or not (0)\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
                 metric.write(f'varcomp {varcomp(tree_class)} '
                              f'Average number of parts in variable names\n')
                 metric.write(f'mhf {mhf(tree_class)} '
-                             f'Method Hiding Factor (MHF)\n')
+                             f'Method Hiding Factor (MHF), which is the ratio of private \
+                             and protected methods to total methods\n')
                 metric.write(f'smhf {smhf(tree_class)} '
-                             f'Static Method Hiding Factor (MHF)\n')
+                             f'Static Method Hiding Factor (MHF), which is the ratio of private \
+                             and protected static methods to total static methods\n')
                 metric.write(f'ahf {ahf(tree_class)} '
-                             f'Method Attribute Factor (AHF)\n')
+                             f'Attribute Hiding Factor (AHF), which is the ratio of private \
+                             and protected attributes to total attributes\n')
                 metric.write(f'sahf {sahf(tree_class)} '
-                             f'Static Attribute Hiding Factor (SAHF)\n')
+                             f'Static Attribute Hiding Factor (SAHF), which is the ratio of private \
+                             and protected static attributes to total static attributes\n')
                 metric.write(f'nomp {nomp(tree_class)} '
-                             f'Number of Method Parameters (NOMP)\n')
+                             f'Number of Method Parameters (NOMP), which is the count of \
+                             all parameters in all methods in a class\n')
                 metric.write(f'nosmp {nosmp(tree_class)} '
-                             f'Number of Static Method Parameters (NOSMP)\n')
+                             f'Number of Static Method Parameters (NOSMP), which is the count of all \
+                             parameters in all static methods in a class\n')
                 metric.write(f'mxnomp {mxnomp(tree_class)} '
-                             f'Maximum of Method Parameters (MxNOMP)\n')
+                             f'Maximum of Method Parameters (MxNOMP), which is the largest amount \
+                             of parameters in some method in a class\n')
                 metric.write(f'mxnosmp {mxnosmp(tree_class)} '
-                             f'Maximum of Static Method Parameters (MxNOSMP)\n')
+                             f'Maximum of Static Method Parameters (MxNOSMP), which is the largest \
+                             amount of parameters in some static method in a class\n')
                 metric.write(f'nom {nom(tree_class)} '
-                             f'Number of Overriding Methods (NOM)\n')
+                             f'Number of Overriding Methods (NOM), which is the number of methods \
+                             with the \\texttt{{@Override}} annotation\n')
                 metric.write(f'nop {nop(tree_class)} '
-                             f'Number of Polymorphic Methods (NOP)\n')
+                             f'Number of Polymorphic Methods (NOP), which is the count of methods \
+                             that are overloaded at least once --- have similar names but different parameters\n')
                 metric.write(f'nulls {nulls(tree_class)} '
                              f'Number of NULL References\n')
         except FileNotFoundError as exception:
