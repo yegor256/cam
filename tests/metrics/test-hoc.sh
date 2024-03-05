@@ -21,10 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 set -e
+set -o pipefail
 
 temp=$1
 stdout=$2
-current_dir="${PWD}"
 
 {
     cd "${temp}"
@@ -43,7 +43,7 @@ current_dir="${PWD}"
     git config commit.gpgsign false
     git commit --quiet -m "first commit"
 
-    "${current_dir}/metrics/hoc.sh" "${java}" "${temp}/stdout" "Foo"
+    "${LOCAL}/metrics/hoc.sh" "${java}" "${temp}/stdout" "Foo"
     grep "hoc Foo:1" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated hits of code"
