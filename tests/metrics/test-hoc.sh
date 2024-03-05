@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 # The MIT License (MIT)
 #
@@ -23,18 +22,28 @@
 # SOFTWARE.
 set -e
 
-java=$1
-output=$(realpath "$2")
-class_name=$3
+temp=$1
+stdout=$2
+current_dir="${PWD}"
 
-cd "$(dirname "${java}")"
-base=$(basename "${java}")
+{
+    cd "${temp}"
 
-# To check that file was added in commit any time
-if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
-    hoc=$(git log -L:"class\\s${class_name}:${java}" -s | grep -o -E "commit\\s\\S{40}" | wc -l)
-else
-    hoc=0
-fi
+    git init --quiet .
+    git config user.email 'foo@example.com'
+    git config user.name 'Foo'
 
-echo "hoc ${class_name}:${hoc} Hits Of Code for given class" > "${output}"
+    java="${temp}/foo/dir/FooTest.java"
+
+    mkdir -p "$(dirname "${java}")"
+    echo "class Foo {}" > "${java}"
+    touch "${temp}/stdout"
+
+    git add "${java}"
+    git config commit.gpgsign false
+    git commit --quiet -m "first commit"
+
+    "${current_dir}/metrics/hoc.sh" "${java}" "${temp}/stdout" "Foo"
+    grep "hoc Foo:1" "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated hits of code"
