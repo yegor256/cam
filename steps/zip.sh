@@ -48,3 +48,9 @@ zip -qq -x "temp/*" -x "measurements/*" -r "${zip}" .
 mv "${zip}" "${TARGET}"
 
 echo "ZIP archive created at ${zip} ($(du -k "${TARGET}/${name}.zip" | cut -f1) Kb)$("${LOCAL}/help/tdiff.sh" "${start}")"
+
+echo "Lines in repositories.csv: $(wc -l "${TARGET}/repositories.csv" | xargs)"
+echo ".java files in github/: $(find "${TARGET}/github" -name '*.java' -type f -print | wc -l | xargs)"
+echo "Lines in data/all.csv: $(wc -l "${TARGET}/data/all.csv" | xargs)"
+echo ".csv files in data/: $(find "${TARGET}/data" -name '*.csv' -type f -print | wc -l | xargs)"
+

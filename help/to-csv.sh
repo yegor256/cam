@@ -27,4 +27,4 @@ set -o pipefail
 # suitable for CSV: replacing commas.
 
 data=$(cat)
-printf '%s' "${data}" | sed 's/,/\\,/'
+printf '%s' "${data}" | sed 's/,/\\,/g'

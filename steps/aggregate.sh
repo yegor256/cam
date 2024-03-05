@@ -56,6 +56,9 @@ echo -n "${metrics}" | while IFS= read -r a; do
 done
 printf "\n" >> "${all}"
 
+echo "All $(wc -l "${all}" | xargs) projects aggregated$("${LOCAL}/help/tdiff.sh" "${start}")"
+printf "\n"
+
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
@@ -73,4 +76,4 @@ if [ -n "${repos}" ]; then
     wait
 fi
 
-echo "All metrics aggregated in ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
+echo "All metrics aggregated and joined in ${total} repositories$("${LOCAL}/help/tdiff.sh" "${start}")"

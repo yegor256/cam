@@ -22,7 +22,7 @@
 
 .SHELLFLAGS: -e -o pipefail -c
 .ONESHELL:
-.PHONY: clone filter measure cleanup env lint zip wipe clean jpeek aggregate
+.PHONY: clone filter measure cleanup env lint zip wipe clean jpeek aggregate all test
 .SILENT:
 
 # Our version.
@@ -93,15 +93,7 @@ zip: $(TARGET)/report.pdf
 
 # Delete calculations.
 clean:
-	set -e
-	set -x
-	rm -rf "$(TARGET)/report.pdf"
-	rm -rf "$(TARGET)/measurements"
-	rm -rf "$(TARGET)/data"
-	rm -rf "$(TARGET)/reports"
-	rm -rf "$(TARGET)/temp"
-	rm -rf "$(TARGET)/test-zone"
-	rm -rf "$(TARGET)/pdf-report"
+	rm -rf "$(TARGET)"
 
 # Delete everything, in order to start from scratch.
 wipe: clean

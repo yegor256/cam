@@ -32,5 +32,5 @@ IFS=',' read -r -a M <<< "${out}"
 cat <<EOT> "${output}"
 nobl ${M[2]} Number of Blank Lines
 nocl ${M[3]} Number of Commenting Lines
-loc ${M[4]} Lines Of Code
+loc ${M[4]} Total Lines Of Code
 EOT

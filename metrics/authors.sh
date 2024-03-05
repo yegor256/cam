@@ -35,4 +35,4 @@ else
     noca=0
 fi
 
-echo "noga ${noca} Number of Git Authors (Different Committers)" > "${output}"
+echo "noga ${noca} Number of unique Git committers of a file" > "${output}"

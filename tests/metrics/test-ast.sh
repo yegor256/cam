@@ -59,6 +59,7 @@ stdout=$2
     grep "mxnosmp 0" "${temp}/stdout"
     grep "nom 0" "${temp}/stdout"
     grep "nop 0" "${temp}/stdout"
+    grep "nulls 0" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 

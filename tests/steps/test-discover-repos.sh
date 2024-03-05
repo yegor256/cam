@@ -35,7 +35,7 @@ tex=${TARGET}/foo.tex
     echo "${msg}" | grep "Found 1 repositories in page #0"
     echo "${msg}" | grep "Found 3 total repositories in GitHub"
     test -e "${csv}"
-    test -e "${tex}"
+    test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
 } > "${stdout}" 2>&1
 echo "👍🏻 A few repositories discovered correctly"
