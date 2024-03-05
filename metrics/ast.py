@@ -23,10 +23,12 @@
 
 import re
 import sys
+from typing import Any
+
 import javalang
 
 
-def ahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def ahf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Ratio of private/protected attributes to all attributes in a class.
     :rtype: float
     """
@@ -44,7 +46,7 @@ def ahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return hidden / total
 
 
-def sahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def sahf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Ratio of private/protected attributes to static attributes in a class.
     :rtype: float
     """
@@ -64,7 +66,7 @@ def sahf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return hidden / total
 
 
-def nomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def nomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Total number of parameters in all class methods.
     :rtype: int
     """
@@ -77,7 +79,7 @@ def nomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
-def nosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def nosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Total number of parameters in static class methods.
     :rtype: int
     """
@@ -92,7 +94,7 @@ def nosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
-def mxnomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def mxnomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in all class methods.
     :rtype: int
     """
@@ -105,7 +107,7 @@ def mxnomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return maximum
 
 
-def mxnosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def mxnosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in static class methods.
     :rtype: int
     """
@@ -120,7 +122,7 @@ def mxnosmp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return maximum
 
 
-def nom(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def nom(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Number of methods that are annotated with @Override.
     :rtype: int
     """
@@ -136,7 +138,7 @@ def nom(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
-def attrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def attrs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count non-static attributes.
     :rtype: int
     """
@@ -150,7 +152,7 @@ def attrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return found
 
 
-def sattrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def sattrs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count static attributes.
     :rtype: int
     """
@@ -164,7 +166,7 @@ def sattrs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return found
 
 
-def ctors(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def ctors(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count constructors.
     :rtype: int
     """
@@ -173,7 +175,7 @@ def ctors(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return len(clist)
 
 
-def methods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def methods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count non-static methods.
     :rtype: int
     """
@@ -187,7 +189,7 @@ def methods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return found
 
 
-def smethods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def smethods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count static methods.
     :rtype: int
     """
@@ -201,7 +203,7 @@ def smethods(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return found
 
 
-def mhf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def mhf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Calculate Method Hiding Factor (MHF), which is the ratio
     between private+protected methods and all methods.
     :rtype: float
@@ -220,7 +222,7 @@ def mhf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return hidden / total
 
 
-def smhf(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def smhf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Calculate Static Method Hiding Factor (MHF), which is the ratio
     between private+protected methods and all methods (which are static).
     :rtype: float
@@ -262,42 +264,42 @@ def ncss(parser_class: javalang.tree.CompilationUnit) -> int:
     return value
 
 
-def impls(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def impls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of interfaces the class implements.
     r:type: int
     """
     return len(tlist[0][1].implements or [])
 
 
-def extnds(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def extnds(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of classes this class extends (0 or 1).
     r:type: int
     """
     return 0 if tlist[0][1].extends is None else 1
 
 
-def final(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def final(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return 1 if the class is final, zero otherwise.
     r:type: int
     """
     return 1 if 'final' in tlist[0][1].modifiers else 0
 
 
-def gnrcs(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def gnrcs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of type parameters (generics).
     r:type: int
     """
     return len(tlist[0][1].type_parameters or [])
 
 
-def annts(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of annotations of the class.
     r:type: int
     """
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> float:
+def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
@@ -330,13 +332,13 @@ def varcomp(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> float:
     return (parts / variables) if variables != 0 else 0
 
 
-def nop(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def nop(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of polymorphic methods in main class.
     Methods of nested classes are skipped.
     r:type: int
     """
     declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
-    methods_count = {}
+    methods_count: dict[str, int] = {}
 
     for path, node in declaration:
         # Methods of nested classe has path > 2.
@@ -350,7 +352,7 @@ def nop(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
     return sum(1 for count in methods_count.values() if count > 1)
 
 
-def nulls(tlist: list[tuple[tuple, javalang.tree.ClassDeclaration]]) -> int:
+def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of null references used in the class.
     r:type: int
     """
