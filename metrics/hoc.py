@@ -9,7 +9,7 @@ import subprocess
 def hoc(file_path: str, class_name: str) -> int | None:
     path = pathlib.Path(file_path).name
     dir_path = pathlib.Path(file_path).parent
-    command = (f'cd {dir_path} && git log -L:"\\sclass\\s{class_name}:{path}"'
+    command = (f'cd {dir_path} && git log -L:"class\\s{class_name}:{path}"'
                ' -s | grep -o -E "commit\\s\\S{40}" | wc -l')
     result = subprocess.run(command, text=True, shell=True, capture_output=True)
 
