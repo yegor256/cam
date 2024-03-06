@@ -130,7 +130,7 @@ while IFS= read -r p; do
   packages+=( "${p}" )
 done < <( cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq )
 $SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none --no-auto-update update "${packages[@]}" || echo 'Failed to update'
+$SUDO tlmgr --verify-repo=none update --no-auto-install "${packages[@]}" || echo 'Failed to update'
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
