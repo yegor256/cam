@@ -15,4 +15,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      - uses: yegor256/cam@${{ github.ref }}
+      - run: |
+          docker build . -t cam
+          docker run --rm cam make install env lint test
