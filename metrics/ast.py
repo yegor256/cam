@@ -28,6 +28,29 @@ from typing import Any
 import javalang
 
 
+def doer(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
+    """
+    Ratio between the number of attributes that are data primitives
+    and the number of attributes that are pointers to objects.
+    """
+    declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
+    fields = list(field for field in declaration)
+    num_primitives = 0
+    num_pointers = 0
+    
+    for path, node in fields:
+        del path
+        if node.type.name in ['int', 'float', 'double', 'boolean', 'char', 'byte', 'short', 'long']:
+            num_primitives += 1
+        else:
+            num_pointers += 1
+    
+    total = num_primitives + num_pointers
+    if total == 0:
+        return 0
+    return num_primitives / total
+
+
 def ahf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Ratio of private/protected attributes to all attributes in a class.
     :rtype: float
@@ -431,6 +454,8 @@ if __name__ == '__main__':
                              that are overloaded at least once --- have similar names but different parameters\n')
                 metric.write(f'nulls {nulls(tree_class)} '
                              f'Number of NULL References\n')
+                metric.write(f'doer {doer(tree_class)} '
+                             f'Data vs Object Encapsulation Ratio\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
