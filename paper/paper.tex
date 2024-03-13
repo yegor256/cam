@@ -4,7 +4,10 @@
 \usepackage{ffcode}
 \usepackage{natbib}
 \usepackage{paralist}
+\usepackage{href-ul}
+\usepackage{doi}
 \usepackage{to-be-determined}
+\usepackage{bibcop}
 
 \usepackage{silence}
   \WarningFilter{microtype}{Unable to apply patch `footnote'}
@@ -15,10 +18,12 @@
 \email{yegor256@huawei.com}
 \affiliation{\institution{Huawei, Russia, Moscow}\city{}\country{}}
 
+\newcommand\cam{{\sffamily CAM}}
+
 \begin{document}
 
 \begin{abstract}
-Even though numerous researchers require stable datasets along with source code and basic metrics calculated on them, neither GitHub nor any other code hosting platform provides such a resource. Consequently, each researcher must download their own data, compute the necessary metrics, and then publish the dataset somewhere to ensure it remains accessible indefinitely. Our CAM project addresses this need. CAM is an open-source software capable of cloning Java repositories from GitHub, filtering out unnecessary files, parsing Java classes, and computing metrics such as Cyclomatic Complexity, Halstead Effort and Volume, C\&K metrics, Maintainability Metrics, LCOM5 and HND, as well as some Git-based Metrics. At least once a year, we execute the entire script, a process which requires a minimum of ten days on a very powerful server, to generate a new dataset. Subsequently, we publish it on Amazon S3, thereby ensuring its availability as a reference for researchers. The latest archive of 2.2Gb that we published on the 2nd of March, 2024 includes 532K Java classes with 48 metrics for each class.
+Even though numerous researchers require stable datasets along with source code and basic metrics calculated on them, neither GitHub nor any other code hosting platform provides such a resource. Consequently, each researcher must download their own data, compute the necessary metrics, and then publish the dataset somewhere to ensure it remains accessible indefinitely. Our \cam{} project addresses this need. It is an open-source software capable of cloning Java repositories from GitHub, filtering out unnecessary files, parsing Java classes, and computing metrics such as Cyclomatic Complexity, Halstead Effort and Volume, C\&K metrics, Maintainability Metrics, LCOM5 and HND, as well as some Git-based Metrics. At least once a year, we execute the entire script, a process which requires a minimum of ten days on a very powerful server, to generate a new dataset. Subsequently, we publish it on Amazon S3, thereby ensuring its availability as a reference for researchers. The latest archive of 2.2Gb that we published on the 2nd of March, 2024 includes 532K Java classes with 48 metrics for each class.
 \end{abstract}
 
 \maketitle
@@ -41,7 +46,7 @@ Having a ready-to-use archive of downloaded, filtered, and measured source code 
 
 \section{Methodology}
 
-In order to help research projects in all three tasks mentioned above, we created CAM\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once a year) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as either a GitHub ``asset'' attached to the next release of CAM repository or an object in Amazon S3 (depending on the size of the archive). Here, immutability is not technically guaranteed but promised: even though we, being the owners of CAM repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
+In order to help research projects in all three tasks mentioned above, we created \cam{}\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once a year) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as either a GitHub ``asset'' attached to the next release of our GitHub repository or an object in Amazon S3 (depending on the size of the archive). Here, immutability is not technically guaranteed but promised: even though we, being the owners of CAM repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
 
 At the time of writing, CAM repository consists of scripts written in Makefile, Python, Ruby, and Bash, which do exactly the following:
 \begin{itemize}
@@ -52,7 +57,11 @@ At the time of writing, CAM repository consists of scripts written in Makefile, 
 
 The size of the latest archive generated on the 2nd of March, 2024 is 2.2Gb. It includes 532K Java classes with 48 metrics for each class. It took us 10 days on a server with eight vCPU and 32Gb of RAM to generate the data.
 
-\section*{Conclusion}
+\section{Limitations}
+
+As of January 2023, \citet{dohmke2023} reported that GitHub host more than 420 million repositories, including at least 28 million public repositories, which is the world's largest source code host as of June 2023. According to \citep{daigle2023}, Java is the 4th most popular language in GitHub. Thus, it is reasonable to assume that there are millions of Java repositories in GitHub. It is technically impossible to download and parse even a few percent of this huge data source. In the \cam{} project, we download and scan only a thousand of repositories (planning to dowload a few thousands). Such a tiny fraction of the entire possible scope of analysis is not representative enough. Researchers must understand this limitation and only use \cam{} when representability of the entire Java domain is not the goal of the research.
+
+\section{Conclusion}
 
 We expect CAM archive to be used by research teams analyzing Java source, which want
 \begin{inparaenum}[(a)]
