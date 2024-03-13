@@ -1,18 +1,13 @@
-\documentclass[10pt,sigplan,nonacm,natbib=false]{acmart}
+\documentclass[11pt,sigplan,nonacm]{acmart}
 \settopmatter{printfolios=false,printccs=false,printacmref=false}
-\usepackage{silence}
-\WarningFilter{microtype}{Unable to apply patch `footnote'}
-\usepackage[maxnames=1,minnames=1,natbib=true,citestyle=authoryear,bibstyle=authoryear,doi=false,url=false,isbn=false,isbn=false,defernumbers=true]{biblatex}
-\addbibresource{main.bib}
 \usepackage[utf8]{inputenc}
-\ifnum\pdfshellescape=1
-  \usepackage[finalizecache]{minted}
-\else
-  \usepackage[frozencache]{minted}
-\fi
 \usepackage{ffcode}
+\usepackage{natbib}
 \usepackage{paralist}
 \usepackage{to-be-determined}
+
+\usepackage{silence}
+  \WarningFilter{microtype}{Unable to apply patch `footnote'}
 
 \title{Classes-And-Metrics (CAM): a Collection of Snapshots of GitHub Java Repositories}
 \author{Yegor Bugayenko}
@@ -22,38 +17,40 @@
 
 \begin{document}
 
+\begin{abstract}
+Even though numerous researchers require stable datasets along with source code and basic metrics calculated on them, neither GitHub nor any other code hosting platform provides such a resource. Consequently, each researcher must download their own data, compute the necessary metrics, and then publish the dataset somewhere to ensure it remains accessible indefinitely. Our CAM project addresses this need. CAM is an open-source software capable of cloning Java repositories from GitHub, filtering out unnecessary files, parsing Java classes, and computing metrics such as Cyclomatic Complexity, Halstead Effort and Volume, C\&K metrics, Maintainability Metrics, LCOM5 and HND, as well as some Git-based Metrics. At least once a year, we execute the entire script, a process which requires a minimum of ten days on a very powerful server, to generate a new dataset. Subsequently, we publish it on Amazon S3, thereby ensuring its availability as a reference for researchers. The latest archive of 2.2Gb that we published on the 2nd of March, 2024 includes 532K Java classes with 48 metrics for each class.
+\end{abstract}
+
 \maketitle
 
-\section*{Motivation}
+\section{Motivation}
 
-First, research projects that analyze Java code usually mine it from places where open-source projects keep their files, such as GitHub. It is a common practice, in the papers explaining the results of the researches, fully disclose the coordinates of the open-source code being mined. However, source code is a very volatile substance: repositories change their locations and files are being modified, as was shown by \citet{5463348}. In order to guarantee \emph{replicability} of their research results, paper authors must somehow guarantee that the source code they used at the time of research remains available and intact during the entire lifetime of the paper. One obvious solution would be making copies of the repositories being mined and then hosting them somewhere where they are ``forever'' available.
+First, research projects that analyze Java code usually extract it from repositories where open-source projects store their files, such as GitHub. It is common practice in papers explaining results to fully disclose the coordinates of the open-source code being extracted. However, source code is inherently volatile: repositories change their locations and files are modified, as demonstrated by \citet{5463348}. To ensure the replicability of their research results, paper authors must somehow guarantee that the source code used at the time of research remains available and intact throughout the paper's lifetime. One obvious solution would be to make copies of the repositories being extracted and then host them somewhere they are "forever" available.
 
-Second, research methods usually involve filtering out some types of files found in repositories, which are not source code, such as plain text documents or graphic images. Then, some source code files may need to be taken out because they are auto-generated or contain unparseable Java code: such files are not suitable for most methods of code analysis.
+Second, research methods typically involve filtering out certain types of files found in repositories, such as plain text documents or graphic images, which are not source code. Additionally, some source code files may need to be excluded because they are auto-generated or contain unparseable Java code, making them unsuitable for most methods of code analysis.
 
-Third, most source code analysis researches involve collecting metrics from the files found in mined repositories, such as lines of code, complexity, cohesion, and so on. Most of these metrics are already known and their retrieval mechanisms are trivial, as was summarized by \citet{nunez2017source}.
+Third, most source code analysis research involves collecting metrics from the files found in extracted repositories, such as lines of code, complexity, cohesion, and so on. Most of these metrics are already known, and their retrieval mechanisms are trivial, as summarized by \citet{nunez2017source}.
 
 Thus, there is an obvious duplication of work among different research projects:
 \begin{inparaenum}[(a)]
-\item they have to ``host'' mined data in order to guarantee desirable replicability, as noted by \citet{7887704},
-\item they must implement filtering of source code fetched from GitHub,
-and
+\item they have to ``host'' extracted data to ensure desirable replicability, as noted by \citet{7887704},
+\item they must implement filtering of source code fetched from GitHub, and
 \item they have to collect popular metrics.
 \end{inparaenum}
-Having a ready-to-use archive of downloaded, filtered, and measured source code files would help many research projects reduce the amount of work efforts.
+Having a ready-to-use archive of downloaded, filtered, and measured source code files would help many research projects reduce the amount of work required.
 
-\section*{How It Works}
+\section{Methodology}
 
-In order to help research projects in all three tasks mentioned above, we created CAM\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once every six months) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as GitHub ``asset'' attached to the next release of CAM repository. Here, immutability is not technically guaranteed but promised: even though we, being the owners of CAM repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
+In order to help research projects in all three tasks mentioned above, we created CAM\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once a year) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as either a GitHub ``asset'' attached to the next release of CAM repository or an object in Amazon S3 (depending on the size of the archive). Here, immutability is not technically guaranteed but promised: even though we, being the owners of CAM repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
 
 At the time of writing, CAM repository consists of scripts written in Makefile, Python, Ruby, and Bash, which do exactly the following:
-
 \begin{itemize}
-    \item Fetches 1024 repositories from GitHub, which have \ff{java} language tag, have more than 1K and less than 10K stars, and are at least as big as 200Kb;
-    \item Removes files without \ff{.java} extension, Java files with syntax errors, \ff{package-info.java} files, files with lines longer than 1024 characters, and unit tests;
-    \item Calculates KLoC, NCSS, Cyclomatic Complexity, Cognitive Complexity, number of attributes, number of constructors, number of methods, number of static methods, and some other metrics.
+    \item Fetch 1024 repositories from GitHub, which have \ff{java} language tag, have more than 1K and less than 10K stars, and are at least as big as 200Kb;
+    \item Remove files without \ff{.java} extension, Java files with syntax errors, \ff{package-info.java} files, files with lines longer than 1024 characters, and unit tests;
+    \item Calculate KLoC, NCSS, Cyclomatic Complexity~\citep{mccabe1976complexity}, Cognitive Complexity~\citep{campbell2018cognitive}, LCOM5~\citep{henderson1996coupling}, NHD~\citep{counsell2006interpretation}, TCC~\citep{bieman1995cohesion}, number of attributes, number of constructors, number of methods, number of static methods, and some other metrics.
 \end{itemize}
 
-The size of the latest archive generated on the 14th of February, 2022 is 692Mb. It includes 97350 Java classes with 16 metrics for each class. It took us 73 hours on a server with four vCPU and 16Gb of RAM to generate the data.
+The size of the latest archive generated on the 2nd of March, 2024 is 2.2Gb. It includes 532K Java classes with 48 metrics for each class. It took us 10 days on a server with eight vCPU and 32Gb of RAM to generate the data.
 
 \section*{Conclusion}
 
@@ -65,6 +62,7 @@ and
 \end{inparaenum}
 We also expect open-source community to contribute to CAM scripts, making filtering more powerful and adding more code metrics to the collection.
 
-\printbibliography
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{main}
 
 \end{document}
