@@ -34,3 +34,18 @@ stdout=$2
     grep "cc 1" "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated cyclomatic complexity"
+
+{
+    if ! "${LOCAL}/metrics/cyclomatic_complexity.py" > "${temp}/message"; then
+        grep "Usage: python cyclomatic_complexity <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python cyclomatic_complexity <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python cyclomatic_complexity <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"
