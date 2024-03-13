@@ -49,6 +49,10 @@ def branches(parser_class: tree.CompilationUnit) -> int:
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python cyclomatic_complexity.py <path to the .java file> <output file with metrics>")
+        sys.exit(1)
+
     JAVA = sys.argv[1]
     METRICS = sys.argv[2]
     with open(JAVA, encoding='utf-8', errors='ignore') as f:
