@@ -37,14 +37,14 @@ def doer(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     fields = list(field for field in declaration)
     num_primitives = 0
     num_pointers = 0
-    
+
     for path, node in fields:
         del path
         if node.type.name in ['int', 'float', 'double', 'boolean', 'char', 'byte', 'short', 'long']:
             num_primitives += 1
         else:
             num_pointers += 1
-    
+
     total = num_primitives + num_pointers
     if total == 0:
         return 0
