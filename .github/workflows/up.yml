@@ -23,8 +23,8 @@ jobs:
       - uses: peter-evans/create-pull-request@v6
         with:
           branch: version-up
-          commit-message: 'new version in README'
+          commit-message: 'new version in README and CITATION.cff'
           delete-branch: true
-          title: 'New version in README'
+          title: 'New version in README and CITATION.cff'
           assignees: yegor256
           base: master
