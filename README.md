@@ -11,7 +11,7 @@ Each release has a fixed version. By referring to it in your research
 you avoid ambiguity and guarantees repeatability of your experiments.
 
 This is a more formal explanation of this project:
-[in PDF](https://github.com/yegor256/cam/blob/gh-pages/paper.pdf).
+[in PDF](https://arxiv.org/abs/2403.08488).
 
 The latest ZIP archive with the dataset is here:
 [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)

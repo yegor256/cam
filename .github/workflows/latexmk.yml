@@ -1,11 +1,12 @@
 name: latexmk
 on:
   push:
+  pull_request:
 concurrency:
   group: latexmk-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  build:
+  latexmk:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -14,11 +15,3 @@ jobs:
           opts: -pdf
           path: paper
           depends: DEPENDS.txt
-      - run: |
-          mkdir gh-pages
-          cp paper/paper.pdf gh-pages
-      - uses: JamesIves/github-pages-deploy-action@v4.5.0
-        with:
-          branch: gh-pages
-          folder: gh-pages
-          clean: false
