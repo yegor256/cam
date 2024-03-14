@@ -1,5 +1,13 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
+license: MIT
+repository-code: https://github.com/yegor256/cam
+abstract: |
+  CAM is a dataset of open source Java classes and some metrics on them.
+  Every now and then we make a new version of it using the scripts
+  in this repository. You are welcome to use it in your researches.
+  Each release has a fixed version. By referring to it in your research
+  you avoid ambiguity and guarantees repeatability of your experiments.
 authors:
 - family-names: "Bugayenko"
   given-names: "Yegor"
@@ -8,4 +16,5 @@ title: "CAM: A Collection of Snapshots of GitHub Java Repositories Together with
 version: 0.9.1
 doi: 10.48550/arXiv.2403.08488
 date-released: 2024-03-14
-url: "https://github.com/yegor256/cam"
+url: "https://arxiv.org/abs/2403.08488"
+publisher: arXiv
