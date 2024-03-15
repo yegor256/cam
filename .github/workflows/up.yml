@@ -19,7 +19,8 @@ jobs:
           latest=$(git tag --sort=creatordate | tail -1) && \
           sed -E -i "s|yegor256/cam:[^ ]+|yegor256/cam:${latest}|g" README.md
           sed -E -i "s|^version: [^ ]+|version: ${latest}|g" CITATION.cff
-          sed -E -i "s|^date-released: [^ ]+|date-released: $(date +%Y-%m-%d)|g" CITATION.cff
+          date=$(git tag --sort=creatordate --format="%(creatordate:short)" | tail -1)
+          sed -E -i "s|^date-released: [^ ]+|date-released: ${date}|g" CITATION.cff
       - uses: peter-evans/create-pull-request@v6
         with:
           branch: version-up
