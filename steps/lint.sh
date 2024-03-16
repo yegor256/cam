@@ -30,6 +30,8 @@ if [ -e "${flag}" ]; then
     exit
 fi
 
+cffconvert --validate
+
 mypy --strict "${LOCAL}/"
 
 flake8 --max-line-length=140 "${LOCAL}/"

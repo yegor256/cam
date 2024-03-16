@@ -18,11 +18,14 @@ jobs:
           git fetch --tags --force && \
           latest=$(git tag --sort=creatordate | tail -1) && \
           sed -E -i "s|yegor256/cam:[^ ]+|yegor256/cam:${latest}|g" README.md
+          sed -E -i "s|^version: [^ ]+|version: ${latest}|g" CITATION.cff
+          date=$(git tag --sort=creatordate --format="%(creatordate:short)" | tail -1)
+          sed -E -i "s|^date-released: [^ ]+|date-released: ${date}|g" CITATION.cff
       - uses: peter-evans/create-pull-request@v6
         with:
           branch: version-up
-          commit-message: 'new version in README'
+          commit-message: 'new version in README and CITATION.cff'
           delete-branch: true
-          title: 'New version in README'
+          title: 'New version in README and CITATION.cff'
           assignees: yegor256
           base: master

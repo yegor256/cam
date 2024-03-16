@@ -25,7 +25,7 @@
 SHELL=bash
 
 TLROOT=$$(kpsewhich -var-value TEXMFDIST)
-PACKAGES=ffcode to-be-determined href-ul
+PACKAGES=ffcode to-be-determined href-ul bibcop iexec
 REPO=yegor256/cam
 
 zip: *.tex
@@ -40,7 +40,7 @@ zip: *.tex
 	gsed -i "s|0\.0\.0|$${version}|g" paper.tex
 	gsed -i "s|REPOSITORY|$(REPO)|g" paper.tex
 	pdflatex -shell-escape -halt-on-error paper.tex > /dev/null
-	biber paper
+	bibtex paper
 	pdflatex -halt-on-error paper.tex > /dev/null
 	pdflatex -halt-on-error paper.tex > /dev/null
 	rm -rf *.aux *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.out *.exc
