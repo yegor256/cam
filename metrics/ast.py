@@ -29,9 +29,8 @@ import javalang
 
 
 def doer(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
-    """
-    Ratio between the number of attributes that are data primitives
-    and the number of attributes that are pointers to objects.
+    """Ratio between the number of attributes that are data primitives and the number of attributes that are pointers to objects.
+    :rtype: float
     """
     declaration = tlist[0][1].filter(javalang.tree.FieldDeclaration)
     fields = list(field for field in declaration)
@@ -45,8 +44,7 @@ def doer(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
         else:
             num_pointers += 1
 
-    total = num_primitives + num_pointers
-    if total == 0:
+    if (total := num_primitives + num_pointers) == 0:
         return 0
     return num_primitives / total
 
