@@ -32,7 +32,7 @@ stdout=$2
   touch "temp_file"
   mkdir -p "${LOCAL}/${temp}"
   "${LOCAL}/metrics/raf.sh" "temp_file" "${LOCAL}/${temp}/stdout"
-  grep "raf 0" "${LOCAL}/${temp}/stdout"
+  grep "raf 0 " "${LOCAL}/${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in non-git directory"
 
