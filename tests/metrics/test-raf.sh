@@ -60,8 +60,8 @@ echo "👍🏻 Didn't fail in non-git directory"
   git add "${file3}"
   git commit --quiet -m "third"
   "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
-  grep "raf 1.0" "t1" # File is created with repo
-  grep "raf 0.5" "t2" # File created right now
-  grep "raf 0.0" "t3" # File created exactly in the middle
+  grep "raf 1.0 " "t1" # File is created with repo
+  grep "raf 0.5 " "t2" # File created right now
+  grep "raf 0.0 " "t3" # File created exactly in the middle
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"
