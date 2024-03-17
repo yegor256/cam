@@ -23,24 +23,30 @@
 set -e
 set -o pipefail
 
-repo=$1
+stdout=$2
 
-# List all Java files in the repo history
-git -C "${repo}/" log --name-only --pretty=format: | grep '\.java$' | sort | uniq > "${repo}/all_java_files.txt"
+{
+    repo="git-siblings-repo"
+    dir="${TARGET}/data/${repo}"
+    mkdir -p "${dir}"
+    git init "${dir}"
+    # Add Two Java Files
+    echo "public class Test1 {}" > "${dir}/Test1.java"
+    echo "public class Test2 {}" > "${dir}/Test2.java"
+    git -C "${dir}" add . && git -C "${dir}" commit -m "Add Test1 and Test2"
+    # Modify Test1.java
+    echo "// Comment added" >> "${dir}/Test1.java"
+    git -C "${dir}" add . && git -C "${dir}" commit -m "Modify Test1.java"
 
-# Create a file to store the final counts
-echo "" > "${repo}/siblings_count.txt"
-
-# Iterate over each Java file and count how many times it appears with others
-while IFS= read -r file; do
-  echo "Analyzing $file..."
-  # Count how many times each file appears in the same commit as the current file
-  git -C "${repo}" log --pretty=format:"%H" --name-only | grep -B1 "$file" | grep '\.java$' | sort | uniq -c | sort -rn > "${repo}/temp_count.txt"
-  {
-    echo "$file: "
-    cat "${repo}/temp_count.txt"
-    echo ""
-  } >> "${repo}/siblings_count.txt"
-done < "${repo}/all_java_files.txt"
-
-echo "Analysis complete. Check siblings_count.txt for results."
+    # Add another Java file
+    echo "public class Test3 {}" > Test3.java
+    git -C "${dir}" add . && git -C "${dir}" commit -m "Add Test3"
+    
+    # Step 3: Verify the Output
+    if grep -q "Test1.java" "${dir}/siblings_count.txt" && grep -q "Test2.java" "${dir}/siblings_count.txt" && grep -q "Test3.java" "${dir}/siblings_count.txt"; then
+        echo "Test passed: All expected Java files are present in the analysis."
+    else
+        echo "Test failed: Analysis output is missing one or more expected Java files."
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Siblings count verified"
