@@ -38,7 +38,7 @@ tex=${TARGET}/foo.tex
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
 } > "${stdout}" 2>&1
-echo "👍🏻 Small repositories discovered test is succeed"
+echo "👍🏻 Small repositories discovery test is succeed"
 
 {
     rm -f "${csv}"
@@ -50,4 +50,4 @@ echo "👍🏻 Small repositories discovered test is succeed"
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '36'
 } > "${stdout}" 2>&1
-echo "👍🏻 Medium repositories discovered test is succeed"
+echo "👍🏻 Medium repositories discovery test is succeed"
