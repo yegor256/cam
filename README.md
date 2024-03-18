@@ -109,7 +109,8 @@ make REPO=yegor256/tojos
 ## How to Contribute (e.g. by adding a new metric)
 
 If you want to add a new metric to the script, fork a repository and
-create a new file in the `metrics/` directory, using one of the existing files as an example.
+create a new file in the `metrics/` directory, using one of
+the existing files as an example.
 Then, create a test for your metric, in the `tests/metrics/` directory.
 
 Then, run the entire test suite
