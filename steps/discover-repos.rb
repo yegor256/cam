@@ -102,7 +102,7 @@ end
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
-  found = found.first(opts[:total]).to_h
+  found = found.first(opts[:total])
   puts "We will use only the first #{opts[:total]} repositories"
 end
 

@@ -47,77 +47,40 @@ if [ -n "${linux}" ]; then
   apt-get install -y coreutils
 fi
 
-if ! parallel --version >/dev/null 2>&1; then
+install_or_quit() {
+  if ! dpkg -s "$1" >/dev/null 2>&1; then
+    if [ -n "${linux}" ]; then
+      apt-get -y install "$1"
+    else
+      echo "Install '$1' somehow"
+      exit 1
+    fi
+  fi
+}
+
+install_or_quit 'parallel'
+install_or_quit 'bc'
+install_or_quit 'cloc'
+install_or_quit 'jq'
+install_or_quit 'xpdf'
+install_or_quit 'shellcheck'
+install_or_quit 'aspell'
+install_or_quit 'xmlstarlet'
+
+if [ ! -f "/usr/local/texlive/$(date +%Y)/bin/x86_64-linux/tlmgr" ]; then
   if [ -n "${linux}" ]; then
-    apt-get -y install parallel
+    wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+    zcat < install-tl-unx.tar.gz | tar xf - && \
+    rm install-tl-unx.tar.gz && \
+    cd install-tl-$(date +%Y)* && \
+    perl ./install-tl --scheme=e --no-interaction
   else
-    echo "Install 'parallel' somehow"
+    echo "Install 'texlive-base' somehow"
     exit 1
   fi
 fi
 
-if ! bc -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y bc
-  else
-    echo "Install 'GNU bc' somehow"
-    exit 1
-  fi
-fi
-
-if ! cloc --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y cloc
-  else
-    echo "Install 'cloc' somehow"
-    exit 1
-  fi
-fi
-
-if ! jq --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y jq
-  else
-    echo "Install 'jq' somehow"
-    exit 1
-  fi
-fi
-
-if ! pdftotext -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xpdf
-  else
-    echo "Install 'poppler' somehow"
-    exit 1
-  fi
-fi
-
-if ! shellcheck --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y shellcheck
-  else
-    echo "Install 'shellcheck' somehow"
-    exit 1
-  fi
-fi
-
-if ! aspell --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y aspell
-  else
-    echo "Install 'GNU aspell' somehow"
-    exit 1
-  fi
-fi
-
-if ! xmlstarlet --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xmlstarlet
-  else
-    echo "Install 'xmlstarlet' somehow"
-    exit 1
-  fi
-fi
+export PATH=/usr/local/texlive/$(date +%Y)/bin/x86_64-linux:$PATH
 
 if [ ! -e "${HOME}/texmf" ]; then
   $SUDO tlmgr init-usertree
@@ -132,14 +95,7 @@ done < <( cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq )
 $SUDO tlmgr --verify-repo=none install "${packages[@]}"
 $SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
 
-if ! pygmentize -V >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y python3-pygments
-  else
-    echo "Install 'python3-pygments' somehow"
-    exit 1
-  fi
-fi
+install_or_quit 'python3-pygments' 
 
 $SUDO python3 -m pip install --upgrade pip
 $SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
