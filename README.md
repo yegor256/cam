@@ -106,6 +106,26 @@ make wipe
 make REPO=yegor256/tojos
 ```
 
+## How to Contribute (e.g. by adding a new metric)
+
+If you want to add a new metric to the script, fork a repository and
+create a new file in the `metrics/` directory, using one of the existing files as an example.
+Then, create a test for your metric, in the `tests/metrics/` directory.
+
+Then, run the entire test suite
+(this should take a few minutes to complete, without errors):
+
+```bash
+sudo make install
+make test
+make lint
+```
+
+Then, send us a
+[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
+We will review your changes and apply them to the `master` branch shortly,
+provided they don't violate our quality standards.
+
 ## How to Calculate Additional Metrics
 
 You may want to use this dataset as a basis, with an intend of adding your own
@@ -124,21 +144,6 @@ It will apply this new metric
 to all `.java` files, generate new `.csv` reports, aggregate them with existing
 reports (in the `cam/dataset/data/` directory),
 and then the final `.pdf` report will also be updated.
-
-## How to Contribute
-
-Fork repository, make changes, send us a
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
-We will review your changes and apply them to the `master` branch shortly,
-provided they don't violate our quality standards. To avoid frustration,
-before sending us your pull request please run full build:
-
-```bash
-sudo make install
-make test
-```
-
-This should take a few minutes to complete, without errors.
 
 ## How to Build a New Archive
 
