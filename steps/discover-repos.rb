@@ -75,10 +75,11 @@ loop do
     break
   end
   json = if opts[:dry]
-    { items: page > 100 ? [] : [{ full_name: "foo/#{Random.hex(5)}", created_at: Time.now }] }
+    { items: page > 100 ? [] : Array.new(size) { { full_name: "foo/#{Random.hex(5)}", created_at: Time.now } } }
   else
     github.search_repositories(query, per_page: size, page: page)
   end
+  puts(json)
   json[:items].each do |i|
     found[i[:full_name]] = {
       full_name: i[:full_name],

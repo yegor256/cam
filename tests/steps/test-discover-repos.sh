@@ -30,7 +30,7 @@ tex=${TARGET}/foo.tex
 
 {
     rm -f "${csv}"
-    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
+    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --page-size=1 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
     echo "${msg}"
     echo "${msg}" | grep "Found 1 repositories in page #0"
     echo "${msg}" | grep "Found 3 total repositories in GitHub"
@@ -38,4 +38,16 @@ tex=${TARGET}/foo.tex
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
 } > "${stdout}" 2>&1
-echo "👍🏻 A few repositories discovered correctly"
+echo "👍🏻 Small repositories discovered test is succeed"
+
+{
+    rm -f "${csv}"
+    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=35 --page-size=30 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
+    echo "${msg}"
+    echo "${msg}" | grep "Found 60 total repositories in GitHub"
+    echo "${msg}" | grep "We will use only the first 35 repositories"
+    test -e "${csv}"
+    test -s "${tex}"
+    test "$(wc -l < "${csv}" | xargs)" = '36'
+} > "${stdout}" 2>&1
+echo "👍🏻 Medium repositories discovered test is succeed"
