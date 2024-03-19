@@ -47,41 +47,26 @@ if [ -n "${linux}" ]; then
   apt-get install -y coreutils
 fi
 
-if ! parallel --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get -y install parallel
-  else
-    echo "Install 'parallel' somehow"
-    exit 1
-  fi
-fi
+function install_package() {
+    local PACKAGE=$1
 
-if ! bc -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y bc
-  else
-    echo "Install 'GNU bc' somehow"
-    exit 1
-  fi
-fi
+    if ! eval $PACKAGE --version >/dev/null 2>&1; then
+        if [ -n "${linux}" ]; then
+            apt-get install -y $PACKAGE
+        else
+            echo "Install '$PACKAGE' somehow"
+            exit 1
+        fi
+    fi
+}
 
-if ! cloc --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y cloc
-  else
-    echo "Install 'cloc' somehow"
-    exit 1
-  fi
-fi
-
-if ! jq --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y jq
-  else
-    echo "Install 'jq' somehow"
-    exit 1
-  fi
-fi
+install_package "parallel"
+install_package "bc"
+install_package "cloc"
+install_package "jq"
+install_package "shellcheck"
+install_package "aspell"
+install_package "xmlstarlet"
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -92,40 +77,14 @@ if ! pdftotext -v >/dev/null 2>&1; then
   fi
 fi
 
-if ! shellcheck --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y shellcheck
-  else
-    echo "Install 'shellcheck' somehow"
-    exit 1
-  fi
-fi
-
-if ! aspell --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y aspell
-  else
-    echo "Install 'GNU aspell' somehow"
-    exit 1
-  fi
-fi
-
-if ! xmlstarlet --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xmlstarlet
-  else
-    echo "Install 'xmlstarlet' somehow"
-    exit 1
-  fi
-fi
-
-if [ ! -f "/usr/local/texlive/$(date +%Y)/bin/*/tlmgr" ]; then
+if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin/* ]; then
   if [ -n "${linux}" ]; then
     wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     zcat < install-tl-unx.tar.gz | tar xf - && \
     rm install-tl-unx.tar.gz && \
     cd install-tl-"$(date +%Y)"* && \
     perl ./install-tl --scheme=e --no-interaction
+    cd .. && rm -r install-tl-"$(date +%Y)"*
   else
     echo "Install 'texlive' somehow"
     exit 1
