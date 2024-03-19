@@ -92,7 +92,7 @@ if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin ]; then
 fi
 
 TEXLIVE_DIR=$(ls -d /usr/local/texlive/"$(date +%Y)"/bin/*/)
-PATH="$PATH:$TEXLIVE_DIR"
+export PATH="$PATH:$TEXLIVE_DIR"
 
 if [ ! -e "${HOME}/texmf" ]; then
   $SUDO tlmgr init-usertree
