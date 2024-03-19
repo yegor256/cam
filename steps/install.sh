@@ -50,9 +50,9 @@ fi
 function install_package() {
     local PACKAGE=$1
 
-    if ! eval $PACKAGE --version >/dev/null 2>&1; then
+    if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if [ -n "${linux}" ]; then
-            apt-get install -y $PACKAGE
+            apt-get install -y "$PACKAGE"
         else
             echo "Install '$PACKAGE' somehow"
             exit 1
@@ -77,7 +77,7 @@ if ! pdftotext -v >/dev/null 2>&1; then
   fi
 fi
 
-if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin/* ]; then
+if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin ]; then
   if [ -n "${linux}" ]; then
     wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     zcat < install-tl-unx.tar.gz | tar xf - && \
