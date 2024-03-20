@@ -32,11 +32,11 @@ if [[ ! "$(realpath --relative-to="${TARGET}/github" "${java}")" =~ ^\.\. ]]; th
 fi
 
 cat <<EOT> "${output}"
-MMAC 0 Method-Method through Attributes Cohesion, per \href{https://dl.acm.org/doi/10.1145/2089116.2089118}{Jehad Al Dallal et al.}
-CAMC 0 Cohesion Among Methods in Class, per \href{https://www.semanticscholar.org/paper/A-Class-Cohesion-Metric-For-Object-Oriented-Designs-Bansiya-Etzkorn/27091005bacefaee0242cf2643ba5efa20fa7c47}{Jagdish Bansiya et al.}
-NHD 0 Normalized Hamming Distance, per \href{https://dl.acm.org/doi/abs/10.1145/1131421.1131422}{Steve Counsell et al.}
-LCOM5 0 Revision of the initial LCOM metric, per \href{https://www.semanticscholar.org/paper/Coupling-and-cohesion-(towards-a-valid-metrics-for-Henderson-Sellers-Constantine/65120b21ce259c613184281198d3c7ec7bf38966}{Brian Henderson-Sellers et al.}
-SCOM 0 Sensitive Class Cohesion Metric, per \href{https://www.researchgate.net/publication/250004848_A_sensitive_metric_of_class_cohesion}{Luis Fernández et al.}
+MMAC 0 Method-Method through Attributes Cohesion~\citep{dallal2012}
+CAMC 0 Cohesion Among Methods in Class~\citep{bansiya1999class}
+NHD 0 Normalized Hamming Distance~\citep{counsell2006}
+LCOM5 0 Revision of the initial LCOM metric~\citep{HendersonSellers1996}
+SCOM 0 Sensitive Class Cohesion Metric~\citep{fernandez2006}
 MMAC-cvc 0 Same as MMAC, but constructors are excluded
 CAMC-cvc 0 Same as CAMC, but constructors are excluded
 NHD-cvc 0 Same as NHD, but constructors are excluded

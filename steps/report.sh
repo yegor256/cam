@@ -63,6 +63,6 @@ if ! TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report
     cat "${tmp}/report.log"
     exit 1
 fi
-mv "${pdf}" "${dest}"
+cp "${pdf}" "${dest}"
 
 echo "PDF report generated in ${dest} ($(du -k "${dest}" | cut -f1) Kb)"
