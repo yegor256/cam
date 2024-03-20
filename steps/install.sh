@@ -85,14 +85,13 @@ if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin ]; then
     cd install-tl-"$(date +%Y)"* && \
     perl ./install-tl --scheme=e --no-interaction
     cd .. && rm -r install-tl-"$(date +%Y)"*
+    TEXLIVE_DIR=$(ls -d /usr/local/texlive/"$(date +%Y)"/bin/*/)
+    export PATH="$PATH:$TEXLIVE_DIR"
   else
     echo "Install 'texlive' somehow"
     exit 1
   fi
 fi
-
-TEXLIVE_DIR=$(ls -d /usr/local/texlive/"$(date +%Y)"/bin/*/)
-export PATH="$PATH:$TEXLIVE_DIR"
 
 if [ ! -e "${HOME}/texmf" ]; then
   $SUDO tlmgr init-usertree
