@@ -26,6 +26,10 @@ import os
 import javalang
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python delete-non-classes.py <path to the .java file> <output file with .java files>")
+        sys.exit(1)
+
     JAVA: str = sys.argv[1]
     LST: str = sys.argv[2]
     try:
