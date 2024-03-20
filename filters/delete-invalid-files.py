@@ -27,6 +27,10 @@ from typing import Final
 import javalang
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python delete-invalid-files.py <path to the .java file> <output file with .java files>")
+        sys.exit(1)
+
     java: Final[str] = sys.argv[1]
     lst: Final[str] = sys.argv[2]
     try:
