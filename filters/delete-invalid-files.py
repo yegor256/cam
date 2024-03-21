@@ -23,6 +23,7 @@
 
 import sys
 import os
+from typing import Final
 import javalang
 
 if __name__ == '__main__':
@@ -30,14 +31,14 @@ if __name__ == '__main__':
         print("Usage: python delete-invalid-files.py <path to the .java file> <output file with .java files>")
         sys.exit(1)
 
-    JAVA: str = sys.argv[1]
-    LST: str = sys.argv[2]
+    java: Final[str] = sys.argv[1]
+    lst: Final[str] = sys.argv[2]
     try:
-        with open(JAVA, encoding='utf-8') as f:
+        with open(java, encoding='utf-8') as f:
             raw = javalang.parse.parse(f.read())
             if len(raw.types) != 1:
-                os.remove(JAVA)
-                with open(LST, 'a+', encoding='utf-8') as others:
-                    others.write(JAVA + "\n")
+                os.remove(java)
+                with open(lst, 'a+', encoding='utf-8') as others:
+                    others.write(java + "\n")
     except Exception:
         pass

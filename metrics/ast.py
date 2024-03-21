@@ -23,7 +23,7 @@
 
 import re
 import sys
-from typing import Any
+from typing import Any, Final
 
 import javalang
 
@@ -387,15 +387,15 @@ if __name__ == '__main__':
         print("Usage: python ast.py <path to the .java file> <output file with metrics>")
         sys.exit(1)
 
-    JAVA = sys.argv[1]
-    METRICS = sys.argv[2]
-    with open(JAVA, encoding='utf-8', errors='ignore') as file:
+    java: Final[str] = sys.argv[1]
+    metrics: Final[str] = sys.argv[2]
+    with open(java, encoding='utf-8', errors='ignore') as file:
         try:
             raw = javalang.parse.parse(file.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
-            with open(METRICS, 'a', encoding='utf-8') as metric:
+            with open(metrics, 'a', encoding='utf-8') as metric:
                 metric.write(f'nooa {attrs(tree_class)} '
                              f'Number of Non-Static (Object) Attributes\n')
                 metric.write(f'nosa {sattrs(tree_class)} '
@@ -455,5 +455,5 @@ if __name__ == '__main__':
                 metric.write(f'doer {doer(tree_class)} '
                              f'Data vs Object Encapsulation Ratio\n')
         except FileNotFoundError as exception:
-            message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
+            message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
