@@ -11,8 +11,8 @@ stdout="${temp}/stdout.txt"
 # Location of the Python script
 script_location="${LOCAL}/metrics/getset.py"
 
-echo ${script_location}
-echo ${temp}
+echo "${script_location}"
+echo "${temp}"
 
 {
     # Create a simple Java file with getter and setter methods
