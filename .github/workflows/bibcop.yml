@@ -1,5 +1,6 @@
+---
 name: bibcop
-on:
+'on':
   push:
   pull_request:
 jobs:

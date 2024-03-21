@@ -1,6 +1,6 @@
 ---
 name: checkmake
-on:
+'on':
   push:
     branches:
       - master

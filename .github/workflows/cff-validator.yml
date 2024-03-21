@@ -1,6 +1,6 @@
 ---
 name: cff-validator
-on:
+'on':
   push:
     paths:
       - CITATION.cff
