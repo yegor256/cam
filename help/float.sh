@@ -30,4 +30,8 @@ if [ "${num}" == 'NaN' ]; then
     exit
 fi
 
-(LC_NUMERIC=C printf '%.8f' "${num}" 2>/dev/null || echo 0) | sed -e 's/0\+$//' | sed -e 's/\.$//'
+# Multiply by 1000 and use integer division to truncate
+num_truncated=$(echo "$num * 1000 / 1" | bc)
+
+# Divide by 1000 to get back to the correct scale and format to three decimal places
+(LC_NUMERIC=C printf '%.3f' $(echo "$num_truncated / 1000" | bc -l) 2>/dev/null || echo 0)

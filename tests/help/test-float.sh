@@ -25,32 +25,38 @@ set -o pipefail
 
 stdout=$2
 
-num=$(echo '.42' | "${LOCAL}/help/float.sh")
-test "${num}" = '0.42'
-echo "${num}" >> "${stdout}"
+test "$(echo '.42' | "${LOCAL}/help/float.sh")" = '0.420'
 echo "👍🏻 Corrected floating point number"
 
-test "$(echo '254.42' | "${LOCAL}/help/float.sh")" = '254.42'
+test "$(echo '254.42' | "${LOCAL}/help/float.sh")" = '254.420'
 echo "👍🏻 Corrected longer floating point number"
 
-test "$(echo '256' | "${LOCAL}/help/float.sh")" = '256'
+test "$(echo '256' | "${LOCAL}/help/float.sh")" = '256.000'
 echo "👍🏻 Corrected integer number"
 
-test "$(echo '09' | "${LOCAL}/help/float.sh")" = '9'
+test "$(echo '09' | "${LOCAL}/help/float.sh")" = '9.000'
 echo "👍🏻 Corrected integer number with leading zero"
 
-test "$(echo '' | "${LOCAL}/help/float.sh")" = '0'
+test "$(echo '' | "${LOCAL}/help/float.sh")" = '0.000'
 echo "👍🏻 Corrected integer number with empty text"
 
-test "$(echo '  ' | "${LOCAL}/help/float.sh")" = '0'
+test "$(echo '  ' | "${LOCAL}/help/float.sh")" = '0.000'
 echo "👍🏻 Corrected integer number with spaces"
 
-test "$(echo 'Blank' | "${LOCAL}/help/float.sh")" = '0'
+test "$(echo 'Blank' | "${LOCAL}/help/float.sh")" = '0.000'
 echo "👍🏻 Corrected integer number with text input"
 
 test "$(echo 'NaN' | "${LOCAL}/help/float.sh")" = 'NaN'
 echo "👍🏻 Corrected integer number with NaN"
 
-test "$(echo '.000000099' | "${LOCAL}/help/float.sh")" = '0.0000001'
-echo "👍🏻 Corrected small precision number"
+test "$(echo '.000000099' | "${LOCAL}/help/float.sh")" = '0.000'
+echo "👍🏻 Printed decimal number with 3 digits"
 
+test "$(echo '254' | "${LOCAL}/help/float.sh")" = '254.000'
+echo "👍🏻 Printed decimal number with 3 digits"
+
+test "$(echo '0.3' | "${LOCAL}/help/float.sh")" = '0.300'
+echo "👍🏻 Printed decimal number with 3 digits"
+
+test "$(echo '0.00023' | "${LOCAL}/help/float.sh")" = '0.000'
+echo "👍🏻 Printed decimal number with 3 digits"
