@@ -91,7 +91,7 @@ In order to restart an entire "step," delete the following directory:
 You can also run it without Docker:
 
 ```bash
-make wipe
+make clean
 make TOTAL=100
 ```
 
@@ -102,7 +102,7 @@ In order to analyze just a single repository, do this
 ([`yegor256/tojos`](https://github.com/yegor256/tojos) as an example):
 
 ```bash
-make wipe
+make clean
 make REPO=yegor256/tojos
 ```
 
