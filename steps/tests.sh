@@ -28,6 +28,15 @@ mkdir -p "${temp}"
 
 export CAMTESTS=1
 
+scripts=$(find "${LOCAL}" -type f -name '*.sh')
+echo "${scripts}" | while IFS= read -r sh; do
+    if [ ! -x "${sh}" ]; then
+        echo "Script '${sh}' is not executable, try running 'chmod +x ${sh}'"
+        exit 1
+    fi
+done
+echo "All $(echo "${scripts}" | wc -w | xargs) scripts are executable, it's OK"
+
 dir="${LOCAL}/tests"
 tests=$(find "${dir}" -type f -name '*.sh' | sort)
 echo "There are $(echo "${tests}" | wc -l | xargs) tests in ${dir}"

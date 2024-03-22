@@ -21,27 +21,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-import os
-from typing import Final
-import javalang
+from astroid import nodes
+from pylint.checkers import BaseChecker
+from pylint.lint import PyLinter
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python delete-unparseable.py <path to the .java file> <output file with .java files>")
-        sys.exit(1)
 
-    java: Final[str] = sys.argv[1]
-    lst: Final[str] = sys.argv[2]
-    try:
-        with open(java, encoding='utf-8') as f:
-            try:
-                raw = javalang.parse.parse(f.read())
-                tree = raw.filter(javalang.tree.ClassDeclaration)
-                list((value for value in tree))
-            except Exception:
-                os.remove(java)
-                with open(lst, 'a+', encoding='utf-8') as others:
-                    others.write(java + "\n")
-    except Exception:
-        pass
+class ConstantChecker(BaseChecker):
+    """Сlass for checking the correct location of constants.
+    Variables in UPPERCASE should only be declared at the top level of the module
+    """
+    name = 'constant-checker'
+    priority = -1
+    msgs = {
+        'E1019': (
+            'Constant "%s" should be defined at the top of the module',
+            'non-top-level-constant',
+            'Emitted when a constant is not defined in the top level'
+        )
+    }
+
+    def visit_assignname(self, node: nodes.AssignName) -> None:
+        """Called when a variable definition is node in the ast tree
+        """
+        if node.name.isupper() and not isinstance(node.parent.parent, nodes.Module):
+            self.add_message('non-top-level-constant', node=node, args=(node.name,))
+
+
+def register(linter: PyLinter) -> None:
+    """Function to register extra pylint checkers.
+    If you want to write your own checker dont forget to register it here
+    """
+    linter.register_checker(ConstantChecker(linter))

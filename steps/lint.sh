@@ -30,11 +30,15 @@ if [ -e "${flag}" ]; then
     exit
 fi
 
+cffconvert --validate
+
 mypy --strict "${LOCAL}/"
 
 flake8 --max-line-length=140 "${LOCAL}/"
 
-find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions \
+PYTHONPATH="${PYTHONPATH}:${LOCAL}/pylint_plugins/"
+
+find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \

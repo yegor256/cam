@@ -44,3 +44,17 @@ stdout=$2
 } > "${stdout}" 2>&1
 echo "👍🏻 An unparseable Java file was deleted"
 
+{
+    if ! "${LOCAL}/filters/delete-unparseable.py" > "${temp}/message"; then
+        grep "Usage: python delete-unparseable.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-unparseable.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python delete-unparseable.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-unparseable.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python delete-unparseable.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"

@@ -32,5 +32,8 @@ runs:
   args:
     - '--login'
     - '-c'
-    - 'export HOME=/cam; cd ${HOME}; . /root/.profile; make install env lint test'
-
+    - >
+        export HOME=/cam;
+        cd ${HOME};
+        . /root/.profile;
+        make install env lint test

@@ -1,6 +1,6 @@
 ---
 name: make
-on:
+'on':
   push:
     branches:
       - master
@@ -14,6 +14,6 @@ jobs:
   make:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@master
       - run: docker build . -t cam
       - run: docker run --rm cam make install env lint test

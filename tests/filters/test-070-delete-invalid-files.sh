@@ -51,3 +51,17 @@ echo "👍🏻 An invalid Java file was deleted"
 } > "${stdout}" 2>&1
 echo "👍🏻 A empty directory didn't fail the script"
 
+{
+    if ! "${LOCAL}/filters/delete-invalid-files.py" > "${temp}/message"; then
+        grep "Usage: python delete-invalid-files.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-invalid-files.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python delete-invalid-files.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-invalid-files.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python delete-invalid-files.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"

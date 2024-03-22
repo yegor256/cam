@@ -29,7 +29,7 @@ stdout=$2
 {
     tmp=$(mktemp -d /tmp/XXXX)
     "${LOCAL}/metrics/authors.sh" "${tmp}" "${temp}/stdout"
-    grep "noga 0" "${temp}/stdout"
+    grep "noga 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in non-git directory"
 
@@ -46,6 +46,6 @@ echo "👍🏻 Didn't fail in non-git directory"
     git config commit.gpgsign false
     git commit --quiet -am start
     "${LOCAL}/metrics/authors.sh" "${java}" stdout
-    grep "noga 1" stdout
+    grep "noga 1 " stdout
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"

@@ -1,5 +1,5 @@
 ---
-name: checkmake
+name: yamllint
 'on':
   push:
     branches:
@@ -8,8 +8,8 @@ name: checkmake
     branches:
       - master
 jobs:
-  checkmake:
+  yamllint:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: Uno-Takashi/checkmake-action@main
+      - uses: ibiqlik/action-yamllint@v3

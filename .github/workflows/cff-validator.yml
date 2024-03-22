@@ -1,0 +1,15 @@
+---
+name: cff-validator
+'on':
+  push:
+    paths:
+      - CITATION.cff
+  pull_request:
+    paths:
+      - CITATION.cff
+jobs:
+  cff-validator:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dieghernan/cff-validator@v3
