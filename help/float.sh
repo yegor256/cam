@@ -22,13 +22,19 @@
 # SOFTWARE.
 #!/bin/bash
 
+# Function to check if a string is a valid float number
+is_float() {
+    local re="^-?[0-9]*\.?[0-9]+$"
+    [[ $1 =~ $re ]]
+}
+
 set -e
 set -o pipefail
 
 num=$(cat)
 
 # Check if the input is empty or consists of only spaces
-if [[ -z "${num// }" ]]; then
+if [[ -z "${num}" || "${num}" =~ ^[[:space:]]+$ ]]; then
     echo "0.000"  # Return default value for empty input or input with spaces
     exit
 fi
@@ -37,9 +43,13 @@ if [ "${num}" == 'NaN' ]; then
     printf '%s' "${num}"
     exit
 fi
+# Check if the input is a valid float number
+if ! is_float "$num"; then
+    echo "0.000"
+    exit 1
+fi
 
-# Multiply by 1000 and use integer division to truncate
 num_truncated=$(echo "$num * 1000 / 1" | bc)
 
 # Divide by 1000 to get back to the correct scale and format to three decimal places
-(LC_NUMERIC=C printf '%.3f' $(echo "$num_truncated / 1000" | bc -l) 2>/dev/null || echo 0)
+(LC_NUMERIC=C printf '%.3f' $(echo "$num_truncated / 1000" | bc -l) 2>/dev/null || echo "0.000")
