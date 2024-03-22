@@ -20,10 +20,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#!/bin/bash
+
 set -e
 set -o pipefail
 
 num=$(cat)
+
+# Check if the input is empty or consists of only spaces
+if [[ -z "${num// }" ]]; then
+    echo "0.000"  # Return default value for empty input or input with spaces
+    exit
+fi
 
 if [ "${num}" == 'NaN' ]; then
     printf '%s' "${num}"
