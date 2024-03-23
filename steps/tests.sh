@@ -63,7 +63,7 @@ echo "${tests}" | while IFS= read -r test; do
     if ! TARGET="${tgt}" "${test}" "${t}" "${stdout}"; then
         if [ ! -e "${stdout}" ]; then
             echo "Can't find log file after a failed test: ${stdout}"
-            tree ${t}
+            tree "${t}"
         else
             cat "${stdout}"
         fi
