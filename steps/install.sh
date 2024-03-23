@@ -49,7 +49,6 @@ fi
 
 function install_package() {
     local PACKAGE=$1
-
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if [ -n "${linux}" ]; then
             apt-get install -y "$PACKAGE"
@@ -77,18 +76,25 @@ if ! pdftotext -v >/dev/null 2>&1; then
   fi
 fi
 
-if [ ! -d /usr/local/texlive/"$(date +%Y)"/bin ]; then
+if ! tlmgr --help >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
-    wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
-    zcat < install-tl-unx.tar.gz | tar xf - && \
-    rm install-tl-unx.tar.gz && \
-    cd install-tl-"$(date +%Y)"* && \
-    perl ./install-tl --scheme=e --no-interaction
-    cd .. && rm -r install-tl-"$(date +%Y)"*
-    TEXLIVE_DIR=$(ls -d /usr/local/texlive/"$(date +%Y)"/bin/*/)
-    export PATH="$PATH:$TEXLIVE_DIR"
+    year=$(date +%Y)
+    bin=/usr/local/texlive/${year}/bin
+    if [ ! -d "${bin}" ]; then
+      wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+      zcat < install-tl-unx.tar.gz | tar xf - && \
+      rm install-tl-unx.tar.gz && \
+      cd install-tl-"${year}"* && \
+      perl ./install-tl --scheme=e --no-interaction
+      cd .. && rm -r install-tl-"${year}"*
+      tl=$(ls -d "${bin}"/*/)
+      export PATH="${PATH}:${tl}"
+    else
+      echo "The directory with TeXLive does exist, but 'tlmgr' doesn't run, why?"
+      exit 1
+    fi
   else
-    echo "Install 'texlive' somehow"
+    echo "Install 'TeXLive' somehow"
     exit 1
   fi
 fi
