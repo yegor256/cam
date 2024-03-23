@@ -59,13 +59,13 @@ function install_package() {
     fi
 }
 
-install_package "parallel"
-install_package "bc"
-install_package "cloc"
-install_package "jq"
-install_package "shellcheck"
-install_package "aspell"
-install_package "xmlstarlet"
+install_package parallel
+install_package bc
+install_package cloc
+install_package jq
+install_package shellcheck
+install_package aspell
+install_package xmlstarlet
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -76,41 +76,28 @@ if ! pdftotext -v >/dev/null 2>&1; then
   fi
 fi
 
-if ! tlmgr --help >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    year=$(date +%Y)
-    bin=/usr/local/texlive/${year}/bin
-    if [ ! -d "${bin}" ]; then
-      wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
-      zcat < install-tl-unx.tar.gz | tar xf - && \
-      rm install-tl-unx.tar.gz && \
-      cd install-tl-"${year}"* && \
-      perl ./install-tl --scheme=e --no-interaction
-      cd .. && rm -r install-tl-"${year}"*
-      tl=$(ls -d "${bin}"/*/)
-      export PATH="${PATH}:${tl}"
-    else
-      echo "The directory with TeXLive does exist, but 'tlmgr' doesn't run, why?"
-      exit 1
-    fi
-  else
-    echo "Install 'TeXLive' somehow"
-    exit 1
-  fi
+if ! python3 -v >/dev/null 2>&1; then
+  echo "Install 'python3' somehow"
+  exit 1
 fi
+if ! pip -v >/dev/null 2>&1; then
+  echo "Install 'pip' somehow"
+  exit 1
+fi
+$SUDO python3 -m pip install --upgrade pip
+$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
 
-if [ ! -e "${HOME}/texmf" ]; then
-  $SUDO tlmgr init-usertree
+if ! ruby -v >/dev/null 2>&1; then
+  echo "Install 'ruby' somehow"
+  exit 1
 fi
-$SUDO tlmgr option repository ctan
-$SUDO tlmgr --verify-repo=none update --self
-root=$(dirname "$0")
-packages=()
-while IFS= read -r p; do
-  packages+=( "${p}" )
-done < <( cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq )
-$SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
+if ! gem -v >/dev/null 2>&1; then
+  echo "Install 'gem' somehow"
+  exit 1
+fi
+gem install --no-document rubocop -v 1.56.3
+gem install --no-document octokit -v 4.21.0
+gem install --no-document slop -v 4.9.1
 
 if ! pygmentize -V >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -121,13 +108,6 @@ if ! pygmentize -V >/dev/null 2>&1; then
   fi
 fi
 
-$SUDO python3 -m pip install --upgrade pip
-$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
-
-gem install --no-document rubocop -v 1.56.3
-gem install --no-document octokit -v 4.21.0
-gem install --no-document slop -v 4.9.1
-
 if ! inkscape --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     add-apt-repository -y ppa:inkscape.dev/stable && \
@@ -137,6 +117,11 @@ if ! inkscape --version >/dev/null 2>&1; then
     echo "Install 'inkscape' somehow"
     exit 1
   fi
+fi
+
+if ! javac -version >/dev/null 2>&1; then
+  echo "Install 'javac' somehow"
+  exit 1
 fi
 
 if ! pmd pmd --version >/dev/null 2>&1; then
@@ -175,6 +160,43 @@ if [ ! -e "${JPEEK}" ]; then
     mkdir -p "$(dirname "${JPEEK}")" && \
     mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
 fi
+
+if ! tlmgr --help >/dev/null 2>&1; then
+  if [ -n "${linux}" ]; then
+    year=$(date +%Y)
+    bin=/usr/local/texlive/${year}/bin
+    if [ ! -d "${bin}" ]; then
+      wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+      zcat < install-tl-unx.tar.gz | tar xf -
+      rm install-tl-unx.tar.gz
+      cd install-tl-"${year}"*
+      perl ./install-tl --scheme=e --no-interaction
+      cd ..
+      rm -r install-tl-"${year}"*
+      tl=$(ls -d "${bin}"/*/)
+      export PATH="${PATH}:${tl}"
+    else
+      echo "The directory with TeXLive does exist, but 'tlmgr' doesn't run, why?"
+      exit 1
+    fi
+  else
+    echo "Install 'TeXLive' somehow"
+    exit 1
+  fi
+fi
+
+if [ ! -e "${HOME}/texmf" ]; then
+  $SUDO tlmgr init-usertree
+fi
+$SUDO tlmgr option repository ctan
+$SUDO tlmgr --verify-repo=none update --self
+root=$(dirname "$0")
+packages=()
+while IFS= read -r p; do
+  packages+=( "${p}" )
+done < <( cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq )
+$SUDO tlmgr --verify-repo=none install "${packages[@]}"
+$SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
 
 set +x
 echo "All dependencies are installed and up to date! Now you can run 'make' and build the dataset."

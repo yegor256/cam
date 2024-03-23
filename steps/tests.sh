@@ -61,7 +61,12 @@ echo "${tests}" | while IFS= read -r test; do
     mkdir -p "$(dirname "${stdout}")"
     touch "${stdout}"
     if ! TARGET="${tgt}" "${test}" "${t}" "${stdout}"; then
-        cat "${stdout}"
+        if [ ! -e "${stdout}" ]; then
+            echo "Can't find log file after a failed test: ${stdout}"
+            tree ${t}
+        else
+            cat "${stdout}"
+        fi
         echo "❌ Non-zero exit code (TARGET=${tgt})"
         echo "You can run this particular test in isolation: make test TEST=tests/${name}"
         exit 1

@@ -127,6 +127,13 @@ Then, send us a
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards.
 
+You can also test it with Docker:
+
+```bash
+docker build . -t cam
+docker run --rm cam make test
+```
+
 ## How to Calculate Additional Metrics
 
 You may want to use this dataset as a basis, with an intend of adding your own
