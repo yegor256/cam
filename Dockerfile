@@ -78,6 +78,25 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+# LaTeX
+ENV TEXLIVE_YEAR 2024
+RUN mkdir /tmp/texlive \
+  && cd /tmp/texlive \
+  && wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
+  && unzip ./install-tl.zip -d install-tl \
+  && cd install-tl/install-tl-* \
+  && echo "selected_scheme scheme-medium" > p \
+  && perl ./install-tl --profile=p \
+  && ln -s $(ls /usr/local/texlive/${TEXLIVE_YEAR}/bin/) /usr/local/texlive/${TEXLIVE_YEAR}/bin/latest
+ENV PATH "${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest"
+RUN echo "export PATH=\${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest" >> /root/.profile \
+  && tlmgr init-usertree \
+  && tlmgr install texliveonfly \
+  && pdflatex --version \
+  && bash -c '[[ "$(pdflatex --version)" =~ "2.6" ]]' \
+  && tlmgr install latexmk \
+  && bash -c 'latexmk --version'
+
 WORKDIR /cam
 COPY Makefile /cam
 COPY requirements.txt /cam
