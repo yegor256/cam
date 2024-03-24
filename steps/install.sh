@@ -76,11 +76,11 @@ if ! pdftotext -v >/dev/null 2>&1; then
   fi
 fi
 
-if ! python3 -v >/dev/null 2>&1; then
+if ! python3 --version >/dev/null 2>&1; then
   echo "Install 'python3' somehow"
   exit 1
 fi
-if ! pip -v >/dev/null 2>&1; then
+if ! pip --version >/dev/null 2>&1; then
   echo "Install 'pip' somehow"
   exit 1
 fi
