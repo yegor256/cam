@@ -83,7 +83,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip ./install-tl.zip -d install-tl \
   && name=$(cd install-tl ; find . -type d -name 'install-tl-*' -exec basename {} \;) \
-  && year=${name:0:4} \
+  && year=${name:11:4} \
   && perl "./install-tl/${name}/install-tl" --scheme=s --no-interaction \
   && ln -s "$(ls /usr/local/texlive/${year}/bin/)" /usr/local/texlive/${year}/bin/latest
 ENV PATH "${PATH}:/usr/local/texlive/${year}/bin/latest"
