@@ -55,14 +55,8 @@ RUN apt-get update -y --fix-missing \
 RUN apt-get update -y --fix-missing \
   && add-apt-repository -y ppa:inkscape.dev/stable \
   && apt-get update -y \
-  && apt-get -y install --no-install-recommends inkscape \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# TeXLive
-RUN apt-get update -y --fix-missing \
-  && apt-get update -y \
-  && apt-get -y install --no-install-recommends texlive-latex-extra \
+  && apt-get -y install --no-install-recommends \
+    inkscape=1:1.3.2+202311252150+091e20ef0f~ubuntu22.04.1 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
