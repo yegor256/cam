@@ -40,10 +40,11 @@ echo "👍🏻 An empty directory didn't crash it"
     mkdir -p "$(dirname "${file}")"
     echo > "${file}"
     ln -s "${file}" "${link}"
+    ln -s "${file}" "${temp}/another-link"
     msg=$("${LOCAL}/filters/080-delete-symlinks.sh" "${temp}" "${temp}/temp")
     echo "${msg}"
-    echo "${msg}" | grep "1 symlinks were deleted"
+    echo "${msg}" | grep "2 symlinks were deleted"
     test ! -e "${link}"
     test -e "${file}"
 } > "${stdout}" 2>&1
-echo "👍🏻 A symlink was deleted"
+echo "👍🏻 A few symlinks were deleted"
