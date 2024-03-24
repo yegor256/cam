@@ -86,7 +86,7 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && cd install-tl/install-tl-* \
   && echo "selected_scheme scheme-small" > p \
   && perl ./install-tl --profile=p \
-  && ln -s $(ls /usr/local/texlive/${TEXLIVE_YEAR}/bin/) /usr/local/texlive/${TEXLIVE_YEAR}/bin/latest
+  && ln -s "$(ls /usr/local/texlive/${TEXLIVE_YEAR}/bin/)" /usr/local/texlive/${TEXLIVE_YEAR}/bin/latest
 ENV PATH "${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest"
 RUN echo "export PATH=\${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest" >> /root/.profile \
   && tlmgr init-usertree \
