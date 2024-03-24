@@ -38,6 +38,7 @@ RUN apt-get update -y --fix-missing \
     gpg-agent=2.2.27-3ubuntu2.1 \
     zip=3.0-12build2 \
     unzip=6.0-26ubuntu3.2 \
+    tree=2.0.2-1 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
