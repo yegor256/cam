@@ -37,12 +37,16 @@ RUN apt-get update -y --fix-missing \
     openssl=3.0.2-0ubuntu1.15 \
     gpg-agent=2.2.27-3ubuntu2.1 \
     zip=3.0-12build2 \
-    unzip=6.0-26ubuntu3.2
+    unzip=6.0-26ubuntu3.2 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Ruby + Java
 RUN apt-get -y install --no-install-recommends \
     ruby-full=1:3.0~exp1 \
-    openjdk-17-jdk=17.0.10+7-1~22.04.1
+    openjdk-17-jdk=17.0.10+7-1~22.04.1 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Python
 RUN add-apt-repository -y ppa:deadsnakes/ppa \
@@ -50,10 +54,8 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get -y install --no-install-recommends \
     python3.7=3.7.17-1+jammy1 \
     python3-pip=22.0.2+dfsg-1ubuntu0.4 \
-    python3.7-dev=3.7.17-1+jammy1
-
-# Clean up
-RUN apt-get clean \
+    python3.7-dev=3.7.17-1+jammy1 \
+  && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /cam
