@@ -87,11 +87,11 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name "*-linux" -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
-  && execs=$(find "${bin}" -type f -exec basename {} \;) \
-  && echo ${execs} | while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; done \
+  && find "${bin}" -type f -exec basename {} \; > execs.txt \
+  && while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; done < execs.txt \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
-  && rm -rf install-tl
+  && rm -rf install-tl execs.txt
 
 WORKDIR /cam
 COPY Makefile /cam
