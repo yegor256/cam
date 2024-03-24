@@ -88,7 +88,8 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name "*-linux" -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
   && find "${bin}" -type f -exec basename {} \; > execs.txt \
-  && while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; done < execs.txt \
+  && env \
+  && while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; echo "[${e}]"; done < execs.txt \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
   && rm -rf install-tl execs.txt
