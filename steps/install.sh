@@ -161,7 +161,7 @@ if [ ! -e "${JPEEK}" ]; then
     mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
 fi
 
-if ! tlmgr --help >/dev/null 2>&1; then
+if ! tlmgr --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     year=$(date +%Y)
     bin=/usr/local/texlive/${year}/bin
