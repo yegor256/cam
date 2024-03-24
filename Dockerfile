@@ -83,10 +83,12 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip install-tl.zip -d install-tl \
   && name=$(find install-tl/ -type d -name 'install-tl-*' -exec basename {} \;) \
-  && export year=${name:11:4} \
+  && year=${name:11:4} \
+  && export year \
   && perl "./install-tl/${name}/install-tl" --scheme=scheme-full --no-interaction \
-  && export arc=$(cd "/usr/local/texlive/${year}/bin" ; find . -type d -name '*-linux' -exec basename {} \;) \
-  && export PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
+  && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name '*-linux' -exec basename {} \;) \
+  && export arc \
+  && PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
   && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" >> /root/.profile \
   && tlmgr init-usertree \
   && tlmgr install latexmk
