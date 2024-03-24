@@ -83,9 +83,9 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 ENV TEXLIVE_YEAR 2024
 RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip ./install-tl.zip -d install-tl \
-  && cd install-tl/install-tl-* \
-  && echo "selected_scheme scheme-small" > p \
-  && perl ./install-tl --profile=p \
+  && name=$(cd install-tl ; find . -type d -name 'install-tl-*' -exec basename {} \;) \
+  && echo "selected_scheme scheme-small" > "${pwd}/install-tl/${name}/p" \
+  && perl "./install-tl/${name}/install-tl" "--profile=${pwd}/install-tl/${name}/p" \
   && ln -s "$(ls /usr/local/texlive/${TEXLIVE_YEAR}/bin/)" /usr/local/texlive/${TEXLIVE_YEAR}/bin/latest
 ENV PATH "${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest"
 RUN echo "export PATH=\${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest" >> /root/.profile \
