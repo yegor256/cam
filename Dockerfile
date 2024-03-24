@@ -38,16 +38,12 @@ RUN apt-get update -y --fix-missing \
     gpg-agent=2.2.27-3ubuntu2.1 \
     zip=3.0-12build2 \
     unzip=6.0-26ubuntu3.2 \
-    tree=2.0.2-1 \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    tree=2.0.2-1
 
 # Ruby + Java
 RUN apt-get -y install --no-install-recommends \
     ruby-full=1:3.0~exp1 \
-    openjdk-17-jdk=17.0.10+7-1~22.04.1 \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    openjdk-17-jdk=17.0.10+7-1~22.04.1
 
 # Python
 RUN add-apt-repository -y ppa:deadsnakes/ppa \
@@ -55,9 +51,9 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get -y install --no-install-recommends \
     python3.7=3.7.17-1+jammy1 \
     python3-pip=22.0.2+dfsg-1ubuntu0.4 \
-    python3.7-dev=3.7.17-1+jammy1 \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    python3.7-dev=3.7.17-1+jammy1
+
+RUN apt-get clean
 
 WORKDIR /cam
 COPY Makefile /cam
