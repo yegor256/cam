@@ -85,7 +85,7 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && name=$(find install-tl/ -type d -name 'install-tl-*' -exec basename {} \;) \
   && year=${name:11:4} \
   && export year \
-  && perl "./install-tl/${name}/install-tl" --scheme=scheme-full --no-interaction \
+  && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name '*-linux' -exec basename {} \;) \
   && export arc \
   && PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
