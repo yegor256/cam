@@ -83,17 +83,14 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip ./install-tl.zip -d install-tl \
   && name=$(cd install-tl ; find . -type d -name 'install-tl-*' -exec basename {} \;) \
-  && year=${name:11:4} \
-  && perl "./install-tl/${name}/install-tl" --scheme=s --no-interaction \
-  && ln -s "$(ls /usr/local/texlive/${year}/bin/)" /usr/local/texlive/${year}/bin/latest
-ENV PATH "${PATH}:/usr/local/texlive/${year}/bin/latest"
-RUN echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/latest" >> /root/.profile \
+  && export year=${name:11:4} \
+  && perl "./install-tl/${name}/install-tl" --scheme=scheme-full --no-interaction \
+  && export arc=$(cd "/usr/local/texlive/${year}/bin" ; find . -type d -name '*-linux' -exec basename {} \;) \
+  && export PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
+  && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" >> /root/.profile \
   && tlmgr init-usertree \
-  && tlmgr install texliveonfly \
-  && pdflatex --version \
-  && bash -c '[[ "$(pdflatex --version)" =~ "2.6" ]]' \
-  && tlmgr install latexmk \
-  && bash -c 'latexmk --version'
+  && tlmgr install latexmk
+ENV PATH "${PATH}:/usr/local/texlive/${year}/bin/${arc}"
 
 WORKDIR /cam
 COPY Makefile /cam
