@@ -24,7 +24,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-SHELL ["/bin/bash", "--login", "-c"]
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 # Build essentials that are required later
 RUN apt-get update -y --fix-missing \
@@ -88,7 +88,7 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name '*-linux' -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
   && execs=$(find "${bin}" -type f -exec basename {} \;) \
-  && echo ${execs} | while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${b}"; done \
+  && echo ${execs} | while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; done \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
   && rm -rf install-tl
