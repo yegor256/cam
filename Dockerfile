@@ -84,15 +84,13 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip install-tl.zip -d install-tl \
   && name=$(find install-tl/ -type d -name 'install-tl-*' -exec basename {} \;) \
   && year=${name:11:4} \
-  && export year \
   && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name '*-linux' -exec basename {} \;) \
-  && export arc \
-  && PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
-  && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" >> /root/.profile \
+  && bin=/usr/local/texlive/${year}/bin/${arc} \
+  && execs=$(find "${bin}" -type f -exec basename {} \;) \
+  && echo ${execs} | while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${b}"; done \
   && tlmgr init-usertree \
   && tlmgr install latexmk
-ENV PATH "$PATH:/usr/local/texlive/$year/bin/$arc"
 
 WORKDIR /cam
 COPY Makefile /cam
