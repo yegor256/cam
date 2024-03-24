@@ -92,7 +92,7 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" >> /root/.profile \
   && tlmgr init-usertree \
   && tlmgr install latexmk
-ENV PATH "${PATH}:/usr/local/texlive/${year}/bin/${arc}"
+ENV PATH "$PATH:/usr/local/texlive/$year/bin/$arc"
 
 WORKDIR /cam
 COPY Makefile /cam
