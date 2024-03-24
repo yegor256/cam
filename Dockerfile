@@ -81,9 +81,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 
 # LaTeX
 ENV TEXLIVE_YEAR 2024
-RUN mkdir /tmp/texlive \
-  && cd /tmp/texlive \
-  && wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
+RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip ./install-tl.zip -d install-tl \
   && cd install-tl/install-tl-* \
   && echo "selected_scheme scheme-small" > p \
