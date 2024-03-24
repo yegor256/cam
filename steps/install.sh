@@ -166,7 +166,7 @@ if ! tlmgr --version >/dev/null 2>&1; then
     year=$(date +%Y)
     bin=/usr/local/texlive/${year}/bin
     if [ ! -d "${bin}" ]; then
-      wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+      wget --quiet https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
       zcat < install-tl-unx.tar.gz | tar xf -
       rm install-tl-unx.tar.gz
       cd install-tl-"${year}"*
