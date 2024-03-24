@@ -81,7 +81,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 
 # LaTeX
 RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
-  && unzip ./install-tl.zip -d install-tl \
+  && unzip install-tl.zip -d install-tl \
   && name=$(cd install-tl ; find . -type d -name 'install-tl-*' -exec basename {} \;) \
   && export year=${name:11:4} \
   && perl "./install-tl/${name}/install-tl" --scheme=scheme-full --no-interaction \
