@@ -48,6 +48,7 @@ RUN apt-get update -y --fix-missing \
     xmlstarlet=1.6.1-2.1 \
     xpdf=3.04+git20220201-1 \
     coreutils=8.32-4.1ubuntu1.1 \
+    gawk=1:5.1.0-1ubuntu0.1 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -82,10 +83,10 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 ENV TEXLIVE_YEAR 2024
 RUN mkdir /tmp/texlive \
   && cd /tmp/texlive \
-  && wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
+  && wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip ./install-tl.zip -d install-tl \
   && cd install-tl/install-tl-* \
-  && echo "selected_scheme scheme-medium" > p \
+  && echo "selected_scheme scheme-small" > p \
   && perl ./install-tl --profile=p \
   && ln -s $(ls /usr/local/texlive/${TEXLIVE_YEAR}/bin/) /usr/local/texlive/${TEXLIVE_YEAR}/bin/latest
 ENV PATH "${PATH}:/usr/local/texlive/${TEXLIVE_YEAR}/bin/latest"

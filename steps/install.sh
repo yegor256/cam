@@ -66,6 +66,7 @@ install_package jq
 install_package shellcheck
 install_package aspell
 install_package xmlstarlet
+install_package gawk
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
