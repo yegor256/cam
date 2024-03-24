@@ -90,7 +90,8 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && execs=$(find "${bin}" -type f -exec basename {} \;) \
   && echo ${execs} | while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${b}"; done \
   && tlmgr init-usertree \
-  && tlmgr install latexmk
+  && tlmgr install latexmk \
+  && rm -rf install-tl
 
 WORKDIR /cam
 COPY Makefile /cam
