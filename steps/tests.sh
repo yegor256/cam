@@ -28,9 +28,22 @@ mkdir -p "${temp}"
 
 export CAMTESTS=1
 
-find "${LOCAL}/tests" -type f -name '*.sh' | sort | while IFS= read -r test; do
+scripts=$(find "${LOCAL}" -type f -name '*.sh')
+echo "${scripts}" | while IFS= read -r sh; do
+    if [ ! -x "${sh}" ]; then
+        echo "Script '${sh}' is not executable, try running 'chmod +x ${sh}'"
+        exit 1
+    fi
+done
+echo "All $(echo "${scripts}" | wc -w | xargs) scripts are executable, it's OK"
+
+dir="${LOCAL}/tests"
+tests=$(find "${dir}" -type f -name '*.sh' | sort)
+echo "There are $(echo "${tests}" | wc -l | xargs) tests in ${dir}"
+echo "${tests}" | while IFS= read -r test; do
     name=$(realpath --relative-to="${LOCAL}/tests" "${test}")
     if [ -n "${TEST}" ] && [ ! "${TEST}" = "${name}" ] && [ ! "${TEST}" = "tests/${name}" ]; then
+        echo "Skipped ${name}"
         continue
     fi
     echo -e "\n${name}:"
@@ -48,8 +61,14 @@ find "${LOCAL}/tests" -type f -name '*.sh' | sort | while IFS= read -r test; do
     mkdir -p "$(dirname "${stdout}")"
     touch "${stdout}"
     if ! TARGET="${tgt}" "${test}" "${t}" "${stdout}"; then
-        cat "${stdout}"
+        if [ ! -e "${stdout}" ]; then
+            echo "Can't find log file after a failed test: ${stdout}"
+            tree "${t}/"
+        else
+            cat "${stdout}"
+        fi
         echo "❌ Non-zero exit code (TARGET=${tgt})"
+        echo "You can run this particular test in isolation: make test TEST=tests/${name}"
         exit 1
     fi
 done

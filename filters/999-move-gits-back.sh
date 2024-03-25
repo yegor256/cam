@@ -28,12 +28,14 @@ temp=$2
 
 if [ ! -e "${temp}/gits" ]; then exit; fi
 
-repos=$(find "${temp}/gits" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${temp}/gits" {} \;)
+repos=${temp}/git-repos-moving-back.txt
 
-if [ -n "${repos}" ]; then
-    echo "${repos}" | while IFS= read -r repo; do
+find "${temp}/gits" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${temp}/gits" {} \; > "${repos}"
+
+if [ -s "${repos}" ]; then
+    while IFS= read -r repo; do
         dest=${TARGET}/github/${repo}
         if [ ! -e "${dest}" ]; then continue; fi
         mv "${temp}/gits/${repo}" "${dest}/.git"
-    done
+    done < "${repos}"
 fi

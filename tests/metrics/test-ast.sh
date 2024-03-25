@@ -39,26 +39,28 @@ stdout=$2
     }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
     cat "${temp}/stdout"
-    grep "nooa 2" "${temp}/stdout"
-    grep "nosa 2" "${temp}/stdout"
-    grep "noca 1" "${temp}/stdout"
-    grep "noom 3" "${temp}/stdout"
-    grep "noii 2" "${temp}/stdout"
-    grep "napc 1" "${temp}/stdout"
-    grep "notp 1" "${temp}/stdout"
-    grep "final 1" "${temp}/stdout"
-    grep "noca 1" "${temp}/stdout"
-    grep "varcomp 2.75" "${temp}/stdout"
-    grep "mhf 1.0" "${temp}/stdout"
-    grep "smhf 0" "${temp}/stdout"
-    grep "ahf 0" "${temp}/stdout"
-    grep "sahf 0" "${temp}/stdout"
-    grep "nomp 0" "${temp}/stdout"
-    grep "nosmp 0" "${temp}/stdout"
-    grep "mxnomp 0" "${temp}/stdout"
-    grep "mxnosmp 0" "${temp}/stdout"
-    grep "nom 0" "${temp}/stdout"
-    grep "nop 0" "${temp}/stdout"
+    grep "nooa 2 " "${temp}/stdout"
+    grep "nosa 2 " "${temp}/stdout"
+    grep "noca 1 " "${temp}/stdout"
+    grep "noom 3 " "${temp}/stdout"
+    grep "noii 2 " "${temp}/stdout"
+    grep "napc 1 " "${temp}/stdout"
+    grep "notp 1 " "${temp}/stdout"
+    grep "final 1 " "${temp}/stdout"
+    grep "noca 1 " "${temp}/stdout"
+    grep "varcomp 2.75 " "${temp}/stdout"
+    grep "mhf 1.0 " "${temp}/stdout"
+    grep "smhf 0 " "${temp}/stdout"
+    grep "ahf 0.25 " "${temp}/stdout"
+    grep "sahf 0.0 " "${temp}/stdout"
+    grep "nomp 0 " "${temp}/stdout"
+    grep "nosmp 0 " "${temp}/stdout"
+    grep "mxnomp 0 " "${temp}/stdout"
+    grep "mxnosmp 0 " "${temp}/stdout"
+    grep "nom 0 " "${temp}/stdout"
+    grep "nop 0 " "${temp}/stdout"
+    grep "nulls 0 " "${temp}/stdout"
+    grep "doer 0.5 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
@@ -70,6 +72,21 @@ echo "👍🏻 Correctly collected AST metrics"
     }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
     cat "${temp}/stdout"
-    grep "nulls 1" "${temp}/stdout"
+    grep "nulls 1 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted NULL references"
+
+{
+    if ! "${LOCAL}/metrics/ast.py" > "${temp}/message"; then
+        grep "Usage: python ast.py <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/metrics/ast.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python ast.py <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python ast.py <path to the .java file> <output file with metrics>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"

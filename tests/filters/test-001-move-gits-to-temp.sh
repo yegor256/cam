@@ -53,3 +53,17 @@ echo "👍🏻 An empty repo directory didn't crash it"
     test -e "${temp}/gits/${repo}/test.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A git repository was moved to temp dir"
+
+{
+    first=foo/first
+    second=foo/second
+    mkdir -p "${TARGET}/github/${first}/.git/test.txt"
+    mkdir -p "${TARGET}/github/${second}/.git/test.txt"
+    msg=$("${LOCAL}/filters/001-move-gits-to-temp.sh" "${temp}" "${temp}")
+    echo "${msg}"
+    ls -al "${TARGET}/github/${first}"
+    test ! -e "${TARGET}/github/${first}/.git"
+    ls -al "${temp}/gits/${second}"
+    test -e "${temp}/gits/${second}/test.txt"
+} > "${stdout}" 2>&1
+echo "👍🏻 A pair of git repositories were moved to temp dir"

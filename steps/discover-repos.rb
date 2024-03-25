@@ -75,10 +75,10 @@ loop do
     break
   end
   json = if opts[:dry]
-           { items: page > 100 ? [] : [{ full_name: "foo/#{Random.hex(5)}", created_at: Time.now }] }
-         else
-           github.search_repositories(query, per_page: size, page: page)
-         end
+    { items: page > 100 ? [] : Array.new(size) { { full_name: "foo/#{Random.hex(5)}", created_at: Time.now } } }
+  else
+    github.search_repositories(query, per_page: size, page: page)
+  end
   json[:items].each do |i|
     found[i[:full_name]] = {
       full_name: i[:full_name],
@@ -102,7 +102,7 @@ end
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
-  found = found.first(opts[:total])
+  found = found.first(opts[:total]).to_h
   puts "We will use only the first #{opts[:total]} repositories"
 end
 
