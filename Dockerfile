@@ -84,14 +84,12 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && unzip install-tl.zip -d install-tl \
   && name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;) \
   && year=${name:11:4} \
-  && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction
-RUN name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;) \
-  && year=${name:11:4} \
+  && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name "*-linux" -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
-  && find "${bin}" -type f -exec basename {} \; > execs.txt \
-  && env \
-  && while IFS= read -r e; do ln -s "${bin}/${e}" "/usr/local/bin/${e}"; echo "[${e}]"; done < execs.txt \
+  && export PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
+  && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" > /etc/profile.d/texlive.sh \
+  && chmod a+x /etc/profile.d/texlive.sh \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
   && rm -rf install-tl execs.txt
@@ -101,6 +99,7 @@ COPY Makefile /cam
 COPY requirements.txt /cam
 COPY DEPENDS.txt /cam
 COPY steps/install.sh /cam/steps/
+COPY steps/install/* /cam/steps/install/
 COPY help/* /cam/help/
 
 RUN make install

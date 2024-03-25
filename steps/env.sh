@@ -78,8 +78,6 @@ parallel --version
 
 cloc --version
 
-pygmentize -V
-
 pmd pmd --version
 
 nproc --version

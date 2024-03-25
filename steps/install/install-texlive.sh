@@ -30,61 +30,45 @@ fi
 set -x
 
 if [ -n "${linux}" ]; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
+  SUDO=
+else
+  SUDO=sudo
 fi
 
-if [ -n "${linux}" ]; then
-  apt-get -y update
-  apt-get install -y coreutils
-fi
-
-function install_package() {
-    local PACKAGE=$1
-    if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
-        if [ -n "${linux}" ]; then
-            apt-get install -y "$PACKAGE"
-        else
-            echo "Install '$PACKAGE' somehow"
-            exit 1
-        fi
+if ! tlmgr --version >/dev/null 2>&1; then
+  if [ -n "${linux}" ]; then
+    root=/usr/local/texlive
+    if [ ! -e "${root}" ]; then
+      echo "The directory with TeXLive does exist: ${root}"
+      exit 1
     fi
-}
-
-install_package parallel
-install_package bc
-install_package cloc
-install_package jq
-install_package shellcheck
-install_package aspell
-install_package xmlstarlet
-install_package gawk
-
-if ! pdftotext -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xpdf
+    year=$(find "${root}/" -maxdepth 1 -type d -name '[0-9][0-9][0-9][0-9]' -exec basename {} \;)
+    arc=$(find "${root}/${year}/bin/" -type d -maxdepth 1 -name '*-*' -exec basename {} \;)
+    bin=${root}/${year}/bin/${arc}
+    if [ ! -e "${bin}" ]; then
+      echo "The directory with TeXLive does exist: ${bin}"
+      exit 1
+    fi
+    PATH=${bin}:${PATH}
+    if ! tlmgr --version >/dev/null 2>&1; then
+      echo "The directory with TeXLive does exist (${bin}), but 'tlmgr' doesn't run, can't understand why :("
+      exit 1
+    fi
+    export PATH
   else
-    echo "Install 'poppler' somehow"
+    echo "Install 'TeXLive' somehow"
     exit 1
   fi
 fi
 
-if ! inkscape --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    add-apt-repository -y ppa:inkscape.dev/stable && \
-      apt-get update -y && \
-      apt-get install -y inkscape
-  else
-    echo "Install 'inkscape' somehow"
-    exit 1
-  fi
+if [ ! -e "${HOME}/texmf" ]; then
+  $SUDO tlmgr init-usertree
 fi
-
-find "${LOCAL}/steps/install" -name 'install-*' | while IFS= read -r i; do
-  "${i}"
-done
-
-set +x
-echo "All dependencies are installed and up to date! Now you can run 'make' and build the dataset."
+$SUDO tlmgr option repository ctan
+$SUDO tlmgr --verify-repo=none update --self
+packages=()
+while IFS= read -r p; do
+  packages+=( "${p}" )
+done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | uniq )
+$SUDO tlmgr --verify-repo=none install "${packages[@]}"
+$SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
