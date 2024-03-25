@@ -87,8 +87,8 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name "*-linux" -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
-  && export PATH=${PATH}:/usr/local/texlive/${year}/bin/${arc} \
-  && echo "export PATH=\${PATH}:/usr/local/texlive/${year}/bin/${arc}" > /etc/profile.d/texlive.sh \
+  && export PATH=${PATH}:${bin} \
+  && echo "export PATH=\${PATH}:${bin}" > /etc/profile.d/texlive.sh \
   && chmod a+x /etc/profile.d/texlive.sh \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
