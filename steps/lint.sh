@@ -23,13 +23,6 @@
 set -e
 set -o pipefail
 
-flag=${TARGET}/temp/lint-done.txt
-
-if [ -e "${flag}" ]; then
-    echo "The quality of code has already been checked (run 'make clean' and then run 'make lint' again)"
-    exit
-fi
-
 cffconvert --validate
 
 mypy --strict "${LOCAL}/"

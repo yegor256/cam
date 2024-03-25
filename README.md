@@ -118,8 +118,7 @@ Then, run the entire test suite
 
 ```bash
 sudo make install
-make test
-make lint
+make test lint
 ```
 
 Then, send us a
