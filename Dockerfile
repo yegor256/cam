@@ -49,6 +49,7 @@ RUN apt-get update -y --fix-missing \
     xpdf=3.04+git20220201-1 \
     coreutils=8.32-4.1ubuntu1.1 \
     gawk=1:5.1.0-1ubuntu0.1 \
+    git=1:2.34.1-1ubuntu1.10 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 

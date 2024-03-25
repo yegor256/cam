@@ -29,12 +29,7 @@ echo "LOCAL=${LOCAL}"
 echo "SHELL=${SHELL}"
 echo "HOME=${HOME}"
 
-flag=${TARGET}/temp/env-done.txt
-
-if [ -e "${flag}" ]; then
-    echo "The environment has already been checked"
-    exit
-fi
+env
 
 bash_version=${BASH_VERSINFO:-0}
 if [ "${bash_version}" -lt 5 ]; then
@@ -50,6 +45,12 @@ if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
     python3 --version
     echo "Python must be 3+"
     exit 1
+fi
+
+
+if ! tlmgr --version >/dev/null 2>&1; then
+  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
+  export PATH
 fi
 
 flake8 --version
@@ -76,6 +77,8 @@ awk --version
 
 parallel --version
 
+git --version
+
 cloc --version
 
 pmd pmd --version
@@ -93,6 +96,3 @@ bc -v
 java -jar "${JPEEK}" --help
 
 locale
-
-mkdir -p "$(dirname "${flag}")"
-date +%s%N > "${flag}"

@@ -23,28 +23,27 @@
 set -e
 set -o pipefail
 
-temp=$1
-stdout=$2
+if tlmgr --version > /dev/null 2>&1; then
+  echo -n "$(dirname "$(which tlmgr)")"
+  exit
+fi
 
-{
-    tmp=$(mktemp -d /tmp/XXXX)
-    "${LOCAL}/metrics/authors.sh" "${tmp}" "${temp}/stdout"
-    grep "noga 0 " "${temp}/stdout"
-} > "${stdout}" 2>&1
-echo "👍🏻 Didn't fail in non-git directory"
+root=/usr/local/texlive
+if [ ! -e "${root}" ]; then
+  echo "The directory with TeXLive does exist: ${root}"
+  exit 1
+fi
+year=$(find "${root}/" -maxdepth 1 -type d -name '[0-9][0-9][0-9][0-9]' -exec basename {} \;)
+arc=$(find "${root}/${year}/bin/" -type d -maxdepth 1 -name '*-*' -exec basename {} \;)
+bin=${root}/${year}/bin/${arc}
+if [ ! -e "${bin}" ]; then
+  echo "The directory with TeXLive does exist: ${bin}"
+  exit 1
+fi
+PATH=${bin}:${PATH}
+if ! tlmgr --version >/dev/null 2>&1; then
+  echo "The directory with TeXLive does exist (${bin}), but 'tlmgr' doesn't run, can't understand why :("
+  exit 1
+fi
 
-{
-    mkdir -p "${temp}/foo"
-    cd "${temp}/foo"
-    git init --quiet .
-    git config user.email 'foo@example.com'
-    git config user.name 'Foo'
-    java="Foo long 'weird' name (--).java"
-    echo "class Foo {}" > "${java}"
-    git add "${java}"
-    git config commit.gpgsign false
-    git commit --quiet -am start
-    "${LOCAL}/metrics/authors.sh" "${java}" stdout
-    grep "noga 1 " stdout
-} > "${stdout}" 2>&1
-echo "👍🏻 Correctly calculated authors"
+echo -n "${bin}"

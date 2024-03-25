@@ -37,23 +37,7 @@ fi
 
 if ! tlmgr --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
-    root=/usr/local/texlive
-    if [ ! -e "${root}" ]; then
-      echo "The directory with TeXLive does exist: ${root}"
-      exit 1
-    fi
-    year=$(find "${root}/" -maxdepth 1 -type d -name '[0-9][0-9][0-9][0-9]' -exec basename {} \;)
-    arc=$(find "${root}/${year}/bin/" -type d -maxdepth 1 -name '*-*' -exec basename {} \;)
-    bin=${root}/${year}/bin/${arc}
-    if [ ! -e "${bin}" ]; then
-      echo "The directory with TeXLive does exist: ${bin}"
-      exit 1
-    fi
-    PATH=${bin}:${PATH}
-    if ! tlmgr --version >/dev/null 2>&1; then
-      echo "The directory with TeXLive does exist (${bin}), but 'tlmgr' doesn't run, can't understand why :("
-      exit 1
-    fi
+    PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
     echo "Install 'TeXLive' somehow"
