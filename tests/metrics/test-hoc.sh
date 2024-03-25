@@ -27,23 +27,42 @@ temp=$1
 stdout=$2
 
 {
+    hoc_script_path="/home/ilnur_ha/Documents/temp/cam/metrics/hoc.sh"
     cd "${temp}"
+
+    rm -rf ./*
+    rm -rf .git
 
     git init --quiet .
     git config user.email 'foo@example.com'
     git config user.name 'Foo'
-
-    java="${temp}/foo/dir/FooTest.java"
-
-    mkdir -p "$(dirname "${java}")"
-    echo "class Foo {}" > "${java}"
-    touch "${temp}/stdout"
-
-    git add "${java}"
     git config commit.gpgsign false
-    git commit --quiet -m "first commit"
 
-    "${LOCAL}/metrics/hoc.sh" "${java}" "${temp}/stdout" "Foo"
-    grep "hoc Foo:1" "${temp}/stdout"
+    java_dir="./foo/dir/"
+    java="FooTest.java"
+
+    mkdir -p "${java_dir}"
+    cd ${java_dir}
+
+    touch "${java}"
+    touch "stdout"
+
+    printf "class Foo {}" > "${java}"
+    git add "${java}"
+    git commit --quiet -m "first commit"
+    ${hoc_script_path} "${java}" "stdout" "Foo"
+    grep "hoc Foo:1" "stdout"
+
+    printf "class Foo {\n\tint x;\n\tbool y;\n}\n" > "${java}"
+    git add "${java}"
+    git commit --quiet -m "+second commit"
+    ${hoc_script_path} "${java}" "stdout" "Foo"
+    grep "hoc Foo:6" "stdout"
+
+    printf "class Foo {\n\tbool z;\n}\n" > "${java}"
+    git add "${java}"
+    git commit --quiet -m "-third commit"
+    ${hoc_script_path} "${java}" "stdout" "Foo"
+    grep "hoc Foo:9" "stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated hits of code"
