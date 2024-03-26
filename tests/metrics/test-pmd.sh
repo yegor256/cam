@@ -26,10 +26,12 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-# Just to make sure they are installed
-pmd pmd --help > /dev/null
-xmllint --version > /dev/null 2>&1
-ruby --version > /dev/null
+{
+    pmd pmd --version
+    xmllint --version
+    ruby --version
+} > "${stdout}" 2>&1
+echo "👍🏻 PMD dependencies are installed"
 
 {
     java="${temp}/Foo long 'weird' name (--).java"

@@ -39,7 +39,7 @@ if ! gradle --version >/dev/null 2>&1; then
     wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
     unzip -qq gradle-${gradle_version}-bin.zip && \
     rm gradle-${gradle_version}-bin.zip && \
-    mv gradle-${gradle_version} gradle && \
+    mv gradle-${gradle_version} gradle
   export GRADLE_LOCAL=/usr/local/gradle
   export PATH=$PATH:/usr/local/gradle/bin
 fi

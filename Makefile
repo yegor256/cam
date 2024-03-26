@@ -50,7 +50,7 @@ REPO =
 LOCAL := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Location of jpeek JAR file
-JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
+JPEEK = /opt/app/jpeek.jar
 
 # Options for all Java processes
 JAVA_OPTS=-Xmx128m
