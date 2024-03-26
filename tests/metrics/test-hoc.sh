@@ -27,7 +27,7 @@ temp=$1
 stdout=$2
 
 {
-    hoc_script_path="/home/ilnur_ha/Documents/temp/cam/metrics/hoc.sh"
+    hoc_script_path="${LOCAL}/metrics/hoc.sh"
     cd "${temp}"
 
     rm -rf ./*
