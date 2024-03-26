@@ -87,6 +87,8 @@ gradle --version
 
 mvn --version
 
+pdftotext -v
+
 nproc --version
 
 # Part of coreutils (by GNU):

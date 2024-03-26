@@ -133,4 +133,7 @@ RUN installs/install-jpeek.sh
 COPY installs/install-pip.sh /cam/installs/install-pip.sh
 RUN installs/install-pip.sh
 
+COPY installs/install-poppler.sh /cam/installs/install-poppler.sh
+RUN installs/install-poppler.sh
+
 COPY . /cam

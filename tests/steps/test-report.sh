@@ -31,6 +31,12 @@ if ! tlmgr --version >/dev/null 2>&1; then
 fi
 
 {
+    pdflatex -v
+    pdftotext -v
+} > "${stdout}" 2>&1
+echo "👍🏻 Dependencies are available"
+
+{
     date +%s%N > "${TARGET}/start.txt"
     mkdir -p "${TARGET}/temp"
     printf '%s' "repo,branch\nyegor256/jaxec,master" > "${TARGET}/repositories.csv"
