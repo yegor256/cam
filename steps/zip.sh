@@ -42,8 +42,8 @@ if [ -e "${TARGET}/github" ]; then
 fi
 
 echo "Archiving the data into ${zip} (may take some time) ..."
-cd "${TARGET}"
-zip -qq -x "temp/*" -x "measurements/*" -r "${zip}" .
+
+zip -qq -x "${TARGET}/temp/*" -x "${TARGET}/measurements/*" -r "${zip}" "${TARGET}"
 
 mv "${zip}" "${TARGET}"
 

@@ -2,6 +2,8 @@
 
 [![make](https://github.com/yegor256/cam/actions/workflows/latexmk.yml/badge.svg)](https://github.com/yegor256/cam/actions/workflows/latexmk.yml)
 
+It's published [in arXiv](https://arxiv.org/abs/2403.08488).
+
 To build it, just run:
 
 ```bash

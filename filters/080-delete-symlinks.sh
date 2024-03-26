@@ -32,12 +32,13 @@ mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
 while true; do
-    links=$(find "${home}" -mindepth 1 -type l -print)
-    if [ -z "${links}" ]; then break; fi
-    echo "${links}" | while IFS= read -r link; do
+    slice=${temp}/symlinks-to-delete.txt
+    find "${home}" -mindepth 1 -type l -print > "${slice}"
+    if [ ! -s "${slice}" ]; then break; fi
+    while IFS= read -r link; do
         rm "${link}"
         echo "${link}" >> "${list}"
-    done
+    done < "${slice}"
 done
 
 total=$(wc -l < "${list}" | xargs)

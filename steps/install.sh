@@ -30,12 +30,6 @@ fi
 set -x
 
 if [ -n "${linux}" ]; then
-  SUDO=
-else
-  SUDO=sudo
-fi
-
-if [ -n "${linux}" ]; then
   if [ ! "$(id -u)" = 0 ]; then
     echo "You should run it as root: 'sudo make install'"
     exit 1
@@ -47,41 +41,26 @@ if [ -n "${linux}" ]; then
   apt-get install -y coreutils
 fi
 
-if ! parallel --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get -y install parallel
-  else
-    echo "Install 'parallel' somehow"
-    exit 1
-  fi
-fi
+function install_package() {
+    local PACKAGE=$1
+    if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
+        if [ -n "${linux}" ]; then
+            apt-get install -y "$PACKAGE"
+        else
+            echo "Install '$PACKAGE' somehow"
+            exit 1
+        fi
+    fi
+}
 
-if ! bc -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y bc
-  else
-    echo "Install 'GNU bc' somehow"
-    exit 1
-  fi
-fi
-
-if ! cloc --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y cloc
-  else
-    echo "Install 'cloc' somehow"
-    exit 1
-  fi
-fi
-
-if ! jq --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y jq
-  else
-    echo "Install 'jq' somehow"
-    exit 1
-  fi
-fi
+install_package parallel
+install_package bc
+install_package cloc
+install_package jq
+install_package shellcheck
+install_package aspell
+install_package xmlstarlet
+install_package gawk
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -91,62 +70,6 @@ if ! pdftotext -v >/dev/null 2>&1; then
     exit 1
   fi
 fi
-
-if ! shellcheck --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y shellcheck
-  else
-    echo "Install 'shellcheck' somehow"
-    exit 1
-  fi
-fi
-
-if ! aspell --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y aspell
-  else
-    echo "Install 'GNU aspell' somehow"
-    exit 1
-  fi
-fi
-
-if ! xmlstarlet --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xmlstarlet
-  else
-    echo "Install 'xmlstarlet' somehow"
-    exit 1
-  fi
-fi
-
-if [ ! -e "${HOME}/texmf" ]; then
-  $SUDO tlmgr init-usertree
-fi
-$SUDO tlmgr option repository ctan
-$SUDO tlmgr --verify-repo=none update --self
-root=$(dirname "$0")
-packages=()
-while IFS= read -r p; do
-  packages+=( "${p}" )
-done < <( cut -d' ' -f2 "${root}/../DEPENDS.txt" | uniq )
-$SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
-
-if ! pygmentize -V >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y python3-pygments
-  else
-    echo "Install 'python3-pygments' somehow"
-    exit 1
-  fi
-fi
-
-$SUDO python3 -m pip install --upgrade pip
-$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
-
-gem install --no-document rubocop -v 1.56.3
-gem install --no-document octokit -v 4.21.0
-gem install --no-document slop -v 4.9.1
 
 if ! inkscape --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
@@ -159,42 +82,9 @@ if ! inkscape --version >/dev/null 2>&1; then
   fi
 fi
 
-if ! pmd pmd --version >/dev/null 2>&1; then
-  if [ ! -e /usr/local ]; then
-    echo "The directory /usr/local must exist"
-    exit 1
-  fi
-  pmd_version=6.55.0
-  cd /usr/local && \
-    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip && \
-    unzip -qq pmd-bin-${pmd_version}.zip && \
-    rm pmd-bin-${pmd_version}.zip && \
-    mv pmd-bin-${pmd_version} pmd && \
-    ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
-fi
-
-if ! gradle --version >/dev/null 2>&1; then
-  if [ ! -e /usr/local ]; then
-    echo "The directory /usr/local must exist"
-    exit 1
-  fi
-  gradle_version=7.4
-  cd /usr/local && \
-    wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
-    unzip -qq gradle-${gradle_version}-bin.zip && \
-    rm gradle-${gradle_version}-bin.zip && \
-    mv gradle-${gradle_version} gradle && \
-  export GRADLE_LOCAL=/usr/local/gradle
-  export PATH=$PATH:/usr/local/gradle/bin
-fi
-
-if [ ! -e "${JPEEK}" ]; then
-  jpeek_version=0.32.0
-  cd /tmp && \
-    wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar && \
-    mkdir -p "$(dirname "${JPEEK}")" && \
-    mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
-fi
+find "${LOCAL}/installs" -name 'install-*' | while IFS= read -r i; do
+  "${i}"
+done
 
 set +x
 echo "All dependencies are installed and up to date! Now you can run 'make' and build the dataset."
