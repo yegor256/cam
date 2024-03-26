@@ -24,13 +24,8 @@ set -e
 set -o pipefail
 
 if ! tlmgr --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
-    export PATH
-  else
-    echo "Install 'TeXLive' somehow"
-    exit 1
-  fi
+  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
+  export PATH
 fi
 
 list=${TARGET}/temp/list-of-metrics.tex

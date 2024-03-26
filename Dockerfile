@@ -51,7 +51,7 @@ RUN apt-get update -y --fix-missing \
     gawk=1:5.1.0-1ubuntu0.1 \
     git=1:2.34.1-1ubuntu1.10 \
     libxml2-utils=2.9.13+dfsg-1ubuntu0.4 \
-    build-essential \
+    build-essential=12.9ubuntu3 \
     cmake=3.22.1-1ubuntu1.22.04.2 \
     libfreetype6-dev=2.11.1+dfsg-1ubuntu0.2 \
     pkg-config=0.29.2-1ubuntu3 \
