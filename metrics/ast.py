@@ -457,4 +457,3 @@ if __name__ == '__main__':
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
-
