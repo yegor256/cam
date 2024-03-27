@@ -65,7 +65,12 @@ fi
 
 dest=${t}/report.pdf
 if ! TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"; then
-    cat "${tmp}/report.log"
+    if [ -e "${tmp}/report.log" ]; then
+        cat "${tmp}/report.log"
+        echo "Failed to generate PDF report with LaTeX, see the log above"
+    else
+        echo "Failed to generate PDF report with LaTeX, there is no log file visible"
+    fi
     exit 1
 fi
 cp "${pdf}" "${dest}"

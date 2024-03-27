@@ -38,7 +38,7 @@ release:
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
-    sudo docker run --rm "${repo}:${tag}" 'make install env lint test'
+    sudo docker run --rm "${repo}:${tag}" make install env lint test
     cat ../docker-password | \
       sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"
