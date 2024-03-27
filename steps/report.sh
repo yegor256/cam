@@ -51,10 +51,11 @@ tmp=${t}/temp/pdf-report
 if [ -e "${tmp}" ]; then
     echo "Temporary directory for PDF report building already exists: '${tmp}'"
     latexmk -cd -C "${tmp}/report.tex"
-    cp -r "${LOCAL}"/tex "${tmp}"
+    cp -r "${LOCAL}"/tex/ "${tmp}"
 else
     mkdir -p "$(dirname "${tmp}")"
     cp -r "${LOCAL}/tex" "${tmp}"
+    echo "Temporary directory for PDF report created: '${tmp}'"
 fi
 
 pdf=${tmp}/report.pdf
@@ -65,11 +66,12 @@ fi
 
 dest=${t}/report.pdf
 if ! TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report.tex"; then
-    if [ -e "${tmp}/report.log" ]; then
-        cat "${tmp}/report.log"
-        echo "Failed to generate PDF report with LaTeX, see the log above"
+    log=${tmp}/report.log
+    if [ -e "${log}" ]; then
+        cat "${log}"
+        echo "Failed to generate PDF report with LaTeX, see the log above (${log})"
     else
-        echo "Failed to generate PDF report with LaTeX, there is no log file visible"
+        echo "Failed to generate PDF report with LaTeX, there is no log file visible (${log})"
     fi
     exit 1
 fi
