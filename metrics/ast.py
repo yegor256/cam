@@ -155,7 +155,6 @@ def nom(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
         annotations = list(annotation.name for annotation in node.annotations)
         if 'Override' in annotations:
             total += 1
-            continue
     return total
 
 
