@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-# temp=$1
+temp=$1
 stdout=$2
 
 {
