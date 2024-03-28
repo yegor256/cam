@@ -42,3 +42,17 @@ list=${temp}/temp/filter-lists/non-class-files.txt
 } > "${stdout}" 2>&1
 echo "👍🏻 A file with a Java interface was deleted"
 
+{
+    if ! "${LOCAL}/filters/delete-non-classes.py" > "${temp}/message"; then
+        grep "Usage: python delete-non-classes.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-non-classes.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python delete-non-classes.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-non-classes.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python delete-non-classes.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"

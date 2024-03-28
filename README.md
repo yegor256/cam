@@ -1,5 +1,6 @@
 # Classes and Metrics (CaM)
 
+[![arXiv](https://img.shields.io/badge/arXiv-2403.08488-green.svg)](https://arxiv.org/abs/2403.08488)
 [![make](https://github.com/yegor256/cam/actions/workflows/make.yml/badge.svg?branch=master)](https://github.com/yegor256/cam/actions/workflows/make.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
@@ -11,7 +12,7 @@ Each release has a fixed version. By referring to it in your research
 you avoid ambiguity and guarantees repeatability of your experiments.
 
 This is a more formal explanation of this project:
-[in PDF](https://github.com/yegor256/cam/blob/gh-pages/paper.pdf).
+[in PDF](https://arxiv.org/abs/2403.08488).
 
 The latest ZIP archive with the dataset is here:
 [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
@@ -90,7 +91,7 @@ In order to restart an entire "step," delete the following directory:
 You can also run it without Docker:
 
 ```bash
-make wipe
+make clean
 make TOTAL=100
 ```
 
@@ -101,8 +102,35 @@ In order to analyze just a single repository, do this
 ([`yegor256/tojos`](https://github.com/yegor256/tojos) as an example):
 
 ```bash
-make wipe
+make clean
 make REPO=yegor256/tojos
+```
+
+## How to Contribute (e.g. by adding a new metric)
+
+If you want to add a new metric to the script, fork a repository and
+create a new file in the `metrics/` directory, using one of
+the existing files as an example.
+Then, create a test for your metric, in the `tests/metrics/` directory.
+
+Then, run the entire test suite
+(this should take a few minutes to complete, without errors):
+
+```bash
+sudo make install
+make test lint
+```
+
+Then, send us a
+[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
+We will review your changes and apply them to the `master` branch shortly,
+provided they don't violate our quality standards.
+
+You can also test it with Docker:
+
+```bash
+docker build . -t cam
+docker run --rm cam make test
 ```
 
 ## How to Calculate Additional Metrics
@@ -123,21 +151,6 @@ It will apply this new metric
 to all `.java` files, generate new `.csv` reports, aggregate them with existing
 reports (in the `cam/dataset/data/` directory),
 and then the final `.pdf` report will also be updated.
-
-## How to Contribute
-
-Fork repository, make changes, send us a
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
-We will review your changes and apply them to the `master` branch shortly,
-provided they don't violate our quality standards. To avoid frustration,
-before sending us your pull request please run full build:
-
-```bash
-sudo make install
-make test
-```
-
-This should take a few minutes to complete, without errors.
 
 ## How to Build a New Archive
 

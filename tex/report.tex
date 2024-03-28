@@ -27,13 +27,14 @@
 \usepackage{iexec} % for \iexec command
 \usepackage{href-ul} % for \href command
 \usepackage{ffcode} % for \ff command
-\usepackage{tabularx} % for special "tabularx" tables
+\usepackage{doi} % for better render of DOI
+\addbibresource{report.bib}
 \begin{document}
 
 \maketitle
 
-This report was generated automatically by the script, which is located in
-the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
+This report was generated automatically by the script~\citep{cam2024}
+located in the GitHub repository \href{https://github.com/yegor256/cam}{yegor256/cam}.
 
 In total, \iexec{tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{} repositories
 were found and retrieved from GitHub.
@@ -73,5 +74,7 @@ The dataset was built by
 CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
 
 If any questions or suggestions, please \href{mailto:yegor256@gmail.com}{email}.
+
+\PrintBibliography
 
 \end{document}

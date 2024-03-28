@@ -26,6 +26,14 @@ set -o pipefail
 stdout=$2
 
 {
+    javac -version
+    mvn --version
+    gradle --version
+    java -jar "${JPEEK}" --help
+} > "${stdout}" 2>&1
+echo "👍🏻 jPeek dependencies are installed"
+
+{
     repo="yegor256/jaxec"
     echo -e "name\n${repo}" > "${TARGET}/repositories.csv"
     rm -rf "${TARGET}/github"

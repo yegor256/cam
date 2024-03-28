@@ -23,18 +23,23 @@
 
 import sys
 import os
+from typing import Final
 import javalang
 
 if __name__ == '__main__':
-    JAVA: str = sys.argv[1]
-    LST: str = sys.argv[2]
+    if len(sys.argv) != 3:
+        print("Usage: python delete-non-classes.py <path to the .java file> <output file with .java files>")
+        sys.exit(1)
+
+    java: Final[str] = sys.argv[1]
+    lst: Final[str] = sys.argv[2]
     try:
-        with open(JAVA, encoding='utf-8') as f:
+        with open(java, encoding='utf-8') as f:
             raw = javalang.parse.parse(f.read())
             tree = raw.filter(javalang.tree.ClassDeclaration)
             if not (tree := list((value for value in tree))):
-                os.remove(JAVA)
-                with open(LST, 'a+', encoding='utf-8') as others:
-                    others.write(JAVA + "\n")
+                os.remove(java)
+                with open(lst, 'a+', encoding='utf-8') as others:
+                    others.write(java + "\n")
     except Exception:
         pass

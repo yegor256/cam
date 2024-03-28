@@ -25,6 +25,17 @@ set -o pipefail
 
 stdout=$2
 
+if ! tlmgr --version >/dev/null 2>&1; then
+  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
+  export PATH
+fi
+
+{
+    pdflatex -v
+    pdftotext -v
+} > "${stdout}" 2>&1
+echo "👍🏻 Dependencies are available"
+
 {
     date +%s%N > "${TARGET}/start.txt"
     mkdir -p "${TARGET}/temp"

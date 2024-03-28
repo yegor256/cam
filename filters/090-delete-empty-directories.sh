@@ -32,12 +32,13 @@ mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
 while true; do
-    dirs=$(find "${home}" -mindepth 1 -type d -empty -print)
-    if [ -z "${dirs}" ]; then break; fi
-    echo "${dirs}" | while IFS= read -r dir; do
+    slice=${temp}/empty-directories-to-delete.txt
+    find "${home}" -mindepth 1 -type d -empty -print > "${slice}"
+    if [ ! -s "${slice}" ]; then break; fi
+    while IFS= read -r dir; do
         rm -r "${dir}"
         echo "${dir}" >> "${list}"
-    done
+    done < "${slice}"
 done
 
 total=$(wc -l < "${list}" | xargs)
