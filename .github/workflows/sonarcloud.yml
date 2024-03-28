@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # MIT License
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -20,26 +19,22 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-set -e
-set -o pipefail
-
-if ! javac -version >/dev/null 2>&1; then
-  echo "Install 'javac' somehow"
-  exit 1
-fi
-
-if ! gradle --version >/dev/null 2>&1; then
-  if [ ! -e /usr/local ]; then
-    echo "The directory /usr/local must exist"
-    exit 1
-  fi
-  gradle_version=7.4
-  cd /usr/local && \
-    wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
-    unzip -qq gradle-${gradle_version}-bin.zip && \
-    rm gradle-${gradle_version}-bin.zip && \
-    mv gradle-${gradle_version} gradle && \
-  export GRADLE_LOCAL=/usr/local/gradle
-  export PATH=$PATH:/usr/local/gradle/bin
-fi
+---
+name: sonarcloud
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The MIT License (MIT)
+# MIT License
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
 #
@@ -10,34 +10,36 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
 
-temp=$1
-stdout=$2
+if ! javac -version >/dev/null 2>&1; then
+  echo "Install 'javac' somehow"
+  exit 1
+fi
 
-{
-    pmd pmd --version
-    xmllint --version
-    ruby --version
-} > "${stdout}" 2>&1
-echo "👍🏻 PMD dependencies are installed"
-
-{
-    java="${temp}/Foo long 'weird' name (--).java"
-    mkdir -p "$(dirname "${java}")"
-    echo "class Foo {}" > "${java}"
-    "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
-    grep "coco 0 " "${temp}/stdout"
-} > "${stdout}" 2>&1
-echo "👍🏻 Correctly calculated congitive complexity"
+if ! gradle --version >/dev/null 2>&1; then
+  if [ ! -e /usr/local ]; then
+    echo "The directory /usr/local must exist"
+    exit 1
+  fi
+  gradle_version=7.4
+  cd /usr/local && \
+    wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
+    unzip -qq gradle-${gradle_version}-bin.zip && \
+    rm gradle-${gradle_version}-bin.zip && \
+    mv gradle-${gradle_version} gradle
+  export GRADLE_LOCAL=/usr/local/gradle
+  export PATH=$PATH:/usr/local/gradle/bin
+fi

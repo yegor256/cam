@@ -27,6 +27,14 @@ temp=$1
 stdout=$2
 
 {
+    javac -version
+    mvn --version
+    gradle --version
+    java -jar "${JPEEK}" --help
+} > "${stdout}" 2>&1
+echo "👍🏻 jPeek dependencies are installed"
+
+{
     java="${TARGET}/github/foo/bar/Foo.java"
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"

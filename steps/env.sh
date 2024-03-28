@@ -83,6 +83,12 @@ cloc --version
 
 pmd pmd --version
 
+gradle --version
+
+mvn --version
+
+pdftotext -v
+
 nproc --version
 
 # Part of coreutils (by GNU):
@@ -92,6 +98,8 @@ sed --version
 realpath --version
 
 bc -v
+
+javac -version
 
 java -jar "${JPEEK}" --help
 
