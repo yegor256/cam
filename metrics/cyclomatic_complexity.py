@@ -42,10 +42,8 @@ def branches(parser_class: tree.CompilationUnit) -> int:
         count = 1
     elif isinstance(parser_class, tree.SwitchStatementCase):
         count = 1
-        # count = len(node.case)
     elif isinstance(parser_class, tree.TryStatement):
         count = 1
-        # count = len(node.catches)
     return count
 
 
