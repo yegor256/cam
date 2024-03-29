@@ -29,6 +29,7 @@ name: sonarcloud
     types: [opened, synchronize, reopened]
 jobs:
   sonarcloud:
+    if: github.repository == 'yegor256/cam'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
