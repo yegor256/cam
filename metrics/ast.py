@@ -325,6 +325,18 @@ def varcomp(tlist) -> float:
     return (parts / variables) if variables != 0 else 0
 
 
+def pcn(tlist) -> int:
+    """Return number of words in the name of a class.
+    r:type: float
+    """
+    words = 0
+    classname = tlist[0][1].name
+    # By naming convention Java classes names use PascalCase.
+    # Nevertheless, this metric considers both PascalCasse and camelCase naming conventions.
+    words = re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z]|$)', classname)
+    return len(words)
+
+
 def nop(tlist) -> int:
     """Return number of polymorphic methods in main class.
     Methods of nested classes are skipped.
@@ -392,6 +404,8 @@ if __name__ == '__main__':
                              f'Number of Class Annotations\n')
                 metric.write(f'varcomp {varcomp(tree_class)} '
                              f'Average number of parts in variable names\n')
+                metric.write(f'pcn {pcn(tree_class)} '
+                             f'Number of words in the name of a class\n')
                 metric.write(f'mhf {mhf(tree_class)} '
                              f'Method Hiding Factor (MHF), which is the ratio of private \
                              and protected methods to total methods\n')

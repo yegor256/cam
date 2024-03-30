@@ -49,6 +49,7 @@ stdout=$2
     grep "final 1" "${temp}/stdout"
     grep "noca 1" "${temp}/stdout"
     grep "varcomp 2.75" "${temp}/stdout"
+    grep "pcn 1" "${temp}/stdout"
     grep "mhf 1.0" "${temp}/stdout"
     grep "smhf 0" "${temp}/stdout"
     grep "ahf 0" "${temp}/stdout"
