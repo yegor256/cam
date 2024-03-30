@@ -30,14 +30,14 @@ fi
 
 root=/usr/local/texlive
 if [ ! -e "${root}" ]; then
-  echo "The directory with TeXLive does exist: ${root}"
+  echo "The directory with TeXLive does not exist: ${root}"
   exit 1
 fi
 year=$(find "${root}/" -maxdepth 1 -type d -name '[0-9][0-9][0-9][0-9]' -exec basename {} \;)
 arc=$(find "${root}/${year}/bin/" -type d -maxdepth 1 -name '*-*' -exec basename {} \;)
 bin=${root}/${year}/bin/${arc}
 if [ ! -e "${bin}" ]; then
-  echo "The directory with TeXLive does exist: ${bin}"
+  echo "The directory with TeXLive does not exist: ${bin}"
   exit 1
 fi
 PATH=${bin}:${PATH}
