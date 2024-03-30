@@ -358,7 +358,7 @@ def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return len(words)
 
 
-def nop(tlist) -> int:
+def nop(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of polymorphic methods in main class.
     Methods of nested classes are skipped.
     r:type: int
