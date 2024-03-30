@@ -45,7 +45,7 @@ EOT
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=49
+    expected=50
     actual=$(echo "${all}" | wc -l | xargs)
     if [ ! "${actual}" = "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected, but ${actual} were actually collected"
