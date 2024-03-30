@@ -351,7 +351,6 @@ def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of words in the name of a class.
     r:type: float
     """
-    words = 0
     classname = tlist[0][1].name
     # By naming convention Java classes names use PascalCase.
     # Nevertheless, this metric considers both PascalCasse and camelCase naming conventions.
