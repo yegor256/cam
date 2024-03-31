@@ -23,7 +23,7 @@
 docker:
   image: yegor256/rultor-image:1.23.1
 assets:
-  docker-password: yegor256/home#assets/docker-password
+  pwd: yegor256/home#assets/docker-password
 install: |
   pdd --file=/dev/null
 merge:
@@ -39,5 +39,5 @@ release:
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
     sudo docker run --rm "${repo}:${tag}" make install env lint test
-    cat ../docker-password | sudo docker login --password-stdin --username yegor256
+    cat ../pwd | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"
