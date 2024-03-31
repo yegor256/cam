@@ -319,7 +319,28 @@ def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
+def _components_number(name: str) -> int:
+    """Return number of parts in variable name.
+       Variables are split considering "$" and "_" symbols, snake_case and camelCase naming conventions.
+    r:type: int
+    """
+    parts = 0
+    components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
+    for component in components:
+        parts += 1
+        prev_char = component[:1]
+        for char in component[1:]:
+            if prev_char.isdigit() != char.isdigit():
+                parts += 1
+            elif prev_char.islower() and char.isupper():
+                parts += 1
+            prev_char = char
+    if len(components) == 0:
+        parts += 1
+    return parts
+
+
+def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
@@ -329,22 +350,35 @@ def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
         if (name := node.name) == '':
             continue
         variables += 1
-        # Java only allows "$" and "_" as special symbols in variable names.
-        # Split variable name by them to only count words and numbers.
-        components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
-        if len(components) == 0:
-            parts += 1
-            continue
-        for component in components:
-            parts += 1
-            prev_char = component[:1]
-            for char in component[1:]:
-                if prev_char.isdigit() != char.isdigit():
-                    parts += 1
-                elif prev_char.islower() and char.isupper():
-                    parts += 1
-                prev_char = char
+        parts += _components_number(name)
     return (parts / variables) if variables != 0 else 0
+
+
+def mxpvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Return maximum number of parts in variable names in class.
+    r:type: int
+    """
+    max_parts = 0
+    for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
+        if (name := node.name) == '':
+            continue
+        name_parts = _components_number(name)
+        max_parts = max(name_parts, max_parts)
+    return max_parts
+
+
+def mnpvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Return minimun number of parts in variable names in class.
+    r:type: int
+    """
+    min_parts = 0
+    for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
+        if (name := node.name) == '':
+            continue
+        name_parts = _components_number(name)
+        if min_parts == 0 or name_parts < min_parts:
+            min_parts = name_parts
+    return min_parts
 
 
 def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
@@ -428,8 +462,12 @@ if __name__ == '__main__':
                              f'Class is ``final\'\' (1) or not (0)\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
-                metric.write(f'varcomp {varcomp(tree_class)} '
+                metric.write(f'pvn {pvn(tree_class)} '
                              f'Average number of parts in variable names\n')
+                metric.write(f'mxpvn {mxpvn(tree_class)} '
+                             f'Maximum number of parts in variable names\n')
+                metric.write(f'mnpvn {mnpvn(tree_class)} '
+                             f'Minimum number of parts in variable names\n')
                 metric.write(f'pcn {pcn(tree_class)} '
                              f'Number of words in the name of a class\n')
                 metric.write(f'mhf {mhf(tree_class)} '
