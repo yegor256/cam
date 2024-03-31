@@ -318,6 +318,7 @@ def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """
     return len(tlist[0][1].annotations or [])
 
+
 def _components_number(name: str) -> int:
     """Return number of parts in variable name.
        Variables are split considering "$" and "_" symbols, snake_case and camelCase naming conventions.
