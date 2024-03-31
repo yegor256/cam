@@ -319,7 +319,7 @@ def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
+def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
@@ -428,7 +428,7 @@ if __name__ == '__main__':
                              f'Class is ``final\'\' (1) or not (0)\n')
                 metric.write(f'noca {annts(tree_class)} '
                              f'Number of Class Annotations\n')
-                metric.write(f'varcomp {varcomp(tree_class)} '
+                metric.write(f'pvn {pvn(tree_class)} '
                              f'Average number of parts in variable names\n')
                 metric.write(f'pcn {pcn(tree_class)} '
                              f'Number of words in the name of a class\n')
