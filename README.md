@@ -133,6 +133,13 @@ docker build . -t cam
 docker run --rm cam make test
 ```
 
+There is even a faster way to run all tests, with the help of Docker,
+if you don't change any installation scripts:
+
+```bash
+docker run -v $(pwd):/c --rm yegor256/cam:0.9.2 make -C /c test
+```
+
 ## How to Calculate Additional Metrics
 
 You may want to use this dataset as a basis, with an intend of adding your own
