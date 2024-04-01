@@ -41,10 +41,9 @@ stdout=$2
     }
 EOT
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
-    echo "${msg}"
     set -x
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=49
+    expected=52
     actual=$(echo "${all}" | grep -E 'm1.([A-Z][A-Za-z]*)+$' | wc -l | xargs)
     if [ ! "${actual}" = "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
