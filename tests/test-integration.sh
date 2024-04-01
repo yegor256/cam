@@ -47,12 +47,12 @@ stdout=$2
         test -f "${TARGET}/${f}"
     done
     test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 10
-    test -f "${TARGET}/data/${repo}/ncss.csv"
+    test -f "${TARGET}/data/${repo}/NCSS.csv"
     test -f "${TARGET}/data/${repo}/NHD.csv"
-    test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"
-    test -f "${TARGET}/data/ncss.csv"
+    test -f "${TARGET}/data/${repo}/SCOMcvc.csv"
+    test -f "${TARGET}/data/NCSS.csv"
     test -f "${TARGET}/data/NHD.csv"
-    test -f "${TARGET}/data/SCOM-cvc.csv"
+    test -f "${TARGET}/data/SCOMcvc.csv"
     test -d "${TARGET}/measurements/${repo}/src/main/java"
     test -d "${TARGET}/temp/jpeek/all/${repo}"
     test -d "${TARGET}/temp/jpeek/cvc/${repo}"
