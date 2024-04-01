@@ -36,5 +36,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@master
+      - uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('Dockerfile') }}
       - run: docker build . -t cam
       - run: docker run --rm cam make install env lint test

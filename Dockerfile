@@ -79,11 +79,9 @@ RUN wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip \
   && arc=$(find "/usr/local/texlive/${year}/bin" -type d -name "*-linux" -exec basename {} \;) \
   && bin=/usr/local/texlive/${year}/bin/${arc} \
   && export PATH=${PATH}:${bin} \
-  && echo "export PATH=\${PATH}:${bin}" > /etc/profile.d/texlive.sh \
-  && chmod a+x /etc/profile.d/texlive.sh \
   && tlmgr init-usertree \
   && tlmgr install latexmk \
-  && rm -rf install-tl execs.txt
+  && rm -rf install-tl
 
 # Ruby
 RUN apt-get update -y --fix-missing \
