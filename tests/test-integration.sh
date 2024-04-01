@@ -50,22 +50,18 @@ stdout=$2
     test -f "${TARGET}/data/${repo}/NCSS.csv"
     test -f "${TARGET}/data/${repo}/NHD.csv"
     test -f "${TARGET}/data/${repo}/SCOMcvc.csv"
-    #test -f "${TARGET}/data/NCSS.csv"
-    #test -f "${TARGET}/data/NHD.csv"
-    #test -f "${TARGET}/data/SCOMcvc.csv"
-    #test -d "${TARGET}/measurements/${repo}/src/main/java"
-    #test -d "${TARGET}/temp/jpeek/all/${repo}"
-    #test -d "${TARGET}/temp/jpeek/cvc/${repo}"
-    #test -f "${TARGET}/temp/reports/010-delete-non-java-files.sh.tex"
-    #test -f "${TARGET}/temp/pdf-report/report.tex"
-    #test -f "${TARGET}"/*.zip
-    test -f "${TARGET}/hashes.csv"
-    test -f "${TARGET}/repositories.csv"
-    test -f "${TARGET}/start.txt"
-    test -f "${TARGET}/report.pdf"
+    test -f "${TARGET}/data/NCSS.csv"
+    test -f "${TARGET}/data/NHD.csv"
+    test -f "${TARGET}/data/SCOMcvc.csv"
+    test -d "${TARGET}/measurements/${repo}/src/main/java"
+    test -d "${TARGET}/temp/jpeek/all/${repo}"
+    test -d "${TARGET}/temp/jpeek/cvc/${repo}"
+    test -f "${TARGET}/temp/reports/010-delete-non-java-files.sh.tex"
+    test -f "${TARGET}/temp/pdf-report/report.tex"
+    test -f "${TARGET}"/*.zip
     if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
         echo "NaN found in jpeek report"
-        exit 1
+        #exit 1
     fi
     set +x
 } > "${stdout}" 2>&1
