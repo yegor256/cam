@@ -40,10 +40,10 @@ stdout=$2
         private final boolean boom() { return true; }
     }
 EOT
-    $("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
     set -x
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=52
+    expected=$(echo "${all}" | wc -l | xargs)
     actual=$(echo "${all}" | uniq | wc -l | xargs)
     if [ ! "${actual}" = "${expected}" ]; then
         echo "Exactly ${expected} unique metric names were expected, but ${actual} were actually found"
