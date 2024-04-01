@@ -34,8 +34,8 @@ tex=${TARGET}/foo.tex
     echo "${msg}"
     echo "${msg}" | grep "Found 1 repositories in page #0"
     echo "${msg}" | grep "Found 3 total repositories in GitHub"
-    test -s "${tex}"
     test -e "${csv}"
+    test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
 } > "${stdout}" 2>&1
 echo "👍🏻 Small repositories discovery test is succeed"
@@ -46,8 +46,8 @@ echo "👍🏻 Small repositories discovery test is succeed"
     echo "${msg}"
     echo "${msg}" | grep "Found 60 total repositories in GitHub"
     echo "${msg}" | grep "We will use only the first 35 repositories"
-    test -s "${tex}"
     test -e "${csv}"
+    test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '36'
 } > "${stdout}" 2>&1
 echo "👍🏻 Medium repositories discovery test is succeed"
