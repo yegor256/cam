@@ -61,7 +61,7 @@ stdout=$2
     test -f "${TARGET}"/*.zip
     if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
         echo "NaN found in jpeek report"
-        #exit 1
+        exit 1
     fi
     set +x
 } > "${stdout}" 2>&1
