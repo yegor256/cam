@@ -40,7 +40,7 @@ stdout=$2
         private final boolean boom() { return true; }
     }
 EOT
-    $("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
     set -x
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
     expected=$(echo "${all}" | wc -l | xargs)
