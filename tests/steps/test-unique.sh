@@ -27,7 +27,7 @@ temp=$1
 stdout=$2
 
 {
-    java="${temp}/Foo(xls;)';aга привет '\".java"
+    java="${temp}/Foo(xls;)';не привет '\".java"
     cat > "${java}" <<EOT
     class Foo extends Boo implements Bar {
         // This is static
