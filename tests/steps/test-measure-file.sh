@@ -86,9 +86,9 @@ echo "👍🏻 Single file measured correctly"
     echo "${msg}"
     echo "${msg}" | grep "Failed to collect ast.py"
     echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
-    test -e "${temp}/m2.coco"
-    test -e "${temp}/m2.loc"
-    test ! -e "${temp}/m2.cc"
+    test -e "${temp}/m2.CoCo"
+    test -e "${temp}/m2.LoC"
+    test ! -e "${temp}/m2.CC"
 } > "${stdout}" 2>&1
 echo "👍🏻 Broken syntax measured and error log created"
 
