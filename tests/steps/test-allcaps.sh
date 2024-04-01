@@ -40,11 +40,11 @@ stdout=$2
         private final boolean boom() { return true; }
     }
 EOT
-    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
+    $("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
     set -x
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=52
-    actual=$(echo "${all}" | grep -E 'm1.([A-Z][A-Za-z]*)+$' | wc -l | xargs)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z]*)+$' | xargs)
     if [ ! "${actual}" = "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
         exit 1
