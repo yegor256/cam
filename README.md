@@ -50,13 +50,13 @@ be built in the current directory
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
 where `1000` is the number of repositories to fetch from GitHub
 and `XXX` is
-your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
+your [personal access token][create-PAT]:
 
 ```bash
 docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
   --oom-kill-disable --memory=16g --memory-swap=16g \
-  yegor256/cam:0.9.1 "make -e >/dataset/make.log 2>&1"
+  yegor256/cam:0.9.2 "make -e >/dataset/make.log 2>&1"
 ```
 
 This command will create a new Docker container, running in the background.
@@ -133,6 +133,13 @@ docker build . -t cam
 docker run --rm cam make test
 ```
 
+There is even a faster way to run all tests, with the help of Docker,
+if you don't change any installation scripts:
+
+```bash
+docker run -v $(pwd):/c --rm yegor256/cam:0.9.2 make -C /c test
+```
+
 ## How to Calculate Additional Metrics
 
 You may want to use this dataset as a basis, with an intend of adding your own
@@ -182,5 +189,6 @@ sudo swapon /swapfile
 Then, create a [personal access token][PAT] in GitHub,
 and run Docker as explained above.
 
+[create-PAT]: https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
 [PAT]: https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [detached]: https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode
