@@ -23,33 +23,33 @@
 set -e
 set -o pipefail
 
+temp=$1
 stdout=$2
 
-csv=${TARGET}/foo.csv
-tex=${TARGET}/foo.tex
-
 {
-    rm -f "${csv}"
-    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --page-size=1 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
-    echo "${msg}"
-    echo "${msg}" | grep "Found 1 repositories in page #0"
-    echo "${msg}" | grep "Found 3 total repositories in GitHub"
-    test -e "${csv}"
-    test -s "${tex}"
-    test "$(wc -l < "${csv}" | xargs)" = '4'
-    test "$(head -1 "${csv}" | tr "," "\n" | wc -l | xargs)" = '8'
-} > "${stdout}" 2>&1
-echo "👍🏻 Small repositories discovery test is succeed"
+    java="${temp}/Foo(xls;)';не привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
 
-{
-    rm -f "${csv}"
-    msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=35 --page-size=30 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
-    echo "${msg}"
-    echo "${msg}" | grep "Found 60 total repositories in GitHub"
-    echo "${msg}" | grep "We will use only the first 35 repositories"
-    test -e "${csv}"
-    test -s "${tex}"
-    test "$(wc -l < "${csv}" | xargs)" = '36'
-    test "$(head -1 "${csv}" | tr "," "\n" | wc -l | xargs)" = '8'
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    set -x
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | uniq | wc -l | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} unique metric names were expected, but ${actual} were actually found"
+        exit 1
+    fi
+    set +x
 } > "${stdout}" 2>&1
-echo "👍🏻 Medium repositories discovery test is succeed"
+echo "👍🏻 All provided metrics are named uniquely"
+
