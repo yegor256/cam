@@ -61,7 +61,7 @@ if __name__ == '__main__':
             for path, node in ast:
                 complexity += branches(node)
             with open(metrics, 'a', encoding='utf-8') as m:
-                m.write(f'cc {complexity} Total \
+                m.write(f'CC {complexity} Total \
                     \\href{{https://en.wikipedia.org/wiki/Cyclomatic_complexity}}{{Cyclomatic Complexity}} \
                     of all methods\n')
         except FileNotFoundError as exception:

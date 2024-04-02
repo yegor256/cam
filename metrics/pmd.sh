@@ -58,10 +58,10 @@ sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   ruby -e "
     a = STDIN.read.split(' ').map(&:to_i)
     sum = a.inject(&:+)
-    puts \"coco #{a.empty? ? 0 : sum} Summary of ${tail}\"
-    puts \"acoco #{a.empty? ? 0 : sum / a.count} Average of ${tail}\"
-    puts \"mxcoco #{a.empty? ? 0 : a.max} Maximum ${tail}\"
-    puts \"mncoco #{a.empty? ? 0 : a.min} Minimum ${tail}\"
+    puts \"CoCo #{a.empty? ? 0 : sum} Summary of ${tail}\"
+    puts \"ACoCo #{a.empty? ? 0 : sum / a.count} Average of ${tail}\"
+    puts \"MxCoCo #{a.empty? ? 0 : a.max} Maximum ${tail}\"
+    puts \"MnCoCo #{a.empty? ? 0 : a.min} Minimum ${tail}\"
   " > "${output}"
 
 rm -rf "${tmp}"

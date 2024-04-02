@@ -20,19 +20,38 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-java=$1
-output=$(realpath "$2")
+temp=$1
+stdout=$2
 
-cd "$(dirname "${java}")"
+{
+    java="${temp}/Foo(xls;)';ого привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
 
-if git status > /dev/null 2>&1; then
-    noca=$(git log --pretty=format:'%an%x09' "$(basename "${java}")" | sort | uniq | wc -l | xargs)
-else
-    noca=0
-fi
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    set -x
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z0-9]*)+(-cvc)?$' | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
+        exit 1
+    fi
+    set +x
+} > "${stdout}" 2>&1
+echo "👍🏻 All metrics are correctly named in AllCaps format"
 
-echo "NoGA ${noca} Number of unique Git committers of a file" > "${output}"
+
+

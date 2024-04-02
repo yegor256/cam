@@ -32,7 +32,7 @@ stdout=$2
   touch "temp_file"
   mkdir -p "${LOCAL}/${temp}"
   "${LOCAL}/metrics/raf.sh" "temp_file" "${LOCAL}/${temp}/stdout"
-  grep "raf 0 " "${LOCAL}/${temp}/stdout"
+  grep "RAF 0 " "${LOCAL}/${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in non-git directory"
 
@@ -60,8 +60,8 @@ echo "👍🏻 Didn't fail in non-git directory"
   git add "${file3}"
   git commit --quiet -m "third"
   "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
-  grep "raf 1.0 " "t1" # File is created with repo
-  grep "raf 0.5 " "t2" # File created right now
-  grep "raf 0.0 " "t3" # File created exactly in the middle
+  grep "RAF 1.0 " "t1" # File is created with repo
+  grep "RAF 0.5 " "t2" # File created right now
+  grep "RAF 0.0 " "t3" # File created exactly in the middle
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"

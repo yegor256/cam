@@ -47,10 +47,10 @@ stdout=$2
         test -f "${TARGET}/${f}"
     done
     test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 10
-    test -f "${TARGET}/data/${repo}/ncss.csv"
+    test -f "${TARGET}/data/${repo}/NCSS.csv"
     test -f "${TARGET}/data/${repo}/NHD.csv"
     test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"
-    test -f "${TARGET}/data/ncss.csv"
+    test -f "${TARGET}/data/NCSS.csv"
     test -f "${TARGET}/data/NHD.csv"
     test -f "${TARGET}/data/SCOM-cvc.csv"
     test -d "${TARGET}/measurements/${repo}/src/main/java"
@@ -59,10 +59,6 @@ stdout=$2
     test -f "${TARGET}/temp/reports/010-delete-non-java-files.sh.tex"
     test -f "${TARGET}/temp/pdf-report/report.tex"
     test -f "${TARGET}"/*.zip
-    test -f "${TARGET}/hashes.csv"
-    test -f "${TARGET}/repositories.csv"
-    test -f "${TARGET}/start.txt"
-    test -f "${TARGET}/report.pdf"
     if grep "NaN" "${TARGET}/data/${repo}/NHD.csv"; then
         echo "NaN found in jpeek report"
         exit 1
