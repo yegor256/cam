@@ -44,7 +44,7 @@ EOT
     set -x
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
     expected=$(echo "${all}" | wc -l | xargs)
-    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z0-9]*)+$' | xargs)
+    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z0-9]*)+(-cvc)?$' | xargs)
     if [ ! "${actual}" = "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
         exit 1
