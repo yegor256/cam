@@ -20,15 +20,22 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
-\documentclass[nobrand,nosecurity]{huawei}
-\renewcommand*\theauthor{yegor256/cam}
-\renewcommand*\thetitle{CaM: Classes and Metrics}
+\documentclass[nonacm,12pt]{acmart}
+\settopmatter{printfolios=false,printccs=false,printacmref=false}
 \usepackage[utf8]{inputenc}
+\usepackage{natbib}
 \usepackage{iexec} % for \iexec command
 \usepackage{href-ul} % for \href command
-\usepackage{ffcode} % for \ff command
+\usepackage[noframes]{ffcode} % for \ff command
 \usepackage{doi} % for better render of DOI
-\addbibresource{report.bib}
+
+\title{CaM: Classes and Metrics}
+\author{yegor256/cam}
+
+\makeatletter
+\let\@authorsaddresses\@empty
+\makeatother
+
 \begin{document}
 
 \maketitle
@@ -75,6 +82,7 @@ CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
 
 If any questions or suggestions, please \href{mailto:yegor256@gmail.com}{email}.
 
-\PrintBibliography
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{report}
 
 \end{document}
