@@ -113,12 +113,14 @@ File.write(
   [
     'The following search criteria have been used:',
     '\begin{enumerate}',
-    "\\item At least #{opts['min-stars']},",
+    "\\item At least #{opts['min-stars']} stars,",
     "\\item At most #{opts['max-stars']} stars,",
     'and',
-    "\\item At least #{opts['min-size']}Kb size of Git repo.",
+    "\\item At least #{opts['min-size']} Kb size of Git repo.",
     '\end{enumerate}',
-    'The exact query string for GitHub API was the following:',
+    'The exact query string for',
+    ' GitHub API\footnote{\url{https://docs.github.com/en/rest}}',
+    ' was the following:',
     '\begin{ffcode}',
     query.gsub(' ', "\n"),
     '\end{ffcode}'
