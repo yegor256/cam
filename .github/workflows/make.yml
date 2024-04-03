@@ -37,8 +37,5 @@ jobs:
     container: yegor256/cam:0.9.2
     steps:
       - uses: actions/checkout@master
-      - uses: ScribeMD/docker-cache@0.5.0
-        with:
-          key: docker-${{ runner.os }}-${{ hashFiles('Dockerfile') }}
-      - run: docker build . -t cam
-      - run: docker run --rm cam make install env lint test
+      - run: make install
+      - run: make env lint test
