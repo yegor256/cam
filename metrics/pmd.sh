@@ -50,7 +50,7 @@ export PMD_JAVA_OPTS=${JVM_OPTS}
 # We don't use --cache here, because it becomes too big and leads to "Out Of Memory" error
 pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --format xml --fail-on-violation false > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
-tail='Cognitive Complexity~\citep{campbell2018cognitive} values for all methods in a class'
+tail='Cognitive Complexity~\\citep{campbell2018cognitive} values for all methods in a class'
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   (xmllint --xpath '//violation[@rule="CognitiveComplexity"]/text()' - 2>/dev/null || echo '') | \
   sed -E "s/.*complexity of ([0-9]+).*/\1/" | \
