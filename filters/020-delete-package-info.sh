@@ -42,5 +42,5 @@ if [ -s "${list}" ]; then
     printf "%'d files named as \\\ff{package-info.java} were deleted" \
         "$(wc -l < "${list}" | xargs)"
 else
-    printf "There were no files named \\\ff{package-info.java}, nothing to delete"
+    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
 fi

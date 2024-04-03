@@ -112,11 +112,17 @@ File.write(
   opts[:tex],
   [
     'The following search criteria have been used:',
-    "``at least #{opts['min-stars']},",
-    "at most #{opts['max-stars']} stars,",
-    "at least #{opts['min-size']}Kb size of Git repo.''",
-    "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
-  ].join(' ')
+    '\begin{enumerate}',
+    "\\item At least #{opts['min-stars']},",
+    "\\item At most #{opts['max-stars']} stars,",
+    'and',
+    "\\item At least #{opts['min-size']}Kb size of Git repo.",
+    '\end{enumerate}',
+    'The exact query string for GitHub API was the following:',
+    '\begin{ffcode}',
+    query.gsub(' ', "\n"),
+    '\end{ffcode}'
+  ].join("\n")
 )
 
 path = File.expand_path(opts[:csv])
