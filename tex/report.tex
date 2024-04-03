@@ -31,6 +31,7 @@
 \usepackage{bibcop}
 \usepackage{paralist}
 \usepackage{ffcode}
+\usepackage[capitalize]{cleveref}
 
 \usepackage{silence}
   \WarningFilter{microtype}{Unable to apply patch `footnote'}
@@ -57,7 +58,7 @@ Even though numerous researchers require stable datasets along with source code 
 
 \maketitle
 
-\section{Motivation}
+\section{Motivation}\label{sec:motivation}
 
 First, research projects that analyze Java code usually extract it from repositories where open-source projects store their files, such as GitHub. It is common practice in papers explaining results to fully disclose the coordinates of the open-source code being extracted. However, source code is inherently volatile: repositories change their locations and files are modified, as demonstrated by \citet{5463348}. To ensure the replicability of their research results, paper authors must somehow guarantee that the source code used at the time of research remains available and intact throughout the paper's lifetime. One obvious solution would be to make copies of the repositories being extracted and then host them somewhere they are "forever" available.
 
@@ -73,7 +74,15 @@ Thus, there is an obvious duplication of work among different research projects:
 \end{inparaenum}
 Having a ready-to-use archive of downloaded, filtered, and measured source code files would help many research projects reduce the amount of work required.
 
-\section{Methodology}
+This article is structured as follows:
+\cref{sec:method} outlines practical steps taken to build the dataset,
+\cref{sec:results} describes obtained results,
+\cref{sec:limitations} explores limitations,
+\cref{sec:discussion} discusses some doubtful aspects of the research,
+and
+\cref{sec:conclusion} offers a summary of the paper.
+
+\section{Methodology}\label{sec:method}
 
 In order to help research projects in all three tasks mentioned above, we created \cam{}\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once a year) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as either a GitHub ``asset'' attached to the next release of our GitHub repository or an object in Amazon S3 (depending on the size of the archive). Here, immutability is not technically guaranteed but promised: even though we, being the owners of the repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
 
@@ -96,7 +105,7 @@ Python, Ruby, and Bash, which do exactly the following:
 Then, the entire dataset is packaged as a ZIP archive and published
 on GitHub.
 
-\section{Results}
+\section{Results}\label{sec:results}
 
 In total, \iexec{tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{} repositories
 were found and retrieved from GitHub.
@@ -136,7 +145,7 @@ The dataset was built by
 \iexec{nproc}\unskip{}
 CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
 
-\section{Limitations}
+\section{Limitations}\label{sec:limitations}
 
 As of January 2023, \citet{dohmke2023} reported that GitHub hosts more than 420 million repositories, including at least 28 million public repositories, which is the world's largest source code host as of June 2023. According to \citep{daigle2023}, Java is the 4th most popular language on GitHub. Thus, it is reasonable to assume that there are millions of Java repositories on GitHub. It is technically impossible to download and parse even a few percent of this huge data source. In the \cam{} project, we download and scan only a thousand repositories (planning to download a few thousand in the future). Such a tiny fraction of the entire possible scope of analysis is obviously not representative enough. Researchers must understand this limitation and only use \cam{} when representability of the entire Java domain is not the goal of the research.
 
@@ -144,7 +153,12 @@ Even though most of the metrics that we collect have formal definitions given in
 
 Even though our scripts download only reasonably popular Java repositories, some of them contain Java files with broken syntax. Also, some files use new Java syntax introduced only in recent versions of Java (such as, for example, ``records'' introduced in Java~21). The parser\footnote{\url{https://github.com/c2nes/javalang}} that we use in \cam{} is only capable of parsing Java~8. We simply exclude all files that are not parseable by this parser. Researchers who are looking for the most current syntax of Java must remember this limitation and try to find another source of data.
 
-\section{Conclusion}
+\section{Discussion}\label{sec:discussion}
+
+\textbf{Why the number of GitHub stars was used as selection criteria?}
+Obviously, the selection criteria was not perfect, for example because, as it was demonstrated by \citet{munaiah2017curating}, the number of stars may not always be a proxy for project quality or relevance. However, it is the best possible indicator of popularity of a repository in GitHub.
+
+\section{Conclusion}\label{sec:discussion}
 
 We expect \cam{} archives to be used by research teams analyzing Java source, which want
 \begin{inparaenum}[(a)]
