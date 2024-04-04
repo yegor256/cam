@@ -55,12 +55,11 @@ echo "👍🏻 Measured metrics correctly"
     }
 EOT
     "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
-    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=$(echo "${all}" | wc -l | xargs)
-    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z0-9]*)+(-cvc)?$' | xargs)
-    if [ ! "${actual}" = "${expected}" ]; then
-        echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
-        exit 1
-    fi
+    metrics=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    echo -n "${metrics}" | while IFS= read -r m; do
+        name=${m:3:100}
+        echo "Checking ${name}..."
+        echo "${name}" | grep -E '^([A-Z][A-Za-z0-9]*)+(-cvc)?$'
+    done
 } > "${stdout}" 2>&1
 echo "👍🏻 All metrics are correctly named in AllCaps format"
