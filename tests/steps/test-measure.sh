@@ -23,6 +23,7 @@
 set -e
 set -o pipefail
 
+temp=$1
 stdout=$2
 
 {
@@ -38,3 +39,28 @@ stdout=$2
     test ! -e "${TARGET}/measurements/${repo}/${name}.m.NHD"
 } > "${stdout}" 2>&1
 echo "👍🏻 Measured metrics correctly"
+
+{
+    java="${temp}/Foo(xls;)';ого привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | grep -E -c 'm1.([A-Z][A-Za-z0-9]*)+(-cvc)?$' | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} metrics were expected to be named in AllCaps format, but ${actual} actually were"
+        exit 1
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 All metrics are correctly named in AllCaps format"
