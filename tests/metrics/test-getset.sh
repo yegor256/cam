@@ -5,8 +5,11 @@ set -e
 set -o pipefail
 
 # Setup temporary workspace
-temp=$(mktemp -d)
-stdout="${temp}/stdout.txt"
+# temp=$(mktemp -d)
+# stdout="${temp}/stdout.txt"
+
+temp=$1
+stdout=$2
 
 # Location of the Python script
 script_location="${LOCAL}/metrics/getset.py"
@@ -45,6 +48,7 @@ echo "${temp}"
     }" > "${java_file}"
     
     metrics_file="${temp}/metrics.txt"
+    #echo "${metrics_file}"    
     "${script_location}" "${java_file}" "${metrics_file}"
     cat "${metrics_file}"
     
