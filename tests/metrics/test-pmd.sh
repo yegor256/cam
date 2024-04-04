@@ -38,6 +38,6 @@ echo "👍🏻 PMD dependencies are installed"
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"
     "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
-    grep "coco 0 " "${temp}/stdout"
+    grep "CoCo 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated congitive complexity"

@@ -20,27 +20,36 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+temp=$1
+stdout=$2
 
-list=${temp}/filter-lists/package-info-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
+{
+    java="${temp}/Foo(xls;)';не привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
 
-mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    set -x
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | uniq | wc -l | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} unique metric names were expected, but ${actual} were actually found"
+        exit 1
+    fi
+    set +x
+} > "${stdout}" 2>&1
+echo "👍🏻 All provided metrics are named uniquely"
 
-if [ -s "${list}" ]; then
-    printf "%'d files named as \\\ff{package-info.java} were deleted" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
-fi

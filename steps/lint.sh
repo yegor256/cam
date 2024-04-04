@@ -45,4 +45,6 @@ find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-
 
 rubocop
 
+bibcop tex/report.bib
+
 find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style

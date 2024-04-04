@@ -20,27 +20,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+stdout=$2
 
-list=${temp}/filter-lists/package-info-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
-
-if [ -s "${list}" ]; then
-    printf "%'d files named as \\\ff{package-info.java} were deleted" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
-fi
+{
+    scripts=$(find "${LOCAL}" -type f -name '*.sh')
+    echo "${scripts}" | while IFS= read -r sh; do
+        if [ ! -x "${sh}" ]; then
+            echo "Script '${sh}' is not executable, try running 'chmod +x ${sh}'"
+            exit 1
+        fi
+    done
+    echo "All $(echo "${scripts}" | wc -w | xargs) scripts are executable, it's OK"
+} > "${stdout}" 2>&1
+echo "👍🏻 All .sh scripts are executable"
