@@ -28,8 +28,10 @@ start=$(date +%s%N)
 metrics=$(find "${TARGET}/measurements" -type f -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq | tr '\n' ' ')
 echo "All $(echo "${metrics}" | wc -w | xargs) metrics (in alphanumeric order): ${metrics}"
 
-repos=$(find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \;)
-total=$(echo "${repos}" | wc -l | xargs)
+repos=${TARGET}/temp/repos-to-aggregate.txt
+mkdir -p "$(dirname "${repos}")"
+find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \; > "${repos}"
+total=$(wc -l < "${repos}" | xargs)
 
 jobs=${TARGET}/temp/jobs/aggregate-jobs.txt
 rm -rf "${jobs}"
@@ -38,14 +40,12 @@ touch "${jobs}"
 
 declare -i repo=0
 sh="$(dirname "$0")/aggregate-repo.sh"
-if [ -n "${repos}" ]; then
-    echo "${repos}" | while IFS= read -r r; do
-        repo=$((repo+1))
-        printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${metrics@Q}" >> "${jobs}"
-    done
-    "${LOCAL}/help/parallel.sh" "${jobs}"
-    wait
-fi
+while IFS= read -r r; do
+    repo=$((repo+1))
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${repo@Q}" "${total@Q}" "${metrics@Q}" >> "${jobs}"
+done < "${repos}"
+"${LOCAL}/help/parallel.sh" "${jobs}"
+wait
 
 mkdir -p "${TARGET}/data"
 rm -rf "${TARGET}/data/*.csv"
@@ -65,15 +65,15 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 declare -i repo=0
 sh="$(dirname "$0")/aggregate-join.sh"
-repos=$(find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print)
-if [ -n "${repos}" ]; then
-    echo "${repos}" | while IFS= read -r d; do
-        r=$(realpath --relative-to="${TARGET}/data" "${d}" )
-        repo=$((repo+1))
-        printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${d@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
-     done
-    "${LOCAL}/help/parallel.sh" "${jobs}"
-    wait
-fi
+repos=${TARGET}/temp/repos-to-join.txt
+mkdir -p "$(dirname "${repos}")"
+find "${TARGET}/data" -maxdepth 2 -mindepth 2 -type d -print > "${repos}"
+while IFS= read -r d; do
+    r=$(realpath --relative-to="${TARGET}/data" "${d}" )
+    repo=$((repo+1))
+    printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${d@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
+done < "${repos}"
+"${LOCAL}/help/parallel.sh" "${jobs}"
+wait
 
 echo "All metrics aggregated and joined in ${total} repositories$("${LOCAL}/help/tdiff.sh" "${start}")"

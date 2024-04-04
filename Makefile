@@ -22,7 +22,7 @@
 
 .SHELLFLAGS: -e -o pipefail -c
 .ONESHELL:
-.PHONY: clone filter measure cleanup env lint zip wipe clean jpeek aggregate all test
+.PHONY: clone filter measure cleanup env lint zip clean jpeek aggregate all test
 .SILENT:
 
 # Our version.
@@ -50,7 +50,7 @@ REPO =
 LOCAL := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Location of jpeek JAR file
-JPEEK = /opt/app/jpeek-0.32.0-jar-with-dependencies.jar
+JPEEK = /opt/app/jpeek.jar
 
 # Options for all Java processes
 JAVA_OPTS=-Xmx128m
@@ -93,12 +93,6 @@ zip: $(TARGET)/report.pdf
 
 # Delete calculations.
 clean:
-	rm -rf "$(TARGET)"
-
-# Delete everything, in order to start from scratch.
-wipe: clean
-	set -e
-	rm -rf "$(TARGET)"/*
 	rm -rf "$(TARGET)"
 
 # Show some details about the environment we are running it

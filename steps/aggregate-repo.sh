@@ -61,7 +61,9 @@ find "${dir}" -type f -name '*.m' > "${mfiles}"
 sum=0
 declare -i files=0
 while IFS= read -r m; do
-    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print | while IFS= read -r v; do
+    slice=${TARGET}/temp/mfiles-slice.txt
+    find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print > "${slice}"
+    while IFS= read -r v; do
         java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
         metric=${v//${dir}${java}\.m\./}
         csv=${ddir}/${metric}.csv
@@ -70,7 +72,7 @@ while IFS= read -r m; do
             printf 'java_file,%s\n' "${metric}" > "${csv}"
         fi
         printf '%s,%s\n' "$(echo "${java}" | "${LOCAL}/help/to-csv.sh")" "$(cat "${v}")" >> "${csv}"
-    done
+    done < "${slice}"
     csv=${ddir}/all.csv
     mkdir -p "$(dirname "${csv}")"
     if [ ! -e "${csv}" ]; then

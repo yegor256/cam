@@ -23,20 +23,15 @@
 set -e
 set -o pipefail
 
-flag=${TARGET}/temp/lint-done.txt
-
-if [ -e "${flag}" ]; then
-    echo "The quality of code has already been checked (run 'make clean' and then run 'make lint' again)"
-    exit
-fi
-
 cffconvert --validate
 
 mypy --strict "${LOCAL}/"
 
 flake8 --max-line-length=140 "${LOCAL}/"
 
-find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions \
+export PYTHONPATH="${PYTHONPATH}:${LOCAL}/pylint_plugins/"
+
+find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \
@@ -50,7 +45,6 @@ find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-
 
 rubocop
 
-find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style
+bibcop tex/report.bib
 
-mkdir -p "$(dirname "${flag}")"
-date +%s%N > "${flag}"
+find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style

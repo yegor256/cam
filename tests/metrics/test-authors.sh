@@ -29,14 +29,13 @@ stdout=$2
 {
     tmp=$(mktemp -d /tmp/XXXX)
     "${LOCAL}/metrics/authors.sh" "${tmp}" "${temp}/stdout"
-    grep "noga 0 " "${temp}/stdout"
+    grep "NoGA 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in non-git directory"
 
 {
-    cd "${temp}"
-    rm -rf ./*
-    rm -rf .git
+    mkdir -p "${temp}/foo"
+    cd "${temp}/foo"
     git init --quiet .
     git config user.email 'foo@example.com'
     git config user.name 'Foo'
@@ -46,6 +45,6 @@ echo "👍🏻 Didn't fail in non-git directory"
     git config commit.gpgsign false
     git commit --quiet -am start
     "${LOCAL}/metrics/authors.sh" "${java}" stdout
-    grep "noga 1 " stdout
+    grep "NoGA 1 " stdout
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated authors"

@@ -44,6 +44,6 @@ else
     raf=0
 fi
 
-echo "raf ${raf} Relative Age of File (in the entire timeframe of repository existence), \
+echo "RAF ${raf} Relative Age of File (in the entire timeframe of repository existence), \
     where 0.0 means the file was added in the first commit and 1.0 means that \
     the file was added in the last commit" > "${output}"

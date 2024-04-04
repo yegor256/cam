@@ -75,7 +75,7 @@ loop do
     break
   end
   json = if opts[:dry]
-    { items: page > 100 ? [] : [{ full_name: "foo/#{Random.hex(5)}", created_at: Time.now }] }
+    { items: page > 100 ? [] : Array.new(size) { { full_name: "foo/#{Random.hex(5)}", created_at: Time.now } } }
   else
     github.search_repositories(query, per_page: size, page: page)
   end
@@ -87,7 +87,8 @@ loop do
       forks: i[:forks_count],
       created_at: i[:created_at].iso8601,
       size: i[:size],
-      open_issues_count: i[:open_issues_count]
+      open_issues_count: i[:open_issues_count],
+      description: i[:description]
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
@@ -102,7 +103,7 @@ end
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
-  found = found.first(opts[:total])
+  found = found.first(opts[:total]).to_h
   puts "We will use only the first #{opts[:total]} repositories"
 end
 
@@ -111,11 +112,19 @@ File.write(
   opts[:tex],
   [
     'The following search criteria have been used:',
-    "``at least #{opts['min-stars']},",
-    "at most #{opts['max-stars']} stars,",
-    "at least #{opts['min-size']}Kb size of Git repo.''",
-    "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
-  ].join(' ')
+    '\begin{enumerate}',
+    "\\item At least #{opts['min-stars']} stars,",
+    "\\item At most #{opts['max-stars']} stars,",
+    'and',
+    "\\item At least #{opts['min-size']} Kb size of Git repo.",
+    '\end{enumerate}',
+    'The exact query string for',
+    ' GitHub API\footnote{\url{https://docs.github.com/en/rest}}',
+    ' was the following:',
+    '\begin{ffcode}',
+    query.gsub(' ', "\n"),
+    '\end{ffcode}'
+  ].join("\n")
 )
 
 path = File.expand_path(opts[:csv])

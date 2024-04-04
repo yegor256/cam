@@ -28,16 +28,17 @@ temp=$2
 
 if [ ! -e "${TARGET}/github" ]; then exit; fi
 
-repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \;)
-gits=${temp}/gits
+list=${temp}/git-to-move.txt
+find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/github" {} \; > "${list}"
 
+gits=${temp}/gits
 mkdir -p "${gits}"
 
-if [ -n "${repos}" ]; then
-    echo "${repos}" | while IFS= read -r repo; do
+if [ -s "${list}" ]; then
+    while IFS= read -r repo; do
         src=${TARGET}/github/${repo}/.git
         if [ ! -e "${src}" ]; then continue; fi
         mkdir -p "$(dirname "${gits}/${repo}")"
         mv "${src}" "${gits}/${repo}"
-    done
+    done < "${list}"
 fi

@@ -23,6 +23,7 @@
 set -e
 set -o pipefail
 
+temp=$1
 stdout=$2
 
 {
@@ -38,3 +39,27 @@ stdout=$2
     test ! -e "${TARGET}/measurements/${repo}/${name}.m.NHD"
 } > "${stdout}" 2>&1
 echo "👍🏻 Measured metrics correctly"
+
+{
+    java="${temp}/Foo(xls;)';ого привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    metrics=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    echo -n "${metrics}" | while IFS= read -r m; do
+        name=${m:3:100}
+        echo "Checking ${name}..."
+        echo "${name}" | grep -E '^([A-Z][A-Za-z0-9]*)+(-cvc)?$'
+    done
+} > "${stdout}" 2>&1
+echo "👍🏻 All metrics are correctly named in AllCaps format"
