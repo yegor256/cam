@@ -58,7 +58,18 @@ EOT
     metrics=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
     echo -n "${metrics}" | while IFS= read -r m; do
         name=${m:3:100}
+        contains_special_case=false
+        correctly_formatted=false
         echo "Checking ${name}..."
+        if echo "${name}" | grep -E '(Mn|Mx|Av)'; then
+            contains_special_case=true
+        fi
+        if echo "${name}" | grep -E '(Mn|Mx|Av)$'; then
+            correctly_formatted=true       
+        fi
+        if [[ "$contains_special_case" = true && "$correctly_formatted" = false ]]; then
+            exit 1
+        fi
         echo "${name}" | grep -E '^([A-Z][A-Za-z0-9]*)+(-cvc)?$'
     done
 } > "${stdout}" 2>&1

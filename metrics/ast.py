@@ -115,7 +115,7 @@ def nosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
-def mxnomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def nompmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in all class methods.
     :rtype: int
     """
@@ -128,7 +128,7 @@ def mxnomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return maximum
 
 
-def mxnosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def nosmpmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in static class methods.
     :rtype: int
     """
@@ -354,7 +354,7 @@ def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     return (parts / variables) if variables != 0 else 0
 
 
-def mxpvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return maximum number of parts in variable names in class.
     r:type: int
     """
@@ -367,7 +367,7 @@ def mxpvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return max_parts
 
 
-def mnpvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return minimun number of parts in variable names in class.
     r:type: int
     """
@@ -464,9 +464,9 @@ if __name__ == '__main__':
                              f'Number of Class Annotations\n')
                 metric.write(f'PVN {pvn(tree_class)} '
                              f'Average number of parts in variable names\n')
-                metric.write(f'MxPVN {mxpvn(tree_class)} '
+                metric.write(f'PVNMx {pvnmx(tree_class)} '
                              f'Maximum number of parts in variable names\n')
-                metric.write(f'MnPVN {mnpvn(tree_class)} '
+                metric.write(f'PVNMN {pvnmn(tree_class)} '
                              f'Minimum number of parts in variable names\n')
                 metric.write(f'PCN {pcn(tree_class)} '
                              f'Number of words in the name of a class\n')
@@ -488,11 +488,11 @@ if __name__ == '__main__':
                 metric.write(f'NoSMP {nosmp(tree_class)} '
                              f'Number of Static Method Parameters (NOSMP), which is the count of all \
                              parameters in all static methods in a class\n')
-                metric.write(f'MxNOMP {mxnomp(tree_class)} '
-                             f'Maximum of Method Parameters (MxNOMP), which is the largest amount \
+                metric.write(f'NOMPMx {nompmx(tree_class)} '
+                             f'Maximum of Method Parameters (NOMPMx), which is the largest amount \
                              of parameters in some method in a class\n')
-                metric.write(f'MxNOSMP {mxnosmp(tree_class)} '
-                             f'Maximum of Static Method Parameters (MxNOSMP), which is the largest \
+                metric.write(f'NOSMPMx {nosmpmx(tree_class)} '
+                             f'Maximum of Static Method Parameters (NOSMPMx), which is the largest \
                              amount of parameters in some static method in a class\n')
                 metric.write(f'NOM {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM), which is the number of methods \
