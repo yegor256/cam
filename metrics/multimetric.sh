@@ -36,6 +36,6 @@ cat <<EOT> "${output}"
 HSD $(echo "${body}" | jq '.halstead_difficulty' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Difficulty}
 HSE $(echo "${body}" | jq '.halstead_effort' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Effort}
 HSV $(echo "${body}" | jq '.halstead_volume' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Halstead_complexity_measures}{Halstead Volume}
-MIdx $(echo "${body}" | jq '.maintainability_index' | "${LOCAL}/help/float.sh") \href{https://ieeexplore.ieee.org/abstract/document/303623/}{Maintainability Index}
+MIdx $(echo "${body}" | jq '.maintainability_index' | "${LOCAL}/help/float.sh") Maintainability Index~\citep{coleman1994}
 FOut $(echo "${body}" | jq '.fanout_external' | "${LOCAL}/help/float.sh") \href{https://en.wikipedia.org/wiki/Fan-out_(software)}{Fan-Out}
 EOT
