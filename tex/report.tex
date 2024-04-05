@@ -53,18 +53,50 @@
 \begin{document}
 
 \begin{abstract}
-Even though numerous researchers require stable datasets along with source code and basic metrics calculated on them, neither GitHub nor any other code hosting platform provides such a resource. Consequently, each researcher must download their own data, compute the necessary metrics, and then publish the dataset somewhere to ensure it remains accessible indefinitely. Our \cam{} (stands for ``Classes and Metrics'') project addresses this need. It is an open-source software capable of cloning Java repositories from GitHub, filtering out unnecessary files, parsing Java classes, and computing metrics such as Cyclomatic Complexity, Halstead Effort and Volume, C\&K metrics, Maintainability Metrics, LCOM5 and HND, as well as some Git-based Metrics. At least once a year, we execute the entire script, a process which requires a minimum of ten days on a very powerful server, to generate a new dataset. Subsequently, we publish it on Amazon S3, thereby ensuring its availability as a reference for researchers. The latest archive of 2.2Gb that we published on the 2nd of March, 2024 includes 532K Java classes with 48 metrics for each class.
+Even though numerous researchers require stable datasets along with source code
+and basic metrics calculated on them, neither GitHub nor any other code hosting
+platform provides such a resource. Consequently, each researcher must download
+their own data, compute the necessary metrics, and then publish the dataset
+somewhere to ensure it remains accessible indefinitely. Our \cam{} (stands for
+``Classes and Metrics'') project addresses this need. It is an open-source
+software capable of cloning Java repositories from GitHub, filtering out
+unnecessary files, parsing Java classes, and computing metrics such as
+Cyclomatic Complexity, Halstead Effort and Volume, C\&K metrics,
+Maintainability Metrics, LCOM5 and HND, as well as some Git-based Metrics. At
+least once a year, we execute the entire script, a process which requires a
+minimum of ten days on a very powerful server, to generate a new dataset.
+Subsequently, we publish it on Amazon S3, thereby ensuring its availability as
+a reference for researchers. The latest archive of 2.2Gb that we published on
+the 2nd of March, 2024 includes 532K Java classes with 48 metrics for each
+class.
 \end{abstract}
 
 \maketitle
 
 \section{Motivation}\label{sec:motivation}
 
-First, research projects that analyze Java code usually extract it from repositories where open-source projects store their files, such as GitHub. It is common practice in papers explaining results to fully disclose the coordinates of the open-source code being extracted. However, source code is inherently volatile: repositories change their locations and files are modified, as demonstrated by \citet{5463348}. To ensure the replicability of their research results, paper authors must somehow guarantee that the source code used at the time of research remains available and intact throughout the paper's lifetime. One obvious solution would be to make copies of the repositories being extracted and then host them somewhere they are "forever" available.
+First, research projects that analyze Java code usually extract it from
+repositories where open-source projects store their files, such as GitHub. It
+is common practice in papers explaining results to fully disclose the
+coordinates of the open-source code being extracted. However, source code is
+inherently volatile: repositories change their locations and files are
+modified, as demonstrated by \citet{5463348}. To ensure the replicability of
+their research results, paper authors must somehow guarantee that the source
+code used at the time of research remains available and intact throughout the
+paper's lifetime. One obvious solution would be to make copies of the
+repositories being extracted and then host them somewhere they are "forever"
+available.
 
-Second, research methods typically involve filtering out certain types of files found in repositories, such as plain text documents or graphic images, which are not source code. Additionally, some source code files may need to be excluded because they are auto-generated or contain unparseable Java code, making them unsuitable for most methods of code analysis.
+Second, research methods typically involve filtering out certain types of files
+found in repositories, such as plain text documents or graphic images, which
+are not source code. Additionally, some source code files may need to be
+excluded because they are auto-generated or contain unparseable Java code,
+making them unsuitable for most methods of code analysis.
 
-Third, most source code analysis research involves collecting metrics from the files found in extracted repositories, such as lines of code, complexity, cohesion, and so on. Most of these metrics are already known, and their retrieval mechanisms are trivial, as summarized by \citet{nunez2017source}.
+Third, most source code analysis research involves collecting metrics from the
+files found in extracted repositories, such as lines of code, complexity,
+cohesion, and so on. Most of these metrics are already known, and their
+retrieval mechanisms are trivial, as summarized by \citet{nunez2017source}.
 
 Thus, there is an obvious duplication of work among different research projects:
 \begin{inparaenum}[(a)]
@@ -84,7 +116,17 @@ and
 
 \section{Methodology}\label{sec:method}
 
-In order to help research projects in all three tasks mentioned above, we created \cam{}\footnote{\url{https://github.com/yegor256/cam}} archive: an open-source collection of scripts regularly (at least once a year) being executed in Docker containers in our proprietary computing environment with results published in form of an ``immutable'' ZIP archive as either a GitHub ``asset'' attached to the next release of our GitHub repository or an object in Amazon S3 (depending on the size of the archive). Here, immutability is not technically guaranteed but promised: even though we, being the owners of the repository, are able to replace any previously created assets, we are not going to do so in order to not jeopardize the idea. Instead, new releases will be published retaining previously generated assets unmodified.
+In order to help research projects in all three tasks mentioned above, we
+created \cam{}\footnote{\url{https://github.com/yegor256/cam}} archive: an
+open-source collection of scripts regularly (at least once a year) being
+executed in Docker containers in our proprietary computing environment with
+results published in form of an ``immutable'' ZIP archive as either a GitHub
+``asset'' attached to the next release of our GitHub repository or an object in
+Amazon S3 (depending on the size of the archive). Here, immutability is not
+technically guaranteed but promised: even though we, being the owners of the
+repository, are able to replace any previously created assets, we are not going
+to do so in order to not jeopardize the idea. Instead, new releases will be
+published retaining previously generated assets unmodified.
 
 At the time of writing, our GitHub repository consists of scripts written in Makefile,
 Python, Ruby, and Bash, which do exactly the following:
@@ -134,7 +176,9 @@ The structure of the archive is the following:
 
 \end{itemize}
 
-The following \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{} metrics were
+The following
+\iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{}
+metrics were
 calculated for each \ff{.java} file:
 
 \begin{itemize}
@@ -147,29 +191,66 @@ CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
 
 \section{Limitations}\label{sec:limitations}
 
-As of January 2023, \citet{dohmke2023} reported that GitHub hosts more than 420 million repositories, including at least 28 million public repositories, which is the world's largest source code host as of June 2023. According to \citep{daigle2023}, Java is the 4th most popular language on GitHub. Thus, it is reasonable to assume that there are millions of Java repositories on GitHub. It is technically impossible to download and parse even a few percent of this huge data source. In the \cam{} project, we download and scan only a thousand repositories (planning to download a few thousand in the future). Such a tiny fraction of the entire possible scope of analysis is obviously not representative enough. Researchers must understand this limitation and only use \cam{} when representability of the entire Java domain is not the goal of the research.
+As of January 2023, \citet{dohmke2023} reported that GitHub hosts more than
+420 million repositories, including at least 28 million public repositories,
+which is the world's largest source code host as of June 2023. According
+to \citep{daigle2023}, Java is the 4th most popular language on GitHub. Thus,
+it is reasonable to assume that there are millions of Java repositories on
+GitHub. It is technically impossible to download and parse even a few percent
+of this huge data source. In the \cam{} project, we download and scan only a
+thousand repositories (planning to download a few thousand in the future).
+Such a tiny fraction of the entire possible scope of analysis is obviously
+not representative enough. Researchers must understand this limitation and
+only use \cam{} when representability of the entire Java domain is not the
+goal of the research.
 
-Even though most of the metrics that we collect have formal definitions given in the papers where the metrics were originally introduced, for example NHD~\citep{counsell2006interpretation} and TCC~\citep{bieman1995cohesion}, there are certain modifications that we had to make to their original algorithms. This happened mostly because modern Java classes have certain features that were not present when said metrics were introduced. Researchers must understand that the metrics generated by the scripts in \cam{} are not exactly the same metrics that were described by their authors.
+Even though most of the metrics that we collect have formal definitions
+given in the papers where the metrics were originally introduced,
+for example NHD~\citep{counsell2006interpretation} and
+TCC~\citep{bieman1995cohesion}, there are certain modifications
+that we had to make to their original algorithms. This happened mostly
+because modern Java classes have certain features that were not present
+when said metrics were introduced. Researchers must understand that
+the metrics generated by the scripts in \cam{} are not exactly the same
+metrics that were described by their authors.
 
-Even though our scripts download only reasonably popular Java repositories, some of them contain Java files with broken syntax. Also, some files use new Java syntax introduced only in recent versions of Java (such as, for example, ``records'' introduced in Java~21). The parser\footnote{\url{https://github.com/c2nes/javalang}} that we use in \cam{} is only capable of parsing Java~8. We simply exclude all files that are not parseable by this parser. Researchers who are looking for the most current syntax of Java must remember this limitation and try to find another source of data.
+Even though our scripts download only reasonably popular Java repositories,
+some of them contain Java files with broken syntax. Also, some files use
+new Java syntax introduced only in recent versions of Java (such as,
+for example, ``records'' introduced in Java~21).
+The parser\footnote{\url{https://github.com/c2nes/javalang}} that we use
+in \cam{} is only capable of parsing Java~8. We simply exclude all files
+that are not parseable by this parser. Researchers who are looking for
+the most current syntax of Java must remember this limitation and try
+to find another source of data.
 
 \section{Discussion}\label{sec:discussion}
 
 \textbf{Why the number of GitHub stars was used as selection criteria?}
-Obviously, the selection criteria was not perfect, for example because, as it was demonstrated by \citet{munaiah2017curating}, the number of stars may not always be a proxy for project quality or relevance. However, it is the best possible indicator of popularity of a repository in GitHub.
+Obviously, the selection criteria was not perfect, for example because,
+as it was demonstrated by \citet{munaiah2017curating}, the number of stars
+may not always be a proxy for project quality or relevance. However,
+it is the best possible indicator of popularity of a repository in GitHub.
 
-\section{Conclusion}\label{sec:discussion}
+\section{Conclusion}\label{sec:conclusion}
 
+In this research, we downloaded Java source code from
+\iexec{tail -n +2 "${TARGET}/repositories.csv" | wc -l}\unskip{}
+open GitHub repositories, removed the noise, and ended up with
+\iexec{find "${TARGET}/github" -type f -name '*.java' | wc -l}\unskip{} Java files.
+Then, we calculated
+\iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{}
+for each Java file and created a ZIP archive.
 We expect \cam{} archives to be used by research teams analyzing Java source, which want
 \begin{inparaenum}[(a)]
 \item to guarantee replicability of their results
 and
 \item to reduce data pre-processing efforts.
 \end{inparaenum}
-We also expect open-source community to contribute to \cam{} scripts, making filtering more powerful and adding more code metrics to the collection.
+We also expect open-source community to contribute to \cam{} scripts,
+making filtering more powerful and adding more code metrics to the collection.
 
-{\raggedright
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{report}}
+\bibliography{report}
 
 \end{document}
