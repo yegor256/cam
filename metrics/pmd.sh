@@ -60,8 +60,8 @@ sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
     sum = a.inject(&:+)
     puts \"CoCo #{a.empty? ? 0 : sum} Summary of ${tail}\"
     puts \"ACoCo #{a.empty? ? 0 : sum / a.count} Average of ${tail}\"
-    puts \"MxCoCo #{a.empty? ? 0 : a.max} Maximum ${tail}\"
-    puts \"MnCoCo #{a.empty? ? 0 : a.min} Minimum ${tail}\"
+    puts \"CoCoMx #{a.empty? ? 0 : a.max} Maximum ${tail}\"
+    puts \"CoCoMn #{a.empty? ? 0 : a.min} Minimum ${tail}\"
   " > "${output}"
 
 rm -rf "${tmp}"
