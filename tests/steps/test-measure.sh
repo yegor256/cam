@@ -63,3 +63,30 @@ EOT
     done
 } > "${stdout}" 2>&1
 echo "👍🏻 All metrics are correctly named in AllCaps format"
+
+{
+    java="${temp}/Foo(xls;)';не привет '\".java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
+    set -x
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    expected=$(echo "${all}" | wc -l | xargs)
+    actual=$(echo "${all}" | uniq | wc -l | xargs)
+    if [ ! "${actual}" = "${expected}" ]; then
+        echo "Exactly ${expected} unique metric names were expected, but ${actual} were actually found"
+        exit 1
+    fi
+    set +x
+} > "${stdout}" 2>&1
+echo "👍🏻 All provided metrics are named uniquely"

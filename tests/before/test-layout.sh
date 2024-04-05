@@ -23,33 +23,21 @@
 set -e
 set -o pipefail
 
-temp=$1
 stdout=$2
 
 {
-    java="${temp}/Foo(xls;)';не привет '\".java"
-    cat > "${java}" <<EOT
-    class Foo extends Boo implements Bar {
-        // This is static
-        private static int X = 1;
-        private String z;
-
-        Foo(String zz) {
-            this.z = zz;
-        }
-        private final boolean boom() { return true; }
-    }
-EOT
-    "${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1"
-    set -x
-    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=$(echo "${all}" | wc -l | xargs)
-    actual=$(echo "${all}" | uniq | wc -l | xargs)
-    if [ ! "${actual}" = "${expected}" ]; then
-        echo "Exactly ${expected} unique metric names were expected, but ${actual} were actually found"
-        exit 1
-    fi
-    set +x
+    dirs=$(find "${LOCAL}/tests" -mindepth 1 -maxdepth 1 -type d -not -name "before" -not -name "after" -exec basename {} \;)
+    echo "${dirs}" | while IFS= read -r d; do
+        tests=$(find "${LOCAL}/tests/${d}" -mindepth 1 -maxdepth 1 -type f -name '*.sh' -exec basename {} \;)
+        echo "${tests}" | while IFS= read -r t; do
+            tail=${t:5:100}
+            base=${tail%.*}
+            name=${d}/${tail}
+            if [ "$(find "${LOCAL}/${d}" -name "${base}.*" 2>/dev/null | wc -l)" -eq 0 ]; then
+                echo "Script '${name}' doesn't exist, but its test exists in '${LOCAL}/tests/${d}/${t}'"
+                exit 1
+            fi
+        done
+    done
 } > "${stdout}" 2>&1
-echo "👍🏻 All provided metrics are named uniquely"
-
+echo "👍🏻 All test scripts have they live counterparts"
