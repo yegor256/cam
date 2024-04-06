@@ -63,7 +63,8 @@ if __name__ == '__main__':
                 if result:
                     method_type, complexity, branches = result
                     with open(METRICS, 'a', encoding='utf-8') as m:
-                        m.write(f'{method_type} {complexity} {branches} Branches of {node.name}\n')
+                        # m.write(f'{method_type} {complexity} {branches} Branches of {node.name}\n')
+                        m.write(f'{method_type} {complexity} {branches}\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
