@@ -31,18 +31,12 @@ def analyze_method(method):
     for _, node in method.filter(tree.Statement):
         branches += count_branches(node)
 
-        # print(method_type)
-        # print(method.name[3:].lower())
-
         if method_type == "setter":
             # Increase complexity for each additional variable assignment
             if isinstance(node, tree.Assignment) and node.expressionl != method.parameters[0].name:
                 complexity += 1
 
         elif method_type == "getter":
-            # print('Expression: ', node.expression)
-            # print(node.expression.selectors[0].member)
-
             # Increase complexity for each statement not related to the returned variable
             if not (isinstance(node, tree.ReturnStatement) and node.expression.selectors[0].member == method.name[3:].lower()):
                 complexity += 1
