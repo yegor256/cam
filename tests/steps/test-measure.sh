@@ -67,8 +67,11 @@ EOT
         if echo "${name}" | grep -E '(Mn|Mx|Av)$'; then
             correctly_formatted=true       
         fi
-        if [[ "$contains_special_case" = true && "$correctly_formatted" = false ]]; then
-            exit 1
+        if $contains_special_case; then
+            if ! $correctly_formatted; then
+                echo "Error: ${name} is not correctly formatted."
+                exit 1
+            fi
         fi
         echo "${name}" | grep -E '^([A-Z][A-Za-z0-9]*)+(-cvc)?$'
     done
