@@ -36,3 +36,15 @@ stdout=$2
     echo "All $(echo "${scripts}" | wc -w | xargs) scripts are executable, it's OK"
 } > "${stdout}" 2>&1
 echo "👍🏻 All .sh scripts are executable"
+
+{
+    scripts=$(find "${LOCAL}" -type f -name '*.py')
+    echo "${scripts}" | while IFS= read -r py; do
+        if [ ! -x "${py}" ]; then
+            echo "Script '${py}' is not executable, try running 'chmod +x ${py}'"
+            exit 1
+        fi
+    done
+    echo "All $(echo "${scripts}" | wc -w | xargs) scripts are executable, it's OK"
+} > "${stdout}" 2>&1
+echo "👍🏻 All .py scripts are executable"

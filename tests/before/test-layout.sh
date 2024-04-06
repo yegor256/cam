@@ -40,4 +40,4 @@ stdout=$2
         done
     done
 } > "${stdout}" 2>&1
-echo "👍🏻 All test scripts have they live counterparts"
+echo "👍🏻 All test scripts have their live counterparts"

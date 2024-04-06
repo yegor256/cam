@@ -27,10 +27,22 @@ temp=$1
 stdout=$2
 
 {
-    javac -version
-    mvn --version
-    gradle --version
-    java -jar "${JPEEK}" --help
+    if ! javac -version; then
+        echo "Java is not installed, that's why can't run this test"
+        exit 1
+    fi
+    if ! mvn --version; then
+        echo "Maven is not installed, that's why can't run this test"
+        exit 1
+    fi
+    if ! gradle --version; then
+        echo "Gradle is not installed, that's why can't run this test"
+        exit 1
+    fi
+    if ! java -jar "${JPEEK}" --help; then
+        echo "jPeek JAR is not available at '${JPEEK}'"
+        exit 1
+    fi
 } > "${stdout}" 2>&1
 echo "👍🏻 jPeek dependencies are installed"
 
