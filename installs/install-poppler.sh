@@ -24,6 +24,12 @@
 set -e
 set -o pipefail
 
+if pdftotext -v; then
+  echo "Poppler is already installed"
+  exit
+fi
+
+
 tmp=$(mktemp -d)
 mkdir -p "${tmp}"
 cd "${tmp}"

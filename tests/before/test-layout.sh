@@ -20,27 +20,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+stdout=$2
 
-list=${temp}/filter-lists/package-info-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
-
-if [ -s "${list}" ]; then
-    printf "%'d files named as \\\ff{package-info.java} were deleted" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
-fi
+{
+    dirs=$(find "${LOCAL}/tests" -mindepth 1 -maxdepth 1 -type d -not -name "before" -not -name "after" -exec basename {} \;)
+    echo "${dirs}" | while IFS= read -r d; do
+        tests=$(find "${LOCAL}/tests/${d}" -mindepth 1 -maxdepth 1 -type f -name '*.sh' -exec basename {} \;)
+        echo "${tests}" | while IFS= read -r t; do
+            tail=${t:5:100}
+            base=${tail%.*}
+            name=${d}/${tail}
+            if [ "$(find "${LOCAL}/${d}" -name "${base}.*" 2>/dev/null | wc -l)" -eq 0 ]; then
+                echo "Script '${name}' doesn't exist, but its test exists in '${LOCAL}/tests/${d}/${t}'"
+                exit 1
+            fi
+        done
+    done
+} > "${stdout}" 2>&1
+echo "👍🏻 All test scripts have their live counterparts"

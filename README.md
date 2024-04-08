@@ -50,7 +50,7 @@ be built in the current directory
 (you need to have [Docker](https://docs.docker.com/get-docker/) installed),
 where `1000` is the number of repositories to fetch from GitHub
 and `XXX` is
-your [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token):
+your [personal access token][create-PAT]:
 
 ```bash
 docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
@@ -189,5 +189,6 @@ sudo swapon /swapfile
 Then, create a [personal access token][PAT] in GitHub,
 and run Docker as explained above.
 
+[create-PAT]: https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
 [PAT]: https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [detached]: https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode

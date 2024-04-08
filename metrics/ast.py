@@ -115,7 +115,7 @@ def nosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
-def mxnomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def nompmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in all class methods.
     :rtype: int
     """
@@ -128,7 +128,7 @@ def mxnomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return maximum
 
 
-def mxnosmp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+def nosmpmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Maximum number of parameters in static class methods.
     :rtype: int
     """
@@ -319,7 +319,28 @@ def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return len(tlist[0][1].annotations or [])
 
 
-def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
+def _components_number(name: str) -> int:
+    """Return number of parts in variable name.
+       Variables are split considering "$" and "_" symbols, snake_case and camelCase naming conventions.
+    r:type: int
+    """
+    parts = 0
+    components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
+    for component in components:
+        parts += 1
+        prev_char = component[:1]
+        for char in component[1:]:
+            if prev_char.isdigit() != char.isdigit():
+                parts += 1
+            elif prev_char.islower() and char.isupper():
+                parts += 1
+            prev_char = char
+    if len(components) == 0:
+        parts += 1
+    return parts
+
+
+def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
     r:type: float
     """
@@ -329,22 +350,35 @@ def varcomp(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
         if (name := node.name) == '':
             continue
         variables += 1
-        # Java only allows "$" and "_" as special symbols in variable names.
-        # Split variable name by them to only count words and numbers.
-        components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
-        if len(components) == 0:
-            parts += 1
-            continue
-        for component in components:
-            parts += 1
-            prev_char = component[:1]
-            for char in component[1:]:
-                if prev_char.isdigit() != char.isdigit():
-                    parts += 1
-                elif prev_char.islower() and char.isupper():
-                    parts += 1
-                prev_char = char
+        parts += _components_number(name)
     return (parts / variables) if variables != 0 else 0
+
+
+def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Return maximum number of parts in variable names in class.
+    r:type: int
+    """
+    max_parts = 0
+    for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
+        if (name := node.name) == '':
+            continue
+        name_parts = _components_number(name)
+        max_parts = max(name_parts, max_parts)
+    return max_parts
+
+
+def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Return minimun number of parts in variable names in class.
+    r:type: int
+    """
+    min_parts = 0
+    for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
+        if (name := node.name) == '':
+            continue
+        name_parts = _components_number(name)
+        if min_parts == 0 or name_parts < min_parts:
+            min_parts = name_parts
+    return min_parts
 
 
 def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
@@ -406,65 +440,69 @@ if __name__ == '__main__':
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
             with open(metrics, 'a', encoding='utf-8') as metric:
-                metric.write(f'nooa {attrs(tree_class)} '
+                metric.write(f'NoOA {attrs(tree_class)} '
                              f'Number of Non-Static (Object) Attributes\n')
-                metric.write(f'nosa {sattrs(tree_class)} '
+                metric.write(f'NoSA {sattrs(tree_class)} '
                              f'Number of Static Attributes\n')
-                metric.write(f'nocc {ctors(tree_class)} '
+                metric.write(f'NoCC {ctors(tree_class)} '
                              f'Number of Class Constructors\n')
-                metric.write(f'noom {methods(tree_class)} '
+                metric.write(f'NoOM {methods(tree_class)} '
                              f'Number of Non-Static (Object) Methods\n')
-                metric.write(f'nocm {smethods(tree_class)} '
+                metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
-                metric.write(f'ncss {ncss(raw)} '
+                metric.write(f'NCSS {ncss(raw)} '
                              f'Non-Commenting Source Statements (NCSS)\n')
-                metric.write(f'noii {impls(tree_class)} '
+                metric.write(f'NoII {impls(tree_class)} '
                              f'Number of Implemented Interfaces\n')
-                metric.write(f'napc {extnds(tree_class)} '
+                metric.write(f'NAPC {extnds(tree_class)} '
                              f'Number of Ancestor (Parent) Classes\n')
-                metric.write(f'notp {gnrcs(tree_class)} '
+                metric.write(f'NoTP {gnrcs(tree_class)} '
                              f'Number of Type Parameters (Generics)\n')
-                metric.write(f'final {final(tree_class)} '
+                metric.write(f'Final {final(tree_class)} '
                              f'Class is ``final\'\' (1) or not (0)\n')
-                metric.write(f'noca {annts(tree_class)} '
+                metric.write(f'NoCA {annts(tree_class)} '
                              f'Number of Class Annotations\n')
-                metric.write(f'varcomp {varcomp(tree_class)} '
+                metric.write(f'PVN {pvn(tree_class)} '
                              f'Average number of parts in variable names\n')
-                metric.write(f'pcn {pcn(tree_class)} '
+                metric.write(f'PVNMx {pvnmx(tree_class)} '
+                             f'Maximum number of parts in variable names\n')
+                metric.write(f'PVNMN {pvnmn(tree_class)} '
+                             f'Minimum number of parts in variable names\n')
+                metric.write(f'PCN {pcn(tree_class)} '
                              f'Number of words in the name of a class\n')
-                metric.write(f'mhf {mhf(tree_class)} '
+                metric.write(f'MHF {mhf(tree_class)} '
                              f'Method Hiding Factor (MHF), which is the ratio of private \
                              and protected methods to total methods\n')
-                metric.write(f'smhf {smhf(tree_class)} '
+                metric.write(f'SMHF {smhf(tree_class)} '
                              f'Static Method Hiding Factor (MHF), which is the ratio of private \
                              and protected static methods to total static methods\n')
-                metric.write(f'ahf {ahf(tree_class)} '
+                metric.write(f'AHF {ahf(tree_class)} '
                              f'Attribute Hiding Factor (AHF), which is the ratio of private \
                              and protected attributes to total attributes\n')
-                metric.write(f'sahf {sahf(tree_class)} '
+                metric.write(f'SAHF {sahf(tree_class)} '
                              f'Static Attribute Hiding Factor (SAHF), which is the ratio of private \
                              and protected static attributes to total static attributes\n')
-                metric.write(f'nomp {nomp(tree_class)} '
+                metric.write(f'NoMP {nomp(tree_class)} '
                              f'Number of Method Parameters (NOMP), which is the count of \
                              all parameters in all methods in a class\n')
-                metric.write(f'nosmp {nosmp(tree_class)} '
+                metric.write(f'NoSMP {nosmp(tree_class)} '
                              f'Number of Static Method Parameters (NOSMP), which is the count of all \
                              parameters in all static methods in a class\n')
-                metric.write(f'mxnomp {mxnomp(tree_class)} '
-                             f'Maximum of Method Parameters (MxNOMP), which is the largest amount \
+                metric.write(f'NOMPMx {nompmx(tree_class)} '
+                             f'Maximum of Method Parameters (NOMPMx), which is the largest amount \
                              of parameters in some method in a class\n')
-                metric.write(f'mxnosmp {mxnosmp(tree_class)} '
-                             f'Maximum of Static Method Parameters (MxNOSMP), which is the largest \
+                metric.write(f'NOSMPMx {nosmpmx(tree_class)} '
+                             f'Maximum of Static Method Parameters (NOSMPMx), which is the largest \
                              amount of parameters in some static method in a class\n')
-                metric.write(f'nom {nom(tree_class)} '
+                metric.write(f'NOM {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM), which is the number of methods \
                              with the \\texttt{{@Override}} annotation\n')
-                metric.write(f'nop {nop(tree_class)} '
+                metric.write(f'NOP {nop(tree_class)} '
                              f'Number of Polymorphic Methods (NOP), which is the count of methods \
                              that are overloaded at least once --- have similar names but different parameters\n')
-                metric.write(f'nulls {nulls(tree_class)} '
+                metric.write(f'NULLs {nulls(tree_class)} '
                              f'Number of NULL References\n')
-                metric.write(f'doer {doer(tree_class)} '
+                metric.write(f'DOER {doer(tree_class)} '
                              f'Data vs Object Encapsulation Ratio\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
