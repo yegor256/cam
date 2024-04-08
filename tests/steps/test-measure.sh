@@ -60,11 +60,9 @@ EOT
         name=${m:3:100}
         
         echo "Checking ${name}..."
-        if echo "${name}" | grep -E '(Mn|Mx|Av)'; then
-            if ! echo "${name}" | grep -E '(Mn|Mx|Av)$'; then
-                echo "Error: ${name} is not correctly formatted."
-                exit 1
-            fi
+        if echo "${name}" | grep -q -E '(.)*(Mn|Mx|Av)(.)+'; then
+            echo "Error: ${name} is not correctly formatted."
+            exit 1
         fi
         echo "${name}" | grep -E '^([A-Z][A-Za-z0-9]*)+(-cvc)?$'
     done
