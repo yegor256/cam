@@ -330,9 +330,7 @@ def _components_number(name: str) -> int:
         parts += 1
         prev_char = component[:1]
         for char in component[1:]:
-            if prev_char.isdigit() != char.isdigit():
-                parts += 1
-            elif prev_char.islower() and char.isupper():
+            if prev_char.isdigit() != char.isdigit() or (prev_char.islower() and char.isupper()):
                 parts += 1
             prev_char = char
     if len(components) == 0:
