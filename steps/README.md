@@ -1,9 +1,12 @@
 ### How it Works?
 The entire process of gathering metrics from GitHub repos consists of these
 steps:
-* **Discovering**. Get the list of repos from GitHub and then create directories for them.
-* **Polishing**. Delete directories that don't exist in the list of required repositories.
-* **Unregistering**. Clean directories from the CSV register if their clones are absent.
+* **Discovering**. Here we fetch the list of repos from GitHub and then create
+directories for them.
+* **Polishing**. Then we delete directories that don't exist in the list of
+required repositories.
+* **Unregistering**. During this step, we clean directories from the CSV
+register if their clones are absent.
 * **Cloning**. In this step we run `git clone` on found repositories.
 * **JPEEK**. Here, we build those gathered repositories and run
 [jpeek](https://github.com/cqfn/jpeek) on them.
