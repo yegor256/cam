@@ -23,7 +23,7 @@
 set -e
 set -o pipefail
 
-# TODO: ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING irc.sh
+# TODO: ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING irloc.sh
 
 temp=$1
 stdout=$2
@@ -98,19 +98,19 @@ echo "👍🏻 Didn't fail in repo with zero lines of code"
   git config commit.gpgsign false
   git commit --quiet -m "first line"
   "${LOCAL}/metrics/irloc.sh" "./${file1}" "t1"
-  grep "irc 1 " "t1" # There is only line in repo and it is inside the given file
+  grep "irloc 1 " "t1" # There is only line in repo and it is inside the given file
 
   file2="two.java"
   echo "line" >"${file2}"
   git add "${file2}"
   git commit --quiet -m "second line"
   "${LOCAL}/metrics/irloc.sh" "./${file2}" "t2"
-  grep "irc 0.5 " "t2" # There are two lines in repo and one for the given file
+  grep "irloc 0.5 " "t2" # There are two lines in repo and one for the given file
 
   printf "line\nline" >>"file.txt"
   git add "${file2}"
   git commit --quiet -m "two more lines"
   "${LOCAL}/metrics/irloc.sh" "./${file2}" "t3"
-  grep "irc 0.75 " "t3" # There are four lines in repo and three for the given file
+  grep "irloc 0.75 " "t3" # There are four lines in repo and three for the given file
 } >"${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the IRLoC (Impact Ratio by Lines of Code)"
