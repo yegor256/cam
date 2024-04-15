@@ -143,7 +143,7 @@ docker run -v $(pwd):/c --rm yegor256/cam:0.9.2 make -C /c test
 
 ## How to Calculate Additional Metrics
 
-You may want to use this dataset as a basis, with an intent of adding your own
+You may want to use this dataset as a basis, with an intend of adding your own
 metrics on top of it. It should be easy:
 
 * Clone this repo into `cam/` directory
