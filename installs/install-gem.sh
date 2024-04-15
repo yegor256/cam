@@ -24,8 +24,8 @@
 set -e
 set -o pipefail
 
-"${LOCAL}/help/ping-tool.sh" ruby -v
-"${LOCAL}/help/ping-tool.sh" gem -v
+"${LOCAL}/help/assert-tool.sh" ruby -v
+"${LOCAL}/help/assert-tool.sh" gem -v
 
 gem install --no-document rubocop -v 1.56.3
 gem install --no-document octokit -v 4.21.0
