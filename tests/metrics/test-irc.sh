@@ -47,17 +47,44 @@ set -o pipefail
 #  git config user.email 'foo@example.com'
 #  git config user.name 'Foo'
 #  file1="one.java"
-#  file2="two.java"
 #  "${LOCAL}/metrics/irc.sh" "./${file1}"  "t0"
 #  grep "File does not exist" "t0" # The given file does not exist
+#} > "${stdout}" 2>&1
+#echo "👍🏻 Didn't fail in repo without given file"
+#
+#{
+#  tmp=$(mktemp -d /tmp/XXXX)
+#  cd "${tmp}"
+#  rm -rf ./*
+#  rm -rf .git
+#  git init --quiet .
+#  git config user.email 'foo@example.com'
+#  git config user.name 'Foo'
+#  file1="one.java"
 #  touch "${file1}"
-#  "${LOCAL}/metrics/irc.sh" "./${file1}" "t1"
-#  grep "No commits yet in repo" "t1" # There are no commits in repo with given file
+#  "${LOCAL}/metrics/irc.sh" "./${file1}" "t0"
+#  grep "No commits yet in repo" "t0" # There are no commits in repo with given file
+#} > "${stdout}" 2>&1
+#echo "👍🏻 Didn't fail in repo without commits"
+#
+#{
+#  tmp=$(mktemp -d /tmp/XXXX)
+#  cd "${tmp}"
+#  rm -rf ./*
+#  rm -rf .git
+#  git init --quiet .
+#  git config user.email 'foo@example.com'
+#  git config user.name 'Foo'
+#
+#  file1="one.java"
+#  touch "${file1}"
 #  git add "${file1}"
 #  git config commit.gpgsign false
 #  git commit --quiet -m "first file"
 #  "${LOCAL}/metrics/irc.sh" "./${file1}" "t2"
 #  grep "irc 1 " "t2" # There is only commit in repo and it is for the given file
+#
+#  file2="two.java"
 #  touch "${file2}"
 #  git add "${file2}"
 #  git commit --quiet -m "second file"
