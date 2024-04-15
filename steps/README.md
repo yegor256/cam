@@ -1,7 +1,5 @@
 ## Gathering Steps
 
-## How it Works?
-
 The entire process of gathering metrics from GitHub repos consists of these
 steps:
 
