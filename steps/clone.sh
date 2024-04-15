@@ -35,6 +35,8 @@ mkdir -p "$(dirname "${repos}")"
 tail -n +2 "${TARGET}/repositories.csv" > "${repos}"
 total=$(wc -l < "${repos}" | xargs)
 
+"${LOCAL}/help/assert-tool.sh" git --version
+
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
 while IFS=',' read -r r tag tail; do

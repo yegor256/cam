@@ -58,6 +58,7 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   if [ -n "${CAMTESTS}" ]; then
     args+=('--dry' '--pause=0')
   fi
+  "${LOCAL}/help/assert-tool.sh" ruby -v
   ruby "${LOCAL}/steps/discover-repos.rb" "${args[@]}"
 else
   echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
