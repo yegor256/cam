@@ -1,4 +1,4 @@
-# Gathering Steps
+## Gathering Steps
 
 ## How it Works?
 
