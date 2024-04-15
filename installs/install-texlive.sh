@@ -48,8 +48,7 @@ if ! tlmgr --version >/dev/null 2>&1; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
-    echo "Install 'TeXLive' somehow"
-    exit 1
+    "${LOCAL}/help/assert-tool.sh" tlmgr --version
   fi
 fi
 

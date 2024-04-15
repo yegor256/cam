@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MIT License
+# The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
 #
@@ -10,40 +10,29 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
-set -x
+stdout=$2
 
-if [ -n "${linux}" ]; then
-  SUDO=
-else
-  SUDO=sudo
-fi
+{
+    "${LOCAL}/help/assert-tool.sh" echo hello
+} > "${stdout}" 2>&1
+echo "👍🏻 Positive assertion works"
 
-if [ -n "${linux}" ]; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
-fi
-
-"${LOCAL}/help/assert-tool.sh" python3 --version
-"${LOCAL}/help/assert-tool.sh" pip --version
-
-$SUDO python3 -m pip install --upgrade pip
-$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
+{
+    if "${LOCAL}/help/assert-tool.sh" bla-bla-bla; then
+        exit 1
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Negative assertion works"
