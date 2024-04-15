@@ -1,6 +1,10 @@
-### How it Works?
+# Gathering Steps
+
+## How it Works?
+
 The entire process of gathering metrics from GitHub repos consists of these
 steps:
+
 * **Discovering**. Here we fetch the list of repos from GitHub and then create
 directories for them.
 * **Polishing**. Then we delete directories that don't exist in the list of
