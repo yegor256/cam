@@ -26,4 +26,4 @@ set -o pipefail
 output=$(realpath "$2")
 
 # TODO: REPLACE WITH ACTUAL METRIC CODE
-echo "Just stub" >"${output}"
+echo "IRCA 0.000 " >"${output}"
