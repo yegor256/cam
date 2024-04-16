@@ -22,3 +22,8 @@
 # SOFTWARE.
 set -e
 set -o pipefail
+
+output=$(realpath "$2")
+
+# TODO: REPLACE WITH ACTUAL METRIC CODE
+echo "Just stub" >"${output}"
