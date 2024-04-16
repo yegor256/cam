@@ -47,8 +47,7 @@ function install_package() {
         if [ -n "${linux}" ]; then
             apt-get install -y "$PACKAGE"
         else
-            echo "Install '$PACKAGE' somehow"
-            exit 1
+          "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
     fi
 }
@@ -66,8 +65,7 @@ if ! pdftotext -v >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     apt-get install -y xpdf
   else
-    echo "Install 'poppler' somehow"
-    exit 1
+    "${LOCAL}/help/assert-tool.sh" pdftotext -v
   fi
 fi
 
@@ -77,8 +75,7 @@ if ! inkscape --version >/dev/null 2>&1; then
       apt-get update -y && \
       apt-get install -y inkscape
   else
-    echo "Install 'inkscape' somehow"
-    exit 1
+    "${LOCAL}/help/assert-tool.sh" inkscape --version
   fi
 fi
 

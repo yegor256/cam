@@ -24,10 +24,7 @@
 set -e
 set -o pipefail
 
-if ! javac -version >/dev/null 2>&1; then
-  echo "Install 'javac' somehow"
-  exit 1
-fi
+"${LOCAL}/help/assert-tool.sh" javac --version
 
 if [ ! -e "${JPEEK}" ]; then
   jpeek_version=0.32.0

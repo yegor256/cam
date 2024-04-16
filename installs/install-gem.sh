@@ -24,14 +24,9 @@
 set -e
 set -o pipefail
 
-if ! ruby -v >/dev/null 2>&1; then
-  echo "Install 'ruby' somehow"
-  exit 1
-fi
-if ! gem -v >/dev/null 2>&1; then
-  echo "Install 'gem' somehow"
-  exit 1
-fi
+"${LOCAL}/help/assert-tool.sh" ruby -v
+"${LOCAL}/help/assert-tool.sh" gem -v
+
 gem install --no-document rubocop -v 1.56.3
 gem install --no-document octokit -v 4.21.0
 gem install --no-document slop -v 4.9.1
