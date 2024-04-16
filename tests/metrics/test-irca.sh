@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+# shellcheck disable=SC2317
+# TODO: REMOVE SHELLCHECK DISABLE RIGHT AFTER IMPLEMENTING ir.sh
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
