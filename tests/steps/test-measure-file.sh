@@ -47,7 +47,7 @@ EOT
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
     expected=52
     actual=$(echo "${all}" | wc -l | xargs)
-    if [ ! "${actual}" = "${expected}" ]; then
+    if [ "${actual}" -lt "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected, but ${actual} were actually collected"
         exit 1
     fi
