@@ -51,7 +51,11 @@ end
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [opts[:page_size], opts[:total]].min
-licenses_to_filter = ['mit', '0bsd', 'apache-2.0']
+licenses_to_filter = [
+  { key: 'mit', name: 'MIT License' },
+  { key: 'apache-2.0', name: 'Apache License 2.0' },
+  { key: '0bsd', name: 'BSD Zero Clause License' }
+]
 
 github = Octokit::Client.new
 unless opts[:token].empty?
@@ -70,19 +74,34 @@ query = [
   'NOT',
   'android'
 ].join(' ')
-loop do
-  if page * size > max
-    puts "Can't go to page ##{page}, since it will be over #{max}"
-    break
+
+def mock_array(size, licenses_to_filter)
+  Array.new(size) do
+    {
+      full_name: "foo/#{Random.hex(5)}",
+      created_at: Time.now,
+      license: licenses_to_filter.sample(1)[0]
+    }
   end
-  json = if opts[:dry]
-    { items: page > 100 ? [] : Array.new(size) { { full_name: "foo/#{Random.hex(5)}", created_at: Time.now } } }
+end
+
+def mock_reps(page, size, licenses_to_filter)
+  {
+    items: if page > 100 then []
+    else
+      mock_array(size, licenses_to_filter)
+    end
+  }
+end
+
+loop do
+  break if page * size > max
+  json = if opts[:dry] then mock_reps(page, size, licenses_to_filter)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
-    license = i[:license]
-    next if license.nil? || !licenses_to_filter.include?(license[:key])
+    next if i[:license].nil? || !licenses_to_filter.include?({ key: i[:license][:key], name: i[:license][:name] })
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -95,9 +114,9 @@ loop do
       topics: i[:topics]
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{license[:name]}"
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:name]}"
   end
-  puts "Found #{json[:items].count} repositories in page ##{page}"
+  puts "Found #{found.count} repositories in page ##{page}"
   break if found.count >= opts[:total]
   puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
 (already found #{found.count} repos, need #{opts[:total]})..."
