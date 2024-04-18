@@ -51,6 +51,7 @@ end
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [opts[:page_size], opts[:total]].min
+licenses_to_filter = ['mit', '0bsd', 'apache-2.0']
 
 github = Octokit::Client.new
 unless opts[:token].empty?
@@ -80,6 +81,8 @@ loop do
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
+    license = i[:license]
+    next if license.nil? || !licenses_to_filter.include?(license[:key])
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -92,7 +95,7 @@ loop do
       topics: i[:topics]
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{license[:name]}"
   end
   puts "Found #{json[:items].count} repositories in page ##{page}"
   break if found.count >= opts[:total]
