@@ -52,3 +52,9 @@ fi
 bibcop tex/report.bib
 
 find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style
+
+grep -q -r '#{Date.today.strftime('%Y')}' \
+    --include '*.rb' \
+    --include '*.sh' \
+    --include '*md' \
+    .
