@@ -27,14 +27,6 @@ from typing import Final
 import javalang
 import chardet
 
-def detect_encoding(file_path):
-    with open(file_path, 'rb') as f:
-        rawdata = f.read()
-        result = chardet.detect(rawdata)
-        encoding = result['encoding']
-        confidence = result['confidence']
-        return encoding, confidence
-
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print("Usage: python delete-wrong-encoded.py <path to the .java file> <output file with .java files>")
@@ -44,7 +36,12 @@ if __name__ == '__main__':
     lst: Final[str] = sys.argv[2]
 
     try:
-        encoding, confidence = detect_encoding(java)
+        with open(java, 'rb') as f:
+            rawdata = f.read()
+            result = chardet.detect(rawdata)
+            encoding = result['encoding']
+            confidence = result['confidence']
+
         if not ((encoding == 'ascii' or encoding == 'UTF-8') and confidence == 1.0):
             print('found file', java)
             os.remove(java)
