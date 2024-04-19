@@ -32,7 +32,7 @@ stdout=$2
     java="${temp}/Foo1.java"
     echo "" > "${java}"
     iconv -f ASCII -t UTF-16 -o "${java}" "${javaTemp}"
-    "${LOCAL}/filters/002-delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
+    "${LOCAL}/filters/delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
     test ! -e "${java}"
     grep "${java}" "${temp}/deleted.txt"
 } > "${stdout}" 2>&1
@@ -44,7 +44,7 @@ echo "👍🏻 A Java file with a UTF-16 encoding deleted correctly"
     java="${temp}/Foo2.java"
     echo "" > "${java}"
     iconv -f ASCII -t UTF-32 -o "${java}" "${javaTemp}"
-    "${LOCAL}/filters/002-delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
+    "${LOCAL}/filters/delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
     test ! -e "${java}"
     grep "${java}" "${temp}/deleted.txt"
 } > "${stdout}" 2>&1
@@ -53,7 +53,7 @@ echo "👍🏻 A Java file with a UTF-32 encoding deleted correctly"
 {
     java="${temp}/Foo3.java"
     echo "interface Foo {}" > "${java}"
-    "${LOCAL}/filters/002-delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
+    "${LOCAL}/filters/delete-wrong-encoded.py" "${java}" "${temp}/deleted.txt"
     test -e "${java}"
     grep -v "${java}" "${temp}/deleted.txt"
 } > "${stdout}" 2>&1
