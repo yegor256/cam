@@ -24,7 +24,6 @@
 import sys
 import os
 from typing import Final
-import javalang
 import chardet
 
 if __name__ == '__main__':
@@ -46,6 +45,7 @@ if __name__ == '__main__':
             print('found file', java)
             os.remove(java)
             with open(lst, 'a+', encoding='utf-8') as others:
-                    others.write(java + "\n")
+                others.write(java + "\n")
+                
     except Exception:
         pass
