@@ -1,4 +1,4 @@
-## How Metrics Work
+# How Metrics Work
 
 Every executable file in this directory is a calculator of a few
 metrics. They all are expected to be executed like this:
@@ -14,7 +14,7 @@ to be saved.
 It is expected, that the `log.txt` will contain the following
 text after the script finished successfully:
 
-```
+```text
 NoBL 42 Number of Blank Lines
 NoCL 44 Number of Commenting Lines
 LoC 323 Total physical lines of source code
