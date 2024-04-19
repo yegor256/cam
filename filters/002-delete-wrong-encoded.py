@@ -46,6 +46,6 @@ if __name__ == '__main__':
             os.remove(java)
             with open(lst, 'a+', encoding='utf-8') as others:
                 others.write(java + "\n")
-                
+
     except Exception:
         pass
