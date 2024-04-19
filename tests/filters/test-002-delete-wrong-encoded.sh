@@ -58,3 +58,18 @@ echo "👍🏻 A Java file with a UTF-32 encoding deleted correctly"
     grep -v "${java}" "${temp}/deleted.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A Java file with a UTF-8 encoding was not deleted"
+
+{
+    if ! "${LOCAL}/filters/delete-wrong-encoded.py" > "${temp}/message"; then
+        grep "Usage: python delete-wrong-encoded.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-wrong-encoded.py" "${java}" > "${temp}/message"; then
+        grep "Usage: python delete-wrong-encoded.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+
+    if ! "${LOCAL}/filters/delete-wrong-encoded.py" "${java}" "${temp}/stdout" "${temp}/stdout" > "${temp}/message"; then
+        grep "Usage: python delete-wrong-encoded.py <path to the .java file> <output file with .java files>" "${temp}/message"
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Usage works correctly"
