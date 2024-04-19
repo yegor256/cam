@@ -52,9 +52,9 @@ raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [opts[:page_size], opts[:total]].min
 licenses_to_filter = [
-  { key: 'mit', name: 'MIT License' },
-  { key: 'apache-2.0', name: 'Apache License 2.0' },
-  { key: '0bsd', name: 'BSD Zero Clause License' }
+  'mit',
+  'apache-2.0',
+  '0bsd'
 ]
 
 github = Octokit::Client.new
@@ -80,7 +80,7 @@ def mock_array(size, licenses_to_filter)
     {
       full_name: "foo/#{Random.hex(5)}",
       created_at: Time.now,
-      license: licenses_to_filter.sample(1)[0]
+      license: { key: licenses_to_filter.sample(1)[0] }
     }
   end
 end
@@ -101,7 +101,7 @@ loop do
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
-    next if i[:license].nil? || !licenses_to_filter.include?({ key: i[:license][:key], name: i[:license][:name] })
+    next if i[:license].nil? || !licenses_to_filter.include?(i[:license][:key])
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
