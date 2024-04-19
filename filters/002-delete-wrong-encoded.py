@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
     try:
         encoding, confidence = detect_encoding(java)
-
-        if not ((encoding = 'ascii' || encoding = 'UTF-8') && confidence = 1.0):
+        if not ((encoding == 'ascii' or encoding == 'UTF-8') and confidence == 1.0):
+            print('found file', java)
             os.remove(java)
             with open(lst, 'a+', encoding='utf-8') as others:
                     others.write(java + "\n")
