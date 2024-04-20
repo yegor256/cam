@@ -50,18 +50,18 @@ echo "👍🏻 Didn't fail in non-git directory"
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  GIT_COMMITTER_DATE="$(date -d "100 seconds ago")" git commit --date "100 seconds ago" --quiet -m "first"
+  GIT_COMMITTER_DATE="$(date -d "100 minutes ago")" git commit --date "100 minutes ago" --quiet -m "first"
   "${LOCAL}/metrics/raf.sh" "${file1}" "t1"
   touch "${file2}"
   git add "${file2}"
-  GIT_COMMITTER_DATE="$(date -d "50 seconds ago")" git commit --date "50 seconds ago" --quiet -m "second"
+  GIT_COMMITTER_DATE="$(date -d "50 minutes ago")" git commit --date "50 minutes ago" --quiet -m "second"
   "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
   touch "${file3}"
   git add "${file3}"
   git commit --quiet -m "third"
   "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
   grep "RAF 1.0 " "t1" # File is created with repo
-  grep "RAF 0.5 " "t2" # File created right now
-  grep "RAF 0.0 " "t3" # File created exactly in the middle
+  grep "RAF 0.5 " "t2" # File created exactly in the middle
+  grep "RAF 0.0 " "t3" # File created right now
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"

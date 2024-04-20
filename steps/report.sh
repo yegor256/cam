@@ -30,10 +30,11 @@ fi
 
 list=${TARGET}/temp/list-of-metrics.tex
 rm -f "${list}"
+touch "${list}"
 
 java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
-find "${LOCAL}/metrics" -type f -exec basename {} \; | while IFS= read -r m; do
+find "${LOCAL}/metrics" -type f -executable -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
     metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"
@@ -41,6 +42,11 @@ find "${LOCAL}/metrics" -type f -exec basename {} \; | while IFS= read -r m; do
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${list}"
     echo "$(wc -l < "${metric}" | xargs) metrics from ${m}"
 done
+
+if [ ! -s "${list}" ]; then
+    echo "No metric generating files found, probably an internal error"
+    exit 1
+fi
 
 sort -o "${list}" "${list}"
 
