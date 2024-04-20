@@ -51,7 +51,7 @@ end
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [opts[:page_size], opts[:total]].min
-licenses_to_filter = [
+licenses = [
   'mit',
   'apache-2.0',
   '0bsd'
@@ -75,33 +75,33 @@ query = [
   'android'
 ].join(' ')
 
-def mock_array(size, licenses_to_filter)
+def mock_array(size, licenses)
   Array.new(size) do
     {
       full_name: "foo/#{Random.hex(5)}",
       created_at: Time.now,
-      license: { key: licenses_to_filter.sample(1)[0] }
+      license: { key: licenses.sample(1)[0] }
     }
   end
 end
 
-def mock_reps(page, size, licenses_to_filter)
+def mock_reps(page, size, licenses)
   {
     items: if page > 100 then []
     else
-      mock_array(size, licenses_to_filter)
+      mock_array(size, licenses)
     end
   }
 end
 
 loop do
   break if page * size > max
-  json = if opts[:dry] then mock_reps(page, size, licenses_to_filter)
+  json = if opts[:dry] then mock_reps(page, size, licenses)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
-    next if i[:license].nil? || !licenses_to_filter.include?(i[:license][:key])
+    next if i[:license].nil? || !licenses.include?(i[:license][:key])
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
