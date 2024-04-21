@@ -27,7 +27,7 @@ def analyze_method(method):
         return None
 
     complexity = 0
-    branches = 0
+    branches = 1
     for _, node in method.filter(tree.Statement):
         branches += count_branches(node)
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                     method_type, complexity, branches = result
                     with open(METRICS, 'a', encoding='utf-8') as m:
                         # m.write(f'{method_type} {complexity} {branches} Branches of {node.name}\n')
-                        m.write(f'{method_type} {complexity} {branches}\n')
+                        m.write(f'Method name: {method_type}; Complexity: {complexity}; Branches: {branches}\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {JAVA}"
             sys.exit(message)
