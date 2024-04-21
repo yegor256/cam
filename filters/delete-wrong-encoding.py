@@ -28,7 +28,7 @@ import chardet
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Usage: python delete-wrong-encoded.py <path to the .java file> <output file with .java files>")
+        print("Usage: python delete-wrong-encoding.py <path to the .java file> <output file with .java files>")
         sys.exit(1)
 
     java: Final[str] = sys.argv[1]
@@ -42,7 +42,6 @@ if __name__ == '__main__':
             confidence = result['confidence']
 
         if not (encoding in ('ascii', 'UTF-8') and confidence == 1.0):
-            print('found file', java)
             os.remove(java)
             with open(lst, 'a+', encoding='utf-8') as others:
                 others.write(java + "\n")
