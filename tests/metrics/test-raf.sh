@@ -51,17 +51,29 @@ echo "👍🏻 Didn't fail in non-git directory"
   git add "${file1}"
   git config commit.gpgsign false
   GIT_COMMITTER_DATE="$(date -d "100 minutes ago")" git commit --date "100 minutes ago" --quiet -m "first"
-  "${LOCAL}/metrics/raf.sh" "${file1}" "t1"
+  "${LOCAL}/metrics/raf.sh" "${file1}" ./log1
   touch "${file2}"
   git add "${file2}"
   GIT_COMMITTER_DATE="$(date -d "50 minutes ago")" git commit --date "50 minutes ago" --quiet -m "second"
-  "${LOCAL}/metrics/raf.sh" "${file2}" "t2"
+  "${LOCAL}/metrics/raf.sh" "${file2}" ./log2
   touch "${file3}"
   git add "${file3}"
   git commit --quiet -m "third"
-  "${LOCAL}/metrics/raf.sh" "${file3}" "t3"
-  grep "RAF 1.0 " "t1" # File is created with repo
-  grep "RAF 0.5 " "t2" # File created exactly in the middle
-  grep "RAF 0.0 " "t3" # File created right now
+  "${LOCAL}/metrics/raf.sh" "${file3}" ./log3
+  if ! grep "RAF 1.0" "log1"; then
+    echo "The RAF metric is wrong for '${file1}' (file created first):"
+    cat ./log1
+    exit 1
+  fi
+  if ! grep "RAF 0.5" "log2"; then
+    echo "The RAF metric is wrong for '${file2}' (file created exactly in the middle):"
+    cat ./log2
+    exit 1
+  fi
+  if ! grep "RAF 0.0" "log3"; then
+    echo "The RAF metric is wrong for '${file3}' (file created last):"
+    cat ./log3
+    exit 1
+  fi
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the Relative Age of File"
