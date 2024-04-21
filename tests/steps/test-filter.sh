@@ -59,7 +59,12 @@ echo "👍🏻 A simple filtering ran smoothly"
         echo "broken code совсем" > "${broken}"
     msg=$("${LOCAL}/steps/filter.sh")
     echo "${msg}"
-    test "$(echo "${msg}" | grep -c "didn't touch any files")" = 0
+    if [ ! "$(echo "${msg}" | grep -c "didn't touch any files")" -eq 0 ]; then
+        echo "One of the filters didn't do anything, which is wrong."
+        echo "This test is designed to trigger all available filters, without exception."
+        echo "If you add a new filter to the filters/ directory, make sure it is triggered here too."
+        exit 1
+    fi
     test ! -e "${broken}"
     test ! -e "${interface}"
 } > "${stdout}" 2>&1
