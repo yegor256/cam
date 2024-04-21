@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import sys
 from javalang import tree, parse
+from typing import Optional, Tuple
 
 sys.setrecursionlimit(10000)
 
-def is_getter_or_setter(method):
+def is_getter_or_setter(method: tree.MethodDeclaration) -> Optional[str]:
     """Figures out whether a method is a getter or a setter."""
     if isinstance(method, tree.MethodDeclaration):
         if method.name.startswith("get") and len(method.parameters) == 0:
@@ -13,21 +14,21 @@ def is_getter_or_setter(method):
             return "setter"
     return None
 
-def count_branches(node):
+def count_branches(node: tree.Node) -> int:
     """Counts the number of branches in a method."""
     count = 0
     if isinstance(node, (tree.IfStatement, tree.WhileStatement, tree.ForStatement, tree.DoStatement, tree.SwitchStatement, tree.CatchClause)):
         count = 1
     return count
 
-def analyze_method(method):
+def analyze_method(method: tree.MethodDeclaration) -> Optional[Tuple[str, int, int]]:
     """Analyzes the complexity of the method."""
     method_type = is_getter_or_setter(method)
     if not method_type:
         return None
 
     complexity = 0
-    branches = 1
+    branches = 0
     for _, node in method.filter(tree.Statement):
         branches += count_branches(node)
 
