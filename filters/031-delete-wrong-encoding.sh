@@ -27,7 +27,7 @@ set -o pipefail
 home=$1
 temp=$2
 
-list=${temp}/filter-lists/wrong-encoded.txt
+list=${temp}/filter-lists/wrong-encoding.txt
 if [ -e "${list}" ]; then
     exit
 fi
@@ -35,7 +35,7 @@ fi
 mkdir -p "$(dirname "${list}")"
 touch "${list}"
 
-jobs=${temp}/jobs/delete-wrong-encoded.txt
+jobs=${temp}/jobs/delete-wrong-encoding.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
@@ -43,7 +43,7 @@ touch "${jobs}"
 candidates=${temp}/classes-to-filter.txt
 mkdir -p "$(dirname "${candidates}")"
 find "${home}" -type f -name '*.java' -print > "${candidates}"
-py=${LOCAL}/filters/delete-wrong-encoded.py
+py=${LOCAL}/filters/delete-wrong-encoding.py
 while IFS= read -r f; do
     printf "python3 %s %s %s\n" "${py@Q}" "${f@Q}" "${list@Q}" >> "${jobs}"
 done < "${candidates}"
