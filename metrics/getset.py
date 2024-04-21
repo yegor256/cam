@@ -5,6 +5,7 @@ from typing import Optional, Tuple
 
 sys.setrecursionlimit(10000)
 
+
 def is_getter_or_setter(method: tree.MethodDeclaration) -> Optional[str]:
     """Figures out whether a method is a getter or a setter."""
     if isinstance(method, tree.MethodDeclaration):
@@ -14,12 +15,15 @@ def is_getter_or_setter(method: tree.MethodDeclaration) -> Optional[str]:
             return "setter"
     return None
 
+
 def count_branches(node: tree.Node) -> int:
     """Counts the number of branches in a method."""
     count = 0
-    if isinstance(node, (tree.IfStatement, tree.WhileStatement, tree.ForStatement, tree.DoStatement, tree.SwitchStatement, tree.CatchClause)):
+    if isinstance(node, (tree.IfStatement, tree.WhileStatement, tree.ForStatement,
+                         tree.DoStatement, tree.SwitchStatement, tree.CatchClause)):
         count = 1
     return count
+
 
 def analyze_method(method: tree.MethodDeclaration) -> Optional[Tuple[str, int, int]]:
     """Analyzes the complexity of the method."""
@@ -46,6 +50,7 @@ def analyze_method(method: tree.MethodDeclaration) -> Optional[Tuple[str, int, i
     complexity += branches
 
     return method_type, complexity, branches
+
 
 if __name__ == '__main__':
     JAVA = sys.argv[1]
