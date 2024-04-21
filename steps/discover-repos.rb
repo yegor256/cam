@@ -94,14 +94,24 @@ def mock_reps(page, size, licenses)
   }
 end
 
+def cooldown(opts, found)
+  puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
+(already found #{found.count} repos, need #{opts[:total]})..."
+  sleep opts[:pause]
+end
+
 loop do
   break if page * size > max
+  count = 0
   json = if opts[:dry] then mock_reps(page, size, licenses)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
-    next if i[:license].nil? || !licenses.include?(i[:license][:key])
+    no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
+    puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
+    next if no_license
+    count += 1
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -114,13 +124,11 @@ loop do
       topics: i[:topics]
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:name]}"
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
   end
-  puts "Found #{found.count} repositories in page ##{page}"
+  puts "Found #{count} repositories in page ##{page}"
   break if found.count >= opts[:total]
-  puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
-(already found #{found.count} repos, need #{opts[:total]})..."
-  sleep opts[:pause]
+  cooldown(opts, found)
   page += 1
 end
 puts "Found #{found.count} total repositories in GitHub"
