@@ -30,7 +30,7 @@ def analyze_method(method: tree.MethodDeclaration) -> tuple[str, int, int] | Non
         return None
 
     complexity = 0
-    branches = 0
+    branches = 1
     for _, statement_node in method.filter(tree.Statement):
         branches += count_branches(statement_node)
 
