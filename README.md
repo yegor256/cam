@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yegor256_cam2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=yegor256_cam2)
+[![DOI](https://zenodo.org/badge/790460564.svg)](https://zenodo.org/doi/10.5281/zenodo.11043850)
 
 This is a dataset of open source Java classes and some metrics on them.
 Every now and then I make a new version of it using the scripts
