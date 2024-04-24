@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2317
-# TODO: REMOVE SHELLCHECK DISABLE RIGHT AFTER IMPLEMENTING ir.sh
+# TODO: #259 REMOVE SHELLCHECK DISABLE RIGHT AFTER IMPLEMENTING ir.sh
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -25,7 +25,7 @@
 set -e
 set -o pipefail
 
-# TODO: ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING ir.sh VIA REMOVING `exit 0`
+# TODO: #259 ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING ir.sh VIA REMOVING `exit 0`
 exit 0
 
 temp=$1
