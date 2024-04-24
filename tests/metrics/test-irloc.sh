@@ -36,10 +36,12 @@ stdout=$2
   cd "${tmp}"
   mkdir -p "${LOCAL}/${temp}"
   touch "${LOCAL}/${temp}/file.java"
-  "${LOCAL}/metrics/irloc.sh" "${LOCAL}/${temp}/file.java" "${LOCAL}/${temp}/stdout"
-  grep "Provided non-git repo" "${LOCAL}/${temp}/stdout"
+  if ! "${LOCAL}/metrics/irloc.sh" "${LOCAL}/${temp}/file.java" "${LOCAL}/${temp}/stdout"
+  then
+    exit 1
+  fi
 } >"${stdout}" 2>&1
-echo "👍🏻 Didn't fail in non-git directory"
+echo "👍🏻 Failed in non-git directory"
 
 {
   tmp=$(mktemp -d /tmp/XXXX)
@@ -50,10 +52,12 @@ echo "👍🏻 Didn't fail in non-git directory"
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
   file1="one.java"
-  "${LOCAL}/metrics/irloc.sh" "./${file1}" "t0"
-  grep "File does not exist" "t0" # The given file does not exist
+  if ! "${LOCAL}/metrics/irloc.sh" "./${file1}" "t0"
+  then
+    exit 1
+  fi
 } >"${stdout}" 2>&1
-echo "👍🏻 Didn't fail in repo without given file"
+echo "👍🏻 Failed in repo without given file"
 
 {
   tmp=$(mktemp -d /tmp/XXXX)
@@ -66,7 +70,7 @@ echo "👍🏻 Didn't fail in repo without given file"
   file1="one.java"
   touch "${file1}"
   "${LOCAL}/metrics/irloc.sh" "./${file1}" "t0"
-  grep "No commits yet in repo" "t0" # There are no commits in repo with given file
+  grep "IRLoC 0" "t0" # There are no commits in repo with given file
 } >"${stdout}" 2>&1
 echo "👍🏻 Didn't fail in repo without commits"
 
@@ -83,7 +87,7 @@ echo "👍🏻 Didn't fail in repo without commits"
   git add "${file1}"
   git commit --quiet -m "first file"
   "${LOCAL}/metrics/irloc.sh" "./${file1}" "t0"
-  grep "Zero lines of code in repo" "t0" # There are only empty files committed in the repo
+  grep "IRLoC 0" "t0" # There are only empty files committed in the repo
 } >"${stdout}" 2>&1
 echo "👍🏻 Didn't fail in repo with zero lines of code"
 
@@ -101,19 +105,19 @@ echo "👍🏻 Didn't fail in repo with zero lines of code"
   git config commit.gpgsign false
   git commit --quiet -m "first line"
   "${LOCAL}/metrics/irloc.sh" "./${file1}" "t1"
-  grep "irloc 1 " "t1" # There is only line in repo and it is inside the given file
+  grep "IRLoC 1 " "t1" # There is only line in repo and it is inside the given file
 
   file2="two.java"
   echo "line" >"${file2}"
   git add "${file2}"
   git commit --quiet -m "second line"
   "${LOCAL}/metrics/irloc.sh" "./${file2}" "t2"
-  grep "irloc 0.5 " "t2" # There are two lines in repo and one for the given file
+  grep "IRLoC 0.5 " "t2" # There are two lines in repo and one for the given file
 
   printf "line\nline" >>"file.txt"
   git add "${file2}"
   git commit --quiet -m "two more lines"
   "${LOCAL}/metrics/irloc.sh" "./${file2}" "t3"
-  grep "irloc 0.75 " "t3" # There are four lines in repo and three for the given file
+  grep "IRLoC 0.75 " "t3" # There are four lines in repo and three for the given file
 } >"${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the IRLoC (Impact Ratio by Lines of Code)"
