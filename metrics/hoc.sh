@@ -25,7 +25,7 @@ set -o pipefail
 
 java=$1
 output=$(realpath "$2")
-class_name=$3
+class_name=$(basename "$java")
 
 cd "$(dirname "${java}")"
 base=$(basename "${java}")
