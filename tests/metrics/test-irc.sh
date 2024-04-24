@@ -36,10 +36,12 @@ stdout=$2
   cd "${tmp}"
   mkdir -p "${LOCAL}/${temp}"
   touch "${LOCAL}/${temp}/file.java"
-  "${LOCAL}/metrics/irc.sh" "${LOCAL}/${temp}/file.java" "${LOCAL}/${temp}/stdout"
-  grep "Provided non-git repo" "${LOCAL}/${temp}/stdout"
+  if ! "${LOCAL}/metrics/irc.sh" "${LOCAL}/${temp}/file.java" "${LOCAL}/${temp}/stdout"
+  then
+    exit 1
+  fi
 } > "${stdout}" 2>&1
-echo "👍🏻 Didn't fail in non-git directory"
+echo "👍🏻 Failed in non-git directory"
 
 {
   tmp=$(mktemp -d /tmp/XXXX)
@@ -50,10 +52,12 @@ echo "👍🏻 Didn't fail in non-git directory"
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
   file1="one.java"
-  "${LOCAL}/metrics/irc.sh" "./${file1}"  "t0"
-  grep "File does not exist" "t0" # The given file does not exist
+  if ! "${LOCAL}/metrics/irc.sh" "./${file1}"  "t0"
+  then
+    exit 1
+  fi
 } > "${stdout}" 2>&1
-echo "👍🏻 Didn't fail in repo without given file"
+echo "👍🏻 Failed in repo without given file"
 
 {
   tmp=$(mktemp -d /tmp/XXXX)
@@ -66,7 +70,7 @@ echo "👍🏻 Didn't fail in repo without given file"
   file1="one.java"
   touch "${file1}"
   "${LOCAL}/metrics/irc.sh" "./${file1}" "t0"
-  grep "No commits yet in repo" "t0" # There are no commits in repo with given file
+  grep "IRC 0" "t0" # There are no commits in repo with given file
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in repo without commits"
 
