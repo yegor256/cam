@@ -25,5 +25,5 @@ set -o pipefail
 
 output=$(realpath "$2")
 
-# TODO: REPLACE WITH ACTUAL METRIC CODE
+# TODO: #279 REPLACE WITH ACTUAL METRIC CODE
 echo "IRC 0.000 " >"${output}"
