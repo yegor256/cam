@@ -24,10 +24,7 @@
 set -e
 set -o pipefail
 
-if ! javac -version >/dev/null 2>&1; then
-  echo "Install 'javac' somehow"
-  exit 1
-fi
+"${LOCAL}/help/assert-tool.sh" javac --version
 
 if ! pmd pmd --version >/dev/null 2>&1; then
   if [ ! -e /usr/local ]; then

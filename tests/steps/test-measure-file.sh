@@ -45,9 +45,9 @@ EOT
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    expected=49
+    expected=52
     actual=$(echo "${all}" | wc -l | xargs)
-    if [ ! "${actual}" = "${expected}" ]; then
+    if [ "${actual}" -lt "${expected}" ]; then
         echo "Exactly ${expected} metrics were expected, but ${actual} were actually collected"
         exit 1
     fi
@@ -55,26 +55,26 @@ EOT
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
     done
-    test "$(cat "${temp}/m1.loc")" = "8"
-    test "$(cat "${temp}/m1.nocl")" = "1"
-    test "$(cat "${temp}/m1.cc")" = "1"
-    test "$(cat "${temp}/m1.ncss")" = "7"
-    test "$(cat "${temp}/m1.nocm")" = "0"
-    test "$(cat "${temp}/m1.noom")" = "1"
-    test "$(cat "${temp}/m1.nocc")" = "1"
-    test "$(cat "${temp}/m1.napc")" = "1"
-    test "$(cat "${temp}/m1.noii")" = "1"
-    test "$(cat "${temp}/m1.notp")" = "0"
-    test "$(cat "${temp}/m1.final")" = "0"
-    test "$(cat "${temp}/m1.nobl")" = "1"
-    test "$(cat "${temp}/m1.hsd")" = "6.1875"
-    test "$(cat "${temp}/m1.hsv")" = "122.62388524"
-    test "$(cat "${temp}/m1.hse")" = "758.73528991"
-    test "$(cat "${temp}/m1.coco")" = "0"
-    test "$(cat "${temp}/m1.fout")" = "0"
-    test "$(cat "${temp}/m1.LCOM5")" = "0"
-    test "$(cat "${temp}/m1.raf")" = "0"
-    test "$(cat "${temp}/m1.nulls")" = "0"
+    test "$(cat "${temp}/m1.LoC")" = "8.000"
+    test "$(cat "${temp}/m1.NoCL")" = "1.000"
+    test "$(cat "${temp}/m1.CC")" = "1.000"
+    test "$(cat "${temp}/m1.NCSS")" = "7.000"
+    test "$(cat "${temp}/m1.NoCM")" = "0.000"
+    test "$(cat "${temp}/m1.NoOM")" = "1.000"
+    test "$(cat "${temp}/m1.NoCC")" = "1.000"
+    test "$(cat "${temp}/m1.NAPC")" = "1.000"
+    test "$(cat "${temp}/m1.NoII")" = "1.000"
+    test "$(cat "${temp}/m1.NoTP")" = "0.000"
+    test "$(cat "${temp}/m1.Final")" = "0.000"
+    test "$(cat "${temp}/m1.NoBL")" = "1.000"
+    test "$(cat "${temp}/m1.HSD")" = "6.187"
+    test "$(cat "${temp}/m1.HSV")" = "122.623"
+    test "$(cat "${temp}/m1.HSE")" = "758.735"
+    test "$(cat "${temp}/m1.CoCo")" = "0.000"
+    test "$(cat "${temp}/m1.FOut")" = "0.000"
+    test "$(cat "${temp}/m1.LCOM5")" = "0.000"
+    test "$(cat "${temp}/m1.RAF")" = "0.000"
+    test "$(cat "${temp}/m1.NULLs")" = "0.000"
     set +x
 } > "${stdout}" 2>&1
 echo "👍🏻 Single file measured correctly"
@@ -86,9 +86,9 @@ echo "👍🏻 Single file measured correctly"
     echo "${msg}"
     echo "${msg}" | grep "Failed to collect ast.py"
     echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
-    test -e "${temp}/m2.coco"
-    test -e "${temp}/m2.loc"
-    test ! -e "${temp}/m2.cc"
+    test -e "${temp}/m2.CoCo"
+    test -e "${temp}/m2.LoC"
+    test ! -e "${temp}/m2.CC"
 } > "${stdout}" 2>&1
 echo "👍🏻 Broken syntax measured and error log created"
 

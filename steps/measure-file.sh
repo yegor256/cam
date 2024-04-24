@@ -32,7 +32,7 @@ start=$(date +%s%N)
 
 mkdir -p "$(dirname "${javam}")"
 touch "${javam}"
-metrics=$(find "${LOCAL}/metrics/" -type f -exec basename {} \;)
+metrics=$(find "${LOCAL}/metrics/" -type f -executable -exec basename {} \;)
 echo "${metrics}" | {
     sum=0
     while IFS= read -r m; do

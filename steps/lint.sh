@@ -45,4 +45,10 @@ find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-
 
 rubocop
 
+if ! bibcop --version >/dev/null 2>&1; then
+  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
+  export PATH
+fi
+bibcop tex/report.bib
+
 find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style

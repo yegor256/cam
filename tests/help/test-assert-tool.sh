@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -19,21 +20,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
----
-name: latexmk
-'on':
-  push:
-  pull_request:
-concurrency:
-  group: latexmk-${{ github.ref }}
-  cancel-in-progress: true
-jobs:
-  latexmk:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@master
-      - uses: yegor256/latexmk-action@0.11.1
-        with:
-          opts: -pdf
-          path: paper
-          depends: DEPENDS.txt
+set -e
+set -o pipefail
+
+stdout=$2
+
+{
+    "${LOCAL}/help/assert-tool.sh" echo hello
+} > "${stdout}" 2>&1
+echo "👍🏻 Positive assertion works"
+
+{
+    if "${LOCAL}/help/assert-tool.sh" bla-bla-bla; then
+        exit 1
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Negative assertion works"

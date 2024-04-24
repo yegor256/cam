@@ -20,27 +20,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-home=$1
-temp=$2
+cmd=$1
+arg=$2
 
-list=${temp}/filter-lists/package-info-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
-
-mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
-
-if [ -s "${list}" ]; then
-    printf "%'d files named as \\\ff{package-info.java} were deleted" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
+out=${TARGET}/temp/assert-tool.out
+mkdir -p "$(dirname "${out}")"
+if ! "${cmd}" "${arg}" > "${out}" 2>&1; then
+    cat "${out}"
+    echo "I can't continue, because '${cmd}' command line tool is not available."
+    echo "Try to install it somehow and then restart me."
+    exit 1
 fi

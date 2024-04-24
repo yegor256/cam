@@ -26,6 +26,7 @@ set -o pipefail
 stdout=$2
 
 {
+    "${LOCAL}/help/texlive-bin.sh"
     path=$("${LOCAL}/help/texlive-bin.sh")
     echo "${path}" | grep '/bin'
 } > "${stdout}" 2>&1

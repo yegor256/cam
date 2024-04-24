@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -21,26 +21,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
-set -o pipefail
+import sys
+import os
+from typing import Final
+import chardet
 
-home=$1
-temp=$2
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python delete-wrong-encoding.py <path to the .java file> <output file with .java files>")
+        sys.exit(1)
 
-list=${temp}/filter-lists/package-info-files.txt
-if [ -e "${list}" ]; then
-    exit
-fi
+    java: Final[str] = sys.argv[1]
+    lst: Final[str] = sys.argv[2]
 
-mkdir -p "$(dirname "${list}")"
-find "${home}" -type f -a -name 'package-info.java' -print > "${list}"
-while IFS= read -r f; do
-    rm -f "${f}"
-done < "${list}"
+    try:
+        with open(java, 'rb') as f:
+            rawdata = f.read()
+            result = chardet.detect(rawdata)
+            encoding = result['encoding']
+            confidence = result['confidence']
 
-if [ -s "${list}" ]; then
-    printf "%'d files named as \\\ff{package-info.java} were deleted" \
-        "$(wc -l < "${list}" | xargs)"
-else
-    printf "There were no files named \\\ff{package-info.java}, that's why nothing was deleted"
-fi
+        if not (encoding in ('ascii', 'UTF-8') and confidence == 1.0):
+            os.remove(java)
+            with open(lst, 'a+', encoding='utf-8') as others:
+                others.write(java + "\n")
+
+    except Exception:
+        pass

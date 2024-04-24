@@ -35,13 +35,20 @@ else
   SUDO=sudo
 fi
 
+if ! "${LOCAL}/help/texlive-bin.sh"; then
+  wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
+  unzip install-tl.zip -d install-tl
+  name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
+  perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction
+  rm -rf install-tl
+fi
+
 if ! tlmgr --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
-    echo "Install 'TeXLive' somehow"
-    exit 1
+    "${LOCAL}/help/assert-tool.sh" tlmgr --version
   fi
 fi
 

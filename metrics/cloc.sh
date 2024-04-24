@@ -30,7 +30,7 @@ output=$2
 out=$(cloc --timeout 0 --quiet --csv "${java}" | tail -1)
 IFS=',' read -r -a M <<< "${out}"
 cat <<EOT> "${output}"
-nobl ${M[2]} Number of Blank Lines
-nocl ${M[3]} Number of Commenting Lines
-loc ${M[4]} Total physical lines of source code, including commenting lines and blank lines
+NoBL ${M[2]} Number of Blank Lines
+NoCL ${M[3]} Number of Commenting Lines
+LoC ${M[4]} Total physical lines of source code, including commenting lines and blank lines
 EOT

@@ -37,6 +37,7 @@ tex=${TARGET}/foo.tex
     test -e "${csv}"
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
+    test "$(head -1 "${csv}" | tr "," "\n" | wc -l | xargs)" = '9'
 } > "${stdout}" 2>&1
 echo "👍🏻 Small repositories discovery test is succeed"
 
@@ -49,5 +50,6 @@ echo "👍🏻 Small repositories discovery test is succeed"
     test -e "${csv}"
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '36'
+    test "$(head -1 "${csv}" | tr "," "\n" | wc -l | xargs)" = '9'
 } > "${stdout}" 2>&1
 echo "👍🏻 Medium repositories discovery test is succeed"

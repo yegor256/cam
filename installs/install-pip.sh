@@ -42,13 +42,8 @@ if [ -n "${linux}" ]; then
   fi
 fi
 
-if ! python3 --version >/dev/null 2>&1; then
-  echo "Install 'python3' somehow"
-  exit 1
-fi
-if ! pip --version >/dev/null 2>&1; then
-  echo "Install 'pip' somehow"
-  exit 1
-fi
+"${LOCAL}/help/assert-tool.sh" python3 --version
+"${LOCAL}/help/assert-tool.sh" pip --version
+
 $SUDO python3 -m pip install --upgrade pip
 $SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"

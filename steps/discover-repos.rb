@@ -51,6 +51,11 @@ end
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 size = [opts[:page_size], opts[:total]].min
+licenses = [
+  'mit',
+  'apache-2.0',
+  '0bsd'
+]
 
 github = Octokit::Client.new
 unless opts[:token].empty?
@@ -69,17 +74,44 @@ query = [
   'NOT',
   'android'
 ].join(' ')
-loop do
-  if page * size > max
-    puts "Can't go to page ##{page}, since it will be over #{max}"
-    break
+
+def mock_array(size, licenses)
+  Array.new(size) do
+    {
+      full_name: "foo/#{Random.hex(5)}",
+      created_at: Time.now,
+      license: { key: licenses.sample(1)[0] }
+    }
   end
-  json = if opts[:dry]
-    { items: page > 100 ? [] : Array.new(size) { { full_name: "foo/#{Random.hex(5)}", created_at: Time.now } } }
+end
+
+def mock_reps(page, size, licenses)
+  {
+    items: if page > 100 then []
+    else
+      mock_array(size, licenses)
+    end
+  }
+end
+
+def cooldown(opts, found)
+  puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
+(already found #{found.count} repos, need #{opts[:total]})..."
+  sleep opts[:pause]
+end
+
+loop do
+  break if page * size > max
+  count = 0
+  json = if opts[:dry] then mock_reps(page, size, licenses)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
   json[:items].each do |i|
+    no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
+    puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
+    next if no_license
+    count += 1
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -87,16 +119,16 @@ loop do
       forks: i[:forks_count],
       created_at: i[:created_at].iso8601,
       size: i[:size],
-      open_issues_count: i[:open_issues_count]
+      open_issues_count: i[:open_issues_count],
+      description: i[:description],
+      topics: i[:topics]
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars)"
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
   end
-  puts "Found #{json[:items].count} repositories in page ##{page}"
+  puts "Found #{count} repositories in page ##{page}"
   break if found.count >= opts[:total]
-  puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
-(already found #{found.count} repos, need #{opts[:total]})..."
-  sleep opts[:pause]
+  cooldown(opts, found)
   page += 1
 end
 puts "Found #{found.count} total repositories in GitHub"
@@ -111,11 +143,19 @@ File.write(
   opts[:tex],
   [
     'The following search criteria have been used:',
-    "``at least #{opts['min-stars']},",
-    "at most #{opts['max-stars']} stars,",
-    "at least #{opts['min-size']}Kb size of Git repo.''",
-    "The exact query string for GitHub API was the following: ``\\texttt{#{query}}''.\n"
-  ].join(' ')
+    '\begin{enumerate}',
+    "\\item At least #{opts['min-stars']} stars,",
+    "\\item At most #{opts['max-stars']} stars,",
+    'and',
+    "\\item At least #{opts['min-size']} Kb size of Git repo.",
+    '\end{enumerate}',
+    'The exact query string for',
+    ' GitHub API\footnote{\url{https://docs.github.com/en/rest}}',
+    ' was the following:',
+    '\begin{ffcode}',
+    query.gsub(' ', "\n"),
+    '\end{ffcode}'
+  ].join("\n")
 )
 
 path = File.expand_path(opts[:csv])
