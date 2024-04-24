@@ -37,4 +37,4 @@ else
     hoc=0
 fi
 
-echo "hoc ${hoc} Hits Of Code for ${class_name} class" > "${output}"
+echo "hoc ${hoc} Hits Of Code > "${output}"
