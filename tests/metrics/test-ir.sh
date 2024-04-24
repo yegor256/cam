@@ -35,10 +35,12 @@ stdout=$2
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
   mkdir -p "${LOCAL}/${temp}"
-  "${LOCAL}/metrics/ir.sh" ./ "${LOCAL}/${temp}/stdout"
-  grep "Provided non-git repo" "${LOCAL}/${temp}/stdout"
+  if ! "${LOCAL}/metrics/ir.sh" ./ "${LOCAL}/${temp}/stdout"
+  then
+    exit 1
+  fi
 } > "${stdout}" 2>&1
-echo "👍🏻 Didn't fail in non-git directory"
+echo "👍🏻 Failed in non-git directory"
 
 {
   tmp=$(mktemp -d /tmp/XXXX)
@@ -48,8 +50,10 @@ echo "👍🏻 Didn't fail in non-git directory"
   git init --quiet .
   git config user.email 'foo@example.com'
   git config user.name 'Foo'
-  "${LOCAL}/metrics/ir.sh" ./ "t0"
-  grep "No files in given repo" "t0"
+  if ! "${LOCAL}/metrics/ir.sh" ./ "t0"
+  then
+    exit 1
+  fi
   file1="one.java"
   file2="two.java"
   touch "${file1}"
@@ -61,8 +65,7 @@ echo "👍🏻 Didn't fail in non-git directory"
   git add "${file2}"
   git commit --quiet -m "second file"
   "${LOCAL}/metrics/ir.sh" ./ "t2"
-  grep "No files in given repo " "t0" # There are no files in repo
-  grep "ir 1 " "t1" # Single file in repo
-  grep "ir 0.5 " "t2" # Two files in repo
+  grep "IR 1" "t1" # Single file in repo
+  grep "IR 0.5 " "t2" # Two files in repo
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated the IR (Impact Ratio)"
