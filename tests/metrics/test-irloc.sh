@@ -25,7 +25,7 @@
 set -e
 set -o pipefail
 
-# TODO: #281 ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING irloc.sh VIA REMOVING `exit 0`
+# TODO: #281 ENABLE THIS TESTS VIA REMOVING `exit 0` AND REMOVE `shellcheck disable=SC2317` on the top RIGHT AFTER IMPLEMENTING irloc.sh
 exit 0
 
 temp=$1
