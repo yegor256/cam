@@ -29,6 +29,10 @@ output=$(realpath "$2")
 cd "$(dirname "${java}")"
 base=$(basename "${java}")
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias gdate=date
+fi
+
 # To check that file was added in commit any time
 if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
     file_creation=$(git log --pretty=format:"%ci" --date=default -- "${base}" | tail -n 1)
@@ -39,7 +43,7 @@ if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; t
     current_time_timestamp=$(date -d "$current_time" +%s)
     from_file_creation=$((current_time_timestamp - file_creation_timestamp))
     from_repo_creation=$((current_time_timestamp - repo_creation_timestamp))
-    raf=$(echo 'import sys; print(float(sys.argv[1])/float(sys.argv[2]) if float(sys.argv[2]) != 0 else 1.0)' | python3 - $((from_file_creation)) $((from_repo_creation)))
+    raf=$(echo 'import sys; print(round(float(sys.argv[1])/float(sys.argv[2]), 1) if float(sys.argv[2]) != 0 else 1.0)' | python3 - $((from_file_creation)) $((from_repo_creation)))
 else
     raf=0
 fi
