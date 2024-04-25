@@ -41,7 +41,6 @@ stdout=$2
     java="FooTest.java"
 
     touch "${java}"
-    touch "${stdout}"
 
     printf "class Foo {}" > "${java}"
     git add "${java}"
