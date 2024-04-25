@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2317
-# TODO: #281 REMOVE SHELLCHECK DISABLE RIGHT AFTER IMPLEMENTING irloc.sh
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
