@@ -50,19 +50,19 @@ stdout=$2
     printf "class Foo {}" > "${java}"
     git add "${java}"
     git commit --quiet -m "first commit"
-    ${hoc_script_path} "${java}" "stdout" "Foo"
+    ${hoc_script_path} "${java}" "stdout"
     grep "hoc 1" "stdout"
 
     printf "class Foo {\n\tint x;\n\tbool y;\n}\n" > "${java}"
     git add "${java}"
     git commit --quiet -m "+second commit"
-    ${hoc_script_path} "${java}" "stdout" "Foo"
+    ${hoc_script_path} "${java}" "stdout"
     grep "hoc 6" "stdout"
 
     printf "class Foo {\n\tbool z;\n}\n" > "${java}"
     git add "${java}"
     git commit --quiet -m "-third commit"
-    ${hoc_script_path} "${java}" "stdout" "Foo"
+    ${hoc_script_path} "${java}" "stdout"
     grep "hoc 9" "stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated hits of code"
