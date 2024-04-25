@@ -31,7 +31,7 @@ base=$(basename "${java}")
 
 # To check that file was added in commit any time
 if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
-    hoc=$(git log -L:"class\s${class_name}:${java}" | grep -E "^[+-].*$" | grep -Ev "^\-\-\-\s\S+$" | grep -Evc "^\+\+\+\s\S+$")
+    hoc=$(git log -L:"class\s:${java}" | grep -E "^[+-].*$" | grep -Ev "^\-\-\-\s\S+$" | grep -Evc "^\+\+\+\s\S+$")
 else
     hoc=0
 fi
