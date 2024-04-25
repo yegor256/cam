@@ -25,7 +25,6 @@ set -o pipefail
 
 java=$1
 output=$(realpath "$2")
-class_name=$(basename "$java")
 
 cd "$(dirname "${java}")"
 base=$(basename "${java}")
@@ -37,4 +36,4 @@ else
     hoc=0
 fi
 
-echo "hoc ${hoc} Hits Of Code > "${output}"
+echo "hoc ${hoc} Hits Of Code" > "${output}"
