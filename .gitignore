@@ -6,3 +6,4 @@ test-zone/
 *.zip
 *.pdf
 pylint_plugins/__pycache__
+target/

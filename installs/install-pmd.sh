@@ -24,9 +24,15 @@
 set -e
 set -o pipefail
 
+if [ -z "${LOCAL}" ]; then
+  LOCAL=$(dirname "$0")/..
+fi
+
 "${LOCAL}/help/assert-tool.sh" javac --version
 
-if ! pmd pmd --version >/dev/null 2>&1; then
+if pmd pmd --version >/dev/null 2>&1; then
+  pmd pmd --version
+else
   if [ ! -e /usr/local ]; then
     echo "The directory /usr/local must exist"
     exit 1
