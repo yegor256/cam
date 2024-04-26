@@ -26,6 +26,10 @@ set -o pipefail
 cmd=$1
 arg=$2
 
+if [ -z "${TARGET}" ]; then
+  TARGET=$(dirname "$0")/../target
+fi
+
 out=${TARGET}/temp/assert-tool.out
 mkdir -p "$(dirname "${out}")"
 if ! "${cmd}" "${arg}" > "${out}" 2>&1; then
