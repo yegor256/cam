@@ -39,6 +39,7 @@ list=${temp}/temp/filter-lists/invalid-files.txt
     test ! -e "${java}"
     test -e "${list}"
     test "$(wc -l < "${list}" | xargs)" = 1
+    exit 1
 } > "${stdout}" 2>&1
 echo "👍🏻 An invalid Java file was deleted"
 
