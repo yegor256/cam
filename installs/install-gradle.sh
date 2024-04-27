@@ -43,8 +43,7 @@ else
     unzip -qq gradle-${gradle_version}-bin.zip && \
     rm gradle-${gradle_version}-bin.zip && \
     mv gradle-${gradle_version} gradle
-  export GRADLE_LOCAL=/usr/local/gradle
-  export PATH=$PATH:/usr/local/gradle/bin
+  ln -s /usr/local/gradle/bin/gradle /usr/local/bin/gradle
   echo "Gradle installed into /usr/local/gradle"
   gradle --version
 fi
