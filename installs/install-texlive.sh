@@ -24,12 +24,9 @@
 set -e
 set -o pipefail
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
 set -x
 
-if [ -n "${linux}" ]; then
+if "${LOCAL}/help/is-linux.sh"; then
   SUDO=
 else
   SUDO=sudo
@@ -44,7 +41,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
 fi
 
 if ! tlmgr --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
+  if "${LOCAL}/help/is-linux.sh"; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
