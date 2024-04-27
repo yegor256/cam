@@ -79,7 +79,7 @@ if ! inkscape --version >/dev/null 2>&1; then
   fi
 fi
 
-find "${LOCAL}/installs" -name 'install-*' | while IFS= read -r i; do
+find "${LOCAL}/installs" -name 'install-*' | sort | while IFS= read -r i; do
   "${i}"
 done
 
