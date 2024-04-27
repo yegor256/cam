@@ -45,4 +45,6 @@ else
     mv gradle-${gradle_version} gradle
   export GRADLE_LOCAL=/usr/local/gradle
   export PATH=$PATH:/usr/local/gradle/bin
+  echo "Gradle installed into /usr/local/gradle"
+  gradle --version
 fi
