@@ -24,13 +24,6 @@
 set -e
 set -o pipefail
 
-if "${LOCAL}/help/is-linux.sh"; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
-fi
-
 "${LOCAL}/help/assert-tool.sh" python3 --version
 "${LOCAL}/help/assert-tool.sh" pip --version
 
