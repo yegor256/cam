@@ -41,7 +41,7 @@ fi
 function install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
-        if [ -n "${linux}" ]; then
+        if "${LOCAL}/help/is-linux.sh"; then
             apt-get install -y "$PACKAGE"
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
