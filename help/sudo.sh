@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 if "${LOCAL}/help/is-linux.sh"; then
-  $@
+  "$@"
 else
-  sudo $@
+  sudo "$@"
 fi
