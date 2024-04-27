@@ -26,7 +26,9 @@ set -o pipefail
 
 "${LOCAL}/help/assert-tool.sh" javac --version
 
-if [ ! -e "${JPEEK}" ]; then
+if [ -e "${JPEEK}" ]; then
+  echo "jPeek JAR is already here: ${JPEEK}"
+else
   jpeek_version=0.32.0
   cd /tmp
   wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar
