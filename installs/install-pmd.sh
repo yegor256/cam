@@ -38,10 +38,11 @@ else
     exit 1
   fi
   pmd_version=6.55.0
-  cd /usr/local && \
-    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip && \
-    unzip -qq pmd-bin-${pmd_version}.zip && \
-    rm pmd-bin-${pmd_version}.zip && \
-    mv pmd-bin-${pmd_version} pmd && \
-    ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+  cd /usr/local
+  wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip
+  unzip -qq pmd-bin-${pmd_version}.zip
+  rm pmd-bin-${pmd_version}.zip
+  mv pmd-bin-${pmd_version} pmd
+  ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+  echo "PMD installed into /usr/local/bin/pmd"
 fi
