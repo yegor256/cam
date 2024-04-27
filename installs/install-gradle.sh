@@ -38,11 +38,11 @@ else
     exit 1
   fi
   gradle_version=7.4
-  cd /usr/local && \
-    wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip && \
-    unzip -qq gradle-${gradle_version}-bin.zip && \
-    rm gradle-${gradle_version}-bin.zip && \
-    mv gradle-${gradle_version} gradle
+  cd /usr/local
+  wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip
+  unzip -qq gradle-${gradle_version}-bin.zip
+  rm gradle-${gradle_version}-bin.zip
+  mv gradle-${gradle_version} gradle
   ln -s /usr/local/gradle/bin/gradle /usr/local/bin/gradle
   echo "Gradle installed into /usr/local/gradle"
   gradle --version
