@@ -33,6 +33,7 @@ fi
 if pmd pmd --version >/dev/null 2>&1; then
   pmd pmd --version
   echo "PMD is already installed"
+  exit
 fi
 
 if [ ! -e /usr/local ]; then

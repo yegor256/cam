@@ -33,6 +33,7 @@ fi
 if gradle --version >/dev/null 2>&1; then
   gradle --version
   echo "Gradle is already installed"
+  exit
 fi
 
 if [ ! -e /usr/local ]; then
