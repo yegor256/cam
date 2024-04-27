@@ -37,7 +37,7 @@ if [ -n "${linux}" ]; then
 fi
 
 if [ -n "${linux}" ]; then
-  apt-get -y update
+  apt-get update -y --fix-missing
   apt-get install -y coreutils
 fi
 
@@ -72,7 +72,7 @@ fi
 if ! inkscape --version >/dev/null 2>&1; then
   if [ -n "${linux}" ]; then
     add-apt-repository -y ppa:inkscape.dev/stable && \
-      apt-get update -y && \
+      apt-get update -y --fix-missing && \
       apt-get install -y inkscape
   else
     "${LOCAL}/help/assert-tool.sh" inkscape --version
