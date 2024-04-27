@@ -27,22 +27,15 @@ set -o pipefail
 set -x
 
 if "${LOCAL}/help/is-linux.sh"; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
-fi
-
-if "${LOCAL}/help/is-linux.sh"; then
-  apt-get update -y --fix-missing
-  apt-get install -y coreutils
+  "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing
+  "${LOCAL}/help/sudo.sh" apt-get install -y coreutils
 fi
 
 function install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if "${LOCAL}/help/is-linux.sh"; then
-            apt-get install -y "$PACKAGE"
+            "${LOCAL}/help/sudo.sh" apt-get install -y "$PACKAGE"
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
@@ -60,7 +53,7 @@ install_package gawk
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
-    apt-get install -y xpdf
+    "${LOCAL}/help/sudo.sh" apt-get install -y xpdf
   else
     "${LOCAL}/help/assert-tool.sh" pdftotext -v
   fi
@@ -68,9 +61,9 @@ fi
 
 if ! inkscape --version >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
-    add-apt-repository -y ppa:inkscape.dev/stable && \
-      apt-get update -y --fix-missing && \
-      apt-get install -y inkscape
+    "${LOCAL}/help/sudo.sh" add-apt-repository -y ppa:inkscape.dev/stable && \
+      "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing && \
+      "${LOCAL}/help/sudo.sh" apt-get install -y inkscape
   else
     "${LOCAL}/help/assert-tool.sh" inkscape --version
   fi
