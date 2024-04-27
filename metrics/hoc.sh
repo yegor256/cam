@@ -37,4 +37,4 @@ else
     hoc=0
 fi
 
-echo "hoc ${hoc} Hits Of Code for file" > "${output}"
+echo "HoC ${hoc} Hits Of Code for file" > "${output}"
