@@ -35,6 +35,7 @@ if __name__ == '__main__':
     lst: Final[str] = sys.argv[2]
     try:
         with open(java, encoding='utf-8') as f:
+            # pylint: disable=no-member
             raw = javalang.parse.parse(f.read())
             if len(raw.types) != 1:
                 os.remove(java)
