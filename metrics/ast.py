@@ -496,8 +496,6 @@ def wmfp(tlist: list[tuple[list[str], javalang.tree.ClassDeclaration]]) -> int:
 
     wmfp_value = unadjusted_fp * complexity_adjustment
 
-    print(unadjusted_fp, complexity_adjustment)
-
     return int(wmfp_value)
 
 
