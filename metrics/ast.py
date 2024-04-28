@@ -420,7 +420,7 @@ def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return null_count
 
 
-def _count_reference_basic_types(variables: list[Any], declarations: dict[str, int]):
+def _count_reference_basic_types(variables: list[Any], declarations: dict[str, int]) -> None:
     """Count number of basic and reference types in the field declaration.
     r:type: None
     """
@@ -431,7 +431,7 @@ def _count_reference_basic_types(variables: list[Any], declarations: dict[str, i
             declarations["basic_types"] += 1
 
 
-def _count_statements(statements: list[Any], declarations: dict[str, int]):
+def _count_statements(statements: list[Any], declarations: dict[str, int]) -> None:
     """Count number of statements in method.
     r:type: None
     """
