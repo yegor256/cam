@@ -64,7 +64,7 @@ stdout=$2
     grep "NOP 0 " "${temp}/stdout"
     grep "NULLs 0 " "${temp}/stdout"
     grep "DOER 0.5 " "${temp}/stdout"
-    grep "wmfp 678155" "${temp}/stdout"
+    grep "wmfp 678155 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
