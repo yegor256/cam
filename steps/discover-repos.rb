@@ -120,8 +120,8 @@ loop do
       created_at: i[:created_at].iso8601,
       size: i[:size],
       open_issues_count: i[:open_issues_count],
-      description: i[:description],
-      topics: i[:topics]
+      description: "\"#{i[:description]}\"",
+      topics: i[:topics].join(" ")
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
