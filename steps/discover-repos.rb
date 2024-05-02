@@ -71,6 +71,7 @@ query = [
   'is:public',
   'mirror:false',
   'archived:false',
+  'template:false';
   'NOT',
   'android'
 ].join(' ')
