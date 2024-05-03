@@ -53,17 +53,17 @@ stdout=$2
     git add "${java1}"
     git commit --quiet -m "first commit"
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvc 1" "stdout"
+    grep "RFVC 1" "stdout"
 
     printf "class Foo {}" > "${java2}"
     git add "${java2}"
     git commit --quiet -m "+second commit"
 
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvc 0.5" "stdout"
+    grep "RFVC 0.5" "stdout"
 
     ${metric_script_path} "${java2}" "stdout"
-    grep "rfvc 0.5" "stdout"
+    grep "RFVC 0.5" "stdout"
 
 
     printf "class Foo {}" > "${java3}"
@@ -71,13 +71,13 @@ stdout=$2
     git commit --quiet -m "-third commit"
 
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvc 0.33" "stdout"
+    grep "RFVC 0.33" "stdout"
     
     ${metric_script_path} "${java2}" "stdout"
-    grep "rfvc 0.33" "stdout"
+    grep "RFVC 0.33" "stdout"
 
     ${metric_script_path} "${java3}" "stdout"
-    grep "rfvc 0.33" "stdout"
+    grep "RFVC 0.33" "stdout"
 
 
     printf "class Foo2 {}" > "${java1}"
@@ -85,13 +85,13 @@ stdout=$2
     git commit --quiet -m "forth commit"
     
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvc 0.5" "stdout"
+    grep "RFVC 0.5" "stdout"
     
     ${metric_script_path} "${java2}" "stdout"
-    grep "rfvc 0.25" "stdout"
+    grep "RFVC 0.25" "stdout"
     
     ${metric_script_path} "${java3}" "stdout"
-    grep "rfvc 0.25" "stdout"
+    grep "RFVC 0.25" "stdout"
 
 
     printf "class Foo3 {}" > "${java1}"
@@ -99,13 +99,13 @@ stdout=$2
     git commit --quiet -m "fifth commit"
 
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvc 0.6" "stdout"
+    grep "RFVC 0.6" "stdout"
 
 
     ${metric_script_path} "${java2}" "stdout"
-    grep "rfvc 0.2" "stdout"
+    grep "RFVC 0.2" "stdout"
 
     ${metric_script_path} "${java3}" "stdout"
-    grep "rfvc 0.2" "stdout"
+    grep "RFVC 0.2" "stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated Relative File Volatility by Commits"

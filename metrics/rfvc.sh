@@ -55,4 +55,4 @@ else
     rfvc=0
 fi
 
-echo "rfvc ${rfvc} Relative File Volatility by Commits for file" > "${output}"
+echo "RFVC ${rfvc} Relative File Volatility by Commits for file" > "${output}"
