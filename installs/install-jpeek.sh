@@ -26,10 +26,16 @@ set -o pipefail
 
 "${LOCAL}/help/assert-tool.sh" javac --version
 
-if [ ! -e "${JPEEK}" ]; then
-  jpeek_version=0.32.0
-  cd /tmp && \
-    wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar && \
-    mkdir -p "$(dirname "${JPEEK}")" && \
-    mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+if [ -e "${JPEEK}" ]; then
+  java -jar "${JPEEK}" --help
+  echo "jPeek JAR is already here: ${JPEEK}"
+  exit
 fi
+
+jpeek_version=0.32.0
+cd /tmp
+wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar
+mkdir -p "$(dirname "${JPEEK}")"
+mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+java -jar "${JPEEK}" --help
+echo "jPeek downloaded into ${JPEEK}"

@@ -24,28 +24,18 @@
 set -e
 set -o pipefail
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
 set -x
 
-if [ -n "${linux}" ]; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
-fi
-
-if [ -n "${linux}" ]; then
-  apt-get -y update
-  apt-get install -y coreutils
+if "${LOCAL}/help/is-linux.sh"; then
+  "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing
+  "${LOCAL}/help/sudo.sh" apt-get install -y coreutils
 fi
 
 function install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
-        if [ -n "${linux}" ]; then
-            apt-get install -y "$PACKAGE"
+        if "${LOCAL}/help/is-linux.sh"; then
+            "${LOCAL}/help/sudo.sh" apt-get install -y "$PACKAGE"
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
@@ -62,24 +52,24 @@ install_package xmlstarlet
 install_package gawk
 
 if ! pdftotext -v >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    apt-get install -y xpdf
+  if "${LOCAL}/help/is-linux.sh"; then
+    "${LOCAL}/help/sudo.sh" apt-get install -y xpdf
   else
     "${LOCAL}/help/assert-tool.sh" pdftotext -v
   fi
 fi
 
 if ! inkscape --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
-    add-apt-repository -y ppa:inkscape.dev/stable && \
-      apt-get update -y && \
-      apt-get install -y inkscape
+  if "${LOCAL}/help/is-linux.sh"; then
+    "${LOCAL}/help/sudo.sh" add-apt-repository -y ppa:inkscape.dev/stable && \
+      "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing && \
+      "${LOCAL}/help/sudo.sh" apt-get install -y inkscape
   else
     "${LOCAL}/help/assert-tool.sh" inkscape --version
   fi
 fi
 
-find "${LOCAL}/installs" -name 'install-*' | while IFS= read -r i; do
+find "${LOCAL}/installs" -name 'install-*' | sort | while IFS= read -r i; do
   "${i}"
 done
 

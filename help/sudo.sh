@@ -23,17 +23,12 @@
 set -e
 set -o pipefail
 
-java=$1
-output=$(realpath "$2")
-
-cd "$(dirname "${java}")"
-base=$(basename "${java}")
-
-# To check that file was added in commit any time
-if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
-    hoc=$(git log -L:"class\s:${java}" | grep -E "^[+-].*$" | grep -Ev "^\-\-\-\s\S+$" | grep -Evc "^\+\+\+\s\S+$")
+if "${LOCAL}/help/is-linux.sh"; then
+  if [ ! "$(id -u)" = 0 ]; then
+    echo "You should run it as root: 'sudo make install'"
+    exit 1
+  fi
+  "$@"
 else
-    hoc=0
+  sudo "$@"
 fi
-
-echo "HoC ${hoc} Hits Of Code for file" > "${output}"

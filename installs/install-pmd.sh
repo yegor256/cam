@@ -24,18 +24,28 @@
 set -e
 set -o pipefail
 
+if [ -z "${LOCAL}" ]; then
+  LOCAL=$(dirname "$0")/..
+fi
+
 "${LOCAL}/help/assert-tool.sh" javac --version
 
-if ! pmd pmd --version >/dev/null 2>&1; then
-  if [ ! -e /usr/local ]; then
-    echo "The directory /usr/local must exist"
-    exit 1
-  fi
-  pmd_version=6.55.0
-  cd /usr/local && \
-    wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip && \
-    unzip -qq pmd-bin-${pmd_version}.zip && \
-    rm pmd-bin-${pmd_version}.zip && \
-    mv pmd-bin-${pmd_version} pmd && \
-    ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+if pmd pmd --version >/dev/null 2>&1; then
+  pmd pmd --version
+  echo "PMD is already installed"
+  exit
 fi
+
+if [ ! -e /usr/local ]; then
+  echo "The directory /usr/local must exist"
+  exit 1
+fi
+
+pmd_version=6.55.0
+cd /usr/local
+wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip
+unzip -qq pmd-bin-${pmd_version}.zip
+rm pmd-bin-${pmd_version}.zip
+mv pmd-bin-${pmd_version} pmd
+ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
+echo "PMD installed into /usr/local/bin/pmd"

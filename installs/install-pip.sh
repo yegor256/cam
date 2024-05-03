@@ -24,26 +24,8 @@
 set -e
 set -o pipefail
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
-set -x
-
-if [ -n "${linux}" ]; then
-  SUDO=
-else
-  SUDO=sudo
-fi
-
-if [ -n "${linux}" ]; then
-  if [ ! "$(id -u)" = 0 ]; then
-    echo "You should run it as root: 'sudo make install'"
-    exit 1
-  fi
-fi
-
 "${LOCAL}/help/assert-tool.sh" python3 --version
 "${LOCAL}/help/assert-tool.sh" pip --version
 
-$SUDO python3 -m pip install --upgrade pip
-$SUDO python3 -m pip install -r "${LOCAL}/requirements.txt"
+"${LOCAL}/help/sudo.sh" python3 -m pip install --upgrade pip
+"${LOCAL}/help/sudo.sh" python3 -m pip install -r "${LOCAL}/requirements.txt"

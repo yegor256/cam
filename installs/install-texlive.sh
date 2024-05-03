@@ -24,16 +24,7 @@
 set -e
 set -o pipefail
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  linux=yes
-fi
 set -x
-
-if [ -n "${linux}" ]; then
-  SUDO=
-else
-  SUDO=sudo
-fi
 
 if ! "${LOCAL}/help/texlive-bin.sh"; then
   wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
@@ -44,7 +35,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
 fi
 
 if ! tlmgr --version >/dev/null 2>&1; then
-  if [ -n "${linux}" ]; then
+  if "${LOCAL}/help/is-linux.sh"; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
@@ -53,13 +44,13 @@ if ! tlmgr --version >/dev/null 2>&1; then
 fi
 
 if [ ! -e "${HOME}/texmf" ]; then
-  $SUDO tlmgr init-usertree
+  "${LOCAL}/help/sudo.sh" tlmgr init-usertree
 fi
-$SUDO tlmgr option repository ctan
-$SUDO tlmgr --verify-repo=none update --self
+"${LOCAL}/help/sudo.sh" tlmgr option repository ctan
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self
 packages=()
 while IFS= read -r p; do
   packages+=( "${p}" )
 done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | uniq )
-$SUDO tlmgr --verify-repo=none install "${packages[@]}"
-$SUDO tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none install "${packages[@]}"
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'

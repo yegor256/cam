@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2317
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -23,17 +24,45 @@
 set -e
 set -o pipefail
 
-java=$1
-output=$(realpath "$2")
+# TODO: #259 ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING ir.sh VIA REMOVING `exit 0` AND REMOVE `shellcheck disable=SC2317` on the top RIGHT AFTER IMPLEMENTING ir.sh
+exit 0
 
-cd "$(dirname "${java}")"
-base=$(basename "${java}")
+temp=$1
+stdout=$2
 
-# To check that file was added in commit any time
-if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
-    hoc=$(git log -L:"class\s:${java}" | grep -E "^[+-].*$" | grep -Ev "^\-\-\-\s\S+$" | grep -Evc "^\+\+\+\s\S+$")
-else
-    hoc=0
-fi
+{
+  tmp=$(mktemp -d /tmp/XXXX)
+  cd "${tmp}"
+  mkdir -p "${LOCAL}/${temp}"
+  if ! "${LOCAL}/metrics/ir.sh" ./ "${LOCAL}/${temp}/stdout"; then
+    exit 1
+  fi
+} >"${stdout}" 2>&1
+echo "👍🏻 Failed in non-git directory"
 
-echo "HoC ${hoc} Hits Of Code for file" > "${output}"
+{
+  tmp=$(mktemp -d /tmp/XXXX)
+  cd "${tmp}"
+  rm -rf ./*
+  rm -rf .git
+  git init --quiet .
+  git config user.email 'foo@example.com'
+  git config user.name 'Foo'
+  if ! "${LOCAL}/metrics/ir.sh" ./ "t0"; then
+    exit 1
+  fi
+  file1="one.java"
+  file2="two.java"
+  touch "${file1}"
+  git add "${file1}"
+  git config commit.gpgsign false
+  git commit --quiet -m "first file"
+  "${LOCAL}/metrics/ir.sh" ./ "t1"
+  touch "${file2}"
+  git add "${file2}"
+  git commit --quiet -m "second file"
+  "${LOCAL}/metrics/ir.sh" ./ "t2"
+  grep "IR 1" "t1"    # Single file in repo
+  grep "IR 0.5 " "t2" # Two files in repo
+} >"${stdout}" 2>&1
+echo "👍🏻 Correctly calculated the IR (Impact Ratio)"
