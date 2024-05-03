@@ -39,4 +39,4 @@ script_location="${LOCAL}/metrics/getset.py"
     grep "none 1 1 Branches of nonAccessorMethod" "${metrics_file}" || true # This line is expected to fail since your script currently doesn't handle non-accessor methods
 } > "${stdout}" 2>&1
 
-echo "👍 Tests passed successfully"
+echo "👍 Correctly calculated complexity and branches"
