@@ -53,4 +53,4 @@ else
     rfvh=0
 fi
 
-echo "rfvh ${rfvh} Relative File Volatility by Hits for file" > "${output}"
+echo "RFVH ${rfvh} Relative File Volatility by Hits for file" > "${output}"
