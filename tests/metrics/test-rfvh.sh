@@ -53,18 +53,18 @@ stdout=$2
     git add "${java1}"
     git commit --quiet -m "first commit"
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvh 1" "stdout"
+    grep "RFVH 1" "stdout"
 
     printf "class Foo {}" > "${java2}"
     git add "${java2}"
     git commit --quiet -m "+second commit"
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvh 0.5" "stdout"
+    grep "RFVH 0.5" "stdout"
 
     printf "class Foo {}" > "${java3}"
     git add "${java3}"
     git commit --quiet -m "-third commit"
     ${metric_script_path} "${java1}" "stdout"
-    grep "rfvh 0.33" "stdout"
+    grep "RFVH 0.33" "stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated relative file volatility by hits"
