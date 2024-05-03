@@ -41,7 +41,7 @@ if __name__ == '__main__':
             encoding = result['encoding']
             confidence = result['confidence']
 
-        if not (encoding in ('ascii', 'UTF-8') and confidence == 1.0):
+        if not (encoding in ('ascii', 'UTF-8') and 1.0 - confidence < 0.01):
             os.remove(java)
             with open(lst, 'a+', encoding='utf-8') as others:
                 others.write(java + "\n")
