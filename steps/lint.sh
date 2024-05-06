@@ -53,17 +53,16 @@ bibcop tex/report.bib
 
 find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style
 
-# Get the current year
-current_year=$(date +%Y)
+header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
 
 copyright_check="false"
 
 # Iterate over each file in the directory recursively
 while IFS= read -r file; do
     # Search for the pattern in the file
-    if ! grep -q "$current_year" "$file"; then
+    if ! grep -q "$header" "$file"; then
         copyright_check="true"
-        echo "⚠️  Check copyright. Current year not found in file: $file"
+        echo "⚠️  Copyright not found in file: $file"
     fi
 done < <(find "$LOCAL" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" \))
 
