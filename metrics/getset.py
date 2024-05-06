@@ -89,15 +89,11 @@ if __name__ == '__main__':
                         getter_max_complexity = complexity_result
 
                     if (method_type_result == 'setter' and complexity_result > setter_max_complexity):
-                        setter_max_complexity = complexity_result    
+                        setter_max_complexity = complexity_result
 
-                    # with open(metrics, 'a', encoding='utf-8') as m:
-                    #     m.write(f'Method name: {method_type_result}; Complexity: {complexity_result}; Branches: {branches_result}\n')
-
-            
             with open(metrics, 'a', encoding='utf-8') as m:
-                        m.write(f'MaxGetterComplexity {getter_max_complexity} The maximum complexity of a getter method\n')
-                        m.write(f'MaxSetterComplexity {setter_max_complexity} The maximum complexity of a setter method\n')
+                m.write(f'MaxGetterComplexity {getter_max_complexity} The maximum complexity of a getter method\n')
+                m.write(f'MaxSetterComplexity {setter_max_complexity} The maximum complexity of a setter method\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
