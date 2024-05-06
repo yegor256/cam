@@ -54,11 +54,8 @@ script_location="${LOCAL}/metrics/getset.py"
     cat "${metrics_file}"
     
     # Assertions: Check for expected output related to getter, setter, and branches
-    grep "Method name: getter; Complexity: 1; Branches: 1" "${metrics_file}"
-    grep "Method name: getter; Complexity: 1; Branches: 1" "${metrics_file}"
-    grep "Method name: getter; Complexity: 1; Branches: 1" "${metrics_file}"
-    grep "Method name: getter; Complexity: 1; Branches: 1" "${metrics_file}"
-    grep "none 1 1 Branches of nonAccessorMethod" "${metrics_file}" || true # This line is expected to fail since your script currently doesn't handle non-accessor methods
+    grep "MaxGetterComplexity 1 The maximum complexity of a getter method" "${metrics_file}"
+    grep "MaxSetterComplexity 1 The maximum complexity of a setter method" "${metrics_file}"
 } > "${stdout}" 2>&1
 
-echo "👍 Correctly calculated complexity and branches"
+echo "👍 Correctly calculated Getter & Setter complexity"

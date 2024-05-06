@@ -76,14 +76,28 @@ def analyze_method(method: tree.MethodDeclaration) -> tuple[str, int, int] | Non
 if __name__ == '__main__':
     java = sys.argv[1]
     metrics = sys.argv[2]
+
+    getter_max_complexity = 0
+    setter_max_complexity = 0
     with open(java, encoding='utf-8', errors='ignore') as f:
         try:
             ast = parse.parse(f.read())
             for _, tree_node in ast.filter(tree.MethodDeclaration):
                 if (result := analyze_method(tree_node)):
                     method_type_result, complexity_result, branches_result = result
-                    with open(metrics, 'a', encoding='utf-8') as m:
-                        m.write(f'Method name: {method_type_result}; Complexity: {complexity_result}; Branches: {branches_result}\n')
+                    if (method_type_result == 'getter' and complexity_result > getter_max_complexity):
+                        getter_max_complexity = complexity_result
+
+                    if (method_type_result == 'setter' and complexity_result > setter_max_complexity):
+                        setter_max_complexity = complexity_result    
+
+                    # with open(metrics, 'a', encoding='utf-8') as m:
+                    #     m.write(f'Method name: {method_type_result}; Complexity: {complexity_result}; Branches: {branches_result}\n')
+
+            
+            with open(metrics, 'a', encoding='utf-8') as m:
+                        m.write(f'MaxGetterComplexity {getter_max_complexity} The maximum complexity of a getter method\n')
+                        m.write(f'MaxSetterComplexity {setter_max_complexity} The maximum complexity of a setter method\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
