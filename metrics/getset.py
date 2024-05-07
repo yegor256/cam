@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# This metric counts the number of getter and setter methods in a class.
+
 import sys
 from javalang import tree, parse
 
@@ -37,63 +39,35 @@ def is_getter_or_setter(method: tree.MethodDeclaration) -> str | None:
     return None
 
 
-def count_branches(node: tree.Node) -> int:
-    """Counts the number of branches in a method."""
-    count = 0
-    if isinstance(node, (tree.IfStatement, tree.WhileStatement, tree.ForStatement,
-                         tree.DoStatement, tree.SwitchStatement, tree.CatchClause)):
-        count = 1
-    return count
-
-
-def analyze_method(method: tree.MethodDeclaration) -> tuple[str, int, int] | None:
+def analyze_method(method: tree.MethodDeclaration) -> str | None:
     """Analyzes the complexity of the method."""
     if not (method_type := is_getter_or_setter(method)):
         return None
 
-    complexity = 0
-    branches = 1
-    for _, statement_node in method.filter(tree.Statement):
-        branches += count_branches(statement_node)
-
-        if method_type == "setter":
-            # Increase complexity for each additional variable assignment
-            if isinstance(statement_node, tree.Assignment) and statement_node.expressionl != method.parameters[0].name:
-                complexity += 1
-
-        elif method_type == "getter":
-            # Increase complexity for each statement not related to the returned variable
-            if not (isinstance(statement_node, tree.ReturnStatement)
-                    and statement_node.expression.selectors[0].member == method.name[3:].lower()):
-                complexity += 1
-
-    # Increase complexity for branching
-    complexity += branches
-
-    return method_type, complexity, branches
+    return method_type
 
 
 if __name__ == '__main__':
     java = sys.argv[1]
     metrics = sys.argv[2]
 
-    getter_max_complexity = 0
-    setter_max_complexity = 0
+    getter_count = 0
+    setter_count = 0
     with open(java, encoding='utf-8', errors='ignore') as f:
         try:
             ast = parse.parse(f.read())
             for _, tree_node in ast.filter(tree.MethodDeclaration):
                 if (result := analyze_method(tree_node)):
-                    method_type_result, complexity_result, branches_result = result
-                    if (method_type_result == 'getter' and complexity_result > getter_max_complexity):
-                        getter_max_complexity = complexity_result
+                    method_type_result = result
+                    if method_type_result == 'getter':
+                        getter_count += 1
 
-                    if (method_type_result == 'setter' and complexity_result > setter_max_complexity):
-                        setter_max_complexity = complexity_result
+                    if method_type_result == 'setter':
+                        setter_count += 1
 
             with open(metrics, 'a', encoding='utf-8') as m:
-                m.write(f'MaxGetterComplexity {getter_max_complexity} The maximum complexity of a getter method\n')
-                m.write(f'MaxSetterComplexity {setter_max_complexity} The maximum complexity of a setter method\n')
+                m.write(f'Getters {getter_count} The number of getter methods\n')
+                m.write(f'Setters {setter_count} The number of setter methods\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)

@@ -54,8 +54,8 @@ script_location="${LOCAL}/metrics/getset.py"
     cat "${metrics_file}"
     
     # Assertions: Check for expected output related to getter, setter, and branches
-    grep "MaxGetterComplexity 1 The maximum complexity of a getter method" "${metrics_file}"
-    grep "MaxSetterComplexity 1 The maximum complexity of a setter method" "${metrics_file}"
+    grep "Getters 2 The number of getter methods" "${metrics_file}"
+    grep "Setters 2 The number of setter methods" "${metrics_file}"
 } > "${stdout}" 2>&1
 
 echo "👍 Correctly calculated Getter & Setter complexity"
