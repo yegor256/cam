@@ -1,0 +1,4 @@
+candidate,input,prediction,model
+foo/bdfb06b907,,"[{'label': 'NEGATIVE', 'score': 0.5895938277244568}]",transformer
+foo/48f04c2a0c,,"[{'label': 'NEGATIVE', 'score': 0.5895938277244568}]",transformer
+foo/6761a6c2b7,,"[{'label': 'NEGATIVE', 'score': 0.5895938277244568}]",transformer
