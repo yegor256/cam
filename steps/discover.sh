@@ -66,7 +66,7 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
     "--out=${nosamples}" \
     "--model=transformer"
   )
-  python3 -m samples-filter filter "${fargs[@]}"
+  samples-filter filter "${fargs[@]}"
   rm "${csv}"
   mv "${nosamples}" "${csv}"
 else
