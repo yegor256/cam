@@ -60,6 +60,15 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   fi
   "${LOCAL}/help/assert-tool.sh" ruby -v
   ruby "${LOCAL}/steps/discover-repos.rb" "${args[@]}"
+  nosamples=${TARGET}/no-samples.csv
+  declare -a fargs=( \
+    "--repositories=${csv}" \
+    "--out=${nosamples}" \
+    "--model=transformer"
+  )
+  samples-filter filter "${fargs[@]}"
+  rm "${csv}"
+  mv "${nosamples}" "${csv}"
 else
   echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
   cat "${REPOS}" > "${csv}"
