@@ -7,3 +7,4 @@ test-zone/
 *.pdf
 pylint_plugins/__pycache__
 target/
+predictions.csv
