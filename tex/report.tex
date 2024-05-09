@@ -86,7 +86,7 @@ modified, as demonstrated by \citet{5463348}. To ensure the replicability of
 their research results, paper authors must somehow guarantee that the source
 code used at the time of research remains available and intact throughout the
 paper's lifetime. One obvious solution would be to make copies of the
-repositories being extracted and then host them somewhere they are "forever"
+repositories being extracted and then host them somewhere they are ``forever''
 available.
 
 Second, research methods typically involve filtering out certain types of files
@@ -136,6 +136,8 @@ Python, Ruby, and Bash, which do exactly the following:
     \item Fetch open repositories from GitHub, which have \ff{java} language
     tag, have reasonably big but not too big number of stars, and are
     of certain minimum size;
+    \item Filter out repositories contain samples, instead real project,
+    framework or library.
     \item Remove files without \ff{.java} extension, Java files with syntax errors,
     supplementary files such as \ff{package-info.java} and \ff{module-info.java},
     files with very long lines, and unit tests;
