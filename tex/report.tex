@@ -137,7 +137,8 @@ Python, Ruby, and Bash, which do exactly the following:
     tag, have reasonably big but not too big number of stars, have either MIT or Apache License,
     and are of certain minimum size;
     \item Filter out repositories those contain samples, instead real project,
-    framework or library.
+    framework or library utilizing Machine Learning techniques like text
+    classification.
     \item Remove files without \ff{.java} extension, Java files with syntax errors,
     supplementary files such as \ff{package-info.java} and \ff{module-info.java},
     files with very long lines, and unit tests;
@@ -161,6 +162,7 @@ were found and retrieved from GitHub.
 \iexec{cat "${TARGET}/temp/repo-details.tex"}
 The full list of them is in the \ff{repositories.csv} file.
 The \ff{hashes.csv} file has a list of Git hashes of their latest commits.
+Predictions about each repository being sample or not located in \ff{predictions.csv} file.
 
 The filtering process was the following:
 
