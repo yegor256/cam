@@ -86,7 +86,7 @@ modified, as demonstrated by \citet{5463348}. To ensure the replicability of
 their research results, paper authors must somehow guarantee that the source
 code used at the time of research remains available and intact throughout the
 paper's lifetime. One obvious solution would be to make copies of the
-repositories being extracted and then host them somewhere they are "forever"
+repositories being extracted and then host them somewhere they are ``forever''
 available.
 
 Second, research methods typically involve filtering out certain types of files
@@ -134,8 +134,12 @@ At the time of writing, our GitHub repository consists of scripts written in Mak
 Python, Ruby, and Bash, which do exactly the following:
 \begin{itemize}
     \item Fetch open repositories from GitHub, which have \ff{java} language
-    tag, have reasonably big but not too big number of stars, and are
-    of certain minimum size;
+    tag, have reasonably big but not too big number of stars, and are of certain minimum size;
+    \item Filter out repositories that have license different from MIT or Apache License.
+    \item Filter out repositories those contain samples, instead real project,
+    framework or library by using \ff{samples-filter}\footnote{\url{https://github.com/h1alexbel/samples-filter}}
+    that predicts using text classification to which class (real or sample)
+    repository belongs to.
     \item Remove files without \ff{.java} extension, Java files with syntax errors,
     supplementary files such as \ff{package-info.java} and \ff{module-info.java},
     files with very long lines, and unit tests;
@@ -151,7 +155,6 @@ on GitHub.
 
 We believe that our method is ethical, as it utilizes data from publicly
 available sources, thereby avoiding any infringement of copyright.
-% Would be great to include only repositories with MIT and Apache license, see https://github.com/yegor256/cam/issues/275
 
 \section{Results}\label{sec:results}
 
@@ -160,6 +163,7 @@ were found and retrieved from GitHub.
 \iexec{cat "${TARGET}/temp/repo-details.tex"}
 The full list of them is in the \ff{repositories.csv} file.
 The \ff{hashes.csv} file has a list of Git hashes of their latest commits.
+Predictions about each repository being sample or not located in \ff{predictions.csv} file.
 
 The filtering process was the following:
 
