@@ -134,11 +134,12 @@ At the time of writing, our GitHub repository consists of scripts written in Mak
 Python, Ruby, and Bash, which do exactly the following:
 \begin{itemize}
     \item Fetch open repositories from GitHub, which have \ff{java} language
-    tag, have reasonably big but not too big number of stars, have either MIT or Apache License,
-    and are of certain minimum size;
+    tag, have reasonably big but not too big number of stars, and are of certain minimum size;
+    \item Filter out repositories that have license different from MIT or Apache License.
     \item Filter out repositories those contain samples, instead real project,
-    framework or library utilizing Machine Learning techniques like text
-    classification.
+    framework or library by using \ff{samples-filter}\footnote{\url{https://github.com/h1alexbel/samples-filter}}
+    that predicts using text classification to which class (real or sample)
+    repository belongs to.
     \item Remove files without \ff{.java} extension, Java files with syntax errors,
     supplementary files such as \ff{package-info.java} and \ff{module-info.java},
     files with very long lines, and unit tests;
