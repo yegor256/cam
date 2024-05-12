@@ -5,4 +5,4 @@ multimetric==1.3.0
 chardet==5.2.0
 mypy==1.10.0
 cffconvert==2.0.0
-samples-filter==0.4.1
+samples-filter==0.5.1
