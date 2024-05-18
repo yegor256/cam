@@ -98,7 +98,7 @@ echo "👍🏻 Correctly counted NULL references"
 echo "👍🏻 Usage works correctly"
 
 
-# TODO: Remove this 'exit 0' below, uncomment the 'grep NOMR' above in first test and remove `shellcheck disable=SC2317` on the top when the NOMR is implemented
+# TODO: #316 Remove this 'exit 0' below, uncomment the 'grep NOMR' above in first test and remove `shellcheck disable=SC2317` on the top when the NOMR is implemented
 exit 0
 {
     java="${temp}/Hello.java"
