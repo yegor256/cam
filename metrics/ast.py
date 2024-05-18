@@ -162,11 +162,9 @@ def nomr(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Number of methods that are annotated with @Override divided by total number of methods.
     :rtype: float
     """
-    total_methods_number = total_methods(tlist)
-    if total_methods_number == 0:
+    if (total_methods_number := total_methods(tlist)) == 0:
         return 0
-    nom_result = nom(tlist)
-    if nom_result == 0:
+    if (nom_result := nom(tlist)) == 0:
         return 0
     return nom_result / total_methods_number
 
