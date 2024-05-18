@@ -512,7 +512,7 @@ if __name__ == '__main__':
                              f'Number of Overriding Methods (NOM), which is the number of methods \
                              with the \\texttt{{@Override}} annotation\n')
                 metric.write(f'NOMR {nomr(tree_class)} '
-                             f'Number of Overriding Methods Ration (NOMR), which is the number of methods \
+                             f'Number of Overriding Methods Ratio (NOMR), which is the number of methods \
                                              with the \\texttt{{@Override}} annotation divided by '
                              f'total number of methods\n')
                 metric.write(f'NOP {nop(tree_class)} '
