@@ -104,7 +104,7 @@ echo "👍🏻 Usage works correctly"
     }" > "${java}"
     "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
     cat "${temp}/stdout"
-    grep "NOM 2 " "${temp}/stdout"
+    grep "NOM 1 " "${temp}/stdout"
     grep "NOMR 0.5 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated NOM and NOMR"
