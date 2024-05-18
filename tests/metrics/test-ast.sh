@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2317
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
