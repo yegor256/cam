@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2317
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -61,6 +62,8 @@ stdout=$2
     grep "NOMPMx 0 " "${temp}/stdout"
     grep "NOSMPMx 0 " "${temp}/stdout"
     grep "NOM 0 " "${temp}/stdout"
+    # Uncomment it when the NOMR is implemented
+    #  grep "NOMR 0 " "${temp}/stdout"
     grep "NOP 0 " "${temp}/stdout"
     grep "NULLs 0 " "${temp}/stdout"
     grep "DOER 0.5 " "${temp}/stdout"
@@ -93,3 +96,20 @@ echo "👍🏻 Correctly counted NULL references"
     fi
 } > "${stdout}" 2>&1
 echo "👍🏻 Usage works correctly"
+
+
+# TODO: Remove this 'exit 0' below, uncomment the 'grep NOMR' above in first test and remove `shellcheck disable=SC2317` on the top when the NOMR is implemented
+exit 0
+{
+    java="${temp}/Hello.java"
+    echo "class Hello {
+        @Override
+        String x() { return null; }
+        String y() { return \"null\"; }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "NOM 2 " "${temp}/stdout"
+    grep "NOMR 0.5 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated NOM and NOMR"
