@@ -163,7 +163,12 @@ def nomr(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     :rtype: float
     """
     total_methods_number = total_methods(tlist)
-    return nom(tlist) / total_methods_number if total_methods_number != 0 else 0
+    if total_methods_number == 0:
+        return 0
+    nom_result = nom(tlist)
+    if nom_result == 0:
+        return 0
+    return nom_result / total_methods_number
 
 
 def attrs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
