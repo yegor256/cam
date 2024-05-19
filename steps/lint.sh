@@ -64,7 +64,7 @@ while IFS= read -r file; do
         copyright_check="true"
         echo "⚠️  Copyright not found in file: $file"
     fi
-done < <(find "$LOCAL" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" \))
+done < <(find "$LOCAL" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml"\))
 
 if [[ "${copyright_check}" = "true" ]]; then
   exit 1
