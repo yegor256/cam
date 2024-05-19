@@ -25,7 +25,7 @@ set -e
 set -o pipefail
 
 "${LOCAL}/help/assert-tool.sh" python3 --version
-"${LOCAL}/help/assert-tool.sh" pip --version
+"${LOCAL}/help/assert-tool.sh" pip3 --version
 
 "${LOCAL}/help/sudo.sh" python3 -m pip install --upgrade pip
 "${LOCAL}/help/sudo.sh" python3 -m pip install -r "${LOCAL}/requirements.txt"
