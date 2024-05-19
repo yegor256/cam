@@ -1,0 +1,12 @@
+parallel
+bc
+cloc
+jq
+shellcheck
+aspell
+xmlstarlet
+gawk
+poppler
+inkscape
+wget
+coreutils

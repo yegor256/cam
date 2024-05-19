@@ -109,23 +109,32 @@ make REPO=yegor256/tojos
 
 ## How to Contribute (e.g. by adding a new metric)
 
-If you want to add a new metric to the script, fork a repository and
-create a new file in the `metrics/` directory, using one of
-the existing files as an example.
-Then, create a test for your metric, in the `tests/metrics/` directory.
 
-Then, run the entire test suite
-(this should take a few minutes to complete, without errors):
+If you want to add a new metric to the script, follow these steps:
+
+1. Fork the repository.
+2. Create a new file in the `metrics/` directory, using one of the existing files as an example.
+3. Implement the logic for your new metric in the newly created file.
+4. Create a test for your metric in the `tests/metrics/` directory.
+5. Run the entire test suite to ensure that your metric passes all the existing tests and is working as expected. To do this, run the following commands:
 
 ```bash
 sudo make install
 make test lint
 ```
 
-Then, send us a
+- If you need to install packages on macOS using Homebrew, you can run the following command:
+
+```bash
+cat brew-requirements.txt | xargs brew install
+```
+
+6. Then, send us a
 [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards.
+
+<br></br>
 
 You can also test it with Docker:
 
