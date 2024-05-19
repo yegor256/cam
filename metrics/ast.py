@@ -158,6 +158,17 @@ def nom(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return total
 
 
+def nomr(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
+    """Number of methods that are annotated with @Override divided by total number of methods.
+    :rtype: float
+    """
+    if (total_methods_number := total_methods(tlist)) == 0:
+        return 0
+    if (nom_result := nom(tlist)) == 0:
+        return 0
+    return nom_result / total_methods_number
+
+
 def attrs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count non-static attributes.
     :rtype: int
@@ -221,6 +232,14 @@ def smethods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
         if 'static' in node.modifiers:
             found += 1
     return found
+
+
+def total_methods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Count total number methods.
+    :rtype: int
+    """
+    declaration = list(tlist[0][1].filter(javalang.tree.MethodDeclaration))
+    return len(declaration)
 
 
 def mhf(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
@@ -495,6 +514,10 @@ if __name__ == '__main__':
                 metric.write(f'NOM {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM), which is the number of methods \
                              with the \\texttt{{@Override}} annotation\n')
+                metric.write(f'NOMR {nomr(tree_class)} '
+                             f'Number of Overriding Methods Ratio (NOMR), which is the number of methods \
+                                             with the \\texttt{{@Override}} annotation divided by '
+                             f'total number of methods\n')
                 metric.write(f'NOP {nop(tree_class)} '
                              f'Number of Polymorphic Methods (NOP), which is the count of methods \
                              that are overloaded at least once --- have similar names but different parameters\n')
