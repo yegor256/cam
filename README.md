@@ -120,18 +120,16 @@ using one of the existing files as an example.
 
 4. Create a test for your metric in the `tests/metrics/` directory.
 
-
 5. Run the entire test suite to ensure that 
-your metric passes all the existing 
-tests and is working as expected. 
+your metric passes all the existing
+tests and is working as expected.
 To do this, run the following commands:
    * `sudo make install`
    * `make test lint`
 
-   If you need to install packages on macOS using Homebrew, 
+   If you need to install packages on macOS using Homebrew,
    you can run the following command:
    * `cat brew-requirements.txt | xargs brew install`
-
 
 6. Then, send us a
 [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
