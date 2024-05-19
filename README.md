@@ -120,7 +120,7 @@ using one of the existing files as an example.
 
 4. Create a test for your metric in the `tests/metrics/` directory.
 
-5. Run the entire test suite to ensure that 
+5. Run the entire test suite to ensure that
 your metric passes all the existing
 tests and is working as expected.
 To do this, run the following commands:
