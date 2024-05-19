@@ -113,19 +113,24 @@ If you want to add a new metric to the script, follow these steps:
 
 1. Fork the repository.
 
-2. Create a new file in the `metrics/` directory, 
+2. Create a new file in the `metrics/` directory,
 using one of the existing files as an example.
 
 3. Implement the logic for your new metric in the newly created file.
 
 4. Create a test for your metric in the `tests/metrics/` directory.
 
-5. Run the entire test suite to ensure that your metric passes all the existing tests and is working as expected. To do this, run the following commands:
-   - `sudo make install`
-   - `sudo make test lint`
 
-   If you need to install packages on macOS using Homebrew, you can run the following command:
-   - `cat brew-requirements.txt | xargs brew install`
+5. Run the entire test suite to ensure that 
+your metric passes all the existing 
+tests and is working as expected. 
+To do this, run the following commands:
+   * `sudo make install`
+   * `make test lint`
+
+   If you need to install packages on macOS using Homebrew, 
+   you can run the following command:
+   * `cat brew-requirements.txt | xargs brew install`
 
 
 6. Then, send us a
