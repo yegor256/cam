@@ -65,7 +65,7 @@ while IFS= read -r file; do
         echo "⚠️  Copyright not found in file: $file"
     fi
 # avoid test-zone and unparseable folders
-done < <(find "$LOCAL" \( -path "$LOCAL/fixtures/filters/unparseable" -prune \) -o \( -path "$LOCAL/test-zone" -prune \) -o -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml" \) -print)
+done < <(find "$LOCAL" \( -path "$LOCAL/fixtures/filters/unparseable" -prune \) -o \( -path "$LOCAL/test-zone" -prune \) -o -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml" -o -name "Makefile" \) -print)
 
 if [[ "${copyright_check}" = "true" ]]; then
   exit 1
