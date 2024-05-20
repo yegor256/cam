@@ -54,19 +54,13 @@ bibcop tex/report.bib
 find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style
 
 header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
-
 copyright_check="false"
-
-# Iterate over each file in the directory recursively
 while IFS= read -r file; do
-    # Search for the pattern in the file
     if ! grep -q "$header" "$file"; then
         copyright_check="true"
         echo "⚠️  Copyright not found in file: $file"
     fi
-# avoid test-zone and unparseable folders
 done < <(find "$LOCAL" \( -path "$LOCAL/fixtures/filters/unparseable" -prune \) -o \( -path "$LOCAL/test-zone" -prune \) -o -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml" \) -print)
-
 if [[ "${copyright_check}" = "true" ]]; then
   exit 1
 fi
