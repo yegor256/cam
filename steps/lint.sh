@@ -60,7 +60,7 @@ while IFS= read -r file; do
         copyright_check="true"
         echo "⚠️  Copyright not found in file: $file"
     fi
-done < <(find "$LOCAL" \( -path "$LOCAL/fixtures/filters/unparseable" -prune \) -o \( -path "$LOCAL/test-zone" -prune \) -o -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml" \) -print)
+done < <(find "$LOCAL" \( -path "$LOCAL/fixtures/filters/unparseable" -prune \) -o \( -path "$LOCAL/test-zone" -prune \) -o -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.java" -o -name "*.xml" -o -name "Makefile" \) -print)
 if [[ "${copyright_check}" = "true" ]]; then
   exit 1
 fi
