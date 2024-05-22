@@ -38,7 +38,16 @@ def branches(parser_class: tree.CompilationUnit) -> int:
     if isinstance(parser_class, tree.BinaryOperation):
         if parser_class.operator in ('&&', '||'):
             count = 1
-    elif (isinstance(parser_class, (tree.ForStatement, tree.IfStatement, tree.WhileStatement, tree.DoStatement, tree.TernaryExpression))):
+    elif isinstance(
+        parser_class,
+        (
+            tree.ForStatement,
+            tree.IfStatement,
+            tree.WhileStatement,
+            tree.DoStatement,
+            tree.TernaryExpression
+        )
+    ):
         count = 1
     elif isinstance(parser_class, tree.SwitchStatementCase):
         count = 1
