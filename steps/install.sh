@@ -36,6 +36,8 @@ function install_package() {
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if "${LOCAL}/help/is-linux.sh"; then
             "${LOCAL}/help/sudo.sh" apt-get install -y "$PACKAGE"
+        elif "${LOCAL}/help/is-macos.sh"; then
+            brew install "$PACKAGE"
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
@@ -54,6 +56,8 @@ install_package gawk
 if ! pdftotext -v >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
     "${LOCAL}/help/sudo.sh" apt-get install -y xpdf
+  elif "${LOCAL}/help/is-macos.sh"; then
+    brew install poppler
   else
     "${LOCAL}/help/assert-tool.sh" pdftotext -v
   fi
@@ -64,6 +68,8 @@ if ! inkscape --version >/dev/null 2>&1; then
     "${LOCAL}/help/sudo.sh" add-apt-repository -y ppa:inkscape.dev/stable && \
       "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing && \
       "${LOCAL}/help/sudo.sh" apt-get install -y inkscape
+  elif "${LOCAL}/help/is-macos.sh"; then
+    brew install --cask inkscape
   else
     "${LOCAL}/help/assert-tool.sh" inkscape --version
   fi
