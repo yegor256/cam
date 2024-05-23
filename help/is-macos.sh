@@ -24,7 +24,6 @@ set -e
 set -o pipefail
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  "${LOCAL}/installs/install-brew.sh"
   exit 0
 else
   exit 1
