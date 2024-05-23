@@ -31,6 +31,11 @@ if "${LOCAL}/help/is-linux.sh"; then
   "${LOCAL}/help/sudo.sh" apt-get install -y coreutils
 fi
 
+if "${LOCAL}/help/is-macos.sh"; then
+  "${LOCAL}/installs/install-brew.sh"
+  brew install coreutils
+fi
+
 function install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
