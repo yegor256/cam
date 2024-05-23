@@ -24,22 +24,32 @@
 set -e
 set -o pipefail
 
-if brew -v; then
-    echo "Homebrew is already installed"
-    exit
+if "${LOCAL}/help/is-macos.sh"; then
+    if brew -v; then
+        echo "Homebrew is already installed"
+        exit
+    fi
+
+    tmp=$(mktemp -d)
+    mkdir -p "${tmp}"
+    cd "${tmp}"
+
+    if wget -V; then 
+    echo "wget is already installed"
+    else
+    brew install wget
+    fi
+
+    if curl -V; then
+    echo "curl is already installed"
+    else
+    brew install curl
+    fi
+
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    "${LOCAL}/help/assert-tool.sh" brew -v
+else 
+    exit 0
 fi
-
-tmp=$(mktemp -d)
-mkdir -p "${tmp}"
-cd "${tmp}"
-
-if wget -h; then 
-  echo "wget is already installed"
-else
-  brew install wget
-fi
-
-wget --quiet https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-chmod +x install.sh
-./install.sh
 
