@@ -36,6 +36,13 @@ function install_package() {
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if "${LOCAL}/help/is-linux.sh"; then
             "${LOCAL}/help/sudo.sh" apt-get install -y "$PACKAGE"
+        elif "${LOCAL}/help/is-macos.sh"; then
+            if brew -v; then
+                brew install "$PACKAGE"
+            else 
+                echo "If you install Homebrew, all necessary packages will be installed automatically by running 'make install'. Visit the Homebrew installation documentation at: https://docs.brew.sh/Installation"
+                exit 1
+            fi
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
@@ -51,9 +58,15 @@ install_package aspell
 install_package xmlstarlet
 install_package gawk
 
+if "${LOCAL}/help/is-macos.sh"; then
+  brew install coreutils
+fi
+
 if ! pdftotext -v >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
     "${LOCAL}/help/sudo.sh" apt-get install -y xpdf
+  elif "${LOCAL}/help/is-macos.sh"; then
+    brew install poppler
   else
     "${LOCAL}/help/assert-tool.sh" pdftotext -v
   fi
@@ -64,6 +77,8 @@ if ! inkscape --version >/dev/null 2>&1; then
     "${LOCAL}/help/sudo.sh" add-apt-repository -y ppa:inkscape.dev/stable && \
       "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing && \
       "${LOCAL}/help/sudo.sh" apt-get install -y inkscape
+  elif "${LOCAL}/help/is-macos.sh"; then
+    brew install --cask inkscape
   else
     "${LOCAL}/help/assert-tool.sh" inkscape --version
   fi
