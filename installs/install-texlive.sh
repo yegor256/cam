@@ -38,7 +38,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
 fi
 
 if ! tlmgr --version >/dev/null 2>&1; then
-  if "${LOCAL}/help/is-linux.sh"; then
+  if "${LOCAL}/help/is-linux.sh" || "${LOCAL}/help/is-macos.sh"; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
