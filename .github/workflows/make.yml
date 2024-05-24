@@ -33,19 +33,14 @@ concurrency:
   cancel-in-progress: true
 jobs:
   make:
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, macos-12]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
     container: yegor256/cam:0.9.2
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Docker (macOS only)
-        if: ${{ matrix.os == 'macos-12' }}
-        run: |
-          brew install docker
-          colima start
-
       - run: make install
       - run: make env lint test
+  make-macos:
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v4
+      - run: make install
