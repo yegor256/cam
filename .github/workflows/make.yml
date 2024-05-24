@@ -43,5 +43,9 @@ jobs:
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v4
-      - run: brew install openjdk@17
+      - name: 'Set up latest Oracle JDK 22'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 22
       - run: make install
