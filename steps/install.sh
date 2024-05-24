@@ -31,18 +31,18 @@ if "${LOCAL}/help/is-linux.sh"; then
   "${LOCAL}/help/sudo.sh" apt-get install -y coreutils
 fi
 
-if "${LOCAL}/help/is-macos.sh"; then
-  "${LOCAL}/installs/install-brew.sh"
-  brew install coreutils
-fi
-
 function install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if "${LOCAL}/help/is-linux.sh"; then
             "${LOCAL}/help/sudo.sh" apt-get install -y "$PACKAGE"
         elif "${LOCAL}/help/is-macos.sh"; then
-            brew install "$PACKAGE"
+            if brew -v; then
+                brew install "$PACKAGE"
+            else 
+                echo "If you install Homebrew, all necessary packages will be installed automatically by running 'make install'. Visit the Homebrew installation documentation at: https://docs.brew.sh/Installation"
+                exit 1
+            fi
         else
           "${LOCAL}/help/assert-tool.sh" "${PACKAGE}" --version
         fi
@@ -57,6 +57,10 @@ install_package shellcheck
 install_package aspell
 install_package xmlstarlet
 install_package gawk
+
+if "${LOCAL}/help/is-macos.sh"; then
+  brew install coreutils
+fi
 
 if ! pdftotext -v >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
