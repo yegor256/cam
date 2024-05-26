@@ -43,14 +43,8 @@ fi
 
 pmd_version=6.55.0
 cd /usr/local
-echo "Installing PMD ${pmd_version}"
-wget --quiet https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip
-echo "Unpacking PMD ${pmd_version}"
+wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-${pmd_version}.zip
 unzip -qq pmd-bin-${pmd_version}.zip
-echo "unzipped PMD ${pmd_version}"
 rm pmd-bin-${pmd_version}.zip
-echo "Deleting PMD ${pmd_version}"
 mv pmd-bin-${pmd_version} pmd
-echo "PMD installed into /usr/local/pmd"
 ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
-echo "PMD installed into /usr/local/bin/pmd"
