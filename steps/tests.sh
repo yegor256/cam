@@ -31,7 +31,7 @@ export CAMTESTS=1
 dir="${LOCAL}/tests"
 tests=$(
     find "${dir}" -mindepth 2 -type f -name '*.sh' -path "${dir}/before/**";
-    find "${dir}" -mindepth 2 -type f -name '*.sh' -not -path "${dir}/before/**" -not -path "${dir}/after/**"  | sort;
+    find "${dir}" -mindepth 2 -type f -name '*.sh' -not -path "${dir}/before/**" -not -path "${dir}/after/**" | sort;
     find "${dir}" -mindepth 2 -type f -name '*.sh' -path "${dir}/after/**"
 )
 echo "There are $(echo "${tests}" | wc -l | xargs) tests in ${dir}"
