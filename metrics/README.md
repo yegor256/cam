@@ -30,13 +30,13 @@ second column, and between the second and the third columns.
 
 ## Metrics in make
 
-Metrics could be calculated in **measure** step presented in makefile.
+Metrics could be calculated in measure step presented in `Makefile`.
 Firstly, executed `steps/measure.sh` that performs preparation steps:
 
 * Creating necessary files and directories
 * Collecting jobs to execute in parallel
   (Currently, one for each java file to analyze metrics for)
-* Executes jobs using `help/parallel.sh`
+* Executing jobs using `help/parallel.sh`
 
 For each job it executes `steps/measure-file.sh`
 that creates the following file structure:
