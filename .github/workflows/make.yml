@@ -48,6 +48,5 @@ jobs:
         with:
           website: oracle.com
           release: 22
-      - name: 'Change permissions'
-        run: sudo chown -R $(whoami) /usr/local
+      - run: sudo chown -R $(whoami) /usr/local
       - run: make install
