@@ -100,8 +100,8 @@ echo "👍🏻 Broken syntax measured and error log created"
         private final boolean boom() { return true; }
     }
 EOT
-    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
-    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m3")
+    all=$(find "${temp}" -name 'm3.*' -type f -exec basename {} \; | sort)
     actual_number_of_metrics_simple=$(echo "${all}" | wc -l | xargs)
 
 
@@ -251,11 +251,11 @@ EOT
         }
     } 
 EOT
-    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m3")
-    all=$(find "${temp}" -name 'm3.*' -type f -exec basename {} \; | sort)
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m4")
+    all=$(find "${temp}" -name 'm4.*' -type f -exec basename {} \; | sort)
     actual_number_of_metrics_complex=$(echo "${all}" | wc -l | xargs)
 
-    if [ ! "${actual_number_of_metrics_simple}" -ne "${actual_number_of_metrics_complex}" ]; then
+    if [ ! "${actual_number_of_metrics_simple}" != "${actual_number_of_metrics_complex}" ]; then
         echo "🚨🚨🚨 Number of metrics does not match for simple and complicated Java files"
         exit 1
     fi
