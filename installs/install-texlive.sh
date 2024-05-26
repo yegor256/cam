@@ -46,8 +46,14 @@ if ! tlmgr --version >/dev/null 2>&1; then
   fi
 fi
 
-if [ ! -e "${HOME}/texmf" ]; then
-  "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+if "${LOCAL}/help/is-macos.sh"; then
+  if [ ! -e "${HOME}/Library/texmf" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
+elif "${LOCAL}/help/is-linux.sh"; then
+  if [ ! -e "${HOME}/texmf" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
 fi
 "${LOCAL}/help/sudo.sh" tlmgr option repository ctan
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self
