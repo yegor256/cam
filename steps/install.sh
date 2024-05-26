@@ -61,6 +61,7 @@ install_package gawk
 if "${LOCAL}/help/is-macos.sh"; then
   brew install coreutils
   brew install wget
+  brew install unzip
 fi
 
 if ! pdftotext -v >/dev/null 2>&1; then
