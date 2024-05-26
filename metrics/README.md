@@ -54,5 +54,6 @@ dataset/
 ```
 
 Where `{file_name}.java.m` is used as a buffer to store intermediate results
-during calculations and `{file_name}.java.m.{metric_name}` stores calculated metric, 
-which has `{metric_name}` name, for the file with `{file_name}` name
+during calculations and `{file_name}.java.m.{metric_name}`
+stores calculated metric, which has `{metric_name}` name,
+for the file with `{file_name}` name
