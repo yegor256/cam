@@ -38,7 +38,7 @@ Firstly, executed `steps/measure.sh` that performs preparation steps:
   (Currently, one for each java file to analyze metrics for)
 * Executes jobs using `help/parallel.sh`
 
-For each job it executes `steps/metrics-file.sh`
+For each job it executes `steps/measure-file.sh`
 that creates the following file structure:
 
 ```text
