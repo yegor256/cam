@@ -27,7 +27,7 @@ temp=$1
 stdout=$2
 
 {
-    java="${temp}/Foo.java"
+    java="${temp}/Foo(xls;)';a привет '\".java"
     cat > "${java}" <<EOT
     class Foo extends Boo implements Bar {
         // This is static
@@ -45,7 +45,6 @@ EOT
     set -x
     test "$(echo "${msg}" | grep -c "sum=0")" = 0
     all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
-    actual_number_of_metrics_simple=$(echo "${all}" | wc -l | xargs)
     echo "${all}" | sort | while IFS= read -r m; do
         metric=${m//m\./}
         echo "${metric}: $(cat "${temp}/${m}")"
@@ -88,6 +87,24 @@ echo "👍🏻 Single file measured correctly"
 echo "👍🏻 Broken syntax measured and error log created"
 
 {
+    java="${temp}/Foo.java"
+    cat > "${java}" <<EOT
+    class Foo extends Boo implements Bar {
+        // This is static
+        private static int X = 1;
+        private String z;
+
+        Foo(String zz) {
+            this.z = zz;
+        }
+        private final boolean boom() { return true; }
+    }
+EOT
+    msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m1")
+    all=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
+    actual_number_of_metrics_simple=$(echo "${all}" | wc -l | xargs)
+
+
     java=${temp}/Complex.java
     cat > "${java}" <<EOT
     import java.util.Objects;
@@ -235,15 +252,13 @@ echo "👍🏻 Broken syntax measured and error log created"
     } 
 EOT
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m3")
-    echo "${msg}"
     all=$(find "${temp}" -name 'm3.*' -type f -exec basename {} \; | sort)
     actual_number_of_metrics_complex=$(echo "${all}" | wc -l | xargs)
-} > "${stdout}" 2>&1
-echo "👍🏻 Complex file measured correctly"
 
-if [ "${actual_number_of_metrics_simple}" -eq "${actual_number_of_metrics_complex}" ]; then
-    echo "👍🏻 Number of metrics matches for simple and complex Java files: ${actual_number_of_metrics_simple} metrics"
-else
-    echo "🚨🚨🚨 Number of metrics does not match for simple and complicated Java files"
-    exit 1
-fi
+    if [ ! "${actual_number_of_metrics_simple}" -ne "${actual_number_of_metrics_complex}" ]; then
+        echo "🚨🚨🚨 Number of metrics does not match for simple and complicated Java files"
+        exit 1
+    fi
+} > "${stdout}" 2>&1
+echo "👍🏻 Number of metrics matches for simple and complex Java files: ${actual_number_of_metrics_simple} metrics"
+
