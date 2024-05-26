@@ -36,6 +36,6 @@ jpeek_version=0.32.0
 cd /tmp
 wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar
 sudo mkdir -p "$(dirname "${JPEEK}")"
-mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+sudo mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
 java -jar "${JPEEK}" --help
 echo "jPeek downloaded into ${JPEEK}"
