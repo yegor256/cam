@@ -28,18 +28,19 @@ The third one contains the description of the metric (in general, NOT
 for this particular file). A space is mandatory between the first and the
 second column, and between the second and the third columns.
 
-## Metrics in make
+## Metrics Calculation
 
-Metrics could be calculated in measure step presented in `Makefile`.
-Firstly, executed `steps/measure.sh` that performs preparation steps:
+Metrics calculation can be elegantly managed during the measure step outlined
+in the `Makefile`. This process initiates with the execution of `steps/measure.sh`,
+which performs several preparatory tasks:
 
-* Creating necessary files and directories
-* Collecting jobs to execute in parallel
-  (Currently, one for each java file to analyze metrics for)
-* Executing jobs using `help/parallel.sh`
+1. Creating the necessary files and directories.
+2. Collecting jobs to execute in parallel,
+   with one job designated for each Java file to analyze metrics.
+3. Running the jobs using `help/parallel.sh`.
 
-For each job it executes `steps/measure-file.sh`
-that creates the following file structure:
+For each job, `steps/measure-file.sh` is executed,
+resulting in the following organized file structure:
 
 ```text
 dataset/
@@ -53,7 +54,8 @@ dataset/
         ...
 ```
 
-Where `{file_name}.java.m` is used as a buffer to store intermediate results
-during calculations and `{file_name}.java.m.{metric_name}`
-stores calculated metric, which has `{metric_name}` name,
-for the file with `{file_name}` name
+In this structure, `{file_name}.m` serves as a buffer
+for intermediate results during calculations.
+The files named `{file_name}.m.{metric_name}` store the calculated metrics,
+where `{metric_name}` corresponds to the specific metric
+for the file `{file_name}`.
