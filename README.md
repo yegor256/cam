@@ -120,7 +120,7 @@ using one of the existing files as an example.
 
   ```bash
   sudo make install
-  make test lint
+  sudo make test lint
   ```
 
   -You can also test it with Docker:
