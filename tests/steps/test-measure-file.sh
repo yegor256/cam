@@ -255,8 +255,8 @@ EOT
     all=$(find "${temp}" -name 'm4.*' -type f -exec basename {} \; | sort)
     actual_number_of_metrics_complex=$(echo "${all}" | wc -l | xargs)
 
-    if [ ! "${actual_number_of_metrics_simple}" != "${actual_number_of_metrics_complex}" ]; then
-        echo "🚨🚨🚨 Number of metrics does not match for simple and complicated Java files"
+    if [ "${actual_number_of_metrics_simple}" != "${actual_number_of_metrics_complex}" ]; then
+        echo "🚨 Number of metrics does not match for simple and complicated Java files. For simple: ${actual_number_of_metrics_simple}, for complex: ${actual_number_of_metrics_complex}"
         exit 1
     fi
 } > "${stdout}" 2>&1
