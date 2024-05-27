@@ -116,29 +116,29 @@ For example, you want to add a new metric to the script:
 using one of the existing files as an example.
 3. Create a test for your metric, in the `tests/metrics/` directory.
 4. Run the entire test suite
-(this should take a few minutes to complete, without errors):
+  (this should take a few minutes to complete, without errors):
 
--```bash
--sudo make install
--make test lint
--```
+  ```bash
+  sudo make install
+  make test lint
+  ```
 
--You can also test it with Docker:
+  -You can also test it with Docker:
 
--```bash
--docker build . -t cam
--docker run --rm cam make test
--```
+  ```bash
+  docker build . -t cam
+  docker run --rm cam make test
+  ```
 
--There is even a faster way to run all tests, with the help of Docker,
--if you don't change any installation scripts:
+  There is even a faster way to run all tests, with the help of Docker,
+  if you don't change any installation scripts:
 
--```bash
--docker run -v $(pwd):/c --rm yegor256/cam:0.9.2 make -C /c test
--```
+  ```bash
+  docker run -v $(pwd):/c --rm yegor256/cam:0.9.2 make -C /c test
+  ```
 
-5. Send us a 
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html). 
+5. Send us a
+[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards.
 
