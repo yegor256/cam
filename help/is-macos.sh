@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # The MIT License (MIT)
 #
 # Copyright (c) 2021-2024 Yegor Bugayenko
@@ -19,34 +20,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
----
-name: make
-'on':
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-concurrency:
-  group: make-${{ github.ref }}
-  cancel-in-progress: true
-jobs:
-  make:
-    runs-on: ubuntu-22.04
-    container: yegor256/cam:0.9.2
-    steps:
-      - uses: actions/checkout@v4
-      - run: make install
-      - run: make env lint test
-  make-macos:
-    runs-on: macos-12
-    steps:
-      - uses: actions/checkout@v4
-      - name: 'Set up latest Oracle JDK 22'
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: oracle.com
-          release: 22
-      - run: sudo chown -R "$(whoami)" /usr/local
-      - run: make install
+set -e
+set -o pipefail
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  exit 0
+else
+  exit 1
+fi

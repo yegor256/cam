@@ -27,7 +27,10 @@ set -o pipefail
 set -x
 
 if ! "${LOCAL}/help/texlive-bin.sh"; then
-  wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
+  if [ ! -f "install-tl.zip" ]; then
+    wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
+  fi
+  rm -rf install-tl
   unzip install-tl.zip -d install-tl
   name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
   perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction
@@ -35,7 +38,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
 fi
 
 if ! tlmgr --version >/dev/null 2>&1; then
-  if "${LOCAL}/help/is-linux.sh"; then
+  if "${LOCAL}/help/is-linux.sh" || "${LOCAL}/help/is-macos.sh"; then
     PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
     export PATH
   else
@@ -43,8 +46,14 @@ if ! tlmgr --version >/dev/null 2>&1; then
   fi
 fi
 
-if [ ! -e "${HOME}/texmf" ]; then
-  "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+if "${LOCAL}/help/is-macos.sh"; then
+  if [ ! -e "${HOME}/Library/texmf" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
+elif "${LOCAL}/help/is-linux.sh"; then
+  if [ ! -e "${HOME}/texmf" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
 fi
 "${LOCAL}/help/sudo.sh" tlmgr option repository ctan
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self

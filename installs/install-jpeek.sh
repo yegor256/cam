@@ -35,7 +35,12 @@ fi
 jpeek_version=0.32.0
 cd /tmp
 wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar
-mkdir -p "$(dirname "${JPEEK}")"
-mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+if "${LOCAL}/help/is-macos.sh"; then
+  "${LOCAL}/help/sudo.sh" mkdir -p "$(dirname "${JPEEK}")"
+  "${LOCAL}/help/sudo.sh" mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+elif "${LOCAL}/help/is-linux.sh"; then
+  mkdir -p "$(dirname "${JPEEK}")"
+  mv "jpeek-${jpeek_version}-jar-with-dependencies.jar" "${JPEEK}"
+fi
 java -jar "${JPEEK}" --help
 echo "jPeek downloaded into ${JPEEK}"

@@ -7,3 +7,8 @@ test-zone/
 *.pdf
 pylint_plugins/__pycache__
 target/
+predictions.csv
+
+install-tl.log
+install-tl.zip.*
+install-tl/

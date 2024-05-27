@@ -28,5 +28,5 @@ jobs:
   hadolint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - uses: hadolint/hadolint-action@v3.1.0

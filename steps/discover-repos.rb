@@ -50,7 +50,9 @@ end
 
 raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
+puts "Trying to find #{opts[:total]} repos in GitHub"
 size = [opts[:page_size], opts[:total]].min
+puts "Taking up to #{size} repos per one GitHub API request"
 licenses = [
   'mit',
   'apache-2.0',
@@ -101,10 +103,12 @@ def cooldown(opts, found)
   sleep opts[:pause]
 end
 
+puts 'Not searching GitHub API, using mock repos' if opts[:dry]
 loop do
   break if page * size > max
   count = 0
-  json = if opts[:dry] then mock_reps(page, size, licenses)
+  json = if opts[:dry]
+    mock_reps(page, size, licenses)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
@@ -127,7 +131,7 @@ loop do
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
   end
-  puts "Found #{count} repositories in page ##{page}"
+  puts "Found #{count} good repositories in page ##{page} (out of #{json[:items].count})"
   break if found.count >= opts[:total]
   cooldown(opts, found)
   page += 1

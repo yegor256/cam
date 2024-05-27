@@ -51,4 +51,21 @@ if ! bibcop --version >/dev/null 2>&1; then
 fi
 bibcop tex/report.bib
 
-find "${LOCAL}" -name '*.sh' -type f -print0 | xargs -0 -n1 shellcheck --shell=bash --severity=style
+while IFS= read -r sh; do
+    shellcheck --shell=bash --severity=style "${sh}"
+done < <(find "$(realpath "${LOCAL}")" -name '*.sh' -type f -not -path "$(realpath "${TARGET}")/**")
+
+header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
+failed="false"
+for mask in *.sh *.py *.rb *.java Makefile; do
+    while IFS= read -r file; do
+        if ! grep -q "$header" "$file"; then
+            failed="true"
+            echo "⚠️  Copyright not found in file: $file"
+        fi
+    done < <(find "$(realpath "${LOCAL}")" -type f -name "${mask}" \
+        -not -path "$(realpath "${TARGET}")/**" \
+        -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparseable/**" \
+        -not -path "$(realpath "${LOCAL}")/test-zone/**")
+done
+if [[ "${failed}" = "true" ]]; then exit; fi
