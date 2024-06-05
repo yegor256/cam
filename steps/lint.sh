@@ -57,7 +57,7 @@ done < <(find "$(realpath "${LOCAL}")" -name '*.sh' -type f -not -path "$(realpa
 
 header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
 failed="false"
-for mask in *.sh *.py *.rb *.java Makefile; do
+for mask in *.sh *.py *.rb *.yml *.java Makefile; do
     while IFS= read -r file; do
         if ! grep -q "$header" "$file"; then
             failed="true"
