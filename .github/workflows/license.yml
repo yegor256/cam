@@ -53,7 +53,9 @@ jobs:
             -name "*.py" -o \
             -name "*.rb" -o \
             -name "*.yml" \
-            \) -print)
+            \) \
+            -not -path './fixtures/**' \
+            -print)
           if [ "${failed}" = "true" ]; then
             exit 1
           fi
