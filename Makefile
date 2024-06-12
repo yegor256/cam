@@ -20,10 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-.SHELLFLAGS: -e -o pipefail -c
-.ONESHELL:
 .PHONY: clone filter measure cleanup env lint zip clean jpeek aggregate all test
 .SILENT:
+.SHELLFLAGS := -e -o pipefail -c
+.ONESHELL:
 
 # Our version.
 VERSION = 0.0.0
