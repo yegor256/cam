@@ -90,11 +90,10 @@ end
 
 def mock_reps(page, size, licenses)
   {
-    items: if page > 100 then
-             []
-           else
-             mock_array(size, licenses)
-           end
+    items: if page > 100 then []
+    else
+      mock_array(size, licenses)
+    end
   }
 end
 
