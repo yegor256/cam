@@ -119,11 +119,11 @@ end
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
 
 def fetch(config)
-  if config[opts][:dry]
+  if config[:opts][:dry]
     mock_reps(config[:page], config[:size], config[:licenses])
   else
     config[:github].search_repositories(
-      [config: query], per_page: config[:size], page: config[:page]
+      config[:query], per_page: config[:size], page: config[:page]
     )
   end
 end
