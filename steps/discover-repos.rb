@@ -90,10 +90,11 @@ end
 
 def mock_reps(page, size, licenses)
   {
-    items: if page > 100 then []
-    else
-      mock_array(size, licenses)
-    end
+    items: if page > 100 then
+             []
+           else
+             mock_array(size, licenses)
+           end
   }
 end
 
@@ -118,9 +119,12 @@ end
 
 def files_in_repo(github, repo, ref, path = '')
   fetch_contents(github, repo, ref, path)
-rescue Octokit::NotFound, Octokit::TooManyRequests
-    puts "There is no contents inside #{repo}"
-    0
+rescue Octokit::NotFound
+  puts "There is no contents inside #{repo}"
+  0
+rescue Octokit::TooManyRequests
+  puts "Rate limit to GitHub API exceeded, try to pass --token."
+  0
 end
 
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
