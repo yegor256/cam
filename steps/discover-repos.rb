@@ -103,14 +103,14 @@ def cooldown(opts, found)
   sleep opts[:pause]
 end
 
-def files_in_repo(github, repo, path='', ref)
-  contents = github.contents(repo, {path: path, ref: ref})
+def files_in_repo(github, repo, ref, path='')
+  contents = github.contents(repo, { path: path, ref: ref })
   count = 0
   contents.each do |content|
     if content[:type] == 'file'
       count += 1
     elsif content[:type] == 'dir'
-      count += files_in_repo(github, repo, content[:path], ref)
+      count += files_in_repo(github, repo, ref, content[:path])
     end
   end
   count
