@@ -103,6 +103,19 @@ def cooldown(opts, found)
   sleep opts[:pause]
 end
 
+def files_in_repo(github, repo, path='', ref)
+  contents = github.contents(repo, {path: path, ref: ref})
+  count = 0
+  contents.each do |content|
+    if content[:type] == 'file'
+      count += 1
+    elsif content[:type] == 'dir'
+      count += files_in_repo(github, repo, content[:path], ref)
+    end
+  end
+  count
+end
+
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
 loop do
   break if page * size > max
@@ -117,6 +130,7 @@ loop do
     puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
     next if no_license
     count += 1
+    files = files_in_repo(github, i[:full_name], '', i[:default_branch])
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -126,7 +140,8 @@ loop do
       size: i[:size],
       open_issues_count: i[:open_issues_count],
       description: "\"#{i[:description]}\"",
-      topics: Array(i[:topics]).join(' ')
+      topics: Array(i[:topics]).join(' '),
+      files: files
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
