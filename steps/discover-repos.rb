@@ -122,7 +122,7 @@ rescue Octokit::NotFound
   puts "There is no contents inside #{repo}"
   0
 rescue Octokit::TooManyRequests
-  puts "Rate limit to GitHub API exceeded, try to pass --token."
+  puts 'Rate limit to GitHub API exceeded, try to pass --token'
   0
 end
 
