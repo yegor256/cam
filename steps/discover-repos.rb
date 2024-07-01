@@ -130,7 +130,6 @@ loop do
     puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
     next if no_license
     count += 1
-    files = files_in_repo(github, i[:full_name], '', i[:default_branch])
     found[i[:full_name]] = {
       full_name: i[:full_name],
       default_branch: i[:default_branch],
@@ -141,7 +140,7 @@ loop do
       open_issues_count: i[:open_issues_count],
       description: "\"#{i[:description]}\"",
       topics: Array(i[:topics]).join(' '),
-      files: files
+      files: files_in_repo(github, i[:full_name], '', i[:default_branch])
     }
     puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
 (#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
