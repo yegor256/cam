@@ -103,7 +103,7 @@ def cooldown(opts, found)
   sleep opts[:pause]
 end
 
-def files_in_repo(github, repo, ref, path='')
+def files_in_repo(github, repo, ref, path = '')
   contents = github.contents(repo, { path: path, ref: ref })
   count = 0
   contents.each do |content|
