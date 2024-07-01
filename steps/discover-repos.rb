@@ -103,22 +103,24 @@ def cooldown(opts, found)
   sleep opts[:pause]
 end
 
-def files_in_repo(github, repo, ref, path = '')
-  begin
-    contents = github.contents(repo, { path: path, ref: ref })
-    count = 0
-    contents.each do |content|
-      if content[:type] == 'file'
-        count += 1
-      elsif content[:type] == 'dir'
-        count += files_in_repo(github, repo, ref, content[:path])
-      end
+def fetch_contents(github, repo, ref, path)
+  contents = github.contents(repo, { path: path, ref: ref })
+  count = 0
+  contents.each do |content|
+    if content[:type] == 'file'
+      count += 1
+    elsif content[:type] == 'dir'
+      count += fetch_contents(github, repo, ref, content[:path])
     end
-    count
-  rescue Octokit::NotFound
-    puts "There is no contents inside #{repo}"
-    count
   end
+  count
+end
+
+def files_in_repo(github, repo, ref, path = '')
+  fetch_contents(github, repo, ref, path)
+rescue Octokit::NotFound
+    puts "There is no contents inside #{repo}"
+    0
 end
 
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
