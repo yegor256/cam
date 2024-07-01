@@ -118,7 +118,7 @@ end
 
 def files_in_repo(github, repo, ref, path = '')
   fetch_contents(github, repo, ref, path)
-rescue Octokit::NotFound
+rescue Octokit::NotFound, Octokit::TooManyRequests
     puts "There is no contents inside #{repo}"
     0
 end
