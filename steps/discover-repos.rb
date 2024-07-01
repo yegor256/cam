@@ -117,14 +117,19 @@ def files_in_repo(github, repo, ref, path = '')
 end
 
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
-loop do
-  break if page * size > max
-  count = 0
-  json = if opts[:dry]
+
+def fetch(github, licenses, opts, page, query, size)
+  if opts[:dry]
     mock_reps(page, size, licenses)
   else
     github.search_repositories(query, per_page: size, page: page)
   end
+end
+
+loop do
+  break if page * size > max
+  count = 0
+  json = fetch(github, licenses, opts, page, query, size)
   json[:items].each do |i|
     no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
     puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
