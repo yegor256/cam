@@ -30,3 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: yegor256/copyrights-action@0.0.4
+        with:
+          ignore: >-
+            fixtures/filters/unparseable/**
