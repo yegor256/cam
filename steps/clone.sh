@@ -31,6 +31,7 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
 repos="${TARGET}/temp/repositories.txt"
+temp_repo_files="${TARGET}/temp/repo_files.csv"
 mkdir -p "$(dirname "${repos}")"
 tail -n +2 "${TARGET}/repositories.csv" > "${repos}"
 total=$(wc -l < "${repos}" | xargs)
@@ -45,7 +46,6 @@ files() {
     echo "${repo_name}, ${count}"
 }
 
-temp_repo_files="${TARGET}/temp/repo_files.csv"
 rm -rf "${temp_repo_files}"
 
 declare -i repo=0
@@ -67,6 +67,11 @@ done < "${repos}"
 "${LOCAL}/help/parallel.sh" "${jobs}" 8
 wait
 
-cat "${temp_repo_files}" > "${TARGET}/repo_files.csv"
+if [ -f "${temp_repo_files}" ]; then
+    cat "${temp_repo_files}" > "${TARGET}/repo_files.csv"
+else
+    echo "Error: ${temp_repo_files} does not exist or is empty."
+    exit 1
+fi
 
 echo "Cloned ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
