@@ -56,6 +56,7 @@ echo "👍🏻 A repo cloned correctly into weird directory"
 
 {
     echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
+    touch "${TARGET}/temp/repo_files.csv"
     rm -rf "${TARGET}/github"
     "${LOCAL}/steps/clone.sh"
     cat "${TARGET}/repo_files.csv"
