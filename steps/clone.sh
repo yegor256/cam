@@ -33,6 +33,7 @@ touch "${jobs}"
 repos="${TARGET}/temp/repositories.txt"
 temp_repo_files="${TARGET}/temp/repo_files.csv"
 mkdir -p "$(dirname "${repos}")"
+mkdir -p "${TARGET}/temp"
 tail -n +2 "${TARGET}/repositories.csv" > "${repos}"
 total=$(wc -l < "${repos}" | xargs)
 
