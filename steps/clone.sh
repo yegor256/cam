@@ -40,7 +40,8 @@ total=$(wc -l < "${repos}" | xargs)
 files() {
     local repo_dir="$1"
     local repo_name="$2"
-    local count=$(find "${repo_dir}" \( -path ./.idea -o -path ./.git \) -prune -o -type f | wc -l)
+    local count
+    count=$(find "${repo_dir}" \( -path ./.git \) -prune -o -type f | wc -l)
     echo "${repo_name}, ${count}"
 }
 
