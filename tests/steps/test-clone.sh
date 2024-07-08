@@ -53,3 +53,11 @@ echo "👍🏻 A repo cloned correctly"
     test -e "${TARGET}/github/files/foo!/test.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly into weird directory"
+
+{
+    echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
+    rm -rf "${TARGET}/github"
+    "${LOCAL}/steps/clone.sh"
+    cat "${TARGET}/repo_files.csv"
+} > "${stdout}" 2>&1
+echo "👍🏻 A repo files counted correctly"

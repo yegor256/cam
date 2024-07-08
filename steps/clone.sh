@@ -45,6 +45,9 @@ files() {
     echo "${repo_name}, ${count}"
 }
 
+temp_repo_files="${TARGET}/temp/repo_files.csv"
+rm -rf "${temp_repo_files}"
+
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
 while IFS=',' read -r r tag tail; do
@@ -53,8 +56,8 @@ while IFS=',' read -r r tag tail; do
     if [ "${tag}" = '.' ]; then tag='master'; fi
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here (${tail})"
-        count=$(count_files "${TARGET}/github/${r}" "${r}")
-        echo "${count}" >> repo_files.csv
+        count=$(files "${TARGET}/github/${r}" "${r}")
+        echo "${count}" >> "${temp_repo_files}"
     else
         printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
@@ -62,5 +65,7 @@ done < "${repos}"
 
 "${LOCAL}/help/parallel.sh" "${jobs}" 8
 wait
+
+cat "${temp_repo_files}" > "${TARGET}/repo_files.csv"
 
 echo "Cloned ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
