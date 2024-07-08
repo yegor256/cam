@@ -37,6 +37,13 @@ total=$(wc -l < "${repos}" | xargs)
 
 "${LOCAL}/help/assert-tool.sh" git --version
 
+files() {
+    local repo_dir="$1"
+    local repo_name="$2"
+    local count=$(find "${repo_dir}" \( -path ./.idea -o -path ./.git \) -prune -o -type f | wc -l)
+    echo "${repo_name}, ${count}"
+}
+
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
 while IFS=',' read -r r tag tail; do
@@ -45,6 +52,8 @@ while IFS=',' read -r r tag tail; do
     if [ "${tag}" = '.' ]; then tag='master'; fi
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here (${tail})"
+        count=$(count_files "${TARGET}/github/${r}" "${r}")
+        echo "${count}" >> repo_files.csv
     else
         printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
