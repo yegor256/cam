@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
+set -ex
 set -o pipefail
 
 java=$1
@@ -48,7 +48,7 @@ cp "${java}" "${tmp}/foo.java"
 
 export PMD_JAVA_OPTS=${JVM_OPTS}
 # We don't use --cache here, because it becomes too big and leads to "Out Of Memory" error
-pmd pmd -R "${tmp}/config.xml" -d "${tmp}" --format xml --fail-on-violation false > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
+pmd check -R "${tmp}/config.xml" -d "${tmp}" --format xml --no-fail-on-violation > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
 tail='Cognitive Complexity~\\citep{campbell2018cognitive} values for all methods in a class'
 sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
