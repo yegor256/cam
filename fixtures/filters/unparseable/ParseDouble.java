@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2021-2024 Yegor Bugayenko
+ */
+/*
  [The "BSD license"]
  Copyright (c) 2011-2013 Joel Li (李家智)
  All rights reserved.

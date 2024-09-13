@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2021-2024 Yegor Bugayenko
+ */
+/*
  * PlotSquared, a land and world management plugin for Minecraft.
  * Copyright (C) IntellectualSites <https://intellectualsites.com>
  * Copyright (C) IntellectualSites team and contributors

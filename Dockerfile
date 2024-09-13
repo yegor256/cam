@@ -29,35 +29,35 @@ SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 # Build essentials that are required later
 RUN apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    build-essential=12.9ubuntu3 \
-    software-properties-common=0.99.22.9 \
-    make=4.3-4.1build1 \
-    wget=1.21.2-2ubuntu1 \
-    libssl-dev=3.0.2-0ubuntu1.15 \
-    openssl=3.0.2-0ubuntu1.15 \
-    gpg-agent=2.2.27-3ubuntu2.1 \
-    zip=3.0-12build2 \
-    unzip=6.0-26ubuntu3.2 \
-    tree=2.0.2-1 \
-    parallel=20210822+ds-2 \
-    bc=1.07.1-3build1 \
-    cloc=1.90-1 \
-    jq=1.6-2.1ubuntu3 \
-    shellcheck=0.8.0-2 \
-    aspell=0.60.8-4build1 \
-    xmlstarlet=1.6.1-2.1 \
-    xpdf=3.04+git20220201-1 \
-    coreutils=8.32-4.1ubuntu1.1 \
-    gawk=1:5.1.0-1ubuntu0.1 \
-    git=1:2.34.1-1ubuntu1.10 \
-    libxml2-utils=2.9.13+dfsg-1ubuntu0.4 \
-    build-essential=12.9ubuntu3 \
-    cmake=3.22.1-1ubuntu1.22.04.2 \
-    libfreetype6-dev=2.11.1+dfsg-1ubuntu0.2 \
-    pkg-config=0.29.2-1ubuntu3 \
-    libfontconfig-dev=2.13.1-4.2ubuntu5 \
-    libjpeg-dev=8c-2ubuntu10 \
-    libopenjp2-7-dev=2.4.0-6 \
+    build-essential=12.* \
+    software-properties-common=0.* \
+    make=4.* \
+    wget=1.* \
+    libssl-dev=3.* \
+    openssl=3.* \
+    gpg-agent=2.* \
+    zip=3.* \
+    unzip=6.* \
+    tree=2.* \
+    parallel=* \
+    bc=1.* \
+    cloc=1.* \
+    jq=1.* \
+    shellcheck=0.* \
+    aspell=0.* \
+    xmlstarlet=1.* \
+    xpdf=3.* \
+    coreutils=* \
+    gawk=* \
+    git=1:2.* \
+    libxml2-utils=2.* \
+    build-essential=12.* \
+    cmake=3.* \
+    libfreetype-dev=* \
+    pkg-config=* \
+    libfontconfig-dev=2.* \
+    libjpeg-dev=* \
+    libopenjp2-7-dev=2.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -66,22 +66,22 @@ RUN apt-get update -y --fix-missing \
   && add-apt-repository -y ppa:inkscape.dev/stable \
   && apt-get update -y \
   && apt-get -y install --no-install-recommends \
-    inkscape=1:1.3.2+202311252150+091e20ef0f~ubuntu22.04.1 \
+    inkscape=1:1.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
 # Ruby
 RUN apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    ruby-full=1:3.0~exp1 \
+    ruby-full=1:3.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
 # Java + Maven
 RUN apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    openjdk-17-jdk=17.0.10+7-1~22.04.1 \
-    maven=3.6.3-5 \
+    openjdk-17-jdk=17.* \
+    maven=3.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -89,9 +89,9 @@ RUN apt-get update -y --fix-missing \
 RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    python3.7=3.7.17-1+jammy1 \
-    python3-pip=22.0.2+dfsg-1ubuntu0.4 \
-    python3.7-dev=3.7.17-1+jammy1 \
+    python3.7=3.* \
+    python3-pip=* \
+    python3.7-dev=3.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
