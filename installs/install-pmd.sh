@@ -46,6 +46,6 @@ cd /usr/local || exit 1
 wget --quiet "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${pmd_version}/pmd-dist-${pmd_version}-bin.zip"
 unzip -qq "pmd-bin-${pmd_version}.zip"
 rm "pmd-bin-${pmd_version}.zip"
-mv "pmd-bin-${pmd_version} pmd"
+mv "pmd-bin-${pmd_version}" pmd
 ln -s /usr/local/pmd/bin/run.sh /usr/local/bin/pmd
 echo "PMD installed into /usr/local/bin/pmd"
