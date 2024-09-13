@@ -21,11 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
+set -ex
 set -o pipefail
 
 "${LOCAL}/help/assert-tool.sh" python3 --version
 "${LOCAL}/help/assert-tool.sh" pip3 --version
 
-"${LOCAL}/help/sudo.sh" python3 -m pip install --upgrade pip
-"${LOCAL}/help/sudo.sh" python3 -m pip install -r "${LOCAL}/requirements.txt"
+python3 -m venv cam
+source cam/bin/activate
+python3 -m pip install -r "${LOCAL}/requirements.txt"

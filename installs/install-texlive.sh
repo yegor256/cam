@@ -21,10 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
+set -ex
 set -o pipefail
-
-set -x
 
 if ! "${LOCAL}/help/texlive-bin.sh"; then
   if [ ! -f "install-tl.zip" ]; then
@@ -33,7 +31,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
   rm -rf install-tl
   unzip install-tl.zip -d install-tl
   name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
-  perl "./install-tl/${name}/install-tl" --scheme=scheme-medium --no-interaction
+  perl "./install-tl/${name}/install-tl" --scheme=scheme-minimal --no-interaction
   rm -rf install-tl
 fi
 

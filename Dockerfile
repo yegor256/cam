@@ -91,6 +91,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get -y install --no-install-recommends \
     python3.7=3.* \
     python3-pip=* \
+    pipx=* \
     python3.7-dev=3.* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
@@ -102,30 +103,30 @@ COPY DEPENDS.txt /cam
 COPY steps/install.sh /cam/steps/
 COPY help/* /cam/help/
 
-ENV LOCAL /cam
+ENV LOCAL=/cam
 
-COPY installs/install-texlive.sh /cam/installs/install-texlive.sh
+COPY installs/install-texlive.sh installs/
 RUN installs/install-texlive.sh
 
-COPY installs/install-pmd.sh /cam/installs/install-pmd.sh
+COPY installs/install-pmd.sh installs/
 RUN installs/install-pmd.sh
 
-COPY installs/install-gradle.sh /cam/installs/install-gradle.sh
+COPY installs/install-gradle.sh installs/
 RUN installs/install-gradle.sh
-ENV GRADLE_LOCAL /usr/local/gradle
-ENV PATH $PATH:/usr/local/gradle/bin
+ENV GRADLE_LOCAL=/usr/local/gradle
+ENV PATH=$PATH:/usr/local/gradle/bin
 
-COPY installs/install-gem.sh /cam/installs/install-gem.sh
-RUN installs/install-gem.sh
+COPY installs/install-gems.sh installs/
+RUN installs/install-gems.sh
 
-COPY installs/install-jpeek.sh /cam/installs/install-jpeek.sh
-ENV JPEEK /opt/app/jpeek.jar
+COPY installs/install-jpeek.sh installs/
+ENV JPEEK=/opt/app/jpeek.jar
 RUN installs/install-jpeek.sh
 
-COPY installs/install-pip.sh /cam/installs/install-pip.sh
+COPY installs/install-pip.sh installs/
 RUN installs/install-pip.sh
 
-COPY installs/install-poppler.sh /cam/installs/install-poppler.sh
+COPY installs/install-poppler.sh installs/
 RUN installs/install-poppler.sh
 
 COPY . /cam
