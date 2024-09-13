@@ -124,7 +124,7 @@ ENV JPEEK=/opt/app/jpeek.jar
 RUN installs/install-jpeek.sh
 
 COPY installs/install-pip.sh installs/
-RUN installs/install-pip.sh && source cam/bin/activate
+RUN installs/install-pip.sh
 
 COPY installs/install-poppler.sh installs/
 RUN installs/install-poppler.sh
