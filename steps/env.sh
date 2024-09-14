@@ -81,7 +81,7 @@ git --version
 
 cloc --version
 
-pmd pmd --version
+pmd --version
 
 gradle --version
 
