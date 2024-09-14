@@ -89,10 +89,10 @@ RUN apt-get update -y --fix-missing \
 RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    python3.7=3.* \
+    python3.10=* \
     python3-pip=* \
-    pipx=* \
-    python3.7-dev=3.* \
+    python3.10-venv=* \
+    python3.10-dev=* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
