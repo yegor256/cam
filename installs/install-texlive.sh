@@ -45,7 +45,7 @@ if ! tlmgr --version >/dev/null 2>&1; then
 fi
 
 if "${LOCAL}/help/is-macos.sh"; then
-  if [ ! -e "${HOME}/Library/texmf" ]; then
+  if [ ! -e "${HOME}/Library/texmf" ] && [ ! -e "${HOME}/texmf/tlpkg/texlive.tlpdb" ]; then
     "${LOCAL}/help/sudo.sh" tlmgr init-usertree
   fi
 elif "${LOCAL}/help/is-linux.sh"; then
