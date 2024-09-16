@@ -92,6 +92,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
     python3.10=* \
     python3-pip=* \
     python3.12-venv=* \
+    python3.10-venv=* \
     python3.10-dev=* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
