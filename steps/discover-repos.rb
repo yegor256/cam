@@ -104,14 +104,30 @@ def cooldown(opts, found)
 end
 
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
+
+def fetch(config)
+  if config[:opts][:dry]
+    mock_reps(config[:page], config[:size], config[:licenses])
+  else
+    config[:github].search_repositories(
+      config[:query], per_page: config[:size], page: config[:page]
+    )
+  end
+end
+
+config = {
+  github: github,
+  licenses: licenses,
+  opts: opts,
+  page: page,
+  query: query,
+  size: size
+}
+
 loop do
   break if page * size > max
   count = 0
-  json = if opts[:dry]
-    mock_reps(page, size, licenses)
-  else
-    github.search_repositories(query, per_page: size, page: page)
-  end
+  json = fetch(config)
   json[:items].each do |i|
     no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
     puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license

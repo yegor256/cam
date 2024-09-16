@@ -31,11 +31,23 @@ mkdir -p "$(dirname "${jobs}")"
 touch "${jobs}"
 
 repos="${TARGET}/temp/repositories.txt"
+temp_repo_files="${TARGET}/temp/repo_files.csv"
 mkdir -p "$(dirname "${repos}")"
+mkdir -p "${TARGET}/temp"
 tail -n +2 "${TARGET}/repositories.csv" > "${repos}"
 total=$(wc -l < "${repos}" | xargs)
 
 "${LOCAL}/help/assert-tool.sh" git --version
+
+files() {
+    local repo_dir="$1"
+    local repo_name="$2"
+    local count
+    count=$(find "${repo_dir}" \( -path ./.git \) -prune -o -type f | wc -l)
+    echo "${repo_name}, ${count}"
+}
+
+rm -rf "${temp_repo_files}"
 
 declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
@@ -45,6 +57,9 @@ while IFS=',' read -r r tag tail; do
     if [ "${tag}" = '.' ]; then tag='master'; fi
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here (${tail})"
+        count=$(files "${TARGET}/github/${r}" "${r}")
+        echo "files count ${count}"
+        echo "${count}" >> "${temp_repo_files}"
     else
         printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${tag@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
     fi
@@ -52,5 +67,12 @@ done < "${repos}"
 
 "${LOCAL}/help/parallel.sh" "${jobs}" 8
 wait
+
+if [ -f "${temp_repo_files}" ]; then
+    cat "${temp_repo_files}" > "${TARGET}/repo_files.csv"
+else
+    echo "Error: ${temp_repo_files} does not exist or is empty."
+    exit 1
+fi
 
 echo "Cloned ${total} repositories in $(nproc) threads$("${LOCAL}/help/tdiff.sh" "${start}")"
