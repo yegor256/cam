@@ -46,7 +46,7 @@ jobs:
             --format="%(creatordate:short)" | tail -1)
           sed -E -i "s|^date-released: [^ ]+|date-released: ${date}|g" \
             CITATION.cff
-      - uses: peter-evans/create-pull-request@v6
+      - uses: peter-evans/create-pull-request@v7
         with:
           branch: version-up
           commit-message: 'new version in README and CITATION.cff'
