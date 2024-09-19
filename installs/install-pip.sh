@@ -27,12 +27,7 @@ set -o pipefail
 "${LOCAL}/help/assert-tool.sh" python3 --version
 "${LOCAL}/help/assert-tool.sh" pip3 --version
 
-if [ ! -d "${LOCAL}/venv" ]; then
-    "${LOCAL}/help/sudo.sh" python3 -m venv "${LOCAL}/venv"
-fi
+# see https://stackoverflow.com/a/76641565/187141
+rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 
-# shellcheck source=/dev/null
-source "${LOCAL}/venv/bin/activate"
-
-"${LOCAL}/help/sudo.sh" python3 -m pip install --upgrade pip
-"${LOCAL}/help/sudo.sh" python3 -m pip install -r "${LOCAL}/requirements.txt"
+pip3 install -r "${LOCAL}/requirements.txt"

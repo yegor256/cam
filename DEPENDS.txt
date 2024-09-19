@@ -6,6 +6,7 @@ hard babel-russian
 hard bibcop
 hard biber
 hard biblatex
+hard booktabs
 hard cancel
 hard catchfile
 hard changepage
@@ -20,6 +21,7 @@ hard datetime
 hard doi
 hard enumitem
 hard environ
+hard everyshi
 hard fdsymbol
 hard ffcode
 hard fmtcount

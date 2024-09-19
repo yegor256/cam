@@ -24,25 +24,25 @@
 set -ex
 set -o pipefail
 
-if ! "${LOCAL}/help/texlive-bin.sh"; then
-  if [ ! -f "install-tl.zip" ]; then
-    wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
-  fi
-  rm -rf install-tl
-  unzip install-tl.zip -d install-tl
-  name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
-  perl "./install-tl/${name}/install-tl" --scheme=scheme-minimal --no-interaction
-  rm -rf install-tl
-fi
-
 if ! tlmgr --version >/dev/null 2>&1; then
-  if "${LOCAL}/help/is-linux.sh" || "${LOCAL}/help/is-macos.sh"; then
-    PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
-    export PATH
-  else
-    "${LOCAL}/help/assert-tool.sh" tlmgr --version
-  fi
+  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
+  export PATH
 fi
 
-"${LOCAL}/help/sudo.sh" tlmgr install collection-latex
-pdflatex -v
+if "${LOCAL}/help/is-macos.sh"; then
+  if [ ! -e "${HOME}/Library/texmf" ] && [ ! -e "${HOME}/texmf/tlpkg/texlive.tlpdb" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
+elif "${LOCAL}/help/is-linux.sh"; then
+  if [ ! -e "${HOME}/texmf" ]; then
+    "${LOCAL}/help/sudo.sh" tlmgr init-usertree
+  fi
+fi
+"${LOCAL}/help/sudo.sh" tlmgr option repository ctan
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self
+packages=()
+while IFS= read -r p; do
+  packages+=( "${p}" )
+done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | uniq )
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none install "${packages[@]}"
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'

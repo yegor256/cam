@@ -89,11 +89,10 @@ RUN apt-get update -y --fix-missing \
 RUN add-apt-repository -y ppa:deadsnakes/ppa \
   && apt-get update -y --fix-missing \
   && apt-get -y install --no-install-recommends \
-    python3.10=* \
+    python3=* \
+    python3-venv=* \
     python3-pip=* \
-    python3.12-venv=* \
-    python3.10-venv=* \
-    python3.10-dev=* \
+    python3-dev=* \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -105,9 +104,6 @@ COPY steps/install.sh /cam/steps/
 COPY help/* /cam/help/
 
 ENV LOCAL=/cam
-
-COPY installs/install-texlive.sh installs/
-RUN installs/install-texlive.sh
 
 COPY installs/install-pmd.sh installs/
 RUN installs/install-pmd.sh
@@ -124,10 +120,15 @@ COPY installs/install-jpeek.sh installs/
 ENV JPEEK=/opt/app/jpeek.jar
 RUN installs/install-jpeek.sh
 
+COPY installs/install-poppler.sh installs/
+RUN installs/install-poppler.sh
+
 COPY installs/install-pip.sh installs/
 RUN installs/install-pip.sh
 
-COPY installs/install-poppler.sh installs/
-RUN installs/install-poppler.sh
+COPY installs/install-texlive.sh installs/
+RUN installs/install-texlive.sh
+COPY installs/install-texlive-depends.sh installs/
+RUN installs/install-texlive-depends.sh
 
 COPY . /cam

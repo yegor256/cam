@@ -40,38 +40,32 @@ if [ "${bash_version}" -lt 5 ]; then
 fi
 
 ruby -v
+rubocop -v
 
 if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
     python3 --version
     echo "Python must be 3+"
     exit 1
 fi
-
+flake8 --version
+pylint --version
 
 if ! tlmgr --version >/dev/null 2>&1; then
   PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
   export PATH
 fi
-
-flake8 --version
-
-pylint --version
+pdflatex --version
+pdftotext -v
+inkscape --version
+aspell --version
 
 xmlstarlet --version
 
 shellcheck --version
 
-pdflatex --version
-
-aspell --version
-
 jq --version
 
 multimetric --help > /dev/null
-
-rubocop -v
-
-inkscape --version
 
 awk --version
 
@@ -82,12 +76,6 @@ git --version
 cloc --version
 
 pmd --version
-
-gradle --version
-
-mvn --version
-
-pdftotext -v
 
 nproc --version
 
@@ -100,7 +88,8 @@ realpath --version
 bc -v
 
 javac -version
-
 java -jar "${JPEEK}" --help
+gradle --version
+mvn --version
 
 locale
