@@ -98,8 +98,6 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa \
 
 WORKDIR /cam
 COPY Makefile /cam
-COPY requirements.txt /cam
-COPY DEPENDS.txt /cam
 COPY steps/install.sh /cam/steps/
 COPY help/* /cam/help/
 
@@ -123,11 +121,13 @@ RUN installs/install-jpeek.sh
 COPY installs/install-poppler.sh installs/
 RUN installs/install-poppler.sh
 
+COPY requirements.txt /cam
 COPY installs/install-pip.sh installs/
 RUN installs/install-pip.sh
 
 COPY installs/install-texlive.sh installs/
 RUN installs/install-texlive.sh
+COPY DEPENDS.txt /cam
 COPY installs/install-texlive-depends.sh installs/
 RUN installs/install-texlive-depends.sh
 

@@ -13,6 +13,7 @@ hard changepage
 hard cjk
 hard cleveref
 hard cm-super
+hard cmap
 hard comment
 hard csquotes
 hard currfile
@@ -45,6 +46,7 @@ hard preprint
 hard silence
 hard stmaryrd
 hard svg
+hard textcase
 hard textpos
 hard titlesec
 hard titling

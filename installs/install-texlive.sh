@@ -32,7 +32,7 @@ if ! "${LOCAL}/help/texlive-bin.sh"; then
   unzip install-tl.zip -d install-tl
   name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
   perl "./install-tl/${name}/install-tl" --scheme=scheme-minimal --no-interaction
-  rm -rf install-tl
+  rm -rf install-tl install-tl.zip
 fi
 
 if ! tlmgr --version >/dev/null 2>&1; then

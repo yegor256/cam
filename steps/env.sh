@@ -58,6 +58,7 @@ pdflatex --version
 pdftotext -v
 inkscape --version
 aspell --version
+latexmk --version
 
 xmlstarlet --version
 
