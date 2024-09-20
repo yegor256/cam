@@ -27,7 +27,11 @@ set -o pipefail
 "${LOCAL}/help/assert-tool.sh" python3 --version
 "${LOCAL}/help/assert-tool.sh" pip3 --version
 
-# see https://stackoverflow.com/a/76641565/187141
-rm /usr/lib/python3.*/EXTERNALLY-MANAGED
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+fi
+
+# shellcheck source=/dev/null
+source venv/bin/activate
 
 pip3 install -r "${LOCAL}/requirements.txt"

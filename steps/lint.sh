@@ -27,11 +27,11 @@ cffconvert --validate
 
 mypy --strict "${LOCAL}/"
 
-flake8 --max-line-length=140 "${LOCAL}/"
+flake8 --max-line-length=140 --exclude venv "${LOCAL}/"
 
 export PYTHONPATH="${PYTHONPATH}:${LOCAL}/pylint_plugins/"
 
-find "${LOCAL}" -type f -name '*.py' -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
+find "${LOCAL}" -type f -name '*.py' -not -path "${LOCAL}/venv/**" -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \
@@ -53,7 +53,7 @@ bibcop tex/report.bib
 
 while IFS= read -r sh; do
     shellcheck --shell=bash --severity=style "${sh}"
-done < <(find "$(realpath "${LOCAL}")" -name '*.sh' -type f -not -path "$(realpath "${TARGET}")/**")
+done < <(find "$(realpath "${LOCAL}")" -name '*.sh' -type f -not -path "$(realpath "${TARGET}")/**" -not -path "$(realpath "${LOCAL}")/venv/**")
 
 header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
 failed="false"
@@ -66,6 +66,7 @@ for mask in *.sh *.py *.rb *.yml *.java Makefile; do
     done < <(find "$(realpath "${LOCAL}")" -type f -name "${mask}" \
         -not -path "$(realpath "${TARGET}")/**" \
         -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparseable/**" \
-        -not -path "$(realpath "${LOCAL}")/test-zone/**")
+        -not -path "$(realpath "${LOCAL}")/test-zone/**" \
+        -not -path "$(realpath "${LOCAL}")/venv/**")
 done
 if [[ "${failed}" = "true" ]]; then exit; fi

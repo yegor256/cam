@@ -23,6 +23,8 @@
 AllCops:
   SuggestExtensions: false
   NewCops: enable
+  Exclude:
+    - 'venv/**/*'
 
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
