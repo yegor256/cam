@@ -28,6 +28,6 @@ set -o pipefail
 "${LOCAL}/help/assert-tool.sh" pip3 --version
 
 # see https://stackoverflow.com/a/76641565/187141
-rm /usr/lib/python3.*/EXTERNALLY-MANAGED
+rm -f /usr/lib/python3.*/EXTERNALLY-MANAGED
 
 pip3 install -r "${LOCAL}/requirements.txt"
