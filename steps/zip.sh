@@ -36,6 +36,12 @@ if [ -e "${zip}" ]; then
     exit
 fi
 
+cam_repo_target_dir="${TARGET}/github/self/${name}"
+
+if [ ! -d "${cam_repo_target_dir}" ]; then
+    git clone --depth 1 https://github.com/yegor256/cam.git "${cam_repo_target_dir}"
+fi
+
 if [ -e "${TARGET}/github" ]; then
     echo "Deleting .git directories (may take some time) ..."
     find "${TARGET}/github" -maxdepth 3 -mindepth 3 -type d -name '.git' -exec rm -rf {} \;
