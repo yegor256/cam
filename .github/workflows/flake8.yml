@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-name: Python-Flake8-Linter
+name: flake8
 'on':
   push:
     branches:
@@ -30,17 +30,11 @@ name: Python-Flake8-Linter
       - master
 jobs:
   flake8:
-    name: Flake8
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.11
-      - name: Install dependencies
-        run: pip install flake8
-      - name: Run Flake8
-        run: |
-          flake8 --max-line-length=120 .
+      - run: pip install flake8
+      - run: flake8 --max-line-length=120 .
