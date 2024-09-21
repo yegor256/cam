@@ -85,6 +85,16 @@ if ! inkscape --version >/dev/null 2>&1; then
   fi
 fi
 
+if ! xmllint --version >/dev/null 2>&1; then
+  if "${LOCAL}/help/is-linux.sh"; then
+    "${LOCAL}/help/sudo.sh" apt-get install -y libxml2-utils
+  elif "${LOCAL}/help/is-macos.sh"; then
+    "${LOCAL}/help/sudo.sh" --as-user brew install libxml2
+  else
+    "${LOCAL}/help/assert-tool.sh" xmllint --version
+  fi
+fi
+
 find "${LOCAL}/installs" -name 'install-*' | sort | while IFS= read -r i; do
   "${i}"
 done
