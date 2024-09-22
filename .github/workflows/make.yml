@@ -52,5 +52,5 @@ jobs:
         run: |
           brew install make bash
           echo "/opt/homebrew/opt/make/libexec/gnubin" >> $GITHUB_PATH
-      - run: sudo gmake install
-      - run: gmake env lint test
+      - run: sudo make install
+      - run: make env lint test
