@@ -33,6 +33,45 @@ sed() {
         sed "$@"
     fi
 }
-
-
 export -f sed
+
+realpath() {
+    if "$LOCAL/help/is-macos.sh"; then
+        # Use grealpath on macOS
+        grealpath "$@"
+    else
+        # Use realpath on other systems
+        command realpath "$@"
+    fi
+}
+
+
+export -f realpath
+
+date() {
+    if "${LOCAL}/help/is-macos.sh"; then
+        # Use gdate from coreutils
+        gdate "$@"
+    else
+        # Use date for other operating systems
+        date "$@"
+    fi
+}
+
+export -f date
+
+make(){
+    if "${LOCAL}/help/is-macos.sh"; then
+        # Use gmake on macOS
+        gmake "$@"
+    else
+        # Use make on other operating systems
+        make "$@"
+    fi
+}
+
+export -f make
+
+
+
+

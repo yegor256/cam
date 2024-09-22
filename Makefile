@@ -63,9 +63,7 @@ define step
 	set -e
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
-	source "$(LOCAL)/help/realpath.sh"
-	source "$(LOCAL)/help/date.sh"
-	source "$(LOCAL)/help/sed.sh"
+	source "$(LOCAL)/help/gnu-utils.sh"
 	if [ -d "$(LOCAL)/venv" ]; then
 		source "$(LOCAL)/venv/bin/activate"
 	fi
