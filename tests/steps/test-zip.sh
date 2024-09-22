@@ -33,6 +33,15 @@ stdout=$2
 echo "👍🏻 A zip archive generated correctly"
 
 {
+    mkdir -p "${TARGET}/something"
+    zip=${TARGET}/cam-$(date +%Y-%m-%d).zip
+    "${LOCAL}/steps/zip.sh"
+    list=$(unzip -l "${zip}")
+    echo "${list}" | grep "cam-*/" > /dev/null
+} > "${stdout}" 2>&1
+echo "👍🏻 A zip archive contains the CaM repository"
+
+{
     mkdir -p "${TARGET}/measurements/a/b/baam.m.cloc"
     mkdir -p "${TARGET}/temp/a/b/hello.txt"
     zip=${TARGET}/cam-$(date +%Y-%m-%d).zip
