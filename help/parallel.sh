@@ -35,6 +35,6 @@ args=(
   "--load=8"
   "--joblog=${jobs}.log"
   "--max-procs=${cores}"
+  "--will-cite"
 )
-
-uniq "${jobs}" | parallel "${args[@]}" "${SHELL}" -c
+uniq "${jobs}" | parallel "${args[@]}"

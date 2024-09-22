@@ -29,9 +29,6 @@ output=$(realpath "$2")
 cd "$(dirname "${java}")"
 base=$(basename "${java}")
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias gdate=date
-fi
 
 # To check that file was added in commit any time
 if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then

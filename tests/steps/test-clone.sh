@@ -27,7 +27,7 @@ temp=$1
 stdout=$2
 
 uri=${temp}/foo!
-git init --quiet "${uri}"
+git init --quiet --initial-branch=master "${uri}" 
 cd "${uri}"
 git config user.email 'foo@example.com'
 git config user.name 'Foo'

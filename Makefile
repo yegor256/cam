@@ -63,10 +63,14 @@ define step
 	set -e
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
+	source "$(LOCAL)/help/realpath.sh"
+	source "$(LOCAL)/help/date.sh"
+	source "$(LOCAL)/help/sed.sh"
 	if [ -d "$(LOCAL)/venv" ]; then
 		source "$(LOCAL)/venv/bin/activate"
 	fi
-    @bash $(LOCAL)/steps/$(1).sh
+	
+	@bash $(LOCAL)/steps/$(1).sh
 	echo "Finished$$("$${LOCAL}/help/tdiff.sh" "$${start}")"
 endef
 

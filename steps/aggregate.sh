@@ -30,7 +30,7 @@ echo "All $(echo "${metrics}" | wc -w | xargs) metrics (in alphanumeric order): 
 
 repos=${TARGET}/temp/repos-to-aggregate.txt
 mkdir -p "$(dirname "${repos}")"
-find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec realpath --relative-to="${TARGET}/measurements" {} \; > "${repos}"
+find "${TARGET}/measurements" -maxdepth 2 -mindepth 2 -type d -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${TARGET}/measurements" {} \; > "${repos}"
 total=$(wc -l < "${repos}" | xargs)
 
 jobs=${TARGET}/temp/jobs/aggregate-jobs.txt

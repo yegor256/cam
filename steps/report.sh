@@ -34,7 +34,7 @@ touch "${list}"
 
 java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
-find "${LOCAL}/metrics" -type f -executable -exec basename {} \; | while IFS= read -r m; do
+find "${LOCAL}/metrics" -type f -exec test -x {} \; -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
     metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"

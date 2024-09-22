@@ -122,7 +122,8 @@ for type in all cvc; do
                     if [ ! "${type}" = "all" ]; then
                         suffix=${suffix}-${type}
                     fi
-                    jfile=$(find "${project}" -type f -path "*${package}/${class}.java" -exec realpath --relative-to="${project}" {} \;)
+                   
+                    jfile=$(find "${project}" -type f -path "*${package}/${class}.java" -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${project}" {} \;)
                     echo "${jfile}" >> "${files}"
                     mfile=${TARGET}/measurements/${repo}/${jfile}.m.${suffix}
                     mkdir -p "$(dirname "${mfile}")"
