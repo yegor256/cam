@@ -30,7 +30,7 @@ sed() {
         gsed "$@"
     else
         # Use realpath on other systems
-        sed "$@"
+        command sed "$@"
     fi
 }
 export -f sed
@@ -54,24 +54,11 @@ date() {
         gdate "$@"
     else
         # Use date for other operating systems
-        date "$@"
+        command date "$@"
     fi
 }
 
 export -f date
-
-make(){
-    if "${LOCAL}/help/is-macos.sh"; then
-        # Use gmake on macOS
-        gmake "$@"
-    else
-        # Use make on other operating systems
-        make "$@"
-    fi
-}
-
-export -f make
-
 
 
 
