@@ -67,7 +67,6 @@ define step
 	if [ -d "$(LOCAL)/venv" ]; then
 		source "$(LOCAL)/venv/bin/activate"
 	fi
-	
 	@bash $(LOCAL)/steps/$(1).sh
 	echo "Finished$$("$${LOCAL}/help/tdiff.sh" "$${start}")"
 endef

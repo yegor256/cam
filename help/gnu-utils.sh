@@ -44,8 +44,6 @@ realpath() {
         command realpath "$@"
     fi
 }
-
-
 export -f realpath
 
 date() {
@@ -57,8 +55,4 @@ date() {
         command date "$@"
     fi
 }
-
 export -f date
-
-
-
