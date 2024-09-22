@@ -27,7 +27,6 @@ stdout=$2
 
 {
     set -x
-    echo ${TARGET}
     make clean "TARGET=${TARGET}"
     repo=yegor256/tojos
     log=$(make "TARGET=${TARGET}" "REPO=${repo}")
