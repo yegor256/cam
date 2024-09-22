@@ -33,6 +33,7 @@ fi
 {
     pdflatex -v
     pdftotext -v
+    latexmk --version
 } > "${stdout}" 2>&1
 echo "👍🏻 Dependencies are available"
 
