@@ -49,6 +49,6 @@ jobs:
           release: 22
       - run: sudo chown -R "$(whoami)" /usr/local
       - name: 'Update make and bash'
-        run: brew install make
+        run: brew install make bash
       - run: sudo gmake install
       - run: gmake env lint test
