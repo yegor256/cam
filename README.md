@@ -196,31 +196,33 @@ and run Docker as explained above.
 [detached]: https://docs.docker.com/language/golang/run-containers/#run-in-detached-mode
 
 ## Troubleshooting
+
 ### macOS: Errors while using the default `make` utility
-#### Error message:
+
+#### Error message
+
 `bash: -c: line 2: syntax error: unexpected end of file`
-#### Solution:
+
+#### Solution
+
 Install the new version of `make` via Homebrew:
+
 ```bash
 brew install make
 ```
+
 Add GNU `make` to your `PATH`:
 
 * On Apple Silicon Macs:
+
   ```bash
   PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
   ```
 
 * On Intel-based Macs:
+
   ```bash
   PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
   ```
 
 ### macOS: Outdated shell version
-#### Error message:
-`/bin/sh version must be 5 or higher. Current /bin/sh version: 3`
-#### Solution:
-Install the new version of `bash` via Homebrew:
-```bash
-brew install bash
-```
