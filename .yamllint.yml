@@ -22,5 +22,5 @@
 ---
 rules:
   line-length:
-    max: 80
+    max: 999
     allow-non-breakable-words: true

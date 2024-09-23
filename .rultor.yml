@@ -35,6 +35,8 @@ release:
   script: |
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
     sed -i "s/0\.0\.0/${tag}/g" Makefile
+    curl -s -L "https://download.docker.com/linux/static/stable/x86_64/docker-18.06.3-ce.tgz" | tar -xz -C /tmp
+    mv /tmp/docker/docker /usr/bin/
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
