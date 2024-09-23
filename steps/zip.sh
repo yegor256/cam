@@ -36,10 +36,11 @@ if [ -e "${zip}" ]; then
     exit
 fi
 
-cam_repo_target_dir="${TARGET}/github/self/${name}"
+cam_repo_target_dir="${TARGET}/cam-sources"
 
 if [ ! -d "${cam_repo_target_dir}" ]; then
     git clone --depth 1 https://github.com/yegor256/cam.git "${cam_repo_target_dir}"
+    rm -rf "${cam_repo_target_dir}/.git"
 fi
 
 if [ -e "${TARGET}/github" ]; then

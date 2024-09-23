@@ -37,9 +37,10 @@ echo "👍🏻 A zip archive generated correctly"
     zip=${TARGET}/cam-$(date +%Y-%m-%d).zip
     "${LOCAL}/steps/zip.sh"
     list=$(unzip -l "${zip}")
-    echo "${list}" | grep "cam-*/" > /dev/null
+    echo "${list}" | grep "cam-sources/" > /dev/null
+    echo "${list}" | grep --invert-match "cam-sources/.git" > /dev/null
 } > "${stdout}" 2>&1
-echo "👍🏻 A zip archive contains the CaM repository"
+echo "👍🏻 A zip archive contains the CaM repository (without .git)"
 
 {
     mkdir -p "${TARGET}/measurements/a/b/baam.m.cloc"
