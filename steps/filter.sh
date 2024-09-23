@@ -24,7 +24,7 @@ set -e
 set -o pipefail
 
 mkdir -p "${TARGET}/temp/reports"
-find "${LOCAL}/filters" -type f -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | sort | while IFS= read -r filter; do
+find "${LOCAL}/filters" -type f -name '*.sh' -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${LOCAL}/filters" {} \; | sort | while IFS= read -r filter; do
     tex=${TARGET}/temp/reports/${filter}.tex
     if [ ! -s "${tex}" ]; then
         echo "The ${filter} filter failed in previous run, cleaning up after it now..."

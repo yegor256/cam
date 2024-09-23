@@ -60,6 +60,7 @@ install_package gawk
 
 if "${LOCAL}/help/is-macos.sh"; then
   "${LOCAL}/help/sudo.sh" --as-user brew install coreutils
+  "${LOCAL}/help/sudo.sh" --as-user brew install gnu-sed
   "${LOCAL}/help/sudo.sh" --as-user brew install wget
 fi
 

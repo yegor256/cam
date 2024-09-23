@@ -48,5 +48,9 @@ jobs:
           website: oracle.com
           release: 22
       - run: sudo chown -R "$(whoami)" /usr/local
-      - run: make install
+      - name: 'Update make and bash'
+        run: brew install make bash
+      - name: 'Add make to PATH'
+        run: echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
+      - run: sudo make install
       - run: make env lint test

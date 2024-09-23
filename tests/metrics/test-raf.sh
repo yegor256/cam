@@ -26,10 +26,6 @@ set -o pipefail
 temp=$1
 stdout=$2
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  alias gdate=date
-fi
-
 {
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
