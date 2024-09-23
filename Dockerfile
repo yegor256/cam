@@ -125,8 +125,8 @@ COPY requirements.txt /cam
 COPY installs/install-pip.sh installs/
 RUN installs/install-pip.sh
 
-COPY installs/install-texlive.sh installs/
-RUN installs/install-texlive.sh
+COPY installs/install-texlive-base.sh installs/
+RUN installs/install-texlive-base.sh
 COPY DEPENDS.txt /cam
 COPY installs/install-texlive-depends.sh installs/
 RUN installs/install-texlive-depends.sh
