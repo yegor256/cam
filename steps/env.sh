@@ -35,7 +35,7 @@ bash_version=${BASH_VERSINFO:-0}
 if [ "${bash_version}" -lt 5 ]; then
     "${SHELL}" --version
     ps -p $$
-    echo "${SHELL} version is older than five: ${bash_version}"
+    echo "${SHELL} version must be 5 or higher. Current ${SHELL} version: ${bash_version}"
     exit 1
 fi
 
