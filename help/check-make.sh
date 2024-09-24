@@ -25,19 +25,19 @@ set -e
 set -o pipefail
 
 make_version=$(make --version | head -n1 | cut -d' ' -f3)
-make_version_major=$(echo "${make_version}" | cut -d'.' -f1)
+make_version_int=$(echo "${make_version}" | cut -d'.' -f1)
 
-if [ "${make_version_major}" -lt 4 ]; then
+if [ "${make_version_int}" -lt 4 ]; then
     echo "Make version must be 4 or higher. Current: ${make_version}"
     if [ "${LOCAL}/help/is-macos.sh" ]; then
-        echo "Use brew install make"
+        echo "Try to update it with \"brew install make\""
         if [ "$(uname -m)" = "arm64" ]; then
-            echo "Make sure you have /opt/homebrew/opt/make/libexec/gnubin in your PATH"
+            echo "Make sure you have \"/opt/homebrew/opt/make/libexec/gnubin\" in your PATH"
         else
-            echo "Make sure you have /usr/local/opt/make/libexec/gnubin in your PATH"
+            echo "Make sure you have \"/usr/local/opt/make/libexec/gnubin\" in your PATH"
         fi
     else
-        echo "Try to update it with sudo apt-get install make"
+        echo "Try to update it with \"sudo apt install make\""
     fi
     exit 1
 fi

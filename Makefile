@@ -61,7 +61,7 @@ export
 # Run a single step from ./steps
 define step
 	set -e
-	"${LOCAL}/help/check-make.sh"
+	${LOCAL}/help/check-make.sh
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
 	source "$(LOCAL)/help/gnu-utils.sh"
@@ -103,10 +103,6 @@ clean:
 # Show some details about the environment we are running it
 # (this is mostly for debugging in Docker)
 env:
-	if [[ "$(MAKE_VERSION)" =~ ^[1-3] ]]; then
-	    echo "Make must be 4+: $(MAKE_VERSION)"
-	    exit 1
-	fi
 	$(call step,env)
 
 # Get the list of repos from GitHub and then create directories
