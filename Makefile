@@ -61,6 +61,7 @@ export
 # Run a single step from ./steps
 define step
 	set -e
+	"${LOCAL}/help/check-make.sh"
 	start=$$(date +%s%N)
 	echo -e "\n\n\n+++ $(1) +++\n"
 	source "$(LOCAL)/help/gnu-utils.sh"
