@@ -29,7 +29,7 @@ make_version_int=$(echo "${make_version}" | cut -d'.' -f1)
 
 if [ "${make_version_int}" -lt 4 ]; then
     echo "Make version must be 4 or higher. Current: ${make_version}"
-    if [ "${LOCAL}/help/is-macos.sh" ]; then
+    if "${LOCAL}/help/is-macos.sh" ; then
         echo "Try to update it with \"brew install make\""
         if [ "$(uname -m)" = "arm64" ]; then
             echo "Make sure you have \"/opt/homebrew/opt/make/libexec/gnubin\" in your PATH"
