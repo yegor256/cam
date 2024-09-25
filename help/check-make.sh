@@ -20,77 +20,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
-set -x
 
-echo "TARGET=${TARGET}"
-echo "LOCAL=${LOCAL}"
-echo "SHELL=${SHELL}"
-echo "HOME=${HOME}"
+make_version=$(make --version | head -n1 | cut -d' ' -f3)
+make_version_int=$(echo "${make_version}" | cut -d'.' -f1)
 
-env
-
-bash_version=${BASH_VERSINFO:-0}
-if [ "${bash_version}" -lt 5 ]; then
-    "${SHELL}" --version
-    ps -p $$
-    echo "${SHELL} version must be 5 or higher. Current ${SHELL} version: ${bash_version}"
+if [ "${make_version_int}" -lt 4 ]; then
+    echo "Make version must be 4 or higher. Current: ${make_version}"
+    if "${LOCAL}/help/is-macos.sh" ; then
+        echo "Try to update it with \"brew install make\""
+        if [ "$(uname -m)" = "arm64" ]; then
+            echo "Make sure you have \"/opt/homebrew/opt/make/libexec/gnubin\" in your PATH"
+        else
+            echo "Make sure you have \"/usr/local/opt/make/libexec/gnubin\" in your PATH"
+        fi
+    else
+        echo "Try to update it with \"sudo apt install make\""
+    fi
     exit 1
 fi
-
-ruby -v
-rubocop -v
-
-if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
-    python3 --version
-    echo "Python must be 3+"
-    exit 1
-fi
-flake8 --version
-pylint --version
-
-if ! tlmgr --version >/dev/null 2>&1; then
-  PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
-  export PATH
-fi
-pdflatex --version
-pdftotext -v
-inkscape --version
-aspell --version
-latexmk --version
-
-xmlstarlet --version
-
-shellcheck --version
-
-jq --version
-
-multimetric --help > /dev/null
-
-awk --version
-
-parallel --version
-
-git --version
-
-cloc --version
-
-pmd --version
-
-nproc --version
-
-# Part of coreutils (by GNU):
-sed --version
-
-# Part of coreutils (by GNU):
-realpath --version
-
-bc -v
-
-javac -version
-java -jar "${JPEEK}" --help
-gradle --version
-mvn --version
-
-locale
