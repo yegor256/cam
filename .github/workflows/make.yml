@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: sudo make install
+      - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
   make-macos:
     runs-on: macos-14
@@ -52,5 +52,5 @@ jobs:
         run: brew install make bash
       - name: 'Add make to PATH'
         run: echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
-      - run: sudo make install
+      - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test

@@ -21,6 +21,57 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
+LINUX_ONLY_PACKAGES=(
+  "coreutils"
+  "xpdf"
+  "libxml2-utils"
+)
+
+MACOS_ONLY_PACKAGES=(
+  "gnu-sed"
+  "wget"
+  "poppler"
+  "libxml2"
+)
+
+PACKAGES_BOTH=(
+  "pmd"
+  "jpeek"
+  "texlive"
+  "coreutils"
+  "parallel"
+  "bc"
+  "cloc"
+  "jq"
+  "shellcheck"
+  "aspell"
+  "xmlstarlet"
+  "gawk"
+  "inkscape"
+)
+
+if [[ -z "$FORCE_INSTALL" ]]; then
+  echo "The following packages will be installed:"
+
+  if "${LOCAL}/help/is-linux.sh"; then
+    PACKAGES=("${LINUX_ONLY_PACKAGES[@]}" "${PACKAGES_BOTH[@]}")
+  else
+    PACKAGES=("${MACOS_ONLY_PACKAGES[@]}" "${PACKAGES_BOTH[@]}")
+  fi
+
+  for i in "${PACKAGES[@]}"; do
+    echo "  - ${i}"
+  done
+
+  read -p "Do you want to proceed with the installation? (y/n): " -n 1 -r
+  echo  
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "Installation aborted by user."
+      exit 1
+  fi
+fi
+
 set -e
 set -o pipefail
 
