@@ -457,13 +457,13 @@ if __name__ == '__main__':
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
             with open(metrics, 'a', encoding='utf-8') as metric:
-                metric.write(f'NoOA {attrs(tree_class)} '
+                metric.write(f'NoOA {attrs(tree_class)} [CAM]'
                              f'Number of Non-Static (Object) Attributes\n')
-                metric.write(f'NoSA {sattrs(tree_class)} '
+                metric.write(f'NoSA {sattrs(tree_class)} [CAMt]'
                              f'Number of Static Attributes\n')
-                metric.write(f'NoCC {ctors(tree_class)} '
+                metric.write(f'NoCC {ctors(tree_class)} [CAMtt]'
                              f'Number of Class Constructors\n')
-                metric.write(f'NoOM {methods(tree_class)} '
+                metric.write(f'NoOM {methods(tree_class)} [CAMttt]'
                              f'Number of Non-Static (Object) Methods\n')
                 metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
