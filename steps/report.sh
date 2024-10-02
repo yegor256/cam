@@ -55,11 +55,11 @@ touch "${st_list}"
 groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ) "")
 for group in "${groups[@]}"; do
     if [[ -z "$group" ]]; then
-        echo "\item Ungrouped Metrics" >> "${st_list}"
+        echo "\\item Ungrouped Metrics" >> "${st_list}"
     else
-        echo "\item $group" >> "${st_list}"
+        echo "\\item $group" >> "${st_list}"
     fi
-    echo "\begin{itemize}" >> "${st_list}"
+    echo "\\begin{itemize}" >> "${st_list}"
     if [[ -z "$group" ]]; then
         group_metrics=$(grep -oP "^[^\[]*$" "${list}")
     else
@@ -68,7 +68,7 @@ for group in "${groups[@]}"; do
     for metric in "${group_metrics[@]}"; do
         printf "\t%s\n" "$metric" >> "${st_list}"
     done
-    echo "\end{itemize}" >> "${st_list}"
+    echo "\\end{itemize}" >> "${st_list}"
 done
 
 sed -i 's/\[[^]]*\]//g' "${st_list}"
