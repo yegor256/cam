@@ -52,7 +52,7 @@ st_list=${TARGET}/temp/structured-list-of-metrics.tex
 rm -f "${st_list}"
 touch "${st_list}"
 
-groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g') "")
+groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ) "")
 for group in "${groups[@]}"; do
     if [[ -z "$group" ]]; then
         echo "\item Ungrouped Metrics" >> "${st_list}"
