@@ -59,7 +59,7 @@ for group in "${groups[@]}"; do
     else
         echo "\item $group" >> "${st_list}"
     fi
-    echo "  \begin{itemize}" >> "${st_list}"
+    echo "\begin{itemize}" >> "${st_list}"
     if [[ -z "$group" ]]; then
         group_metrics=$(grep -oP "^[^\[]*$" "${list}")
     else
@@ -68,7 +68,7 @@ for group in "${groups[@]}"; do
     for metric in "${group_metrics[@]}"; do
         printf "\t%s\n" "$metric" >> "${st_list}"
     done
-    echo "  \end{itemize}" >> "${st_list}"
+    echo "\end{itemize}" >> "${st_list}"
 done
 
 sed -i 's/\[[^]]*\]//g' "${st_list}"
