@@ -48,40 +48,31 @@ if [ ! -s "${list}" ]; then
     exit 1
 fi
 
-groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g') "")
-
 st_list=${TARGET}/temp/structured-list-of-metrics.tex
 rm -f "${st_list}"
 touch "${st_list}"
 
+groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g') "")
 for group in "${groups[@]}"; do
-
     if [[ -z "$group" ]]; then
         echo "\item Ungrouped Metrics" >> "${st_list}"
     else
         echo "\item $group" >> "${st_list}"
     fi
-    
     echo "  \begin{itemize}" >> "${st_list}"
-
     if [[ -z "$group" ]]; then
         group_metrics=$(grep -oP "^[^\[]*$" "${list}")
     else
         group_metrics=$(grep -oP ".*\[\b${group}\b\].*" "${list}")
     fi
-
     for metric in "${group_metrics[@]}"; do
         printf "\t%s\n" "$metric" >> "${st_list}"
     done
-
     echo "  \end{itemize}" >> "${st_list}"
-    
 done
 
 sed -i 's/\[[^]]*\]//g' "${st_list}"
-
 mv "${st_list}" "${list}"
-
 
 # It's important to make sure the path is absolute, for LaTeX
 t=$(realpath "${TARGET}")
