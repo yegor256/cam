@@ -55,23 +55,9 @@ echo "👍🏻 Dependencies are available"
 echo "👍🏻 A PDF report generated correctly"
 
 {
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^[[:space:]]*\\item\\ff\{[a-zA-Z0-9-]+\}: ]]; then
-            printf "Valid metric: %s\n" "$line"
-        else
-            printf "Invalid metric format: %s\n" "$line"
-        fi
-    done < "${TARGET}/temp/list-of-metrics.tex"
+    while IFS= read -r t; do
+        metric=$(echo "${t}" | cut -f1 -d' ')
+        echo "${metric}" | grep '^\\item\\ff{[a-zA-Z0-9-]\+}:$' > /dev/null
+    done < "${TARGET}/temp/list-of-metrics.tex.unstructured"
 } > "${stdout}" 2>&1
 echo "👍🏻 A list of metrics is properly formatted"
-
-{
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^\\item[[:space:]]* ]]; then
-            printf "Valid group: %s\n" "$line"
-        else
-            printf "Invalid group format: %s\n" "$line"
-        fi
-    done < "${TARGET}/temp/list-of-metrics.tex"
-} > "${stdout}" 2>&1
-echo "👍🏻 Groups are properly formatted"
