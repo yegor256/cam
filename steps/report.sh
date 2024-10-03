@@ -52,8 +52,11 @@ st_list=${TARGET}/temp/structured-list-of-metrics.tex
 rm -f "${st_list}"
 touch "${st_list}"
 
-groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ) "Ungrouped metrics")
-for idx in ${!groups[@]}; do
+groups=()
+while IFS='' read -r line; do
+    groups+=("$line")
+done < <(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ; echo "Ungrouped metrics")
+for idx in "${!groups[@]}"; do
     printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
     printf "\\\\begin{itemize}\n" >> "${st_list}"
     if [ "$idx" -eq $(( ${#groups[@]} - 1 )) ]; then
