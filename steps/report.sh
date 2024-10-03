@@ -65,8 +65,8 @@ for idx in "${!groups[@]}"; do
         group_metrics=$(grep -oP ".*\[\b${groups[$idx]}\b\].*" "${list}")
     fi
     while IFS= read -r metric; do
-        clean_metric=$(echo "${metric}" | sed 's/\[[^]]*\]//g')
-        printf "\t%s\n" "$clean_metric" >> "${st_list}"
+        clean_metric="${metric//\[*\]/}"
+        printf "\t%s\n" "${clean_metric}" >> "${st_list}"
     done <<< "$group_metrics"
     printf "\\\\end{itemize}\n" >> "${st_list}"
 done
