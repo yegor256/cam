@@ -52,26 +52,22 @@ st_list=${TARGET}/temp/structured-list-of-metrics.tex
 rm -f "${st_list}"
 touch "${st_list}"
 
-groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ) "")
-for group in "${groups[@]}"; do
-    if [[ -z "$group" ]]; then
-        echo "\\item Ungrouped Metrics" >> "${st_list}"
-    else
-        echo "\\item $group" >> "${st_list}"
-    fi
-    echo "\\begin{itemize}" >> "${st_list}"
-    if [[ -z "$group" ]]; then
+groups=($(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ) "Ungrouped metrics")
+for idx in ${!groups[@]}; do
+    printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
+    printf "\\\\begin{itemize}\n" >> "${st_list}"
+    if [ "$idx" -eq $(( ${#groups[@]} - 1 )) ]; then
         group_metrics=$(grep -oP "^[^\[]*$" "${list}")
     else
-        group_metrics=$(grep -oP ".*\[\b${group}\b\].*" "${list}")
+        group_metrics=$(grep -oP ".*\[\b${groups[$idx]}\b\].*" "${list}")
     fi
-    for metric in "${group_metrics[@]}"; do
-        printf "\t%s\n" "$metric" >> "${st_list}"
-    done
-    echo "\\end{itemize}" >> "${st_list}"
+    while IFS= read -r metric; do
+        clean_metric=$(echo "$metric" | sed 's/\[[^]]*\]//g')
+        printf "\t%s\n" "$clean_metric" >> "${st_list}"
+    done <<< "$group_metrics"
+    printf "\\\\end{itemize}\n" >> "${st_list}"
 done
-
-sed -i 's/\[[^]]*\]//g' "${st_list}"
+cp "${list}" "${list}.unstructured"
 mv "${st_list}" "${list}"
 
 # It's important to make sure the path is absolute, for LaTeX
