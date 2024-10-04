@@ -61,3 +61,35 @@ echo "👍🏻 A PDF report generated correctly"
     done < "${TARGET}/temp/list-of-metrics.tex.unstructured"
 } > "${stdout}" 2>&1
 echo "👍🏻 A list of metrics is properly formatted"
+
+{
+    test_metric_sh="#!/bin/bash\n\n"
+    test_metric_sh+="output=\$(realpath \"\$2\")\n"
+    test_metric_sh+="for idx in {2..5}; do\n"
+    test_metric_sh+="    echo \"Test-\${idx} 0 [Test group \$((idx % 2))] Test metrics\" >> \"\${output}\"\n"
+    test_metric_sh+="done\n"
+    printf "%b" "$test_metric_sh" > "${LOCAL}/metrics/group_test.sh"
+    chmod +x "${LOCAL}/metrics/group_test.sh"
+    "${LOCAL}/steps/report.sh"
+    test -e "${TARGET}/report.pdf"
+    pdftotext "${TARGET}/report.pdf" "${TARGET}/report.txt"
+    txt=$(cat "${TARGET}/report.txt")
+    actual=$(echo "${txt}" | grep -c '.*Test group [0-9]\+')
+    if [ "$actual" != "2" ]; then
+        echo "Exactly 2 test group names were expected, but ${actual} were actually found"
+        exit 1
+    fi
+    awk '
+        /Test group 0/ { in_group_0 = 1; in_group_1 = 0 }
+        /Test group 1/ { in_group_0 = 0; in_group_1 = 1 }
+        in_group_0 && /Test-(2|4): Test metrics/ { group_0_valid++ }
+        in_group_1 && /Test-(3|5): Test metrics/ { group_1_valid++ }
+        END {
+            if (group_0_valid != 2 || group_1_valid != 2) {
+                printf "Expected 2 valid metrics in each group, but found %d in group 0 and %d in group 1\n", group_0_valid, group_1_valid
+                exit 1
+            }
+        }
+    ' <<< "$txt"
+} > "${stdout}" 2>&1
+echo "👍🏻 Grouping is properly formatted for the list of metrics."

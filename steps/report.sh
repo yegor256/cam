@@ -55,7 +55,7 @@ touch "${st_list}"
 groups=()
 while IFS='' read -r line; do
     groups+=("$line")
-done < <(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' || : ; echo "Ungrouped metrics")
+done < <(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' | sort -u || : ; echo "Ungrouped metrics")
 for idx in "${!groups[@]}"; do
     printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
     printf "\\\\begin{itemize}\n" >> "${st_list}"
