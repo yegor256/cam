@@ -28,17 +28,21 @@ if ! tlmgr --version >/dev/null 2>&1; then
   export PATH
 fi
 
+if [ -z "${LOCAL_METRICS}" ]; then
+  LOCAL_METRICS=${LOCAL}/metrics
+fi
+
 list=${TARGET}/temp/list-of-metrics.tex
 rm -f "${list}"
 touch "${list}"
 
 java=${TARGET}/temp/Foo.java
 mkdir -p "$(dirname "${java}")"
-find "${LOCAL}/metrics" -type f -exec test -x {} \; -exec basename {} \; | while IFS= read -r m; do
+find "${LOCAL_METRICS}" -type f -exec test -x {} \; -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
     metric=${TARGET}/temp/Foo.${m}.m
     rm -f "${metric}"
-    "${LOCAL}/metrics/${m}" "${java}" "${metric}"
+    "${LOCAL_METRICS}/${m}" "${java}" "${metric}"
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${list}"
     echo "$(wc -l < "${metric}" | xargs) metrics from ${m}"
 done
@@ -57,13 +61,14 @@ while IFS='' read -r line; do
     groups+=("$line")
 done < <(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' | sort -u || : ; echo "Ungrouped metrics")
 for idx in "${!groups[@]}"; do
+    if [ "$idx" -eq $(( ${#groups[@]} - 1 )) ]; then
+        group_metrics=$(grep -oP "^[^\[]*$" "${list}" || :)
+    else
+        group_metrics=$(grep -oP ".*\[\b${groups[$idx]}\b\].*" "${list}" || :)
+    fi
+    if [[ $(printf "%s\n" "${group_metrics[@]}" | grep -c "item") -eq 0 ]]; then continue; fi
     printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
     printf "\\\\begin{itemize}\n" >> "${st_list}"
-    if [ "$idx" -eq $(( ${#groups[@]} - 1 )) ]; then
-        group_metrics=$(grep -oP "^[^\[]*$" "${list}")
-    else
-        group_metrics=$(grep -oP ".*\[\b${groups[$idx]}\b\].*" "${list}")
-    fi
     while IFS= read -r metric; do
         clean_metric="${metric//\[*\]/}"
         printf "\t%s\n" "${clean_metric}" >> "${st_list}"
