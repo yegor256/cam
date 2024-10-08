@@ -63,14 +63,15 @@ echo "👍🏻 A PDF report generated correctly"
 echo "👍🏻 A list of metrics is properly formatted"
 
 {
+    mkdir -p "${TARGET}/temp/test_metric"
     test_metric_sh="#!/bin/bash\n\n"
     test_metric_sh+="output=\$(realpath \"\$2\")\n"
     test_metric_sh+="for idx in {2..5}; do\n"
     test_metric_sh+="    echo \"Test-\${idx} 0 [Test group \$((idx % 2))] Test metrics\" >> \"\${output}\"\n"
     test_metric_sh+="done\n"
-    printf "%b" "$test_metric_sh" > "${LOCAL}/metrics/group_test.sh"
-    chmod +x "${LOCAL}/metrics/group_test.sh"
-    "${LOCAL}/steps/report.sh"
+    printf "%b" "$test_metric_sh" > "${TARGET}/temp/test_metric/group_test.sh"
+    chmod +x "${TARGET}/temp/test_metric/group_test.sh"
+    LOCAL_METRICS="${TARGET}/temp/test_metric" "${LOCAL}/steps/report.sh"
     test -e "${TARGET}/report.pdf"
     pdftotext "${TARGET}/report.pdf" "${TARGET}/report.txt"
     txt=$(cat "${TARGET}/report.txt")
