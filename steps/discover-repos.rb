@@ -130,6 +130,42 @@ def process_repositories(repositories, context)
   end
 end
 
+def process_repo(repo_data, found, licenses)
+  return if repo_already_processed?(repo_data, found)
+
+  return if license_invalid?(repo_data, licenses)
+
+  add_repo_to_found(repo_data, found)
+  print_repo_info(repo_data, found)
+end
+
+def repo_already_processed?(repo_data, found)
+  found.key?(repo_data[:full_name])
+end
+
+def license_invalid?(repo_data, licenses)
+  no_license = repo_data[:license].nil? || !licenses.include?(repo_data[:license][:key])
+  puts "Repo #{repo_data[:full_name]} doesn't contain required license. Skipping" if no_license
+  no_license
+end
+
+def add_repo_to_found(repo_data, found)
+  found[repo_data[:full_name]] = {
+    full_name: repo_data[:full_name],
+    default_branch: repo_data[:default_branch],
+    created_at: repo_data[:created_at].iso8601,
+    open_issues_count: repo_data[:open_issues_count],
+    description: "\"#{repo_data[:description]}\"",
+    topics: Array(repo_data[:topics]).join(' '),
+    stars: repo_data[:stargazers_count], forks: repo_data[:forks_count], size: repo_data[:size]
+  }
+end
+
+def print_repo_info(repo, found)
+  puts "Found #{repo[:full_name].inspect} GitHub repo ##{found.count} \
+(#{repo[:forks_count]} forks, #{repo[:stargazers_count]} stars) with license: #{repo[:license][:key]}"
+end
+
 def cooldown(context)
   puts "Let's sleep for #{context[:opts][:pause]} seconds to cool off GitHub API \
 (already found #{context[:found].count} repos, need #{context[:opts][:total]})..."
