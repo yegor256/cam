@@ -73,7 +73,7 @@ define step
 endef
 
 # The main goal
-all: env $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone unregister jpeek filter measure aggregate zip
+all: env $(TARGET)/start.txt $(TARGET)/repositories.csv polish clone unregister jpeek filter measure aggregate summarize zip
 	echo -e "\n\nSUCCESS (made by yegor256/cam $(VERSION)$$("$${LOCAL}/help/tdiff.sh" "$$(cat "$(TARGET)/start.txt")"))!"
 
 install:
@@ -139,6 +139,10 @@ measure: $(TARGET)/github $(TARGET)/temp $(TARGET)/measurements
 # Aggregate all metrics in summary CSV files.
 aggregate: $(TARGET)/measurements $(TARGET)/data
 	$(call step,aggregate)
+
+# Summarize aggregated metrics in summary CSV files.
+summarize: $(TARGET)/measurements $(TARGET)/data
+	$(call step,summarize)
 
 $(TARGET)/report.pdf: $(TARGET)/temp tex/report.tex
 	$(call step,report)
