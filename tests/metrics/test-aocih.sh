@@ -20,20 +20,31 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 set -e
 set -o pipefail
 
-java_file=$1
-output=$2
+temp=$1
+stdout=$2
 
-creation_timestamp=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
-if [[ -z "$creation_timestamp" ]]; then
-    age_in_hours=0
-else
-    current_timestamp=$(date +%s)
-    age_in_seconds=$((current_timestamp - creation_timestamp))
-    age_in_hours=$((age_in_seconds / 3600))
-fi
+{
+    tmp=$(mktemp -d /tmp/XXXX)
+    "${LOCAL}/metrics/age_of_class.sh" "${tmp}/Test.java" "${temp}/stdout"
+    grep -q "AoCiH 0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Didn't fail in non-git directory"
 
-echo "AoCiH $age_in_hours Age of the class in hours" > "$output"
+{
+    mkdir -p "${temp}/foo"
+    cd "${temp}/foo"
+    git init --quiet .
+    git config user.email 'foo@example.com'
+    git config user.name 'Foo'
+    java="Test.java"
+    echo "class Foo {}" > "${java}"
+    git add "${java}"
+    git config commit.gpgsign false
+    git commit --quiet -am "Initial commit"
+    "${LOCAL}/metrics/age_of_class.sh" "${java}" stdout
+    grep -qP "AoCiH [^0]" stdout
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated AoCiH in the repository"
