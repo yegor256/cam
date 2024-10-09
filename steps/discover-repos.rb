@@ -28,6 +28,7 @@ $stdout.sync = true
 require 'fileutils'
 require 'slop'
 require 'octokit'
+require 'date'
 
 max = 1000
 
@@ -40,6 +41,7 @@ opts = Slop.parse do |o|
   o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: max
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
+  o.integer '--start-year', 'The starting year for querying repositories', default: Date.today.year
   o.string '--csv', 'The file name to save the list to', required: true
   o.string '--tex', 'The file name to save LaTeX summary of the operation', required: true
   o.on '--help' do
@@ -47,8 +49,6 @@ opts = Slop.parse do |o|
     exit
   end
 end
-
-raise 'Can only retrieve up to 1000 repos' if opts[:total] > max
 
 puts "Trying to find #{opts[:total]} repos in GitHub"
 size = [opts[:page_size], opts[:total]].min
@@ -65,19 +65,6 @@ unless opts[:token].empty?
   puts 'Accessing GitHub with personal access token!'
 end
 found = {}
-page = 0
-query = [
-  "stars:#{opts['min-stars']}..#{opts['max-stars']}",
-  "size:>=#{opts['min-size']}",
-  'language:java',
-  'is:public',
-  'mirror:false',
-  'archived:false',
-  'template:false',
-  'NOT',
-  'android'
-].join(' ')
-
 def mock_array(size, licenses)
   Array.new(size) do
     {
@@ -97,6 +84,10 @@ def mock_reps(page, size, licenses)
   }
 end
 
+current_year = opts[:start_year]
+years = (2008..current_year).to_a.reverse
+final_query = ''
+
 def cooldown(opts, found)
   puts "Let's sleep for #{opts[:pause]} seconds to cool off GitHub API \
 (already found #{found.count} repos, need #{opts[:total]})..."
@@ -104,38 +95,59 @@ def cooldown(opts, found)
 end
 
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
-loop do
-  break if page * size > max
-  count = 0
-  json = if opts[:dry]
-    mock_reps(page, size, licenses)
-  else
-    github.search_repositories(query, per_page: size, page: page)
-  end
-  json[:items].each do |i|
-    no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
-    puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
-    next if no_license
-    count += 1
-    found[i[:full_name]] = {
-      full_name: i[:full_name],
-      default_branch: i[:default_branch],
-      stars: i[:stargazers_count],
-      forks: i[:forks_count],
-      created_at: i[:created_at].iso8601,
-      size: i[:size],
-      open_issues_count: i[:open_issues_count],
-      description: "\"#{i[:description]}\"",
-      topics: Array(i[:topics]).join(' ')
-    }
-    puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
-  end
-  puts "Found #{count} good repositories in page ##{page} (out of #{json[:items].count})"
+years.each do |year|
   break if found.count >= opts[:total]
-  cooldown(opts, found)
-  page += 1
+  page = 0
+  query = [
+    "stars:#{opts['min-stars']}..#{opts['max-stars']}",
+    "size:>=#{opts['min-size']}",
+    'language:java',
+    "created:#{year}-01-01..#{year}-12-31",
+    'is:public',
+    'mirror:false',
+    'archived:false',
+    'template:false',
+    'NOT android'
+  ].join(' ')
+  final_query = query if final_query.empty?
+  puts "Querying for repositories created in #{year}..."
+  loop do
+    break if found.count >= opts[:total]
+    json = if opts[:dry]
+      mock_reps(page, size, licenses)
+    else
+      github.search_repositories(query, per_page: size, page: page)
+    end
+    if json[:items].empty?
+      puts "No more repositories found in year #{year} on page ##{page}. Moving to the next year."
+      break
+    end
+    json[:items].each do |i|
+      next if found.key?(i[:full_name])
+      no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
+      puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
+      next if no_license
+      found[i[:full_name]] = {
+        full_name: i[:full_name],
+        default_branch: i[:default_branch],
+        stars: i[:stargazers_count],
+        forks: i[:forks_count],
+        created_at: i[:created_at].iso8601,
+        size: i[:size],
+        open_issues_count: i[:open_issues_count],
+        description: "\"#{i[:description]}\"",
+        topics: Array(i[:topics]).join(' ')
+      }
+      puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
+    end
+    break if found.count >= opts[:total]
+    page += 1
+    cooldown(opts, found)
+  end
+  puts "Completed querying for year #{year}. Found #{found.count} repositories so far."
 end
+
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
@@ -158,7 +170,7 @@ File.write(
     ' GitHub API\footnote{\url{https://docs.github.com/en/rest}}',
     ' was the following:',
     '\begin{ffcode}',
-    query.gsub(' ', "\n"),
+    final_query.gsub(' ', "\n"),
     '\end{ffcode}'
   ].join("\n")
 )
