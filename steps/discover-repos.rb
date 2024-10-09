@@ -82,6 +82,63 @@ def mock_reps(page, size, licenses)
   }
 end
 
+def process_repo(i, found, licenses, opts)
+  {
+    return if found.key?(i[:full_name])
+    no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
+    puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
+    return if no_license
+    found[i[:full_name]] = {
+      full_name: i[:full_name],
+      default_branch: i[:default_branch],
+      stars: i[:stargazers_count],
+      forks: i[:forks_count],
+      created_at: i[:created_at].iso8601,
+      size: i[:size],
+      open_issues_count: i[:open_issues_count],
+      description: "\"#{i[:description]}\"",
+      topics: Array(i[:topics]).join(' ')
+    }
+    puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
+(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
+  }
+end
+
+def process_year(year, github, found, opts, size, licenses)
+  {
+    page = 0
+    query = [
+      "stars:#{opts['min-stars']}..#{opts['max-stars']}",
+      "size:>=#{opts['min-size']}",
+      'language:java',
+      "created:#{year}-01-01..#{year}-12-31",
+      'is:public',
+      'mirror:false',
+      'archived:false',
+      'template:false',
+      'NOT',
+      'android'
+    ].join(' ')
+    puts "Querying for repositories created in #{year}..."
+    loop do
+      break if found.count >= opts[:total]
+      json = if opts[:dry]
+        mock_reps(page, size, licenses)
+      else
+        github.search_repositories(query, per_page: size, page: page)
+      end
+      break if json[:items].empty?
+
+      json[:items].each do |i|
+        process_repo(i, found, licenses, opts)
+      end
+      page += 1
+      cooldown(opts, found)
+    end
+    puts "Completed querying for year #{year}. Found #{found.count} repositories so far."
+  }
+end
+
 current_year = opts[:start_year]
 years = (2008..current_year).to_a.reverse
 final_query = ''
@@ -95,56 +152,9 @@ end
 puts 'Not searching GitHub API, using mock repos' if opts[:dry]
 years.each do |year|
   break if found.count >= opts[:total]
-  page = 0
-  query = [
-    "stars:#{opts['min-stars']}..#{opts['max-stars']}",
-    "size:>=#{opts['min-size']}",
-    'language:java',
-    "created:#{year}-01-01..#{year}-12-31",
-    'is:public',
-    'mirror:false',
-    'archived:false',
-    'template:false',
-    'NOT',
-    'android'
-  ].join(' ')
-  final_query = query if final_query.empty?
-  puts "Querying for repositories created in #{year}..."
-  loop do
-    break if found.count >= opts[:total]
-    json = if opts[:dry]
-      mock_reps(page, size, licenses)
-    else
-      github.search_repositories(query, per_page: size, page: page)
-    end
-    if json[:items].empty?
-      puts "No more repositories found in year #{year} on page ##{page}. Moving to the next year."
-      break
-    end
-    json[:items].each do |i|
-      next if found.key?(i[:full_name])
-      no_license = i[:license].nil? || !licenses.include?(i[:license][:key])
-      puts "Repo #{i[:full_name]} doesn't contain required license. Skipping" if no_license
-      next if no_license
-      found[i[:full_name]] = {
-        full_name: i[:full_name],
-        default_branch: i[:default_branch],
-        stars: i[:stargazers_count],
-        forks: i[:forks_count],
-        created_at: i[:created_at].iso8601,
-        size: i[:size],
-        open_issues_count: i[:open_issues_count],
-        description: "\"#{i[:description]}\"",
-        topics: Array(i[:topics]).join(' ')
-      }
-      puts "Found #{i[:full_name].inspect} GitHub repo ##{found.count} \
-(#{i[:forks_count]} forks, #{i[:stargazers_count]} stars) with license: #{i[:license][:key]}"
-    end
-    break if found.count >= opts[:total]
-    page += 1
-    cooldown(opts, found)
-  end
-  puts "Completed querying for year #{year}. Found #{found.count} repositories so far."
+  process_year(year, github, found, opts, size, licenses)
+end
+  
 end
 puts "Found #{found.count} total repositories in GitHub"
 
