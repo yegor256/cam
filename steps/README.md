@@ -19,4 +19,5 @@ files and so on). Whole filtering process will be printed in the final report,
 you can check it [here](http://cam.yegor256.com/cam-2024-03-02.pdf).
 * **Measuring**. We calculate metrics for each file using these
 [metrics](https://github.com/yegor256/cam/tree/master/metrics).
-* **Aggregating**. Finally, we aggregate all metrics in summary CSV files.
+* **Aggregating**. We aggregate all metrics in summary CSV files.
+* **Summarization**. Generate summary statistics (count, sum, average, etc.) for each metric and save them in data/summary/{metric}.csv.
