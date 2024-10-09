@@ -30,15 +30,13 @@ require 'slop'
 require 'octokit'
 require 'date'
 
-max = 1000
-
 opts = Slop.parse do |o|
   o.string '--token', 'GitHub access token', default: ''
   o.boolean '--dry', 'Make no round-trips to GitHub API (for testing)', default: false
   o.integer '--total', 'Total number of repos to take from GitHub', required: true
   o.integer '--pause', 'How many seconds to sleep between API calls', default: 10
   o.integer '--page-size', 'Number of repos to fetch in one API call', default: 100
-  o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: max
+  o.integer '--min-stars', 'Minimum GitHub stars in each repo', default: 1000
   o.integer '--max-stars', 'Maximum GitHub stars in each repo', default: 100_000
   o.integer '--min-size', 'Minimum size of GitHub repo, in Kb', default: 100
   o.integer '--start-year', 'The starting year for querying repositories', default: Date.today.year
@@ -107,7 +105,8 @@ years.each do |year|
     'mirror:false',
     'archived:false',
     'template:false',
-    'NOT android'
+    'NOT',
+    'android'
   ].join(' ')
   final_query = query if final_query.empty?
   puts "Querying for repositories created in #{year}..."
@@ -147,7 +146,6 @@ years.each do |year|
   end
   puts "Completed querying for year #{year}. Found #{found.count} repositories so far."
 end
-
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
