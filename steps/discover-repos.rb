@@ -154,8 +154,6 @@ years.each do |year|
   break if found.count >= opts[:total]
   process_year(year, github, found, opts, size, licenses)
 end
-  
-end
 puts "Found #{found.count} total repositories in GitHub"
 
 if found.count > opts[:total]
