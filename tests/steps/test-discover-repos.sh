@@ -32,7 +32,7 @@ tex=${TARGET}/foo.tex
     rm -f "${csv}"
     msg=$("${LOCAL}/steps/discover-repos.rb" --dry --pause=0 --total=3 --page-size=1 --min-stars=100 --max-stars=1000 "--csv=${csv}"  "--tex=${tex}")
     echo "${msg}"
-    echo "${msg}" | grep "Found 1 good repositories in page #0"
+    echo "${msg}" | grep "Completed querying for year 2024. Found 3 repositories so far."
     echo "${msg}" | grep "Found 3 total repositories in GitHub"
     test -e "${csv}"
     test -s "${tex}"
