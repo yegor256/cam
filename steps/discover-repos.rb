@@ -85,7 +85,6 @@ end
 def process_year(year, github, context)
   query = build_query(year, context[:opts])
   puts "Querying for repositories created in #{year}..."
-
   loop_through_pages(query, github, context)
   puts "Completed querying for year #{year}. Found #{context[:found].count} repositories so far."
 end
@@ -106,10 +105,8 @@ def loop_through_pages(query, github, context)
   page = 0
   loop do
     break if context[:found].count >= context[:opts][:total]
-
     json = fetch_repositories(query, github, page, context)
     break if json[:items].empty?
-
     process_repositories(json[:items], context)
     page += 1
     cooldown(context)
