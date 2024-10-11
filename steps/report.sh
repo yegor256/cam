@@ -103,7 +103,7 @@ if ! TARGET="${t}" latexmk -pdf -r "${tmp}/.latexmkrc" -quiet -cd "${tmp}/report
     log=${tmp}/report.log
     if [ -e "${log}" ]; then
         cat "${log}"
-        echo "Failed to generate PDF report with LaTeX, see the log above (${log})"
+        echo "Failed to generate PDF report with LaTeX from ${tmp}/report.tex, see the log above (${log})"
     else
         echo "Failed to generate PDF report with LaTeX, there is no log file visible (${log})"
     fi
