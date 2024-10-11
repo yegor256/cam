@@ -25,7 +25,7 @@ set -e
 set -o pipefail
 
 java_file=$1
-output=$2
+output=$(realpath "$2")
 
 repo_first_commit=$(git log --reverse --format=%at | head -1)
 file_first_commit=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
