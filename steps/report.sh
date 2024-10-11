@@ -59,12 +59,12 @@ touch "${st_list}"
 groups=()
 while IFS='' read -r line; do
     groups+=("$line")
-done < <(grep -oP '\[.*?\]' "${list}" | sed 's/[][]//g' | sort -u || : ; echo "Ungrouped metrics")
+done < <(grep -oE '\[.*\]' "${list}" | sed 's/[][]//g' | sort -u || : ; echo "Ungrouped metrics")
 for idx in "${!groups[@]}"; do
     if [ "$idx" -eq $(( ${#groups[@]} - 1 )) ]; then
-        group_metrics=$(grep -oP "^[^\[]*$" "${list}" || :)
+        group_metrics=$(grep -oE "^[^[]*$" "${list}" || :)
     else
-        group_metrics=$(grep -oP ".*\[\b${groups[$idx]}\b\].*" "${list}" || :)
+        group_metrics=$(grep -oE ".*\b${groups[$idx]}\b.*" "${list}" || :)
     fi
     if [[ $(printf "%s\n" "${group_metrics[@]}" | grep -c "item") -eq 0 ]]; then continue; fi
     printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
