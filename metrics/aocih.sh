@@ -27,13 +27,13 @@ set -o pipefail
 java_file=$1
 output=$2
 
-creation_timestamp=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
-if [[ -z "$creation_timestamp" ]]; then
+repo_first_commit=$(git log --reverse --format=%at | head -1)
+file_first_commit=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
+if [[ -z "$file_first_commit" ]]; then
     age_in_hours=0
 else
-    current_timestamp=$(date +%s)
-    age_in_seconds=$((current_timestamp - creation_timestamp))
+    age_in_seconds=$((file_first_commit - repo_first_commit))
     age_in_hours=$((age_in_seconds / 3600))
 fi
 
-echo "AoCiH $age_in_hours Age of the class in hours" > "$output"
+echo "AoCiH $age_in_hours Age of Class in Hours" > "$output"
