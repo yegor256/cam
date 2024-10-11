@@ -129,9 +129,7 @@ end
 
 def process_repo(repo_data, found, licenses)
   return if repo_already_processed?(repo_data, found)
-
   return if license_invalid?(repo_data, licenses)
-
   add_repo_to_found(repo_data, found)
   print_repo_info(repo_data, found)
 end
