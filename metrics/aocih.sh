@@ -34,9 +34,7 @@ cd "$(dirname "${java_file}")"
 if git status > /dev/null 2>&1; then
     repo_first_commit=$(git log --reverse --format=%at | head -1)
     file_first_commit=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
-    if [[ -z "$file_first_commit" ]]; then
-        age_in_hours=0
-    else
+    if [[ -n "$file_first_commit" ]]; then
         age_in_seconds=$((file_first_commit - repo_first_commit))
         age_in_hours=$((age_in_seconds / 3600))
     fi
