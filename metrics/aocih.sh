@@ -24,17 +24,13 @@
 set -e
 set -o pipefail
 
-java_file=$1
+java_file=$(realpath $1)
 output=$(realpath "$2")
 
 age_in_hours=0
-handle_error() {
-    echo "AoCiH 0 Age of Class in Hours" > "$output"
-}
-trap handle_error ERR
 
-cd "$(realpath $(dirname "${java_file}"))"
-echo "$(realpath $(dirname "${java_file}"))"
+cd "$(dirname "${java_file}")"
+
 if git status > /dev/null 2>&1; then
     repo_first_commit=$(git log --reverse --format=%at | head -1)
     file_first_commit=$(git log --diff-filter=A --format=%at -- "$java_file" | tail -1)
@@ -44,8 +40,6 @@ if git status > /dev/null 2>&1; then
         age_in_seconds=$((file_first_commit - repo_first_commit))
         age_in_hours=$((age_in_seconds / 3600))
     fi
-else
-    age_in_hours=0
 fi
 
 echo "AoCiH $age_in_hours Age of Class in Hours" > "$output"
