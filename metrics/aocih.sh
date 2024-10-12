@@ -24,7 +24,7 @@
 set -e
 set -o pipefail
 
-java_file=$(realpath $1)
+java_file=$(realpath "$1")
 output=$(realpath "$2")
 
 age_in_hours=0
