@@ -39,11 +39,15 @@ echo "👍🏻 Didn't fail in non-git directory"
     git init --quiet .
     git config user.email 'foo@example.com'
     git config user.name 'Foo'
+    git config commit.gpgsign false
+    touch empty.file
+    git add "empty.file"
+    git commit --quiet -am "Initial commit"
     java="Test.java"
     echo "class Foo {}" > "${java}"
     git add "${java}"
-    git config commit.gpgsign false
-    git commit --quiet -am "Initial commit"
+    git commit --quiet -am "Second commit"
+    git commit --amend --no-edit --date="$(date -d "+1 hour" --rfc-2822)"
     "${LOCAL}/metrics/aocih.sh" "${java}" stdout
     grep -qP "AoCiH [^0]" stdout
 } > "${stdout}" 2>&1
