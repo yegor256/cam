@@ -28,7 +28,6 @@ java_file=$(realpath "$1")
 output=$(realpath "$2")
 
 age_in_hours=0
-
 cd "$(dirname "${java_file}")"
 
 if git status > /dev/null 2>&1; then
