@@ -28,7 +28,7 @@ stdout=$2
 
 {
     tmp=$(mktemp -d /tmp/XXXX)
-    "${LOCAL}/metrics/age_of_class.sh" "${tmp}/Test.java" "${temp}/stdout"
+    "${LOCAL}/metrics/aocih.sh" "${tmp}/Test.java" "${temp}/stdout"
     grep -q "AoCiH 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Didn't fail in non-git directory"
@@ -44,7 +44,7 @@ echo "👍🏻 Didn't fail in non-git directory"
     git add "${java}"
     git config commit.gpgsign false
     git commit --quiet -am "Initial commit"
-    "${LOCAL}/metrics/age_of_class.sh" "${java}" stdout
+    "${LOCAL}/metrics/aocih.sh" "${java}" stdout
     grep -qP "AoCiH [^0]" stdout
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated AoCiH in the repository"
