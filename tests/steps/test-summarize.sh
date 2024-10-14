@@ -1,0 +1,52 @@
+{
+    rm -rf "${TARGET}/data"
+    rm -rf "${TARGET}/measurements"
+    rm -rf "${TARGET}/summary"
+    dir1="${TARGET}/measurements/repo1"
+    mkdir -p "${dir1}"
+    "${LOCAL}/steps/summarize.sh"
+    test -e "${TARGET}/data/summary/LOC.csv"
+    ! grep "repo1" < "${TARGET}/data/summary/LOC.csv"
+} > "${stdout}" 2>&1
+echo "👍🏻 Summarization step handled empty repository correctly"
+
+{
+    rm -rf "${TARGET}/data"
+    rm -rf "${TARGET}/measurements"
+    rm -rf "${TARGET}/summary"
+    dir1="${TARGET}/measurements/repo1"
+    mkdir -p "${dir1}"
+    echo "50" > "${dir1}/file1.m.LOC"
+    echo "100" > "${dir1}/file2.m.LOC"
+    echo "10" > "${dir1}/file1.m.CYC"
+    echo "20" > "${dir1}/file2.m.CYC"
+    "${LOCAL}/steps/summarize.sh"
+    test -e "${TARGET}/data/summary/LOC.csv"
+    test -e "${TARGET}/data/summary/CYC.csv"
+    grep "repo1,2,150" < "${TARGET}/data/summary/LOC.csv"
+    grep "repo1,2,30" < "${TARGET}/data/summary/CYC.csv"
+} > "${stdout}" 2>&1
+echo "👍🏻 Summarization step handled multiple metrics correctly"
+
+
+{
+    rm -rf "${TARGET}/data"
+    rm -rf "${TARGET}/measurements"
+    rm -rf "${TARGET}/summary"
+    dir1="${TARGET}/measurements/repo1"
+    mkdir -p "${dir1}"
+    echo "50" > "${dir1}/file1.m.LOC"
+    echo "100" > "${dir1}/file2.m.LOC"
+    echo "10" > "${dir1}/file1.m.CYC"
+    dir2="${TARGET}/measurements/repo2"
+    mkdir -p "${dir2}"
+    echo "25" > "${dir2}/file1.m.LOC"
+    "${LOCAL}/steps/summarize.sh"
+    test -e "${TARGET}/data/summary/LOC.csv"
+    grep "repo1,2,150" < "${TARGET}/data/summary/LOC.csv"
+    grep "repo2,1,25" < "${TARGET}/data/summary/LOC.csv"
+    test -e "${TARGET}/data/summary/CYC.csv"
+    grep "repo1,1,10" < "${TARGET}/data/summary/CYC.csv"
+    ! grep "repo2" < "${TARGET}/data/summary/CYC.csv"
+} > "${stdout}" 2>&1
+echo "👍🏻 Summarization step handled mixed metrics across repositories correctly"
