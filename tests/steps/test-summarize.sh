@@ -33,7 +33,7 @@ stdout=$2
     mkdir -p "${dir1}"
     "${LOCAL}/steps/summarize.sh"
     test -e "${TARGET}/data/summary/LOC.csv"
-    ! grep "repo1" < "${TARGET}/data/summary/LOC.csv"
+    grep "repo1" < "${TARGET}/data/summary/LOC.csv" && exit 1
 } > "${stdout}" 2>&1
 echo "👍🏻 Summarization step handled empty repository correctly"
 
@@ -74,6 +74,6 @@ echo "👍🏻 Summarization step handled multiple metrics correctly"
     grep "repo2,1,25" < "${TARGET}/data/summary/LOC.csv"
     test -e "${TARGET}/data/summary/CYC.csv"
     grep "repo1,1,10" < "${TARGET}/data/summary/CYC.csv"
-    ! grep "repo2" < "${TARGET}/data/summary/CYC.csv"
+    grep "repo2" < "${TARGET}/data/summary/CYC.csv" && exit 1
 } > "${stdout}" 2>&1
 echo "👍🏻 Summarization step handled mixed metrics across repositories correctly"
