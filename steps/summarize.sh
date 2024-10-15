@@ -20,6 +20,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
 
@@ -57,12 +58,11 @@ for metric in ${metrics}; do
         else
             average=0
         fi
-
         if [[ ${#all_values[@]} -gt 0 ]]; then
-            sorted_values=($(printf "%s\n" "${all_values[@]}" | sort -n))
+            mapfile -t sorted_values < <(printf "%s\n" "${all_values[@]}" | sort -n)
             middle_index=$((count / 2))
             if ((count % 2 == 0)); then
-                mean=$(echo "scale=2; (${sorted_values[$((middle_index-1))]} + ${sorted_values[middle_index]}) / 2" | bc -l)
+                mean=$(echo "scale=2; (${sorted_values[$((middle_index-1))]} + ${sorted_values[$middle_index]}) / 2" | bc -l)
             else
                 mean=${sorted_values[middle_index]}
             fi
