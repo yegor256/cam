@@ -71,6 +71,6 @@ for metric in ${metrics}; do
         fi
         echo "${repo},${count},${sum},${average},${mean},${min},${max}" >> "${summary_file}"
     done < "${TARGET}/temp/repos-to-aggregate.txt"
-    echo "Metric ${metric} summarized in ${summary_file}"
+    echo "Metric ${metric} summarized in ${summary_file}."
 done
 echo "All metrics summarized."
