@@ -46,4 +46,4 @@ export PMD_JAVA_OPTS=${JVM_OPTS}
 pmd check -R "${tmp}/config.xml" -d "${tmp}" --format xml --no-fail-on-error --no-fail-on-violation > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
 violation_num=$(awk '/<violation/ {count++} END {print count+0}' "${tmp}/result.xml")
-printf "BugNum %s The number of issues detected in the code by the static analyzer\n" "${violation_num}" > "${output}"
+printf "BugNum %s The number of issues detected by PMD\n" "${violation_num}" > "${output}"
