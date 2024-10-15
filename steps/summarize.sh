@@ -39,6 +39,9 @@ for metric in ${metrics}; do
         all_values=()
         for file in ${files}; do
             value=$(cat "${file}")
+            if [[ -z "$value" || ! "$value" =~ ^[0-9]+$ ]]; then
+                continue
+            fi
             count=$((count + 1))
             sum=$((sum + value))
             all_values+=("${value}")
@@ -50,16 +53,21 @@ for metric in ${metrics}; do
             fi
         done
         if [[ ${count} -gt 0 ]]; then
-            average=$(echo "${sum} / ${count}" | bc -l)
+            average=$(echo "scale=2; ${sum} / ${count}" | bc -l)
         else
             average=0
         fi
-        sorted_values=($(printf "%s\n" "${all_values[@]}" | sort -n))
-        middle_index=$((count / 2))
-        if ((count % 2 == 0)); then
-            mean=$(echo "(${sorted_values[middle_index-1]} + ${sorted_values[middle_index]}) / 2" | bc -l)
+
+        if [[ ${#all_values[@]} -gt 0 ]]; then
+            sorted_values=($(printf "%s\n" "${all_values[@]}" | sort -n))
+            middle_index=$((count / 2))
+            if ((count % 2 == 0)); then
+                mean=$(echo "scale=2; (${sorted_values[$((middle_index-1))]} + ${sorted_values[middle_index]}) / 2" | bc -l)
+            else
+                mean=${sorted_values[middle_index]}
+            fi
         else
-            mean=${sorted_values[middle_index]}
+            mean=0
         fi
         echo "${repo},${count},${sum},${average},${mean},${min},${max}" >> "${summary_file}"
     done < "${TARGET}/temp/repos-to-aggregate.txt"
