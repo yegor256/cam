@@ -38,6 +38,9 @@ for metric in ${metrics}; do
         min=999999
         max=0
         all_values=()
+        if [[ -z $files ]]; then
+            continue
+        fi
         for file in ${files}; do
             value=$(cat "${file}")
             if [[ -z "$value" || ! "$value" =~ ^[0-9]+$ ]]; then

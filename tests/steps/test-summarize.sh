@@ -26,16 +26,15 @@ set -o pipefail
 stdout=$2
 
 {
+    echo "${TARGET}"
     rm -rf "${TARGET}/data"
     rm -rf "${TARGET}/measurements"
     rm -rf "${TARGET}/summary"
+    rm -rf "${TARGET}/temp"
     dir1="${TARGET}/measurements/repo1"
     mkdir -p "${dir1}"
     "${LOCAL}/steps/summarize.sh"
-    test -e "${TARGET}/data/summary/LOC.csv"
-    if grep "repo1" < "${TARGET}/data/summary/LOC.csv"; then
-        exit 1
-    fi
+    test -z "$(ls -A "${TARGET}/data/summary")"
 } > "${stdout}" 2>&1
 echo "👍🏻 Summarization step handled empty repository correctly"
 
@@ -43,7 +42,11 @@ echo "👍🏻 Summarization step handled empty repository correctly"
     rm -rf "${TARGET}/data"
     rm -rf "${TARGET}/measurements"
     rm -rf "${TARGET}/summary"
+    rm -rf "${TARGET}/temp"
     dir1="${TARGET}/measurements/repo1"
+    mkdir -p "${TARGET}/temp"
+    touch "${TARGET}/temp/repos-to-aggregate.txt"
+    echo "repo1" >> "${TARGET}/temp/repos-to-aggregate.txt"
     mkdir -p "${dir1}"
     echo "50" > "${dir1}/file1.m.LOC"
     echo "100" > "${dir1}/file2.m.LOC"
@@ -62,7 +65,12 @@ echo "👍🏻 Summarization step handled multiple metrics correctly"
     rm -rf "${TARGET}/data"
     rm -rf "${TARGET}/measurements"
     rm -rf "${TARGET}/summary"
+    rm -rf "${TARGET}/temp"
     dir1="${TARGET}/measurements/repo1"
+    mkdir -p "${TARGET}/temp"
+    touch "${TARGET}/temp/repos-to-aggregate.txt"
+    echo "repo1" >> "${TARGET}/temp/repos-to-aggregate.txt"
+    echo "repo2" >> "${TARGET}/temp/repos-to-aggregate.txt"
     mkdir -p "${dir1}"
     echo "50" > "${dir1}/file1.m.LOC"
     echo "100" > "${dir1}/file2.m.LOC"
