@@ -27,6 +27,7 @@ set -o pipefail
 summary_dir="${TARGET}/data/summary"
 mkdir -p "${summary_dir}"
 metrics=$(find "${TARGET}/measurements" -type f -name '*.m.*' -print | sed "s|^.*\.\(.*\)$|\1|" | sort | uniq)
+metrics_count=0
 
 for metric in ${metrics}; do
     summary_file="${summary_dir}/${metric}.csv"
@@ -74,6 +75,7 @@ for metric in ${metrics}; do
         fi
         echo "${repo},${count},${sum},${average},${mean},${min},${max}" >> "${summary_file}"
     done < "${TARGET}/temp/repos-to-aggregate.txt"
+    metrics_count=$((metrics_count + 1))
     echo "Metric ${metric} summarized in ${summary_file}."
 done
-echo "All metrics summarized."
+echo "All ${metrics_count} metrics summarized into ${summary_dir}."
