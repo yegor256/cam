@@ -38,7 +38,7 @@ repo_name="comp_.lex\$repo[info]>"
     "${LOCAL}/steps/summarize.sh"
     test -z "$(ls -A "${TARGET}/data/summary")"
 } > "${stdout}" 2>&1
-echo "👍🏻 Summarization step handled empty ${repo_name}sitory correctly"
+echo "👍🏻 Summarization step handled empty repository correctly"
 
 {
     rm -rf "${TARGET}/data"
