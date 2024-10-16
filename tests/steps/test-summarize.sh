@@ -24,8 +24,8 @@ set -e
 set -o pipefail
 
 stdout=$2
-file_name="file -p \(test \) \\n\?.k"
-repo_name="comp_.lex\$repo\[info\]>"
+file_name="file -p (test ) \n\?.k"
+repo_name="comp_.lex\$repo[info]>"
 
 {
     echo "${TARGET}"
@@ -57,8 +57,8 @@ echo "👍🏻 Summarization step handled empty ${repo_name}sitory correctly"
     "${LOCAL}/steps/summarize.sh"
     test -e "${TARGET}/data/summary/LOC.csv"
     test -e "${TARGET}/data/summary/CYC.csv"
-    grep "${repo_name}1,2,150" < "${TARGET}/data/summary/LOC.csv"
-    grep "${repo_name}1,2,30" < "${TARGET}/data/summary/CYC.csv"
+    grep -F "${repo_name}1,2,150" < "${TARGET}/data/summary/LOC.csv"
+    grep -F "${repo_name}1,2,30" < "${TARGET}/data/summary/CYC.csv"
 } > "${stdout}" 2>&1
 echo "👍🏻 Summarization step handled multiple metrics correctly"
 
@@ -81,10 +81,10 @@ echo "👍🏻 Summarization step handled multiple metrics correctly"
     echo "25" > "${dir2}/${file_name}1.m.LOC"
     "${LOCAL}/steps/summarize.sh"
     test -e "${TARGET}/data/summary/LOC.csv"
-    grep "${repo_name}1,2,150" < "${TARGET}/data/summary/LOC.csv"
-    grep "${repo_name}2,1,25" < "${TARGET}/data/summary/LOC.csv"
+    grep -F "${repo_name}1,2,150" < "${TARGET}/data/summary/LOC.csv"
+    grep -F "${repo_name}2,1,25" < "${TARGET}/data/summary/LOC.csv"
     test -e "${TARGET}/data/summary/CYC.csv"
-    grep "${repo_name}1,1,10" < "${TARGET}/data/summary/CYC.csv"
+    grep -F "${repo_name}1,1,10" < "${TARGET}/data/summary/CYC.csv"
     if grep "${repo_name}2" < "${TARGET}/data/summary/CYC.csv"; then
         exit 1
     fi

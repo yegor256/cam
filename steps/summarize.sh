@@ -42,7 +42,7 @@ for metric in ${metrics}; do
         if [[ -z $files ]]; then
             continue
         fi
-        for file in ${files}; do
+        while IFS= read -r file; do
             value=$(cat "${file}")
             if [[ -z "$value" || ! "$value" =~ ^[0-9]+$ ]]; then
                 continue
@@ -56,7 +56,7 @@ for metric in ${metrics}; do
             if ((value > max)); then
                 max=${value}
             fi
-        done
+        done < <(echo "$files")
         if [[ ${count} -gt 0 ]]; then
             average=$(echo "scale=2; ${sum} / ${count}" | bc -l)
         else
