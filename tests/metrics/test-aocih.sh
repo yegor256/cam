@@ -49,6 +49,6 @@ echo "👍🏻 Didn't fail in non-git directory"
     git commit --quiet -am "Second commit"
     git commit --amend --no-edit --date="$(date -d "+1 hour" --rfc-2822)"
     "${LOCAL}/metrics/aocih.sh" "${java}" stdout
-    grep -qP "AoCiH 1" stdout
+    grep -q "AoCiH 1" stdout
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated AoCiH in the repository"
