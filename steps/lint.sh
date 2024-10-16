@@ -25,13 +25,13 @@ set -o pipefail
 
 cffconvert --validate
 
-mypy --strict "${LOCAL}/"
+mypy --strict "${LOCAL}/" --exclude "${TARGET}/.*"
 
 flake8 --max-line-length=140 --exclude venv "${LOCAL}/"
 
 export PYTHONPATH="${PYTHONPATH}:${LOCAL}/pylint_plugins/"
 
-find "${LOCAL}" -type f -name '*.py' -not -path "${LOCAL}/venv/**" -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
+find "${LOCAL}" -type f -name '*.py' -not -path "${LOCAL}/venv/**" -not -path "${TARGET}/**" -print0 | xargs -0 -n1 pylint --enable-all-extensions --load-plugins=custom_checkers \
     --disable=empty-comment \
     --disable=missing-module-docstring \
     --disable=invalid-name \
@@ -53,6 +53,7 @@ bibcop tex/report.bib
 
 while IFS= read -r sh; do
     shellcheck --shell=bash --severity=style "${sh}"
+    echo "${sh}: shellcheck OK"
 done < <(find "$(realpath "${LOCAL}")" -name '*.sh' -type f -not -path "$(realpath "${TARGET}")/**" -not -path "$(realpath "${LOCAL}")/venv/**")
 
 header="Copyright (c) 2021-$(date +%Y) Yegor Bugayenko"
