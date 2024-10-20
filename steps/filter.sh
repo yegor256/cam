@@ -23,6 +23,13 @@
 set -e
 set -o pipefail
 
+if [ -f "venv/bin/activate" ]; then
+  # shellcheck source=venv/bin/activate disable=SC1091
+  . venv/bin/activate
+else
+  echo "Error: venv/bin/activate not found. Please make sure the virtual environment is set up."
+  exit 1
+fi
 mkdir -p "${TARGET}/temp/reports"
 find "${LOCAL}/filters" -type f -name '*.sh' -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${LOCAL}/filters" {} \; | sort | while IFS= read -r filter; do
     tex=${TARGET}/temp/reports/${filter}.tex
