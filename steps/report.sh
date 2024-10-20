@@ -33,7 +33,13 @@ rm -f "${list}"
 touch "${list}"
 
 java=${TARGET}/temp/Foo.java
-source venv/bin/activate
+if [ -f "venv/bin/activate" ]; then
+  # shellcheck source=venv/bin/activate disable=SC1091
+  . venv/bin/activate
+else
+  echo "Error: venv/bin/activate not found. Please make sure the virtual environment is set up."
+  exit 1
+fi
 mkdir -p "$(dirname "${java}")"
 find "${LOCAL}/metrics" -type f -executable -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
