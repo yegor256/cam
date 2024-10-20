@@ -23,6 +23,7 @@
 set -e
 set -o pipefail
 
+source venv/bin/activate
 mkdir -p "${TARGET}/temp/reports"
 find "${LOCAL}/filters" -type f -name '*.sh' -exec realpath --relative-to="${LOCAL}/filters" {} \; | sort | while IFS= read -r filter; do
     tex=${TARGET}/temp/reports/${filter}.tex

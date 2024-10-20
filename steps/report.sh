@@ -33,6 +33,7 @@ rm -f "${list}"
 touch "${list}"
 
 java=${TARGET}/temp/Foo.java
+source venv/bin/activate
 mkdir -p "$(dirname "${java}")"
 find "${LOCAL}/metrics" -type f -executable -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
