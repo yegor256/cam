@@ -186,6 +186,19 @@ The structure of the archive is the following:
 
 \end{itemize}
 
+Some repositories require compilation prior to analysis.
+Below is a summary of the build systems used and the status of their builds:
+\begin{itemize}
+  \item Gradlew: successful builds: \iexec{grep -E 'Success.*Gradlew' "${TARGET}/temp/jpeek_success.log" | wc -l}, 
+  failed builds: \iexec{grep -E 'Failure.*Gradlew' "${TARGET}/temp/jpeek_failure.log" | wc -l}.
+  \item Gradle: successful builds: \iexec{grep -E 'Success.*Gradle' "${TARGET}/temp/jpeek_success.log" | wc -l}, 
+  failed builds: \iexec{grep -E 'Failure.*Gradle' "${TARGET}/temp/jpeek_failure.log" | wc -l}.
+  \item Maven: successful builds: \iexec{grep -E 'Success.*Maven' "${TARGET}/temp/jpeek_success.log" | wc -l}, 
+  failed builds: \iexec{grep -E 'Failure.*Maven' "${TARGET}/temp/jpeek_failure.log" | wc -l}.
+  \item Other: successful builds: \iexec{grep -E 'Success.*Non-build' "${TARGET}/temp/jpeek_success.log" | wc -l}, 
+  failed builds: \iexec{grep -E 'Failure.*Non-build' "${TARGET}/temp/jpeek_failure.log" | wc -l}.
+\end{itemize}
+
 The following
 \iexec{cat "${TARGET}/temp/list-of-metrics.tex" | wc -l}\unskip{}
 metrics were
