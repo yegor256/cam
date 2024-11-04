@@ -33,6 +33,8 @@ touch "${jobs}"
 repos=$(find "${TARGET}/github" -maxdepth 2 -mindepth 2 -type d -print)
 total=$(echo "${repos}" | wc -l | xargs)
 
+: > "${TARGET}/temp/jpeek_failure.log"
+: > "${TARGET}/temp/jpeek_success.log"
 dir=${TARGET}/temp/jpeek/all
 mkdir -p "${dir}"
 

@@ -41,30 +41,39 @@ fi
 mkdir -p "${logs}"
 
 build() {
+    failure_log="${TARGET}/temp/jpeek_failure.log"
+    success_log="${TARGET}/temp/jpeek_success.log"
     if [ -e "${project}/gradlew" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradlew..."
         if ! timeout 1h "${project}/gradlew" classes -q -p "${project}" > "${logs}/gradlew.log" 2>&1; then
             echo "Failed to compile ${repo} using Gradlew$("${LOCAL}/help/tdiff.sh" "${start}")"
+            echo "Failure ${repo} Gradlew" >> "${failure_log}"
             exit
         fi
-        echo "Сompiled ${repo} using Gradlew$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Compiled ${repo} using Gradlew$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Success ${repo} Gradlew" >> "${success_log}"
     elif [ -e "${project}/build.gradle" ]; then
         echo "Building ${repo} (${pos}/${total}) with Gradle..."
         echo "apply plugin: 'java'" >> "${project}/build.gradle"
         if ! timeout 1h gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
+            echo "Failed to compile ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")" 
+            echo "Failure ${repo} Gradle" >> "${failure_log}"
             exit
         fi
-        echo "Сompiled ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Compiled ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Success ${repo} Gradle" >> "${success_log}"
     elif [ -e "${project}/pom.xml" ]; then
         echo "Building ${repo} (${pos}/${total}) with Maven..."
         if ! timeout 1h mvn compile -quiet -DskipTests -f "${project}" -U > "${logs}/maven.log" 2>&1; then
             echo "Failed to compile ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
+            echo "Failure ${repo} Maven" >> "${failure_log}"
             exit
         fi
-        echo "Сompiled ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Compiled ${repo} using Maven$("${LOCAL}/help/tdiff.sh" "${start}")"
+        echo "Success ${repo} Maven" >> "${success_log}"
     else
         echo "Could not build classes in ${repo} (${pos}/${total}) (neither Maven nor Gradle project)"
+        echo "Failure ${repo} Non-build" >> "${failure_log}"
         exit
     fi
 }

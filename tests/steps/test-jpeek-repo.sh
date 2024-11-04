@@ -50,6 +50,7 @@ echo "👍🏻 jPeek dependencies are installed"
     test ! "${value}" = 'NaN'
     test -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc"
     test ! -e "${TARGET}/measurements/${repo}/src/main/java/com/yegor256/Jaxec.java.m.NHD-cvc-cvc"
+    test "$(grep -Ec 'Success.*Maven' "${TARGET}/temp/jpeek_success.log")" = '1'
 } > "${stdout}" 2>&1
 echo "👍🏻 A simple repo analyzed with jpeek correctly"
 
