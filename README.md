@@ -34,7 +34,7 @@ and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
-* [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2023-03-02.zip)
+* [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
   (2.22Gb): 1000 repos, 48 metrics, 532K classes
 * [cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip)
   (2.19Gb): 1000 repos, 33 metrics, 863K classes
