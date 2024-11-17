@@ -90,7 +90,7 @@ if ! collect; then
     exit
 fi
 
-accept=".*[^index|matrix|skeleton].xml"
+accept="^(?!.*(index|matrix|skeleton)).*\.xml$"
 
 values=${TARGET}/temp/jpeek-values/${repo}.txt
 mkdir -p "$(dirname "${values}")"
