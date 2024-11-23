@@ -99,7 +99,7 @@ if ! collect; then
     exit
 fi
 
-accept=".*[^index|matrix|skeleton].xml"
+accept="^(?!.*(index|matrix|skeleton)).*\.xml$"
 
 values=${TARGET}/temp/jpeek-values/${repo}.txt
 mkdir -p "$(dirname "${values}")"
@@ -114,7 +114,7 @@ for type in all cvc; do
         continue
     fi
     find "${dir}" -type f -maxdepth 1 -print | while IFS= read -r report; do
-        if echo "${report}" | grep -q "${accept}"; then
+        if echo "${report}" | grep -qP "${accept}"; then
             packages=$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")
             name=$(xmlstarlet sel -t -v "/metric/title" "${report}")
             for ((i=1; i <= packages; i++)); do
