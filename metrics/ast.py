@@ -468,8 +468,8 @@ if __name__ == '__main__':
                 metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
                 metric.write(f'NCSS {ncss(raw)} '
-                             f"""Non-Commenting Source Statements (NCSS). This metric that measures the number of lines in
-                              source code that are not comments or blank lines. It focuses on the actual executable
+                             f"""Non-Commenting Source Statements (NCSS). This metric that measures the number of lines
+                              in source code that are not comments or blank lines. It focuses on the actual executable
                               statements in the code, excluding any documentation or formatting lines. \n""")
                 metric.write(f'NoII {impls(tree_class)} '
                              f'Number of Implemented Interfaces\n')
