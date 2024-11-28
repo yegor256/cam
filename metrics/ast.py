@@ -468,7 +468,9 @@ if __name__ == '__main__':
                 metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
                 metric.write(f'NCSS {ncss(raw)} '
-                             f'Non-Commenting Source Statements (NCSS)\n')
+                             f"""Non-Commenting Source Statements (NCSS). This metric that measures the number of lines
+                              in source code that are not comments or blank lines. It focuses on the actual executable
+                              statements in the code, excluding any documentation or formatting lines. \n""")
                 metric.write(f'NoII {impls(tree_class)} '
                              f'Number of Implemented Interfaces\n')
                 metric.write(f'NAPC {extnds(tree_class)} '
@@ -522,9 +524,12 @@ if __name__ == '__main__':
                              f'Number of Polymorphic Methods (NOP), which is the count of methods \
                              that are overloaded at least once --- have similar names but different parameters\n')
                 metric.write(f'NULLs {nulls(tree_class)} '
-                             f'Number of NULL References\n')
+                             f'Number of references that are NULL by default in a given class \n')
                 metric.write(f'DOER {doer(tree_class)} '
-                             f'Data vs Object Encapsulation Ratio\n')
+                             f"""Data vs Object Encapsulation Ratio (DOER). This metric represents the ratio of
+                             attributes that store primitive data types (e.g., int, char, boolean) to the total number
+                             of attributes in a class. It provides insight into the balance between simple data storage
+                             (primitives) and references to more complex objects (references).\n""")
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
