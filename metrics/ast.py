@@ -467,7 +467,7 @@ if __name__ == '__main__':
                              f'Number of Non-Static (Object) Methods\n')
                 metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
-                metric.write(f'NCSS {ncss(raw)}
+                metric.write(f'NCSS {ncss(raw)} '
                              f'Non-Commenting Source Statements (NCSS)\n')
                 metric.write(f'NoII {impls(tree_class)} '
                              f'Number of Implemented Interfaces\n')
@@ -525,7 +525,6 @@ if __name__ == '__main__':
                              f'Number of NULL References\n')
                 metric.write(f'DOER {doer(tree_class)} '
                              f'Data vs Object Encapsulation Ratio\n')
-
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
