@@ -36,6 +36,7 @@ values=$(awk -F, 'NR > 1 {print $3}' "${metric_file}")
 
 while IFS= read -r value; do
     sum=$(echo "$sum + $value" | bc)
+
     count=$((count + 1))
 done <<< "${values}"
 
