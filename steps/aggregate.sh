@@ -59,6 +59,26 @@ printf "\n" >> "${all}"
 echo "All $(wc -l "${all}" | xargs) projects aggregated$("${LOCAL}/help/tdiff.sh" "${start}")"
 printf "\n"
 
+mkdir -p "${TARGET}/data/aggregation"
+
+jobs=${TARGET}/temp/jobs/aggregate-function-jobs.txt
+rm -rf "${jobs}"
+mkdir -p "$(dirname "${jobs}")"
+touch "${jobs}"
+
+for metric in ${metrics}; do
+    metric_file="${TARGET}/data/${metric}.csv"
+
+    if [[ -f "${metric_file}" ]]; then
+        sh="${LOCAL}/steps/aggregation-functions/mean.sh"
+        output_folder="${TARGET}/data/aggregation"
+        printf "%s %s %s %s %s %s\n" "${sh@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
+    fi
+done
+
+"${LOCAL}/help/parallel.sh" "${jobs}"
+wait
+
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
