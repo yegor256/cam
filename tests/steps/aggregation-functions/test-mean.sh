@@ -72,9 +72,11 @@ echo "👍🏻 Multiple metrics (LCOM5, NHD) aggregated correctly"
     mkdir -p "${dir1}"
     touch "${dir1}/First.java.m.LCOM5"
     echo "repo,java_file,LCOM5" > "${dir1}/LCOM5.csv"
-    echo "kek,src/main/kek,42.000" >> "${dir1}/LCOM5.csv"
-    echo "kek,src/main/kek,35.000" >> "${dir1}/LCOM5.csv"
-    echo "kek,src/main/kek,50.000" >> "${dir1}/LCOM5.csv"
+    {
+      echo "kek,src/main/kek,42.000"
+      echo "kek,src/main/kek,35.000"
+      echo "kek,src/main/kek,50.000"
+    } >> "${dir1}/LCOM5.csv"
 
     "${LOCAL}/steps/aggregation-functions/mean.sh" "${dir1}/LCOM5.csv" "${TARGET}/data/aggregation" "LCOM5"
 

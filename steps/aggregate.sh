@@ -72,7 +72,7 @@ for metric in ${metrics}; do
     if [[ -f "${metric_file}" ]]; then
         sh="${LOCAL}/steps/aggregation-functions/mean.sh"
         output_folder="${TARGET}/data/aggregation"
-        printf "%s %s %s %s %s %s\n" "${sh@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
+        printf "%s %s %s %s\n" "${sh@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
     fi
 done
 
