@@ -70,7 +70,7 @@ for metric in ${metrics}; do
     metric_file="${TARGET}/data/${metric}.csv"
     if [[ -f "${metric_file}" ]]; then
         output_folder="${TARGET}/data/aggregation"
-        for sh_script in ${LOCAL}/steps/aggregation-functions/*.sh; do
+        for sh_script in "${LOCAL}/steps/aggregation-functions/"*.sh; do
             if [[ -f "${sh_script}" ]]; then
                 printf "%s %s %s %s\n" "${sh_script@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
             fi
