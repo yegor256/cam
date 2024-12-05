@@ -26,6 +26,7 @@ set -o pipefail
 
 if ! "${LOCAL}/help/texlive-bin.sh"; then
   if [ ! -f "install-tl.zip" ]; then
+
     wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
   fi
   rm -rf install-tl
