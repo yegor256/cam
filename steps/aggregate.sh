@@ -68,7 +68,6 @@ touch "${jobs}"
 
 for metric in ${metrics}; do
     metric_file="${TARGET}/data/${metric}.csv"
-
     if [[ -f "${metric_file}" ]]; then
         sh="${LOCAL}/steps/aggregation-functions/mean.sh"
         output_folder="${TARGET}/data/aggregation"
