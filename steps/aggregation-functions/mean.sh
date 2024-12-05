@@ -36,15 +36,12 @@ values=$(awk -F, 'NR > 1 {print $3}' "${metric_file}")
 
 while IFS= read -r value; do
     sum=$(echo "$sum + $value" | bc)
-
     count=$((count + 1))
 done <<< "${values}"
 
 if ((count > 0)); then
     mean=$(echo "scale=3; $sum / $count" | bc)
-
     formatted_mean=$(printf "%0.3f" "$mean")
-
     output_file="${output_folder}/${metric_name}.mean.csv"
     echo "$formatted_mean" > "${output_file}"
     echo "Aggregated mean for ${metric_name}: $formatted_mean"
