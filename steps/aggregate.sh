@@ -69,9 +69,12 @@ touch "${jobs}"
 for metric in ${metrics}; do
     metric_file="${TARGET}/data/${metric}.csv"
     if [[ -f "${metric_file}" ]]; then
-        sh="${LOCAL}/steps/aggregation-functions/mean.sh"
         output_folder="${TARGET}/data/aggregation"
-        printf "%s %s %s %s\n" "${sh@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
+        for sh_script in ${LOCAL}/steps/aggregation-functions/*.sh; do
+            if [[ -f "${sh_script}" ]]; then
+                printf "%s %s %s %s\n" "${sh_script@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
+            fi
+        done
     fi
 done
 
