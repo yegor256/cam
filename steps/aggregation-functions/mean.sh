@@ -20,9 +20,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
 set -e
 set -o pipefail
-
 
 metric_file=$1
 output_folder=$2
@@ -34,7 +34,6 @@ sum=0
 count=0
 
 values=$(awk -F, 'NR > 1 {print $3}' "${metric_file}")
-
 
 while IFS= read -r value; do
     sum=$(echo "$sum + $value" | bc)
