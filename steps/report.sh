@@ -21,9 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# shellcheck disable=SC2128
-# I disabled it, because unwrapping array and take first elem is exactly what i need in this script
-
 set -e
 set -o pipefail
 
@@ -82,6 +79,8 @@ latex_escape() {
 
 files=("${TARGET}/data/aggregation/*.csv")
 
+# shellcheck disable=SC2128
+# I disabled it, because unwrapping array and take first elem is exactly what i need in this script
 if compgen -G "${files}" > /dev/null; then
     # Process each CSV file in the aggregation directory
     for file in ${files}; do
