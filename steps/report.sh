@@ -57,6 +57,64 @@ fi
 
 sort -o "${list}" "${list}"
 
+# Create the aggregation table LaTeX file
+aggregation_table=${TARGET}/temp/aggregation_table.tex
+rm -f "${aggregation_table}"
+touch "${aggregation_table}"
+
+# LaTeX escape function to handle special characters
+latex_escape() {
+  echo "$1" | sed 's/&/\\&/g; s/%/\\%/g; s/_/\\_/g; s/\$/\\\$/g; s/#{}/\\{\\}/g; s/\^/\\^/g; s/~/{\~}/g; s/\\/\\\\/g'
+}
+
+{
+  printf "\onecolumn\n"
+  printf "\\centering\n"
+  printf "\\\\begin{longtable}{|l|c|c|c|}\n"
+  printf "\\hline\n"
+  printf "Metric & 90th Percentile & Mean & Median \\\\\\\\\\\\\ \n"
+  printf "\\hline\n"
+} >> "${aggregation_table}"
+
+files=("${TARGET}/data/aggregation/*.csv")
+
+if [ "${files}" != "${TARGET}/data/aggregation/*.csv" ]; then
+    # Process each CSV file in the aggregation directory
+    for file in "${files[@]}"; do
+        # Extract the metric name (e.g., AHF from AHF.90th_percentile.csv)
+        metric=$(basename "${file}" | cut -d '.' -f 1)
+        # Extract values from the CSV file
+        value=$(<"${file}")
+
+        # Check which aggregation type this file corresponds to and store it accordingly
+        if [[ "${file}" =~ \.90th_percentile\.csv$ ]]; then
+            percentile="${value}"
+            mean=""
+            median=""
+        elif [[ "${file}" =~ \.mean\.csv$ ]]; then
+            mean="${value}"
+        elif [[ "${file}" =~ \.median\.csv$ ]]; then
+            median="${value}"
+        fi
+
+        # Sanitize the values before inserting into the LaTeX table
+        percentile=$(latex_escape "${percentile}")
+        mean=$(latex_escape "${mean}")
+        median=$(latex_escape "${median}")
+
+        # Write the row for this metric to the LaTeX table
+        if [[ -n "${percentile}" && -n "${mean}" && -n "${median}" ]]; then
+            printf "%s & %s & %s & %s \\\\\\\\\\\\\ \n" "${metric}" "${percentile}" "${mean}" "${median}" >> "${aggregation_table}"
+        fi
+    done
+fi
+
+# Close the LaTeX table
+printf "\\hline\n" >> "${aggregation_table}"
+printf "\\\\end{longtable}\n" >> "${aggregation_table}"
+
+printf "Aggregation table generated in %s\n" "${aggregation_table}"
+
 # It's important to make sure the path is absolute, for LaTeX
 t=$(realpath "${TARGET}")
 

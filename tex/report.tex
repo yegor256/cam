@@ -32,6 +32,10 @@
 \usepackage{paralist}
 \usepackage{ffcode}
 \usepackage[capitalize]{cleveref}
+\usepackage{amsmath}    % for mathematical symbols
+\usepackage{graphicx}   % for advanced table formatting
+\usepackage{array}      % for better table control
+\usepackage{longtable}      % for better table control
 
 \usepackage{silence}
   \WarningFilter{microtype}{Unable to apply patch `footnote'}
@@ -194,10 +198,14 @@ calculated for each \ff{.java} file:
 \begin{itemize}
   \input{$TARGET/temp/list-of-metrics.tex}
 \end{itemize}
+Here is a graph of metrics and their aggregated values:
+\iexec{cat "${TARGET}/temp/aggregation_table.tex" }\unskip{}
+
 
 The dataset was built by
 \iexec{nproc}\unskip{}
 CPUs\iexec{"${LOCAL}/help/tdiff.sh" "$(cat "${TARGET}/start.txt")"}\unskip{}.
+
 
 \section{Limitations}\label{sec:limitations}
 
