@@ -59,28 +59,6 @@ printf "\n" >> "${all}"
 echo "All $(wc -l "${all}" | xargs) projects aggregated$("${LOCAL}/help/tdiff.sh" "${start}")"
 printf "\n"
 
-mkdir -p "${TARGET}/data/aggregation"
-
-jobs=${TARGET}/temp/jobs/aggregate-function-jobs.txt
-rm -rf "${jobs}"
-mkdir -p "$(dirname "${jobs}")"
-touch "${jobs}"
-
-for metric in ${metrics}; do
-    metric_file="${TARGET}/data/${metric}.csv"
-    if [[ -f "${metric_file}" ]]; then
-        output_folder="${TARGET}/data/aggregation"
-        for sh_script in "${LOCAL}/steps/aggregation-functions/"*.sh; do
-            if [[ -f "${sh_script}" ]]; then
-                printf "%s %s %s %s\n" "${sh_script@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${jobs}"
-            fi
-        done
-    fi
-done
-
-"${LOCAL}/help/parallel.sh" "${jobs}"
-wait
-
 jobs=${TARGET}/temp/jobs/aggregate-join-jobs.txt
 rm -rf "${jobs}"
 mkdir -p "$(dirname "${jobs}")"
@@ -96,6 +74,26 @@ while IFS= read -r d; do
     printf "%s %s %s %s %s\n" "${sh@Q}" "${r@Q}" "${d@Q}" "${repo@Q}" "${total@Q}" >> "${jobs}"
 done < "${repos}"
 "${LOCAL}/help/parallel.sh" "${jobs}"
+wait
+
+mkdir -p "${TARGET}/data/aggregation"
+f_jobs=${TARGET}/temp/jobs/aggregate-function-jobs.txt
+rm -rf "${f_jobs}"
+mkdir -p "$(dirname "${f_jobs}")"
+touch "${f_jobs}"
+
+for metric in ${metrics}; do
+    metric_file="${TARGET}/data/${metric}.csv"
+    if [[ -f "${metric_file}" ]]; then
+        output_folder="${TARGET}/data/aggregation"
+        for sh_script in "${LOCAL}/steps/aggregation-functions/"*.sh; do
+            if [[ -f "${sh_script}" ]]; then
+                printf "%s %s %s %s\n" "${sh_script@Q}" "${metric_file}" "${output_folder@Q}" "${metric@Q}" >> "${f_jobs}"
+            fi
+        done
+    fi
+done
+"${LOCAL}/help/parallel.sh" "${f_jobs}"
 wait
 
 echo "All metrics aggregated and joined in ${total} repositories$("${LOCAL}/help/tdiff.sh" "${start}")"
