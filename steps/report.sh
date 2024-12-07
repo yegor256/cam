@@ -20,6 +20,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# shellcheck disable=SC2128
+# I disabled it, because unwrapping array and take first elem is exactly what i need in this script
+
 set -e
 set -o pipefail
 
