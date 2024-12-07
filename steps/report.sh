@@ -78,11 +78,12 @@ latex_escape() {
 
 files=("${TARGET}/data/aggregation/*.csv")
 
-if [ "${files}" != "${TARGET}/data/aggregation/*.csv" ]; then
+if compgen -G "${files}" > /dev/null; then
     # Process each CSV file in the aggregation directory
-    for file in "${files[@]}"; do
+    for file in ${files}; do
         # Extract the metric name (e.g., AHF from AHF.90th_percentile.csv)
         metric=$(basename "${file}" | cut -d '.' -f 1)
+
         # Extract values from the CSV file
         value=$(<"${file}")
 
