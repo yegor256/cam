@@ -60,8 +60,7 @@ sort -o "${list}" "${list}"
 
 # Create the aggregation table LaTeX file
 aggregation_table=${TARGET}/temp/aggregation_table.tex
-rm -f "${aggregation_table}"
-touch "${aggregation_table}"
+echo > "${aggregation_table}"
 
 # LaTeX escape function to handle special characters
 latex_escape() {
