@@ -81,7 +81,6 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   rm "${csv}"
   mv "${maintained}" "${csv}"
 
-
 else
   echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
   cat "${REPOS}" > "${csv}"

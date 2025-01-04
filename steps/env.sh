@@ -70,7 +70,6 @@ multimetric --help > /dev/null
 
 repo-reasoner --help > /dev/null
 
-
 awk --version
 
 parallel --version
