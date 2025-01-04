@@ -70,9 +70,6 @@ multimetric --help > /dev/null
 
 repo-reasoner --help > /dev/null
 
-rubocop -v
-
-inkscape --version
 
 awk --version
 
