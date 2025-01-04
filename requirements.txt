@@ -6,3 +6,4 @@ chardet==5.2.0
 mypy==1.12.1
 cffconvert==2.0.0
 samples-filter==0.5.1
+repo-reasoner==0.0.25
