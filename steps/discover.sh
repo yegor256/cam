@@ -71,14 +71,15 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   mv "${nosamples}" "${csv}"
 
   maintained=${TARGET}/maintained.csv
-    declare -a margs=( \
-      "--repositories=${csv}" \
-      "--output=${maintained}" \
-      "--key=${GIGACHAT_KEY}" \
-      "--model=${GIGACHAT_MODEL}"
-    )
+  declare -a margs=( \
+    "--repositories=${csv}" \
+    "--output=${maintained}" \
+    "--key=${GIGACHAT_KEY}" \
+    "--model=${GIGACHAT_MODEL}"
+  )
   repo-reasoner filter-unmaintained "${margs[@]}"
-  rm "${csv}"
+  original_csv="${csv}.original"
+  mv "${csv}" "${original_csv}"
   mv "${maintained}" "${csv}"
 
 else
