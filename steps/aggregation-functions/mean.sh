@@ -24,9 +24,6 @@
 set -e
 set -o pipefail
 
-export LC_NUMERIC=C
-
-
 metric_file=$1
 output_folder=$2
 metric_name=$3
