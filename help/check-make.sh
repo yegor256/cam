@@ -24,7 +24,7 @@
 set -e
 set -o pipefail
 
-make_version=$(make --version | awk 'NR==1 {print $3}')
+make_version=$(make --version | head -n1 | cut -d' ' -f3)
 make_version_int=$(echo "${make_version}" | cut -d'.' -f1)
 
 if [ "${make_version_int}" -lt 4 ]; then
