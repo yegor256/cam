@@ -61,7 +61,8 @@ find "${dir}" -type f -name '*.m' > "${mfiles}"
 sum=0
 declare -i files=0
 while IFS= read -r m; do
-    slice=${TARGET}/temp/mfiles-slice.txt
+    slice=${TARGET}/temp/mfiles-slice/${repo}.txt
+    mkdir -p "$(dirname "${slice}")"
     find "$(dirname "${m}")" -name "$(basename "${m}").*" -type f -print > "${slice}"
     while IFS= read -r v; do
         java=$(echo "${v}" | sed "s|${dir}||" | sed "s|\.m\..*$||")
