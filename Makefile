@@ -55,6 +55,9 @@ JPEEK = /opt/app/jpeek.jar
 # Options for all Java processes
 JAVA_OPTS=-Xmx128m
 
+# defines rules and symbols for formatting numeric information
+LC_NUMERIC=C
+
 # Make all variables from this Makefile visible in all steps/*.sh
 export
 
