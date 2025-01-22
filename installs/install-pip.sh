@@ -25,7 +25,9 @@ set -ex
 set -o pipefail
 
 "${LOCAL}/help/assert-tool.sh" python3 --version
+python3 --version
 "${LOCAL}/help/assert-tool.sh" pip3 --version
+pip3 --version
 
 if [ ! -d "venv" ]; then
     python3 -m venv venv
