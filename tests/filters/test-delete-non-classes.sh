@@ -77,4 +77,3 @@ echo "👍🏻 Absent file didn't fail the script"
     grep -v "${java}" "${temp}/deleted.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A good Java file was not deleted, it's correct behavior"
-

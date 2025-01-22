@@ -56,7 +56,7 @@ build() {
         echo "Building ${repo} (${pos}/${total}) with Gradle..."
         echo "apply plugin: 'java'" >> "${project}/build.gradle"
         if ! timeout 1h gradle classes -q -p "${project}" > "${logs}/gradle.log" 2>&1; then
-            echo "Failed to compile ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")" 
+            echo "Failed to compile ${repo} using Gradle$("${LOCAL}/help/tdiff.sh" "${start}")"
             echo "Failure ${repo} Gradle" >> "${failure_log}"
             exit
         fi
@@ -131,7 +131,7 @@ for type in all cvc; do
                     if [ ! "${type}" = "all" ]; then
                         suffix=${suffix}-${type}
                     fi
-                   
+
                     jfile=$(find "${project}" -type f -path "*${package}/${class}.java" -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${project}" {} \;)
                     echo "${jfile}" >> "${files}"
                     mfile=${TARGET}/measurements/${repo}/${jfile}.m.${suffix}

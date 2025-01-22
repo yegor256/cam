@@ -54,7 +54,7 @@ fi
 olist=${TARGET}/temp/orgs-to-polish.txt
 mkdir -p "$(dirname "${olist}")"
 echo "Wait a bit, searching for orgs in '${dir}'..."
- 
+
 find "${dir}" -maxdepth 1 -mindepth 1 -type d -exec bash -c 'realpath --relative-to="${1}" "$2"' _ "${dir}" {} \; > "${olist}"
 
 if [ -s "${olist}" ]; then

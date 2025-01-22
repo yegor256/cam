@@ -47,4 +47,3 @@ if [ "${total}" -eq 0 ]; then
 else
     printf "%'d symlinks were deleted" "${total}"
 fi
-

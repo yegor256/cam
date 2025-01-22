@@ -51,4 +51,3 @@ while IFS=',' read -r r tag tail; do
     fi
 done < "${before}"
 echo "All ${total} repositories checked, ${good} are good"
-

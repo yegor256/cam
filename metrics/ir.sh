@@ -26,4 +26,3 @@ set -o pipefail
 output=$(realpath "$2")
 
 echo "IR 0.000 " >"${output}"
-

@@ -49,4 +49,3 @@ echo "👍🏻 An empty directory didn't crash it"
     test "$(wc -l < "${list}" | xargs)" = 1
 } > "${stdout}" 2>&1
 echo "👍🏻 A binary non-Java file was deleted"
-

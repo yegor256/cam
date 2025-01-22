@@ -58,7 +58,7 @@ EOT
     metrics=$(find "${temp}" -name 'm1.*' -type f -exec basename {} \; | sort)
     echo -n "${metrics}" | while IFS= read -r m; do
         name=${m:3:100}
-        
+
         echo "Checking ${name}..."
         if echo "${name}" | grep -q -E '(.)*(Mn|Mx|Av)(.)+'; then
             echo "Error: ${name} is not correctly formatted."

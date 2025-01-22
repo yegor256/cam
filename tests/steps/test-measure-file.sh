@@ -249,7 +249,7 @@ EOT
             StdOut.println("|a|          = " + a.abs());
             StdOut.println("tan(a)       = " + a.tan());
         }
-    } 
+    }
 EOT
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m4")
     all=$(find "${temp}" -name 'm4.*' -type f -exec basename {} \; | sort)
@@ -261,4 +261,3 @@ EOT
     fi
 } > "${stdout}" 2>&1
 echo "👍🏻 Number of metrics matches for simple and complex Java files: ${actual_number_of_metrics_simple} metrics"
-

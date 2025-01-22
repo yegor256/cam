@@ -39,20 +39,20 @@ script_location="${LOCAL}/metrics/getset.py"
     echo "public class Person {
         private String name;
         private int age;
-        
+
         public String getName() {return this.name;}
-        public void setName(String name) {this.name = name;}        
-        public int getAge() {return this.age;}        
-        public void setAge(int age) {this.age = age;}        
+        public void setName(String name) {this.name = name;}
+        public int getAge() {return this.age;}
+        public void setAge(int age) {this.age = age;}
         public void nonAccessorMethod() {
             if (age > 18) {System.out.println(\"Adult\");}
         }
     }" > "${java_file}"
-    
+
     metrics_file="${temp}/metrics.txt"
     "${script_location}" "${java_file}" "${metrics_file}"
     cat "${metrics_file}"
-    
+
     # Assertions: Check for expected output related to getter, setter, and branches
     grep "Getters 2 The number of getter methods" "${metrics_file}"
     grep "Setters 2 The number of setter methods" "${metrics_file}"

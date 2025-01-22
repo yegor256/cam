@@ -78,4 +78,3 @@ echo "👍🏻 A non-unicode file didn't cause awk troubles"
     test "$(wc -l < "${list}" | xargs)" = 0
 } > "${stdout}" 2>&1
 echo "👍🏻 An empty Java file wasn't deleted"
-

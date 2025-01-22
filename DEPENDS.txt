@@ -25,6 +25,7 @@ hard environ
 hard everyshi
 hard fdsymbol
 hard ffcode
+hard float
 hard fmtcount
 hard footmisc
 hard framed

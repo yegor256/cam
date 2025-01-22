@@ -42,7 +42,7 @@ EOT
 cp "${java}" "${tmp}/foo.java"
 
 export PMD_JAVA_OPTS=${JVM_OPTS}
-# We don't use --cache here, because it becomes too big and leads to "Out Of Memory" error 
+# We don't use --cache here, because it becomes too big and leads to "Out Of Memory" error
 pmd check -R "${tmp}/config.xml" -d "${tmp}" --format xml --no-fail-on-error --no-fail-on-violation > "${tmp}/result.xml" 2> "${tmp}/stderr.txt" || (cat "${tmp}/stderr.txt"; exit 1)
 
 violation_num=$(awk '/<violation/ {count++} END {print count+0}' "${tmp}/result.xml")

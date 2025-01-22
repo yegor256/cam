@@ -33,7 +33,7 @@ set -o pipefail
 num=$(cat)
 
 if [[ -z "${num}" || "${num}" =~ ^[[:space:]]+$ ]]; then
-    echo "0.000"  
+    echo "0.000"
     exit
 fi
 

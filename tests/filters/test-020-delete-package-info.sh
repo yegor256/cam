@@ -40,4 +40,3 @@ stdout=$2
     test "$(wc -l < "${list}" | xargs)" = 1
 } > "${stdout}" 2>&1
 echo "👍🏻 A package-info.java file was deleted"
-

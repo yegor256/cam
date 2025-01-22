@@ -65,4 +65,3 @@ sed 's/xmlns=".*"//g' "${tmp}/result.xml" | \
   " > "${output}"
 
 rm -rf "${tmp}"
-

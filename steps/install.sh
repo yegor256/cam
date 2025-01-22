@@ -65,7 +65,7 @@ if [[ -z "$FORCE_INSTALL" ]]; then
   done
 
   read -p "Do you want to proceed with the installation? (y/n): " -n 1 -r
-  echo  
+  echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
       echo "Installation aborted by user."
       exit 1
@@ -90,7 +90,7 @@ function install_package() {
         elif "${LOCAL}/help/is-macos.sh"; then
             if brew -v; then
                 "${LOCAL}/help/sudo.sh" --as-user brew install "$PACKAGE"
-            else 
+            else
                 echo "If you install Homebrew, all necessary packages will be installed automatically by running 'make install'. Visit the Homebrew installation documentation at: https://docs.brew.sh/Installation"
                 exit 1
             fi

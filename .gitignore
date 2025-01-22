@@ -8,8 +8,8 @@ test-zone/
 pylint_plugins/__pycache__
 target/
 predictions.csv
-
 install-tl.log
 install-tl.zip.*
 install-tl/
 venv/
+pipeline/

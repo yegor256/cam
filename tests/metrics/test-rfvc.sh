@@ -72,7 +72,7 @@ stdout=$2
 
     ${metric_script_path} "${java1}" "stdout"
     grep "RFVC 0.33" "stdout"
-    
+
     ${metric_script_path} "${java2}" "stdout"
     grep "RFVC 0.33" "stdout"
 
@@ -83,13 +83,13 @@ stdout=$2
     printf "class Foo2 {}" > "${java1}"
     git add "${java1}"
     git commit --quiet -m "forth commit"
-    
+
     ${metric_script_path} "${java1}" "stdout"
     grep "RFVC 0.5" "stdout"
-    
+
     ${metric_script_path} "${java2}" "stdout"
     grep "RFVC 0.25" "stdout"
-    
+
     ${metric_script_path} "${java3}" "stdout"
     grep "RFVC 0.25" "stdout"
 
