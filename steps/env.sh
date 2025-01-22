@@ -42,7 +42,6 @@ fi
 ruby -v
 rubocop -v
 
-
 if [[ "$(python3 --version 2>&1 | cut -f2 -d' ')" =~ ^[1-2] ]]; then
     python3 --version
     echo "Python must be 3+"
