@@ -33,4 +33,4 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: dieghernan/cff-validator@v3
+      - uses: dieghernan/cff-validator@v4
