@@ -79,7 +79,7 @@ set -x
 
 if "${LOCAL}/help/is-linux.sh"; then
   "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing
-  "${LOCAL}/help/sudo.sh" apt-get install -y coreutils
+  "${LOCAL}/help/sudo.sh" apt-get install --yes coreutils
 fi
 
 function install_package() {
