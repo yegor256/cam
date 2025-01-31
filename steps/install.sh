@@ -129,7 +129,7 @@ if ! inkscape --version >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
     "${LOCAL}/help/sudo.sh" add-apt-repository -y ppa:inkscape.dev/stable && \
       "${LOCAL}/help/sudo.sh" apt-get update -y --fix-missing && \
-      "${LOCAL}/help/sudo.sh" apt-get install -y inkscape
+      "${LOCAL}/help/sudo.sh" apt-get install --yes inkscape
   elif "${LOCAL}/help/is-macos.sh"; then
    "${LOCAL}/help/sudo.sh" --as-user brew install --cask inkscape
   else
@@ -139,7 +139,7 @@ fi
 
 if ! xmllint --version >/dev/null 2>&1; then
   if "${LOCAL}/help/is-linux.sh"; then
-    "${LOCAL}/help/sudo.sh" apt-get install -y libxml2-utils
+    "${LOCAL}/help/sudo.sh" apt-get install --yes libxml2-utils
   elif "${LOCAL}/help/is-macos.sh"; then
     "${LOCAL}/help/sudo.sh" --as-user brew install libxml2
   else
