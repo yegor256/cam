@@ -70,7 +70,7 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   rm "${csv}"
   mv "${nosamples}" "${csv}"
 
-  if [ -n "${GIGACHAT_API}" ] && [ -n "${GIGACHAT_MODEL}" ]; then
+  if [ -n "${GIGACHAT_KEY}" ] && [ -n "${GIGACHAT_MODEL}" ]; then
     maintained=${TARGET}/maintained.csv
       declare -a margs=( \
         "--repositories=${csv}" \
@@ -80,14 +80,13 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
       )
     repo-reasoner filter-unmaintained "${margs[@]}"
     cp "${csv}" "${csv}.old"
-    echo "" > "${csv}"
-    head -n 1 "${maintained}" > "${csv}"
+    head -n 1 "${csv}.old" > "${csv}"
     while IFS=, read -r full_name default_branch created_at open_issues_count description topics stars forks size; do
       if [[ "${full_name}" == "full_name" ]]; then
         continue
       fi
       maintained_status=$(grep -m 1 "^${full_name}," "${maintained}" | cut -d ',' -f2)
-      if [ "${maintained_status}" == "yes" ]; then
+      if [[ "${maintained_status,,}" == "yes" ]]; then
         echo "${full_name},${default_branch},${created_at},${open_issues_count},${description},${topics},${stars},${forks},${size}" >> "${csv}"
       fi
     done < "${csv}.old"
