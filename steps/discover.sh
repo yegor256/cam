@@ -69,6 +69,31 @@ elif [ -z "${REPOS}" ] || [ ! -e "${REPOS}" ]; then
   samples-filter filter "${fargs[@]}"
   rm "${csv}"
   mv "${nosamples}" "${csv}"
+
+  if [ -n "${GIGACHAT_KEY}" ] && [ -n "${GIGACHAT_MODEL}" ]; then
+    maintained=${TARGET}/maintained.csv
+      declare -a margs=( \
+        "--repositories=${csv}" \
+        "--output=${maintained}" \
+        "--key=${GIGACHAT_KEY}" \
+        "--model=${GIGACHAT_MODEL}"
+      )
+    repo-reasoner filter-unmaintained "${margs[@]}"
+    cp "${csv}" "${csv}.old"
+    head -n 1 "${csv}.old" > "${csv}"
+    while IFS=, read -r full_name default_branch created_at open_issues_count description topics stars forks size; do
+      if [[ "${full_name}" == "full_name" ]]; then
+        continue
+      fi
+      maintained_status=$(grep -m 1 "^${full_name}," "${maintained}" | cut -d ',' -f2)
+      if [[ "${maintained_status,,}" == "yes" ]]; then
+        echo "${full_name},${default_branch},${created_at},${open_issues_count},${description},${topics},${stars},${forks},${size}" >> "${csv}"
+      fi
+    done < "${csv}.old"
+  else
+    echo "GIGACHAT_API and/or GIGACHAT_MODEL are not defined. Skipping repo-reasoner."
+  fi
+
 else
   echo "Using the list of repositories from the '${REPOS}' file (defined by the REPOS environment variable)..."
   cat "${REPOS}" > "${csv}"
