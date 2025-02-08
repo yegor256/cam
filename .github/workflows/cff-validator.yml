@@ -30,6 +30,7 @@ name: cff-validator
       - CITATION.cff
 jobs:
   cff-validator:
+    timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
