@@ -46,12 +46,6 @@ REPOS =
 # Single repository name to use (mostly for testing purposes).
 REPO =
 
-# Api key for GigaChat.
-GIGACHAT_KEY =
-
-# LLM model to be applied
-GIGACHAT_MODEL =
-
 # Where all files are kept
 LOCAL := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
