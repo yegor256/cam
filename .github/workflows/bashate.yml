@@ -16,4 +16,4 @@ jobs:
         with:
           python-version: 3.11
       - run: pip install bashate
-      - run: bashate -i E006,E003 $(find . -name '*.sh')
+      - run: bashate -i E006,E003 "$(find . -name '*.sh')"
