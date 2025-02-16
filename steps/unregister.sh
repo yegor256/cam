@@ -41,7 +41,9 @@ echo "${head}" > "${csv}"
 declare -i total=0
 declare -i good=0
 while IFS=',' read -r r tag tail; do
-    if [ -z "${r}" ]; then continue; fi
+    if [ -z "${r}" ]; then
+      continue;
+    fi
     total=$((total+1))
     if [ ! -e "${TARGET}/github/${r}" ]; then
         echo "The clone of ${r} is absent, unregistered"

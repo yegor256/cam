@@ -41,7 +41,9 @@ candidates=${temp}/files-to-check-line-lengths.txt
 find "${home}" -type f -name '*.java' -print > "${candidates}"
 while IFS= read -r f; do
     length=$(LC_ALL=C awk '{ print length($0) }' < "${f}" | sort -n | tail -1)
-    if [ -z "${length}" ]; then continue; fi
+    if [ -z "${length}" ]; then
+      continue;
+    fi
     if [ "${length}" -gt "${max}" ]; then
         echo "${f}" >> "${list}"
         rm "${f}"

@@ -70,4 +70,6 @@ for mask in *.sh *.py *.rb *.yml *.java Makefile; do
         -not -path "$(realpath "${LOCAL}")/test-zone/**" \
         -not -path "$(realpath "${LOCAL}")/venv/**")
 done
-if [[ "${failed}" = "true" ]]; then exit; fi
+if [[ "${failed}" = "true" ]]; then
+  exit;
+fi

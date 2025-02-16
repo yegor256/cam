@@ -41,8 +41,12 @@ declare -i repo=0
 sh="$(dirname "$0")/clone-repo.sh"
 while IFS=',' read -r r tag tail; do
     repo=$((repo+1))
-    if [ -z "${tag}" ]; then tag='master'; fi
-    if [ "${tag}" = '.' ]; then tag='master'; fi
+    if [ -z "${tag}" ]; then
+      tag='master';
+    fi
+    if [ "${tag}" = '.' ]; then
+      tag='master';
+    fi
     if [ -e "${TARGET}/github/${r}" ]; then
         echo "${r}: Git repo is already here (${tail})"
     else
