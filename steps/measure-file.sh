@@ -51,5 +51,5 @@ echo "${metrics}" | {
     done
     echo "$(echo "${metrics}" | wc -w | xargs) scripts \
 collected $(find "$(dirname "${javam}")" -type f -name "$(basename "${javam}").*" | wc -l | xargs) metrics (sum=${sum}) \
-for $(basename "${java}") (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
+for: $(basename "${java}") (${pos}/${total})$("${LOCAL}/help/tdiff.sh" "${start}")"
 }
