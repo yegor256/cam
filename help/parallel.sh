@@ -25,7 +25,9 @@ set -o pipefail
 
 jobs=$1
 x=$2
-if [ -z "${x}" ]; then x=1; fi
+if [ -z "${x}" ]; then
+  x=1;
+fi
 
 cores=$(echo "$(nproc) * ${x}" | bc)
 args=(

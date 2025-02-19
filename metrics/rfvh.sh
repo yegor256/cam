@@ -45,7 +45,7 @@ if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; t
         rest=''                     #   and there is no 'rest'
       fi
       rvh=$(git log -L:"class\s:${first}" | grep -E "^[+-].*$" | grep -Ev "^\-\-\-\s\S+$" | grep -Evc "^\+\+\+\s\S+$")
-      ((all_rvhs+=rvh))
+      all_rvhs=$((all_rvhs+rvh))
       files=$rest
     done
     rfvh=$(python3 -c "print(${my_rvh} / ${all_rvhs})")

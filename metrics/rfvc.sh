@@ -32,7 +32,7 @@ base=$(basename "${java}")
 # To check that file was added in commit any time
 if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; then
     my_rvc=$(git log --pretty=format:"%h" "${java}" | wc -l)
-    ((my_rvc+=1))
+    my_rvc=$((my_rvc+1))
     files=$(git ls-tree -r "$(git branch --show-current)" --name-only)
     all_rvcs=0
 
@@ -46,8 +46,8 @@ if git status > /dev/null 2>&1 && test -n "$(git log --oneline -- "${base}")"; t
         rest=''                     #   and there is no 'rest'
       fi
       rvc=$(git log --pretty=format:"%h" "$first" | wc -l)
-      ((rvc+=1))
-      ((all_rvcs+=rvc))
+      rvc=$((rvc+1))
+      all_rvcs=$((all_rvcs+rvc))
       files=$rest
     done
     rfvc=$(python3 -c "print(${my_rvc} / ${all_rvcs})")

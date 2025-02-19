@@ -74,7 +74,9 @@ for idx in "${!groups[@]}"; do
     else
         group_metrics=$(grep -oE ".*\b${groups[$idx]}\b.*" "${list}" || :)
     fi
-    if [[ $(printf "%s\n" "${group_metrics[@]}" | grep -c "item") -eq 0 ]]; then continue; fi
+    if [[ $(printf "%s\n" "${group_metrics[@]}" | grep -c "item") -eq 0 ]]; then
+      continue;
+    fi
     printf "\\item %s\n" "${groups[$idx]}" >> "${st_list}"
     printf "\\\\begin{itemize}\n" >> "${st_list}"
     while IFS= read -r metric; do
