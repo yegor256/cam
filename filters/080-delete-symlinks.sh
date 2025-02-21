@@ -34,7 +34,9 @@ touch "${list}"
 while true; do
     slice=${temp}/symlinks-to-delete.txt
     find "${home}" -mindepth 1 -type l -print > "${slice}"
-    if [ ! -s "${slice}" ]; then break; fi
+    if [ ! -s "${slice}" ];then
+      break;
+    fi
     while IFS= read -r link; do
         rm "${link}"
         echo "${link}" >> "${list}"
