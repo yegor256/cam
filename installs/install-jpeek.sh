@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# MIT License
-#
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
