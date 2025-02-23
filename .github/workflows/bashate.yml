@@ -23,4 +23,3 @@ jobs:
       - run: |
           readarray -t files < <(find . -name '*.sh')
           bashate -i E006,E003 "${files[@]}"
-
