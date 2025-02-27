@@ -20,6 +20,7 @@ path = [
     ".gitleaksignore",
     ".pdd",
     ".xcop",
+    "DEPENDS.txt",
     "Gemfile.lock",
     "README.md",
     "renovate.json",
