@@ -25,5 +25,7 @@ if ! tlmgr --version >/dev/null 2>&1; then
   fi
 fi
 
+# Force update tlmgr even if remote appears older
+"${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self --force
 "${LOCAL}/help/sudo.sh" tlmgr install collection-latex
 pdflatex -v
