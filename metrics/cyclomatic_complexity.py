@@ -27,6 +27,7 @@ def branches(parser_class: tree.CompilationUnit) -> int:
             tree.WhileStatement,
             tree.DoStatement,
             tree.TernaryExpression
+            tree.MethodDeclaration
         )
     ):
         count = 1
