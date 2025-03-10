@@ -14,7 +14,24 @@ stdout=$2
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-echo "👍🏻 Correctly calculated cyclomatic complexity"
+echo "👍🏻 Correctly calculated cyclomatic complexity for empty class"
+
+{
+    java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /FooTest.java"
+    mkdir -p "$(dirname "${java}")"
+    echo "public class SimpleControlFlow {
+              public void checkNumber(int number) {
+                  if (number > 0) {
+                      System.out.println(\"The number is positive.\");
+                  } else {
+                      System.out.println(\"The number is not positive.\");
+                  }
+              }
+          }" > "${java}"
+    "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated cyclomatic complexity for single method class"
 
 {
     if ! "${LOCAL}/metrics/cyclomatic_complexity.py" > "${temp}/message"; then
