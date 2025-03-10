@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2021-2025 Yegor Bugayenko
+ * SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+ * SPDX-License-Identifier: MIT
  */
 /*
  * PlotSquared, a land and world management plugin for Minecraft.

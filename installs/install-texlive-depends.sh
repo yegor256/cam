@@ -19,7 +19,7 @@ elif "${LOCAL}/help/is-linux.sh"; then
     "${LOCAL}/help/sudo.sh" tlmgr init-usertree
   fi
 fi
-"${LOCAL}/help/sudo.sh" tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet
+"${LOCAL}/help/sudo.sh" tlmgr option repository https://ftp.snt.utwente.nl/pub/software/tex/systems/texlive/tlnet
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self
 packages=()
 while IFS= read -r p; do

@@ -7,12 +7,12 @@ set -o pipefail
 
 if ! "${LOCAL}/help/texlive-bin.sh"; then
   if [ ! -f "install-tl.zip" ]; then
-    wget --quiet http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip
+    wget --quiet https://ftp.snt.utwente.nl/pub/software/tex/systems/texlive/tlnet/install-tl.zip
   fi
   rm -rf install-tl
   unzip install-tl.zip -d install-tl
   name=$(find install-tl/ -type d -name "install-tl-*" -exec basename {} \;)
-  perl "./install-tl/${name}/install-tl" --scheme=scheme-minimal --no-interaction
+  perl "./install-tl/${name}/install-tl" --scheme=scheme-minimal --no-interaction --repository=https://ftp.snt.utwente.nl/pub/software/tex/systems/texlive/tlnet
   rm -rf install-tl install-tl.zip
 fi
 
