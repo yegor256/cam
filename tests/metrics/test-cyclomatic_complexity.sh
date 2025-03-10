@@ -12,7 +12,7 @@ stdout=$2
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
-    grep "CC 1 " "${temp}/stdout"
+    grep "CC 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated cyclomatic complexity"
 

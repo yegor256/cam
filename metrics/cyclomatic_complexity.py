@@ -46,7 +46,7 @@ if __name__ == '__main__':
     metrics: Final[str] = sys.argv[2]
     with open(java, encoding='utf-8', errors='ignore') as f:
         try:
-            complexity: int = 1
+            complexity: int = 0
             ast = parse.parse(f.read())
             for path, node in ast:
                 complexity += branches(node)
