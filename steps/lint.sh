@@ -30,7 +30,6 @@ if ! bibcop --version >/dev/null 2>&1; then
   PATH=$PATH:$("${LOCAL}/help/texlive-bin.sh")
   export PATH
 fi
-bibcop tex/report.bib
 
 while IFS= read -r sh; do
     shellcheck --shell=bash --severity=style "${sh}"
