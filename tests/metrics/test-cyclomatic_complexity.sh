@@ -8,6 +8,7 @@ temp=$1
 stdout=$2
 
 {
+
     java="${temp}/foo/dir (with) _ long & and 'weird' \"name\" /FooTest.java"
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"
