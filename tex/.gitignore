@@ -13,3 +13,5 @@ _minted-*
 *.pyg
 *.out
 *.synctex.gz
+*.ret
+*.tmp

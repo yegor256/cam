@@ -1,0 +1,3 @@
+[submodule "tex/bibliography"]
+	path = tex/bibliography
+	url = https://github.com/yegor256/bibliography
