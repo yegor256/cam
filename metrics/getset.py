@@ -5,6 +5,7 @@
 # This metric counts the number of getter and setter methods in a class.
 
 import sys
+from typing import Final
 from javalang import tree, parse
 
 sys.setrecursionlimit(10000)
@@ -29,8 +30,8 @@ def analyze_method(method: tree.MethodDeclaration) -> str | None:
 
 
 if __name__ == '__main__':
-    java = sys.argv[1]
-    metrics = sys.argv[2]
+    java: Final[str] = sys.argv[1]
+    metrics: Final[str] = sys.argv[2]
 
     getter_count = 0
     setter_count = 0
