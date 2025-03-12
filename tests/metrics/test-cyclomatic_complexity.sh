@@ -14,7 +14,6 @@ stdout=$2
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 Correctly calculated cyclomatic complexity for empty class"
 
 {
@@ -32,7 +31,6 @@ echo "👍🏻 Correctly calculated cyclomatic complexity for empty class"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 Correctly calculated cyclomatic complexity for single method class"
 
 {
@@ -48,7 +46,6 @@ echo "👍🏻 Correctly calculated cyclomatic complexity for single method clas
         grep "Usage: python cyclomatic_complexity.py <path to the .java file> <output file with metrics>" "${temp}/message"
     fi
 } > "${stdout}" 2>&1
-
 echo "👍🏻 Usage works correctly"
 
 {
@@ -58,7 +55,6 @@ echo "👍🏻 Usage works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 IfStatement works correctly"
 
 {
@@ -68,7 +64,6 @@ echo "👍🏻 IfStatement works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 ForStatement works correctly"
 
 {
@@ -78,7 +73,6 @@ echo "👍🏻 ForStatement works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 WhileStatement works correctly"
 
 {
@@ -88,7 +82,6 @@ echo "👍🏻 WhileStatement works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 DoWhileStatement works correctly"
 
 {
@@ -98,7 +91,6 @@ echo "👍🏻 DoWhileStatement works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 3 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 BinaryOperation works correctly"
 
 {
@@ -108,7 +100,6 @@ echo "👍🏻 BinaryOperation works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 2 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 TernaryExpression works correctly"
 
 {
@@ -118,5 +109,4 @@ echo "👍🏻 TernaryExpression works correctly"
     "${LOCAL}/metrics/cyclomatic_complexity.py" "${java}" "${temp}/stdout"
     grep "CC 1 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-
 echo "👍🏻 MethodDeclaration works correctly"
