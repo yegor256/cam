@@ -3,70 +3,62 @@
 # SPDX-License-Identifier: MIT
 
 import sys
-from typing import Any, Final, List
+from typing import Any, Final
 
 import javalang
 
 
-def has_javadoc(lines: List[str], method_line: int) -> bool:
-    """
-    Checks whether a Javadoc comment exists immediately before the method declaration.
+def has_javadoc(lines_list: list[str], method_line: int) -> bool:
+    """Check whether a Javadoc comment exists immediately before the method declaration.
+
     Arguments:
-      lines: list of lines from the source file.
+      lines_list: list of lines from the source file.
       method_line: the line number (1-based) where the method declaration starts.
+
     Returns:
       True if a Javadoc comment is present immediately before the method, otherwise False.
     """
-    i = (
-        method_line - 2
-    )  # Move to the line before the method declaration (0-based indexing)
-    if i < 0:
-        return False
-
     comment_block = []
-    # Collect the comment block that is immediately above the method.
-    while i >= 0:
-        line = lines[i].strip()
-        # If the line is empty, assume a break between the comment and the method.
-        if line == "":
+    for line in reversed(lines_list[: method_line - 1]):
+        if not (stripped_line := line.strip()):
             break
-        # If the line starts with comment symbols.
-        if line.startswith("/*") or line.startswith("*") or line.startswith("//"):
-            comment_block.append(line)
-            i -= 1
+        if (
+            stripped_line.startswith("/*")
+            or stripped_line.startswith("*")
+            or stripped_line.startswith("//")
+        ):
+            comment_block.append(stripped_line)
         else:
             break
-    # If a comment block is found, check if it starts with "/**".
     if comment_block:
-        comment_block.reverse()  # Reverse to get the correct order
+        comment_block.reverse()  # Reverse to restore original order.
         return comment_block[0].startswith("/**")
     return False
 
 
 def javadoc_coverage(
-    tlist: list[tuple[Any, javalang.tree.ClassDeclaration]], lines: List[str]
+    tlist: list[tuple[Any, javalang.tree.ClassDeclaration]], lines_list: list[str]
 ) -> float:
-    """
-    Calculates the Javadoc coverage, i.e., the ratio of methods with Javadoc comments
-    to the total number of methods in a class.
+    """Calculate the Javadoc coverage, i.e., the ratio of methods documented with Javadoc to total methods in a class.
 
     :rtype: float
     """
-    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
-    methods_list = list(method for method in declaration)
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
     if not methods_list:
         return 0.0
 
     documented = 0
     total = 0
 
-    for path, node in methods_list:
+    for _, node in methods_list:
         total += 1
         if node.position is not None:
             method_line = node.position[
                 0
-            ]  # The line number where the method declaration starts
-            if has_javadoc(lines, method_line):
+            ]  # The line number where the method declaration starts.
+            if has_javadoc(lines_list, method_line):
                 documented += 1
     return documented / total
 
@@ -84,11 +76,10 @@ if __name__ == "__main__":
         raw_text = file.read()
         try:
             parsed = javalang.parse.parse(raw_text)
-            tree_class = list(parsed.filter(javalang.tree.ClassDeclaration))
-            if not tree_class:
-                raise Exception("This is not a class")
-            lines = raw_text.splitlines()
-            coverage = javadoc_coverage(tree_class, lines)
+            if not (tree_class := list(parsed.filter(javalang.tree.ClassDeclaration))):
+                raise ValueError("The file does not contain a valid class declaration")
+            lines_from_file = raw_text.splitlines()
+            coverage = javadoc_coverage(tree_class, lines_from_file)
             with open(metrics, "a", encoding="utf-8") as m:
                 m.write(
                     f"JDC {coverage} Javadoc Coverage: Ratio of methods documented with Javadoc to total methods\n"
