@@ -19,6 +19,7 @@ jobs:
       - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
   make-macos:
+    timeout-minutes: 30
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
