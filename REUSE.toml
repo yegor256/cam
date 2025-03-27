@@ -5,8 +5,10 @@ version = 1
 [[annotations]]
 path = [
     "**.csv",
+    "**.jpg",
     "**.json",
     "**.md",
+    "**.png",
     "**.txt",
     "**/*.csv",
     "**/*.jpg",
@@ -20,6 +22,7 @@ path = [
     "**/.DS_Store",
     "**/.dockerignore",
     "**/.gitignore",
+    "**/.gitmodules",
     "**/.latexmkrc",
     "**/.shellcheckrc",
     "**/.texqc",
@@ -31,8 +34,8 @@ path = [
     ".DS_Store",
     ".dockerignore",
     ".gitattributes",
-    ".gitmodules",
     ".gitignore",
+    ".gitmodules",
     ".latexmkrc",
     ".shellcheckrc",
     ".texqc",
