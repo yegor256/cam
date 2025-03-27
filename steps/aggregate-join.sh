@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
@@ -25,8 +27,7 @@
 # yegor256/jaxec,/src/main/java/bar/test/Another.java,14
 # ```
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 repo=$1
 dir=$2

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 stdout=$2
 
@@ -47,7 +48,8 @@ echo "👍🏻 A list of metrics is properly formatted"
 
 {
     mkdir -p "${TARGET}/temp/test_metric"
-    test_metric_sh="#!/bin/bash\n\n"
+    test_metric_sh="#!/usr/bin/env bash
+\n\n"
     test_metric_sh+="output=\$(realpath \"\$2\")\n"
     test_metric_sh+="for idx in {2..5}; do\n"
     test_metric_sh+="    echo \"Test-\${idx} 0 [Test group \$((idx % 2))] Test metrics\" >> \"\${output}\"\n"

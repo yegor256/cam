@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+
+
 # shellcheck disable=SC2317
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 # ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING irca.sh VIA REMOVING `exit 0`
 exit 0
@@ -62,7 +63,7 @@ echo "👍🏻 Didn't fail in repo without commits"
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  git commit --quiet -m "added first file"
+  git commit --no-verify --quiet -m "added first file"
   "${LOCAL}/metrics/irca.sh" "./${file1}" "t1"
   grep "irca 1 " "t1" # There is only committer in repo
 
@@ -71,7 +72,7 @@ echo "👍🏻 Didn't fail in repo without commits"
   file2="two.java"
   touch "${file2}"
   git add "${file2}"
-  git commit --quiet -m "added second file"
+  git commit --no-verify --quiet -m "added second file"
   "${LOCAL}/metrics/irca.sh" "./${file2}" "t2"
   grep "irca 0.5 " "t2" # There are two committers in repo and one for the given file
 
@@ -80,7 +81,7 @@ echo "👍🏻 Didn't fail in repo without commits"
   file3="three.java"
   touch "${file3}"
   git add "${file3}"
-  git commit --quiet -m "added third file"
+  git commit --no-verify --quiet -m "added third file"
   "${LOCAL}/metrics/irca.sh" "./${file3}" "t3"
   grep "irca 0.33 " "t3" # There are three committers in repo and one for the given file
 } >"${stdout}" 2>&1

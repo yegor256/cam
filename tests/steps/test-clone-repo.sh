@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -15,7 +16,7 @@ git config user.name 'Foo'
 touch test.txt
 git add .
 git config commit.gpgsign false
-git commit --quiet -am test
+git commit --no-verify --quiet -am test
 
 {
     rm -rf "${TARGET}/github"

@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-#!/bin/bash
+#!/usr/bin/env bash
+
 is_float() {
     local re="^-?[0-9]*\.?[0-9]+$"
     [[ $1 =~ $re ]]
 }
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 num=$(cat)
 

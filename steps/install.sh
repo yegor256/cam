@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
@@ -53,8 +55,7 @@ if [[ -z "$FORCE_INSTALL" ]]; then
   fi
 fi
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 set -x
 

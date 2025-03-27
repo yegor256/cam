@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -24,7 +25,7 @@ echo "👍🏻 Didn't fail in non-git directory"
     echo "class Foo {}" > "${java}"
     git add "${java}"
     git config commit.gpgsign false
-    git commit --quiet -am start
+    git commit --no-verify --quiet -am start
     "${LOCAL}/metrics/authors.sh" "${java}" stdout
     grep "NoGA 1 " stdout
 } > "${stdout}" 2>&1

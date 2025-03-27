@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+
+
 # shellcheck disable=SC2317
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 # TODO: #279 ENABLE THIS TESTS VIA REMOVING `exit 0` AND REMOVE `shellcheck disable=SC2317` on the top RIGHT AFTER IMPLEMENTING irc.sh
 exit 0
@@ -67,14 +68,14 @@ echo "👍🏻 Didn't fail in repo without commits"
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  git commit --quiet -m "first file"
+  git commit --no-verify --quiet -m "first file"
   "${LOCAL}/metrics/irc.sh" "./${file1}" "t2"
   grep "irc 1 " "t2" # There is only commit in repo and it is for the given file
 
   file2="two.java"
   touch "${file2}"
   git add "${file2}"
-  git commit --quiet -m "second file"
+  git commit --no-verify --quiet -m "second file"
   "${LOCAL}/metrics/irc.sh" "./${file2}" "t3"
   grep "irc 0.5 " "t3" # There are two commits in repo and one for the given file
 } > "${stdout}" 2>&1

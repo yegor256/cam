@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -23,12 +24,12 @@ echo "👍🏻 Didn't fail in non-git directory"
     git config commit.gpgsign false
     touch empty.file
     git add "empty.file"
-    git commit --quiet -am "Initial commit"
+    git commit --no-verify --quiet -am "Initial commit"
     java="Test.java"
     echo "class Foo {}" > "${java}"
     git add "${java}"
-    git commit --quiet -am "Second commit"
-    git commit --amend --no-edit --date="$(date -d "+1 hour" --rfc-2822)"
+    git commit --no-verify --quiet -am "Second commit"
+    git commit --no-verify --amend --no-edit --date="$(date -d "+1 hour" --rfc-2822)"
     "${LOCAL}/metrics/aocih.sh" "${java}" stdout
     grep -q "AoCiH 1" stdout
 } > "${stdout}" 2>&1

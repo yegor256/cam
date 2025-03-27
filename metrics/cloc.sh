@@ -2,8 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 java=$1
 output=$2

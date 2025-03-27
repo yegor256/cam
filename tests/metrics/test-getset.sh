@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+
+
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 # Test script for analyzing Java getter and setter methods and their complexities
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 # Setup temporary workspace
 temp=$1
