@@ -32,9 +32,8 @@ jobs:
           distribution: 'temurin'
           java-version: 21
       - run: sudo chown -R "$(whoami)" /usr/local
-      - name: 'Update make and bash'
-        run: brew install make bash
-      - name: 'Add make to PATH'
-        run: echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
+      - run: brew install make bash grep
+      - run: echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
+      - run: sudo ln -s /opt/homebrew/opt/ggrep /opt/homebrew/opt/grep
       - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
