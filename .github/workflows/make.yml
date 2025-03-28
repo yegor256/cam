@@ -32,9 +32,10 @@ jobs:
           distribution: 'temurin'
           java-version: 21
       - run: sudo chown -R "$(whoami)" /usr/local
-      - run: brew install make bash grep --overwrite
-      - run: echo "$(brew --prefix)/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
-      - run: echo "$(brew --prefix)/opt/grep/libexec/gnubin" >> "$GITHUB_PATH"
-      - run: echo 'hello' | grep --perl-regexp 'o'
+      - run: |
+          for c in make bash grep; do
+            brew install "${c}" --overwrite
+            echo "$(brew --prefix)/opt/${c}/libexec/gnubin" >> "$GITHUB_PATH"
+          done
       - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
