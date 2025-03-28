@@ -32,10 +32,8 @@ jobs:
           distribution: 'temurin'
           java-version: 21
       - run: sudo chown -R "$(whoami)" /usr/local
-      - run: brew install make bash grep
+      - run: brew install make bash grep --overwrite
       - run: echo "/opt/homebrew/opt/make/libexec/gnubin" >> "$GITHUB_PATH"
-      - run: echo 'export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"' >> ~/.bash_profile
-      - run: source ~/.bash_profile
       - run: echo 'hello' | grep --perl-regexp 'o'
       - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
