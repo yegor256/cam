@@ -27,15 +27,11 @@ public class TestDoc {
     public void alsoDocumented() {}
 }
 EOT
-
     metrics_file="${temp}/metrics.txt"
     "${script_location}" "${java_file}" "${metrics_file}"
     cat "${metrics_file}"
-
-
     grep "JDC 0.666" "${metrics_file}" \
       || grep "JDC 0.66" "${metrics_file}" \
       || grep "JDC 0.67" "${metrics_file}"
 } > "${stdout}" 2>&1
-
 echo "👍 Javadoc coverage was calculated correctly"

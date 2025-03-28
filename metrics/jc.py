@@ -66,7 +66,7 @@ def javadoc_coverage(
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print(
-            "Usage: python javadoc_coverage.py <path to the .java file> <output file with metrics>"
+            "Usage: python jc.py <path to the .java file> <output file with metrics>"
         )
         sys.exit(1)
 
