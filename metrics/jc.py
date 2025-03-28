@@ -80,6 +80,7 @@ if __name__ == "__main__":
                 raise ValueError("The file does not contain a valid class declaration")
             lines_from_file = raw_text.splitlines()
             coverage = javadoc_coverage(tree_class, lines_from_file)
+            coverage = round(coverage, 2)
             with open(metrics, "a", encoding="utf-8") as m:
                 m.write(
                     f"JDC {coverage} Javadoc Coverage: Ratio of methods documented with Javadoc to total methods\n"

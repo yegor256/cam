@@ -29,9 +29,12 @@ public class TestDoc {
 EOT
     metrics_file="${temp}/metrics.txt"
     "${script_location}" "${java_file}" "${metrics_file}"
-    cat "${metrics_file}"
-    grep "JDC 0.666" "${metrics_file}" \
-      || grep "JDC 0.66" "${metrics_file}" \
-      || grep "JDC 0.67" "${metrics_file}"
+    output=$(cat "${metrics_file}")
+    echo "${output}"
+    grep -q "JDC 0.67 " "${metrics_file}" || {
+        echo "Error: Expected JDC 0.67 not found in output:";
+        echo "${output}";
+        exit 1;
+    }
 } > "${stdout}" 2>&1
 echo "👍 Javadoc coverage was calculated correctly"
