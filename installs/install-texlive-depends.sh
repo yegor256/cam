@@ -23,6 +23,7 @@ fi
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --self
 packages=()
 while IFS= read -r p; do
+  p=$(echo "$p" | tr -d '\r')
   packages+=( "${p}" )
 done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | uniq )
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none install "${packages[@]}"
