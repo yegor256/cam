@@ -66,6 +66,9 @@ sed --version
 # Part of coreutils (by GNU):
 realpath --version
 
+# If fails on macOS, see this: https://stackoverflow.com/questions/16658333
+echo 'hello' | grep -q --perl-regexp 'e'
+
 bc -v
 
 javac -version
