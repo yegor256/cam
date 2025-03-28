@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
+# shellcheck disable=SC2317
 set -e -o pipefail
 
 temp=$1

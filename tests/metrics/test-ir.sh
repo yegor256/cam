@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-
-
-# shellcheck disable=SC2317
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
+# shellcheck disable=SC2317
 set -e -o pipefail
 
 # TODO: #259 ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING ir.sh VIA REMOVING `exit 0` AND REMOVE `shellcheck disable=SC2317` on the top RIGHT AFTER IMPLEMENTING ir.sh
