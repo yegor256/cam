@@ -55,7 +55,7 @@ def average_method_length(
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print(
-            "Usage: python average_method_length.py <path to the .java file> <output file with metrics>"
+            "Usage: python aml.py <path to the .java file> <output file with metrics>"
         )
         sys.exit(1)
 

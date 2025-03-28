@@ -8,7 +8,6 @@ temp=$1
 stdout=$2
 
 script_location="${LOCAL}/metrics/aml.py"
-
 {
     java_file="${temp}/TestAML.java"
     cat > "${java_file}" <<'EOT'
@@ -21,13 +20,18 @@ public class TestAML {
     }
 }
 EOT
-
     metrics_file="${temp}/metrics.txt"
     "${script_location}" "${java_file}" "${metrics_file}"
     output=$(cat "${metrics_file}")
-    echo "${output}"
-    echo "${output}" | grep "AML" || { echo "Error: AML metric not found"; exit 1; }
-    echo "${output}" | grep "Average Method Length" || { echo "Error: Metric description not found"; exit 1; }
+    expected_value="2.5"
+    echo "${output}" | grep -q "AML ${expected_value} " || {
+        echo "Error: Expected AML ${expected_value} not found in output:";
+        echo "${output}";
+        exit 1;
+    }
+    echo "${output}" | grep -q "Average Method Length" || {
+        echo "Error: Metric description 'Average Method Length' not found";
+        exit 1;
+    }
 } > "${stdout}" 2>&1
-
-echo "👍🏻 Average Method Length was calculated correctly"
+echo "👍🏻 Average Method Length was calculated correctly with value ${expected_value}"
