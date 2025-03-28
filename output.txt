@@ -1,0 +1,18 @@
+JDC 0.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+JDC 1.0 Javadoc Coverage: Ratio of methods documented with Javadoc to total methods
+AML 8.75 Average Method Length: Average number of lines per method
+AML 0.0 Average Method Length: Average number of lines per method
+CoCo 0 Cognitive Complexity: Total cognitive complexity of all methods in the class
+CoCo 32 Cognitive Complexity: Total cognitive complexity of all methods in the class
+LCOM 36 Lack of Cohesion of Methods (LCOM1)
+LCOM 0 Lack of Cohesion of Methods (LCOM1)
+LCOM 36 Lack of Cohesion of Methods (LCOM1)
