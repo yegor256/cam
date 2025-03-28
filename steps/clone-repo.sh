@@ -10,7 +10,7 @@ total=$4
 
 start=$(date +%s%N)
 
-if [[ "${repo}" =~ '!' ]]; then
+if [[ "${repo}" =~ '@' ]]; then
     uri=file://${repo}
     repo=files/$(basename "${repo}")
 else

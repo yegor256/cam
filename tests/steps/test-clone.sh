@@ -7,7 +7,8 @@ temp=$1
 stdout=$2
 
 {
-    uri=${temp}/foo!
+    name=foo@
+    uri=${temp}/${name}
     git init --quiet --initial-branch=master "${uri}"
     cd "${uri}"
     git config user.email 'foo@example.com'
@@ -19,15 +20,16 @@ stdout=$2
     echo -e "name\n${uri},master,4,5,5,6" > "${TARGET}/repositories.csv"
     rm -rf "${TARGET}/github"
     "${LOCAL}/steps/clone.sh"
-    test -e "${TARGET}/github/files/foo!/test.txt"
+    test -e "${TARGET}/github/files/${name}/test.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly"
 
 {
-    uri=${temp}/bar!
+    name=bar@
+    uri=${temp}/${name}
     git init --quiet --initial-branch=master "${uri}"
     cd "${uri}"
-    git config user.email 'bar@example.com'
+    git config user.email 'something@example.com'
     git config user.name 'Bar'
     touch test.txt
     git add test.txt
@@ -38,6 +40,6 @@ echo "👍🏻 A repo cloned correctly"
     echo -e "name\n${uri}" > "${TARGET}/repositories.csv"
     rm -rf "${TARGET}/github"
     "${LOCAL}/steps/clone.sh"
-    test -e "${TARGET}/github/files/bar!/test.txt"
+    test -e "${TARGET}/github/files/${name}/test.txt"
 } > "${stdout}" 2>&1
 echo "👍🏻 A repo cloned correctly into weird directory"

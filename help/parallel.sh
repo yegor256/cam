@@ -15,7 +15,6 @@ args=(
   '--halt=now,fail=1'
   '--retries=3'
   "--load=8"
-  "--unsafe"
   "--joblog=${jobs}.log"
   "--max-procs=${cores}"
   "--will-cite"
