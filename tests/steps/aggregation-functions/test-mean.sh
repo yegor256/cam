@@ -56,7 +56,6 @@ echo "👍🏻 Multiple metrics (LCOM5, NHD) aggregated correctly"
 echo "👍🏻 Mixed metrics aggregated correctly (LCOM5)"
 
 {
-    set -x
     dir="${TARGET}"
     mkdir -p "${dir}"
     touch "${dir}/Empty.java.m.LCOM5"
