@@ -6,20 +6,20 @@ set -e -o pipefail
 temp=$1
 stdout=$2
 
-uri=${temp}/foo!
-git init --quiet "${uri}"
-cd "${uri}"
-git config user.email 'foo@example.com'
-git config user.name 'Foo'
-touch test.txt
-git add .
-git config commit.gpgsign false
-git commit --no-verify --quiet -am test
-
 {
+    name=foo@
+    uri=${temp}/${name}
+    git init --quiet "${uri}"
+    cd "${uri}"
+    git config user.email 'foo@example.com'
+    git config user.name 'Foo'
+    touch test.txt
+    git add .
+    git config commit.gpgsign false
+    git commit --no-verify --quiet -am test
     rm -rf "${TARGET}/github"
     "${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1
-    test -e "${TARGET}/github/files/foo!/test.txt"
+    test -e "${TARGET}/github/files/${name}/test.txt"
     echo "👍🏻 A repo cloned correctly"
     "${LOCAL}/steps/clone-repo.sh" "${uri}" . 1 1
 } > "${stdout}" 2>&1
