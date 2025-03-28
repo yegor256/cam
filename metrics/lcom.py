@@ -12,7 +12,7 @@ def get_class_fields(
     tlist: List[Tuple[Any, javalang.tree.ClassDeclaration]],
 ) -> Set[str]:
     """Extracts the set of field names declared in the first class."""
-    fields = set()
+    fields: Set[str] = set()
     for _, field_decl in tlist[0][1].filter(javalang.tree.FieldDeclaration):
         for declarator in field_decl.declarators:
             fields.add(declarator.name)
@@ -23,7 +23,7 @@ def get_method_field_usage(
     method: javalang.tree.MethodDeclaration, class_fields: Set[str]
 ) -> Set[str]:
     """Returns the set of field names (from class_fields) that are used in the method."""
-    used = set()
+    used: Set[str] = set()
     if method.body is None:
         return used
     for stmt in method.body:
