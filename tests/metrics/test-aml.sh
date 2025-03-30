@@ -23,7 +23,7 @@ EOT
     metrics_file="${temp}/metrics.txt"
     "${script_location}" "${java_file}" "${metrics_file}"
     output=$(cat "${metrics_file}")
-    expected_value="2.5"
+    expected_value="3.0"
     echo "${output}" | grep -q "AML ${expected_value} " || {
         echo "Error: Expected AML ${expected_value} not found in output:";
         echo "${output}";
@@ -35,3 +35,26 @@ EOT
     }
 } > "${stdout}" 2>&1
 echo "👍🏻 Average Method Length was calculated correctly with value ${expected_value}"
+
+{
+    java_file="${temp}/EmptyTest.java"
+    cat > "${java_file}" <<'EOT'
+public class EmptyClass {
+}
+EOT
+    metrics_file="${temp}/metrics_empty_class.txt"
+    "${script_location}" "${java_file}" "${metrics_file}"
+    output=$(cat "${metrics_file}")
+    expected_value="0.0"
+    echo "${output}" | grep -q "AML ${expected_value} " || {
+        echo "Error: Expected AML ${expected_value} not found in output for empty class:";
+        echo "${output}";
+        exit 1;
+    }
+    echo "${output}" | grep -q "Average Method Length" || {
+        echo "Error: Metric description 'Average Method Length' not found in output for empty class";
+        exit 1;
+    }
+    echo "👍🏻 Average Method Length was calculated correctly for empty class with value ${expected_value}"
+} > "${stdout}" 2>&1
+echo "👍🏻 All tests passed successfully."

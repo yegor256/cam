@@ -28,11 +28,10 @@ def get_end_line(obj: Any) -> int:
 def average_method_length(
     tlist: list[tuple[Any, javalang.tree.ClassDeclaration]],
 ) -> float:
-    """Calculate the Average Method Length (AML), defined as the average number of lines per method in a class.
-    The method length is estimated as the difference between the method's starting line and the maximum line number
-    found in its body.
-
-    :rtype: float"""
+    """Calculate the Average Method Length (AML) defined as the average number
+    of lines (including declaration, opening and closing braces, and body) per method in a class.
+    For one-line methods and empty methods, AML is 1.
+    """
     methods = list(
         method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
     )
@@ -45,8 +44,12 @@ def average_method_length(
         if method.position is None:
             continue
         start_line = method.position[0]
-        end_line = get_end_line(method.body) if method.body is not None else start_line
-        length = end_line - start_line + 1
+        if method.body is None or not method.body:
+            length = 1
+        elif (end_line := get_end_line(method.body)) <= start_line:
+            length = 1
+        else:
+            length = (end_line - start_line + 1) + 1
         total_length += length
         count += 1
     return total_length / count if count else 0.0
