@@ -45,6 +45,7 @@ stdout=$2
     grep "NOP 0 " "${temp}/stdout"
     grep "NULLs 0 " "${temp}/stdout"
     grep "DOER 0.5 " "${temp}/stdout"
+    grep "AML 1.0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
@@ -88,3 +89,29 @@ echo "👍🏻 Usage works correctly"
     grep "NOMR 0.5 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated NOM and NOMR"
+
+{
+    java="${temp}/TestAML.java"
+    echo "public class TestAML {
+        public void shortMethod() { int a = 1; }
+        public void longMethod() {
+            System.out.println(\"Line 1\");
+            System.out.println(\"Line 2\");
+            System.out.println(\"Line 3\");
+        }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "AML 3.0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated AML for default class"
+
+{
+    java="${temp}/EmptyTest.java"
+    echo "public class EmptyClass {
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "AML 0.0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated AML for empty class"

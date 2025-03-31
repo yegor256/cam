@@ -420,6 +420,56 @@ def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return null_count
 
 
+def _get_end_line(obj: Any) -> int:
+    """Recursively traverse the given object (AST node or list) and return the maximum line number found.
+    If no line number is found, returns 0.
+    :rtype: int
+    """
+    max_line = 0
+    if hasattr(obj, "position") and obj.position is not None:
+        max_line = obj.position[0]
+    if isinstance(obj, list):
+        for item in obj:
+            if (candidate := _get_end_line(item)) > max_line:
+                max_line = candidate
+    elif hasattr(obj, "__dict__"):
+        for value in obj.__dict__.values():
+            if (candidate := _get_end_line(value)) > max_line:
+                max_line = candidate
+    return max_line
+
+
+def aml(
+    tlist: list[tuple[Any, javalang.tree.ClassDeclaration]],
+) -> float:
+    """Calculate the Average Method Length (AML), which is the average number
+    of lines (including declaration, opening and closing braces, and body) per method in a class.
+    For one-line methods and empty methods, AML is 1.
+    :rtype: float
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0.0
+
+    total_length = 0
+    count = 0
+    for _, method in methods_list:
+        if method.position is None:
+            continue
+        start_line = method.position[0]
+        if method.body is None or not method.body:
+            length = 1
+        elif (end_line := _get_end_line(method.body)) <= start_line:
+            length = 1
+        else:
+            length = (end_line - start_line + 1) + 1
+        total_length += length
+        count += 1
+    return total_length / count if count else 0.0
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -511,6 +561,9 @@ if __name__ == '__main__':
                              f'attributes that store primitive data types (e.g., int, char, boolean) to the total'
                              f'number of attributes in a class. It provides insight into the balance between simple'
                              f'data storage (primitives) and references to more complex objects (references).\n')
+                metric.write(f'AML {aml(tree_class)} '
+                             f'Average Method Length (AML), which is average number of \
+                             lines per method in a class\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
