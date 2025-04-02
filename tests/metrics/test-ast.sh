@@ -49,6 +49,7 @@ stdout=$2
     grep "Getters 0 " "${temp}/stdout"
     grep "Setters 0 " "${temp}/stdout"
     grep "CC 3 " "${temp}/stdout"
+    grep "JDC 0.0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
@@ -220,3 +221,26 @@ echo "👍🏻 TernaryExpression works correctly for Cyclomatic Complexity"
     grep "CC 1 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 MethodDeclaration works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/TestDoc.java"
+    cat > "${java}" <<EOT
+public class TestDoc {
+    /**
+     * This is a documented method.
+     */
+    public void documented() {}
+
+    public void notDocumented() {}
+
+    /**
+     * Another documented method.
+     */
+    public void alsoDocumented() {}
+}
+EOT
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "JDC 0.67 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍 Javadoc coverage was calculated correctly"

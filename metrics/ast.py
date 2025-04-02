@@ -541,6 +541,47 @@ def cc(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return complexity
 
 
+def _has_javadoc(lines_list: list[str], method_line: int) -> bool:
+    """Check whether a Javadoc comment exists immediately before the method declaration.
+    :rtype: bool
+    """
+    comment_block = []
+    for line in reversed(lines_list[: method_line - 1]):
+        if not (stripped_line := line.strip()):
+            break
+        if (
+            stripped_line.startswith("/*")
+            or stripped_line.startswith("*")
+            or stripped_line.startswith("//")
+        ):
+            comment_block.append(stripped_line)
+        else:
+            break
+    if comment_block:
+        comment_block.reverse()
+        return comment_block[0].startswith("/**")
+    return False
+
+
+def javadoc_coverage(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]], lines_list: list[str]) -> float:
+    """Calculate the Javadoc coverage, which is the ratio of methods
+    documented with Javadoc to total methods in a class.
+    :rtype: float
+    """
+    methods_list = list(method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration))
+    if not methods_list:
+        return 0.0
+    documented = 0
+    total = 0
+    for _, node in methods_list:
+        total += 1
+        if node.position is not None:
+            method_line = node.position[0]
+            if _has_javadoc(lines_list, method_line):
+                documented += 1
+    return round(documented / total, 2)
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -553,11 +594,13 @@ if __name__ == '__main__':
     java: Final[str] = sys.argv[1]
     metrics: Final[str] = sys.argv[2]
     with open(java, encoding='utf-8', errors='ignore') as file:
+        file_text = file.read()
         try:
-            raw = javalang.parse.parse(file.read())
+            raw = javalang.parse.parse(file_text)
             tree = raw.filter(javalang.tree.ClassDeclaration)
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
+            lines_from_file = file_text.splitlines()
             with open(metrics, 'a', encoding='utf-8') as metric:
                 metric.write(f'NoOA {attrs(tree_class)} '
                              f'Number of Non-Static (Object) Attributes\n')
@@ -642,6 +685,9 @@ if __name__ == '__main__':
                              f'Number of setter methods in a class\n')
                 metric.write(f'CC {cc(tree_class)} '
                              f'Cyclomatic Complexity of all methods\n')
+                metric.write(f'JDC {javadoc_coverage(tree_class, lines_from_file)} '
+                             f'Javadoc Coverage, which is ratio of methods documented \
+                             with Javadoc to total methods\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
