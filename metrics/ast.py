@@ -501,6 +501,46 @@ def getset(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> tuple[int
     return getter_count, setter_count
 
 
+def _branches(node: Any) -> int:
+    """Determines the number of branches for a node
+    according to the Extended Cyclomatic Complexity metric.
+    Binary operations (&&, ||) and each case statement
+    are taken into account.
+    :rtype: int
+    """
+    count = 0
+    if isinstance(node, javalang.tree.BinaryOperation):
+        if node.operator in ('&&', '||'):
+            count = 1
+    elif isinstance(
+        node,
+        (
+            javalang.tree.ForStatement,
+            javalang.tree.IfStatement,
+            javalang.tree.WhileStatement,
+            javalang.tree.DoStatement,
+            javalang.tree.TernaryExpression,
+            javalang.tree.MethodDeclaration
+        )
+    ):
+        count = 1
+    elif isinstance(node, javalang.tree.SwitchStatementCase):
+        count = 1
+    elif isinstance(node, javalang.tree.TryStatement):
+        count = 1
+    return count
+
+
+def cc(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Calculate the Cyclomatic Complexity (CC) of a class.
+    :rtype: int
+    """
+    complexity = 0
+    for _, node in tlist[0][1].filter(javalang.tree.Node):
+        complexity += _branches(node)
+    return complexity
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -600,6 +640,8 @@ if __name__ == '__main__':
                              f'Number of getter methods in a class\n')
                 metric.write(f'Setters {setters} '
                              f'Number of setter methods in a class\n')
+                metric.write(f'CC {cc(tree_class)} '
+                             f'Cyclomatic Complexity of all methods\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
