@@ -470,6 +470,37 @@ def aml(
     return total_length / count if count else 0.0
 
 
+def _is_getter_or_setter(method: javalang.tree.MethodDeclaration) -> str | None:
+    """Figures out whether a method is a getter or a setter.
+    :rtype: str or None
+    """
+    if method.name.startswith("get") and len(method.parameters) == 0:
+        return "getter"
+    if method.name.startswith("set") and len(method.parameters) == 1:
+        return "setter"
+    return None
+
+
+def getset(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> tuple[int, int]:
+    """Counts the number of getter and setter methods in a class.
+    :rtype: tuple[int, int]
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0, 0
+    getter_count = 0
+    setter_count = 0
+    for _, method in methods_list:
+        result = _is_getter_or_setter(method)
+        if result == "getter":
+            getter_count += 1
+        elif result == "setter":
+            setter_count += 1
+    return getter_count, setter_count
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -564,6 +595,11 @@ if __name__ == '__main__':
                 metric.write(f'AML {aml(tree_class)} '
                              f'Average Method Length (AML), which is average number of \
                              lines per method in a class\n')
+                getters, setters = getset(tree_class)
+                metric.write(f'Getters {getters} '
+                             f'Number of getter methods in a class\n')
+                metric.write(f'Setters {setters} '
+                             f'Number of setter methods in a class\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)

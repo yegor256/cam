@@ -46,6 +46,8 @@ stdout=$2
     grep "NULLs 0 " "${temp}/stdout"
     grep "DOER 0.5 " "${temp}/stdout"
     grep "AML 1.0 " "${temp}/stdout"
+    grep "Getters 0 " "${temp}/stdout"
+    grep "Setters 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
@@ -115,3 +117,23 @@ echo "👍🏻 Correctly calculated AML for default class"
     grep "AML 0.0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated AML for empty class"
+
+{
+    java="${temp}/Person.java"
+    echo "public class Person {
+        private String name;
+        private int age;
+        public String getName() {return this.name;}
+        public void setName(String name) {this.name = name;}
+        public int getAge() {return this.age;}
+        public void setAge(int age) {this.age = age;}
+        public void nonAccessorMethod() {
+            if (age > 18) {System.out.println(\"Adult\");}
+        }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "Getters 2 " "${temp}/stdout"
+    grep "Setters 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated Getter & Setter complexity"
