@@ -59,7 +59,6 @@ echo "👍🏻 Single file measured correctly"
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m2")
     echo "${msg}"
     echo "${msg}" | grep "Failed to collect ast.py"
-    echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
     test -e "${temp}/m2.CoCo"
     test -e "${temp}/m2.LoC"
     test ! -e "${temp}/m2.CC"

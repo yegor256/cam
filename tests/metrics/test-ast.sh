@@ -45,6 +45,10 @@ stdout=$2
     grep "NOP 0 " "${temp}/stdout"
     grep "NULLs 0 " "${temp}/stdout"
     grep "DOER 0.5 " "${temp}/stdout"
+    grep "AML 1.0 " "${temp}/stdout"
+    grep "Getters 0 " "${temp}/stdout"
+    grep "Setters 0 " "${temp}/stdout"
+    grep "CC 3 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly collected AST metrics"
 
@@ -88,3 +92,131 @@ echo "👍🏻 Usage works correctly"
     grep "NOMR 0.5 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated NOM and NOMR"
+
+{
+    java="${temp}/TestAML.java"
+    echo "public class TestAML {
+        public void shortMethod() { int a = 1; }
+        public void longMethod() {
+            System.out.println(\"Line 1\");
+            System.out.println(\"Line 2\");
+            System.out.println(\"Line 3\");
+        }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "AML 3.0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated AML for default class"
+
+{
+    java="${temp}/EmptyTest.java"
+    echo "public class EmptyClass {
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "AML 0.0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated AML for empty class"
+
+{
+    java="${temp}/Person.java"
+    echo "public class Person {
+        private String name;
+        private int age;
+        public String getName() {return this.name;}
+        public void setName(String name) {this.name = name;}
+        public int getAge() {return this.age;}
+        public void setAge(int age) {this.age = age;}
+        public void nonAccessorMethod() {
+            if (age > 18) {System.out.println(\"Adult\");}
+        }
+    }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "Getters 2 " "${temp}/stdout"
+    grep "Setters 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated Getter & Setter complexity"
+
+{
+    java="${temp}/FooTest.java"
+    echo "class Foo {}" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "CC 0 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated Cyclomatic Complexity for empty class"
+
+{
+    java="${temp}/SimpleControlFlow.java"
+    echo "public class SimpleControlFlow {
+              public void checkNumber(int number) {
+                  if (number > 0) {
+                      System.out.println(\"The number is positive.\");
+                  } else {
+                      System.out.println(\"The number is not positive.\");
+                  }
+              }
+          }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    cat "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly calculated Cyclomatic Complexity for single method class"
+
+{
+    java="${temp}/IfStatement.java"
+    echo "public class IfStatement { public void test(int a) { if (a > 0) {} } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 IfStatement works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/ForStatement.java"
+    echo "public class ForStatement { public void test() { for(int i=0; i<10; i++) {} } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 ForStatement works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/WhileStatement.java"
+    echo "public class WhileStatement { public void test(int a) { while (a > 0) { a--; } } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 WhileStatement works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/DoWhileStatement.java"
+    echo "public class DoWhileStatement { public void test(int a) { do { a--; } while (a > 0); } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 DoWhileStatement works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/BinaryOperation.java"
+    echo "public class BinaryOperation { public void test(int a, int b) { if (a > 0 && b > 0) {} } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 3 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 BinaryOperation works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/TernaryExpression.java"
+    echo "public class TernaryExpression { public int test(int a) { return (a > 0) ? 1 : 0; } }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 2 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 TernaryExpression works correctly for Cyclomatic Complexity"
+
+{
+    java="${temp}/MethodDeclaration.java"
+    echo "public class MethodDeclaration { public void test() {} }" > "${java}"
+    "${LOCAL}/metrics/ast.py" "${java}" "${temp}/stdout"
+    grep "CC 1 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 MethodDeclaration works correctly for Cyclomatic Complexity"

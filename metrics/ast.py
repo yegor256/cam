@@ -420,6 +420,127 @@ def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return null_count
 
 
+def _get_end_line(obj: Any) -> int:
+    """Recursively traverse the given object (AST node or list) and return the maximum line number found.
+    If no line number is found, returns 0.
+    :rtype: int
+    """
+    max_line = 0
+    if hasattr(obj, "position") and obj.position is not None:
+        max_line = obj.position[0]
+    if isinstance(obj, list):
+        for item in obj:
+            if (candidate := _get_end_line(item)) > max_line:
+                max_line = candidate
+    elif hasattr(obj, "__dict__"):
+        for value in obj.__dict__.values():
+            if (candidate := _get_end_line(value)) > max_line:
+                max_line = candidate
+    return max_line
+
+
+def aml(
+    tlist: list[tuple[Any, javalang.tree.ClassDeclaration]],
+) -> float:
+    """Calculate the Average Method Length (AML), which is the average number
+    of lines (including declaration, opening and closing braces, and body) per method in a class.
+    For one-line methods and empty methods, AML is 1.
+    :rtype: float
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0.0
+
+    total_length = 0
+    count = 0
+    for _, method in methods_list:
+        if method.position is None:
+            continue
+        start_line = method.position[0]
+        if method.body is None or not method.body:
+            length = 1
+        elif (end_line := _get_end_line(method.body)) <= start_line:
+            length = 1
+        else:
+            length = (end_line - start_line + 1) + 1
+        total_length += length
+        count += 1
+    return total_length / count if count else 0.0
+
+
+def _is_getter_or_setter(method: javalang.tree.MethodDeclaration) -> str | None:
+    """Figures out whether a method is a getter or a setter.
+    :rtype: str or None
+    """
+    if method.name.startswith("get") and len(method.parameters) == 0:
+        return "getter"
+    if method.name.startswith("set") and len(method.parameters) == 1:
+        return "setter"
+    return None
+
+
+def getset(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> tuple[int, int]:
+    """Counts the number of getter and setter methods in a class.
+    :rtype: tuple[int, int]
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0, 0
+    getter_count = 0
+    setter_count = 0
+    for _, method in methods_list:
+        result = _is_getter_or_setter(method)
+        if result == "getter":
+            getter_count += 1
+        elif result == "setter":
+            setter_count += 1
+    return getter_count, setter_count
+
+
+def _branches(node: Any) -> int:
+    """Determines the number of branches for a node
+    according to the Extended Cyclomatic Complexity metric.
+    Binary operations (&&, ||) and each case statement
+    are taken into account.
+    :rtype: int
+    """
+    count = 0
+    if isinstance(node, javalang.tree.BinaryOperation):
+        if node.operator in ('&&', '||'):
+            count = 1
+    elif isinstance(
+        node,
+        (
+            javalang.tree.ForStatement,
+            javalang.tree.IfStatement,
+            javalang.tree.WhileStatement,
+            javalang.tree.DoStatement,
+            javalang.tree.TernaryExpression,
+            javalang.tree.MethodDeclaration
+        )
+    ):
+        count = 1
+    elif isinstance(node, javalang.tree.SwitchStatementCase):
+        count = 1
+    elif isinstance(node, javalang.tree.TryStatement):
+        count = 1
+    return count
+
+
+def cc(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Calculate the Cyclomatic Complexity (CC) of a class.
+    :rtype: int
+    """
+    complexity = 0
+    for _, node in tlist[0][1].filter(javalang.tree.Node):
+        complexity += _branches(node)
+    return complexity
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -511,6 +632,16 @@ if __name__ == '__main__':
                              f'attributes that store primitive data types (e.g., int, char, boolean) to the total'
                              f'number of attributes in a class. It provides insight into the balance between simple'
                              f'data storage (primitives) and references to more complex objects (references).\n')
+                metric.write(f'AML {aml(tree_class)} '
+                             f'Average Method Length (AML), which is average number of \
+                             lines per method in a class\n')
+                getters, setters = getset(tree_class)
+                metric.write(f'Getters {getters} '
+                             f'Number of getter methods in a class\n')
+                metric.write(f'Setters {setters} '
+                             f'Number of setter methods in a class\n')
+                metric.write(f'CC {cc(tree_class)} '
+                             f'Cyclomatic Complexity of all methods\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
