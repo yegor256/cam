@@ -112,14 +112,24 @@ make REPO=yegor256/tojos
 For example, you want to add a new metric to the script:
 
 1. Fork a repository.
-2. Create a new file in the `metrics/` directory,
-using one of the existing files as an example.
-3. Create a test for your metric, in the `tests/metrics/` directory.
-4. Run the entire test suite
-    (this should take a few minutes to complete, without errors):
+2. Ensure dependencies are installed and the upstream master branch works correctly:
 
     ```bash
     sudo make install
+    make env test lint
+    ```
+
+    If you discover any errors in the master branch during this step,
+    please create an [issue](https://github.com/yegor256/cam/issues)
+    to report it before proceeding with your changes.
+
+3. Create a new file in the `metrics/` directory,
+using one of the existing files as an example.
+4. Create a test for your metric, in the `tests/metrics/` directory.
+5. Run the entire test suite
+    (this should take a few minutes to complete, without errors):
+
+    ```bash
     sudo make test lint
     ```
 
@@ -137,7 +147,7 @@ using one of the existing files as an example.
     docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
     ```
 
-5. Send us a
+6. Send us a
 [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
 We will review your changes and apply them to the `master` branch shortly,
 provided they don't violate our quality standards.
