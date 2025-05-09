@@ -6,11 +6,19 @@
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yegor256_cam2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=yegor256_cam2)
 
+## Table of Contents
+
+- [Dataset Overview](#classes-and-metrics-cam)
+- [Quick Start](#quick-start)
+- [How to Contribute](#how-to-contribute-eg-by-adding-a-new-metric)
+- [How to Calculate Additional Metrics](#how-to-calculate-additional-metrics)
+- [How to Build a New Archive](#how-to-build-a-new-archive)
+
 This is a dataset of open source Java classes and some metrics on them.
 Every now and then I make a new version of it using the scripts
-in this repository. You are welcome to use it in your researches.
+in this repository. You are welcome to use it in your research.
 Each release has a fixed version. By referring to it in your research
-you avoid ambiguity and guarantees repeatability of your experiments.
+you avoid ambiguity and guarantee repeatability of your experiments.
 
 This is a more formal explanation of this project:
 [in PDF](https://arxiv.org/abs/2403.08488).
@@ -34,16 +42,18 @@ and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
 Previous archives (took me a few days to build each of them, using a pretty big machine):
 
-* [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
+- [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
   (2.22Gb): 1000 repos, 48 metrics, 532K classes
-* [cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip)
+- [cam-2023-10-22.zip](http://cam.yegor256.com/cam-2023-10-22.zip)
   (2.19Gb): 1000 repos, 33 metrics, 863K classes
-* [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip)
+- [cam-2023-10-11.zip](http://cam.yegor256.com/cam-2023-10-11.zip)
   (3Gb): 959 repos, 29 metrics, 840K classes
-* [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip)
+- [cam-2021-08-04.zip](https://github.com/yegor256/cam/releases/download/0.2.0/cam-2021-08-04.zip)
   (692Mb): 1000 repos, 15 metrics
-* [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip)
+- [cam-2021-07-08.zip](https://github.com/yegor256/cam/releases/download/0.1.1/cam-2021-07-08.zip)
   (387Mb): 1000 repos, 11 metrics
+
+## Quick Start
 
 If you want to create a new dataset,
 just run the following command and the entire dataset will
@@ -85,9 +95,9 @@ created files. The process is incremental — it will understand
 where it stopped before.
 In order to restart an entire "step," delete the following directory:
 
-* `github/` to rerun `clone`
-* `temp/jpeek-logs/` to rerun `jpeek`
-* `measurements/` to rerun `measure`
+- `github/` to rerun `clone`
+- `temp/jpeek-logs/` to rerun `jpeek`
+- `measurements/` to rerun `measure`
 
 You can also run it without Docker:
 
@@ -114,56 +124,56 @@ For example, you want to add a new metric to the script:
 1. Fork a repository.
 2. Ensure dependencies are installed and the upstream master branch works correctly:
 
-    ```bash
-    sudo make install
-    make env test lint
-    ```
+   ```bash
+   sudo make install
+   make env test lint
+   ```
 
-    If you discover any errors in the master branch during this step,
-    please create an [issue](https://github.com/yegor256/cam/issues)
-    to report it before proceeding with your changes.
+   If you discover any errors in the master branch during this step,
+   please create an [issue](https://github.com/yegor256/cam/issues)
+   to report it before proceeding with your changes.
 
 3. Create a new file in the `metrics/` directory,
-using one of the existing files as an example.
+   using one of the existing files as an example.
 4. Create a test for your metric, in the `tests/metrics/` directory.
 5. Run the entire test suite
-    (this should take a few minutes to complete, without errors):
+   (this should take a few minutes to complete, without errors):
 
-    ```bash
-    sudo make test lint
-    ```
+   ```bash
+   sudo make test lint
+   ```
 
-    -You can also test it with Docker:
+   -You can also test it with Docker:
 
-    ```bash
-    docker build . -t cam
-    docker run --rm cam make test
-    ```
+   ```bash
+   docker build . -t cam
+   docker run --rm cam make test
+   ```
 
-    There is even a faster way to run all tests, with the help of Docker,
-    if you don't change any installation scripts:
+   There is even a faster way to run all tests, with the help of Docker,
+   if you don't change any installation scripts:
 
-    ```bash
-    docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
-    ```
+   ```bash
+   docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
+   ```
 
 6. Send us a
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
-We will review your changes and apply them to the `master` branch shortly,
-provided they don't violate our quality standards.
+   [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
+   We will review your changes and apply them to the `master` branch shortly,
+   provided they don't violate our quality standards.
 
 ## How to Calculate Additional Metrics
 
-You may want to use this dataset as a basis, with an intend of adding your own
+You may want to use this dataset as a basis, with an intent of adding your own
 metrics on top of it. It should be easy:
 
-* Clone this repo into `cam/` directory
-* Download ZIP archive
-* Unpack it to the `cam/dataset/` directory
-* Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
-* Delete all other files except yours from the `cam/metrics/` directory
-* Run [`make`](https://www.gnu.org/software/make/) in the `cam/`
-directory: `sudo make install; make all`
+- Clone this repo into `cam/` directory
+- Download ZIP archive
+- Unpack it to the `cam/dataset/` directory
+- Add a new script to the `cam/metrics/` directory (use `ast.py` as an example)
+- Delete all other files except yours from the `cam/metrics/` directory
+- Run [`make`](https://www.gnu.org/software/make/) in the `cam/`
+  directory: `sudo make install; make all`
 
 The `make` should understand that a new metric was added.
 It will apply this new metric
