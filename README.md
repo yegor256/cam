@@ -8,9 +8,9 @@
 
 This is a dataset of open source Java classes and some metrics on them.
 Every now and then I make a new version of it using the scripts
-in this repository. You are welcome to use it in your researches.
-Each release has a fixed version. By referring to it in your research
-you avoid ambiguity and guarantees repeatability of your experiments.
+in this repository. You are welcome to use it in your research.
+Each release has a fixed version. By referring to it in your research,
+you avoid ambiguity and guarantee repeatability of your experiments.
 
 This is a more formal explanation of this project:
 [in PDF](https://arxiv.org/abs/2403.08488).
@@ -133,7 +133,7 @@ using one of the existing files as an example.
     sudo make test lint
     ```
 
-    -You can also test it with Docker:
+    You can also test it with Docker:
 
     ```bash
     docker build . -t cam
@@ -154,7 +154,7 @@ provided they don't violate our quality standards.
 
 ## How to Calculate Additional Metrics
 
-You may want to use this dataset as a basis, with an intend of adding your own
+You may want to use this dataset as a basis, with an intent of adding your own
 metrics on top of it. It should be easy:
 
 * Clone this repo into `cam/` directory
