@@ -286,35 +286,35 @@ def ncss(parser_class: javalang.tree.CompilationUnit) -> int:
 
 def impls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of interfaces the class implements.
-    r:type: int
+    :rtype: int
     """
     return len(tlist[0][1].implements or [])
 
 
 def extnds(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Count the number of classes this class extends (0 or 1).
-    r:type: int
+    :rtype: int
     """
     return 0 if tlist[0][1].extends is None else 1
 
 
 def final(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return 1 if the class is final, zero otherwise.
-    r:type: int
+    :rtype: int
     """
     return 1 if 'final' in tlist[0][1].modifiers else 0
 
 
 def gnrcs(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of type parameters (generics).
-    r:type: int
+    :rtype: int
     """
     return len(tlist[0][1].type_parameters or [])
 
 
 def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of annotations of the class.
-    r:type: int
+    :rtype: int
     """
     return len(tlist[0][1].annotations or [])
 
@@ -322,7 +322,7 @@ def annts(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 def _components_number(name: str) -> int:
     """Return number of parts in variable name.
        Variables are split considering "$" and "_" symbols, snake_case and camelCase naming conventions.
-    r:type: int
+    :rtype: int
     """
     parts = 0
     components = [comp for comp in re.split(r'[\$_]+', name) if comp != '']
@@ -340,7 +340,7 @@ def _components_number(name: str) -> int:
 
 def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
     """Return average number of parts in variable names in class.
-    r:type: float
+    :rtype: float
     """
     parts = 0
     variables = 0
@@ -354,7 +354,7 @@ def pvn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> float:
 
 def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return maximum number of parts in variable names in class.
-    r:type: int
+    :rtype: int
     """
     max_parts = 0
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
@@ -366,8 +366,8 @@ def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 
 
 def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
-    """Return minimun number of parts in variable names in class.
-    r:type: int
+    """Return minimum number of parts in variable names in class.
+    :rtype: int
     """
     min_parts = 0
     for _, node in tlist[0][1].filter(javalang.tree.VariableDeclarator):
@@ -381,7 +381,7 @@ def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 
 def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of words in the name of a class.
-    r:type: int
+    :rtype: int
     """
     classname = tlist[0][1].name
     # By naming convention Java classes names use PascalCase.
@@ -393,7 +393,7 @@ def pcn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 def nop(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of polymorphic methods in main class.
     Methods of nested classes are skipped.
-    r:type: int
+    :rtype: int
     """
     declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
     methods_count: dict[str, int] = {}
@@ -411,7 +411,7 @@ def nop(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 
 def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     """Return number of null references used in the class.
-    r:type: int
+    :rtype: int
     """
     null_count = 0
     for _, node in tlist[0][1].filter(javalang.tree.Literal):
@@ -613,7 +613,7 @@ if __name__ == '__main__':
                 metric.write(f'NoCM {smethods(tree_class)} '
                              f'Number of Static (Class) Methods\n')
                 metric.write(f'NCSS {ncss(raw)} '
-                             f'Non-Commenting Source Statements (NCSS). This metric that measures the number of lines'
+                             f'Non-Commenting Source Statements (NCSS). This metric measures the number of lines'
                              f'in source code that are not comments or blank lines. It focuses on the actual executable'
                              f'statements in the code, excluding any documentation or formatting lines.\n')
                 metric.write(f'NoII {impls(tree_class)} '
@@ -638,7 +638,7 @@ if __name__ == '__main__':
                              f'Method Hiding Factor (MHF), which is the ratio of private \
                              and protected methods to total methods\n')
                 metric.write(f'SMHF {smhf(tree_class)} '
-                             f'Static Method Hiding Factor (MHF), which is the ratio of private \
+                             f'Static Method Hiding Factor (SMHF), which is the ratio of private \
                              and protected static methods to total static methods\n')
                 metric.write(f'AHF {ahf(tree_class)} '
                              f'Attribute Hiding Factor (AHF), which is the ratio of private \
@@ -653,10 +653,10 @@ if __name__ == '__main__':
                              f'Number of Static Method Parameters (NOSMP), which is the count of all \
                              parameters in all static methods in a class\n')
                 metric.write(f'NOMPMx {nompmx(tree_class)} '
-                             f'Maximum of Method Parameters (NOMPMx), which is the largest amount \
+                             f'Maximum Number of Method Parameters (NOMPMx), which is the largest amount \
                              of parameters in some method in a class\n')
                 metric.write(f'NOSMPMx {nosmpmx(tree_class)} '
-                             f'Maximum of Static Method Parameters (NOSMPMx), which is the largest \
+                             f'Maximum Number of Static Method Parameters (NOSMPMx), which is the largest \
                              amount of parameters in some static method in a class\n')
                 metric.write(f'NOM {nom(tree_class)} '
                              f'Number of Overriding Methods (NOM), which is the number of methods \
