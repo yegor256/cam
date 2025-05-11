@@ -691,3 +691,12 @@ if __name__ == '__main__':
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
+        except NotClassError:
+            # Silently exit if it's not a class file
+            sys.exit(0)
+        except javalang.parser.JavaSyntaxError as exception:
+            message = f"JavaSyntaxError: {str(exception)}: {java}"
+            sys.exit(message)
+        except Exception as exception:
+            message = f"Unexpected error: {type(exception).__name__} {str(exception)}: {java}"
+            sys.exit(message)
