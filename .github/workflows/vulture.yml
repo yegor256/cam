@@ -42,7 +42,7 @@ jobs:
             --exclude '**/pylint_plugins/**' \
             > vulture_report.txt
           vulture_exit=$?
-          
+
           if [ $vulture_exit -ne 0 ]; then
             echo "::error::Vulture found unused code!"
             cat vulture_report.txt
