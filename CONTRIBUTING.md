@@ -42,7 +42,7 @@ Please follow these guidelines to help us maintain a high-quality project.
   ```
   
 * To run tests in Docker:
- 
+
   ```bash
   docker build . -t cam
   docker run --rm cam make test
@@ -60,7 +60,8 @@ Please follow these guidelines to help us maintain a high-quality project.
 
 * To add a new metric:
 
-  1. Create a new script in the `metrics/` directory (use `ast.py` or other scripts as examples).
+  1. Create a new script in the `metrics/` directory
+   (use `ast.py` or other scripts as examples).
   2. Add a corresponding test in `tests/metrics/`.
   3. Update documentation as needed (e.g., `metrics/README.md`).
   4. Run all tests and lint checks.
@@ -73,4 +74,5 @@ Please follow these guidelines to help us maintain a high-quality project.
 
 ## Questions?
 
-If you have any questions, open an issue or start a discussion. We appreciate your contributions!
+If you have any questions, open an issue or start a discussion.
+ We appreciate your contributions!
