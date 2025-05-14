@@ -1,6 +1,6 @@
 # Contributing to CaM
 
-Thank you for your interest in contributing! 
+Thank you for your interest in contributing!
 Please follow these guidelines to help us maintain a high-quality project.
 
 ## Branching Model
@@ -14,16 +14,20 @@ Please follow these guidelines to help us maintain a high-quality project.
 * **Python:**
 
   * Follow [PEP8](https://www.python.org/dev/peps/pep-0008/) style.
-  * Linting is enforced with `flake8` and `pylint` (see `.github/workflows/flake8.yml` and `.github/workflows/pylint.yml`).
+  * Linting is enforced with `flake8` and `pylint`
+   (see `.github/workflows/flake8.yml` and `.github/workflows/pylint.yml`).
 
 * **Bash:**
 
-  * Use [ShellCheck](https://www.shellcheck.net/) and [bashate](https://github.com/openstack/bashate) for shell scripts.
+  * Use [ShellCheck](https://www.shellcheck.net/)
+   and [bashate](https://github.com/openstack/bashate) for shell scripts.
   * Linting is enforced in CI (`.github/workflows/shellcheck.yml`, `.github/workflows/bashate.yml`).
 
 * **Markdown:**
 
-  * Documentation should follow [Markdownlint](https://github.com/DavidAnson/markdownlint) rules (see `.github/workflows/markdown-lint.yml`).
+  * Documentation should follow
+   [Markdownlint](https://github.com/DavidAnson/markdownlint)
+    rules (see `.github/workflows/markdown-lint.yml`).
 
 * **General:**
 
