@@ -9,7 +9,7 @@ import javalang
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Usage: python delete-unparseable.py <path to the .java file> <output file with .java files>")
+        print("Usage: python delete-unparsable.py <path to the .java file> <output file with .java files>")
         sys.exit(1)
 
     java: Final[str] = sys.argv[1]

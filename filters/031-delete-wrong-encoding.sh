@@ -38,7 +38,7 @@ else
     if [ "${total}" -eq 0 ]; then
         printf "There were no Java classes with wrong encoding, nothing to delete"
     else
-        printf "All %'d files are with corrent encoding (utf-8/ascii), nothing to delete" \
+        printf "All %'d files are with correct encoding (utf-8/ascii), nothing to delete" \
             "${total}"
     fi
 fi

@@ -45,7 +45,7 @@ for mask in *.sh *.py *.rb *.yml *.java Makefile; do
         fi
     done < <(find "$(realpath "${LOCAL}")" -type f -name "${mask}" \
         -not -path "$(realpath "${TARGET}")/**" \
-        -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparseable/**" \
+        -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparsable/**" \
         -not -path "$(realpath "${LOCAL}")/test-zone/**" \
         -not -path "$(realpath "${LOCAL}")/venv/**")
 done
