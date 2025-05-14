@@ -66,7 +66,7 @@ install_package() {
     local PACKAGE=$1
     if ! eval "$PACKAGE" --version >/dev/null 2>&1; then
         if "${LOCAL}/help/is-linux.sh"; then
-            "${LOCAL}/help/sudo.sh" apt-get install --yes -S "$PACKAGE"
+            "${LOCAL}/help/sudo.sh" apt-get install --yes "$PACKAGE"
         elif "${LOCAL}/help/is-macos.sh"; then
             if brew -v; then
                 "${LOCAL}/help/sudo.sh" --as-user brew install "$PACKAGE"
