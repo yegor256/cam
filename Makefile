@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-.PHONY: clone filter measure cleanup env lint zip clean jpeek aggregate all test
+.PHONY: clone filter measure cleanup env lint zip clean jpeek aggregate all test metrics
 .SILENT:
 .SHELLFLAGS := -e -o pipefail -c
 .ONESHELL:
@@ -127,6 +127,10 @@ aggregate: $(TARGET)/measurements $(TARGET)/data
 # Summarize aggregated metrics in summary CSV files.
 summarize: $(TARGET)/measurements $(TARGET)/data
 	$(call step,summarize)
+
+# Collect and print all available metrics with their count.
+metrics: $(TARGET)/temp
+	$(call step,metrics)
 
 $(TARGET)/report.pdf: $(TARGET)/temp tex/report.tex
 	$(call step,report)
