@@ -366,7 +366,7 @@ def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 
 
 def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
-    """Return minimun number of parts in variable names in class.
+    """Return minimum number of parts in variable names in class.
     r:type: int
     """
     min_parts = 0
