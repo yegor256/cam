@@ -31,6 +31,7 @@ jobs:
             CITATION.cff
       - uses: peter-evans/create-pull-request@v7
         with:
+          sign-commits: true
           branch: version-up
           commit-message: 'new version in README and CITATION.cff'
           delete-branch: true

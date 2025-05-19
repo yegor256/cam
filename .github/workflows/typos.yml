@@ -2,18 +2,18 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: cff-validator
+name: typos
 'on':
   push:
-    paths:
-      - CITATION.cff
+    branches:
+      - master
   pull_request:
-    paths:
-      - CITATION.cff
+    branches:
+      - master
 jobs:
-  cff-validator:
+  typos:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: dieghernan/cff-validator@v4
+      - uses: crate-ci/typos@v1.32.0
