@@ -582,6 +582,19 @@ def javadoc_coverage(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]], li
     return round(documented / total, 2)
 
 
+def deprecated_methods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Count the number of methods annotated with @Deprecated.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    count = 0
+    for path, node in declaration:
+        del path
+        if any(annotation.name == "Deprecated" for annotation in node.annotations):
+            count += 1
+    return count
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -688,6 +701,8 @@ if __name__ == '__main__':
                 metric.write(f'JDC {javadoc_coverage(tree_class, lines_from_file)} '
                              f'Javadoc Coverage, which is ratio of methods documented \
                              with Javadoc to total methods\n')
+                metric.write(f'Deprecated {deprecated_methods(tree_class)} '
+                             f'Number of methods annotated with @Deprecated\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)
