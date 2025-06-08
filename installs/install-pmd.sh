@@ -22,7 +22,7 @@ if [ ! -e /usr/local ]; then
 fi
 
 pmd_version=7.5.0
-cd /usr/local || exit 1
+cd /usr/local
 name=pmd-dist-${pmd_version}-bin
 wget --quiet "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${pmd_version}/${name}.zip"
 unzip -qq "${name}.zip"
