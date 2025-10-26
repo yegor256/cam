@@ -18,8 +18,6 @@ stdout=$2
 echo "👍🏻 Didn't fail in non-git directory"
 
 {
-  echo "This test doesn't pass for some reason, need to investigate"
-  exit 0
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
   rm -rf ./*
@@ -33,11 +31,11 @@ echo "👍🏻 Didn't fail in non-git directory"
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  GIT_COMMITTER_DATE="$(date -d "100 minutes ago")" git commit --no-verify --date "100 minutes ago" --quiet -m "first"
+  GIT_COMMITTER_DATE="$(LC_ALL=C date -d "100 minutes ago")" git commit --no-verify --date "100 minutes ago" --quiet -m "first"
   "${LOCAL}/metrics/raf.sh" "${file1}" ./log1
   touch "${file2}"
   git add "${file2}"
-  GIT_COMMITTER_DATE="$(date -d "50 minutes ago")" git commit --no-verify --date "50 minutes ago" --quiet -m "second"
+  GIT_COMMITTER_DATE="$(LC_ALL=C date -d "50 minutes ago")" git commit --no-verify --date "50 minutes ago" --quiet -m "second"
   "${LOCAL}/metrics/raf.sh" "${file2}" ./log2
   touch "${file3}"
   git add "${file3}"
