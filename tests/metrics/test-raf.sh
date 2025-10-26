@@ -18,6 +18,7 @@ stdout=$2
 echo "👍🏻 Didn't fail in non-git directory"
 
 {
+  source "${LOCAL}/help/gnu-utils.sh"
   tmp=$(mktemp -d /tmp/XXXX)
   cd "${tmp}"
   rm -rf ./*
