@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: reviewdog/action-typos@v1.19.0
+      - uses: reviewdog/action-typos@d5eb1bb
         with:
           fail_level: none
           github_token: ${{ secrets.GITHUB_TOKEN }}
