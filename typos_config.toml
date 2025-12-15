@@ -1,0 +1,3 @@
+[default.extend-words]
+## Project-specific acronym
+astroid = "astroid" # library name
