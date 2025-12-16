@@ -126,16 +126,16 @@ public final class Jaxec {
      * @param args The command line arguments
      * @param dir Home directory
      * @param redir Redirect STDERR to STDOUT?
-     * @param chck Check exit code and fail if it's not zero?
+     * @param check Check exit code and fail if it's not zero?
      * @param input STDIN
      * @checkstyle ParameterNumberCheck (5 lines)
      */
     public Jaxec(final Collection<String> args, final File dir,
-        final boolean redir, final boolean chck, final InputStream input) {
+        final boolean redir, final boolean check, final InputStream input) {
         this.arguments = Collections.unmodifiableCollection(args);
         this.home = dir;
         this.redirect = redir;
-        this.check = chck;
+        this.check = check;
         this.stdin = input;
     }
 
@@ -176,12 +176,12 @@ public final class Jaxec {
 
     /**
      * With checking?
-     * @param chck If it's TRUE, the exit code of the shell command will be checked
+     * @param check If it's TRUE, the exit code of the shell command will be checked
      *  and an exception will be thrown if it's not zero
      * @return New Jaxec with a new checking mechanism
      */
-    public Jaxec withCheck(final boolean chck) {
-        return new Jaxec(this.arguments, this.home, this.redirect, chck, this.stdin);
+    public Jaxec withCheck(final boolean check) {
+        return new Jaxec(this.arguments, this.home, this.redirect, check, this.stdin);
     }
 
     /**
