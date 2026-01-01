@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 set -ex
