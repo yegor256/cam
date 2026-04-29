@@ -29,7 +29,7 @@ jobs:
             --format="%(creatordate:short)" | tail -1)
           sed -E -i "s|^date-released: [^ ]+|date-released: ${date}|g" \
             CITATION.cff
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8
         with:
           sign-commits: true
           branch: version-up
