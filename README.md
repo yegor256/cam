@@ -57,7 +57,7 @@ your [personal access token][create-PAT]:
 docker run --detach --name=cam --rm --volume "$(pwd):/dataset" \
   -e "TOKEN=XXX" -e "TOTAL=1000" -e "TARGET=/dataset" \
   --oom-kill-disable --memory=16g --memory-swap=16g \
-  yegor256/cam:0.9.3 "make -e >/dataset/make.log 2>&1"
+  yegor256/cam: "make -e >/dataset/make.log 2>&1"
 ```
 
 This command will create a new Docker container, running in the background.
@@ -144,7 +144,7 @@ using one of the existing files as an example.
     if you don't change any installation scripts:
 
     ```bash
-    docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
+    docker run -v $(pwd):/c --rm yegor256/cam: make -C /c test
     ```
 
 6. Send us a
