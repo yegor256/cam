@@ -193,7 +193,16 @@ File.write(
 
 path = File.expand_path(opts[:csv])
 FileUtils.mkdir_p(File.dirname(path))
-lines = [found.first[1].keys.join(',')] + found.values.map { |m| m.values.join(',') }
-lines << ''
-File.write(path, lines.join("\n"))
+csv_lines = []
+# If no repositories were found we still want to create a (possibly empty)
+# CSV file, but without raising an exception when trying to access
+# +found.first+. The header will be added only when we have at least one
+# repository collected.
+unless found.empty?
+  header = found.values.first.keys.join(',')
+  csv_lines << header
+  csv_lines += found.values.map { |m| m.values.join(',') }
+end
+csv_lines << ''
+File.write(path, csv_lines.join("\n"))
 puts "The list of #{found.count} repos saved into #{path}"
