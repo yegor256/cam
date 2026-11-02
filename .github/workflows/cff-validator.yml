@@ -13,7 +13,7 @@ name: cff-validator
 jobs:
   cff-validator:
     timeout-minutes: 15
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
       - uses: dieghernan/cff-validator@v5
