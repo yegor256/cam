@@ -32,7 +32,8 @@ number of attributes, constructors, methods;
 number of Git authors;
 and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
-Previous archives (took me a few days to build each of them, using a pretty big machine):
+Previous archives (took me a few days to build each of them,
+using a pretty big machine):
 
 * [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
   (2.22Gb): 1000 repos, 48 metrics, 532K classes
@@ -181,7 +182,8 @@ Then, install Docker into it:
 ```bash
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) \
 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
 https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
