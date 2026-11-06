@@ -12,8 +12,8 @@ fi
 # Raise the open-file soft limit to the hard limit so that GNU parallel
 # does not print "Only enough file handles to run N jobs in parallel".
 hard=$(ulimit -Hn 2>/dev/null || echo "")
-if [ -n "${hard}" ] && [ "${hard}" != "unlimited" ]; then
-  ulimit -n "${hard}" 2>/dev/null || true
+if [ -n "${hard}" ]; then
+  ulimit -Sn "${hard}" 2>/dev/null || true
 fi
 
 cores=$(echo "$(nproc) * ${x}" | bc)
