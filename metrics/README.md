@@ -77,24 +77,33 @@ Recursion adds one point per method in a direct or indirect call cycle,
 regardless of the number of recursive call sites. Calls through parameters or
 fields of the same source class can resolve to that method. Lambdas belong to
 the enclosing method; anonymous methods have their own call-graph nodes.
-This source-only implementation resolves unambiguous calls and simple same-arity
-overloads using source argument types. It does not perform classpath resolution,
-inheritance lookup or full Java overload inference. Keep PMD's metric when those
-capabilities are required.
+Qualified `this` selects its named enclosing class; later selectors in a chain
+are not treated as calls on `this`. Variable lookup follows the call's lexical
+position, including block and switch boundaries, declaration order and captured
+variables, inner fields, loop/catch/resource bindings and lambda parameters. An
+inferred lambda parameter still shadows a field even when its type is unknown.
+This source-only implementation resolves unambiguous calls and simple
+same-arity overloads using source argument types. Unknown receiver types and
+unresolved same-arity overloads do not create call-graph edges. It does not
+perform classpath resolution, inheritance lookup or full Java overload
+inference. Keep PMD's metric when those capabilities are required.
 
-The 82 snippets in `tests/metrics/cc-cases.json` record actual PMD 7.5.0 results
-(the version installed by CAM). `test-cc.sh` runs the installed PMD against all
-snippets in one invocation, checks its XML results against the recorded `pmd`
-values, then checks CoCoJ against the independent `expected` values. It also
-checks that appending CoCoJ preserves an existing CoCo row. Run it with:
+The 119 snippets in `tests/metrics/cc-cases.json` record actual PMD 7.5.0
+results (the version installed by CAM). `test-cc.sh` runs the installed PMD
+against all snippets in one invocation, checks its XML results against the
+recorded `pmd` values (also verified with PMD 7.22.0), then checks CoCoJ
+against the independent `expected` values. It also checks that appending CoCoJ
+preserves an existing CoCo row. Run it with:
 
 ```bash
 make test TEST=metrics/test-cc.sh
 ```
 
-Eight expectations deliberately differ from PMD 7.5.0 (also reproduced with
-7.22.0). These follow the [Cognitive Complexity specification][cognitive-spec]
-rather than incidental traversal behavior in [PMD's visitor][pmd-visitor]:
+Eleven expectations deliberately differ from PMD 7.5.0 (also reproduced with
+7.22.0). Control-flow and cycle differences follow the
+[Cognitive Complexity specification][cognitive-spec] rather than traversal
+behavior in [PMD's visitor][pmd-visitor]. The unresolved-overload case records
+the source inference limit:
 
 | Case | PMD | CoCoJ | Reason |
 | --- | ---: | ---: | --- |
@@ -106,6 +115,9 @@ rather than incidental traversal behavior in [PMD's visitor][pmd-visitor]:
 | `recursive_anonymous` | 2 | 0 | A call alone forms no cycle |
 | `three_method_cycle` | 0 | 3 | Three methods in an indirect cycle |
 | `repeated_indirect_cycle` | 0 | 2 | Repeated edges count once |
+| `qualified_outer_this` | 2 | 0 | Inner calls outer with no return edge |
+| `qualified_nested_outer_this` | 2 | 0 | Outer receiver has no cycle |
+| `unknown_overload_argument` | 1 | 0 | Unresolved argument type |
 
 Negated boolean groups start an independent sequence; parentheses alone do not.
 The baseline values stay separate so a PMD change cannot silently redefine

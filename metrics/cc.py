@@ -23,6 +23,7 @@ class Complexity:
 
     def __init__(self, ancestors: list[Any], selected: set[int], cycles: set[int]) -> None:
         self.cycles = cycles
+        self.ancestors = ancestors
         self.selected = selected
         self.methods = [node for node in ancestors if isinstance(node, TREE.MethodDeclaration)]
         self.classes = []
@@ -32,29 +33,81 @@ class Complexity:
             elif isinstance(node, TREE.ClassCreator) and node.body is not None:
                 self.classes.append(TREE.ClassDeclaration(name='', body=node.body))
 
-    def variable_type(self, name: str, scope: Any) -> str | None:
-        """Look up parameters, local declarations and fields in the source."""
-        if self.methods:
-            method = self.methods[-1]
-            for parameter in method.parameters:
-                if parameter.name == name:
-                    return str(parameter.type.name)
-            for path, declaration in method.filter(TREE.LocalVariableDeclaration):
-                if not any(isinstance(parent, (TREE.ClassDeclaration, TREE.ClassCreator,
-                                               TREE.LambdaExpression)) for parent in path):
-                    if any(variable.name == name for variable in declaration.declarators):
-                        return str(declaration.type.name)
-        for member in scope.body:
-            if isinstance(member, TREE.FieldDeclaration):
-                if any(variable.name == name for variable in member.declarators):
-                    return str(member.type.name)
+    @staticmethod
+    def binding_type(declarations: list[Any], name: str) -> str | None:
+        """Return an empty type for a bound but uninferred name, never a class name."""
+        for declaration in reversed(declarations):
+            names = [variable.name for variable in getattr(declaration, 'declarators', [])]
+            names.append(getattr(declaration, 'name', getattr(declaration, 'member', None)))
+            if name in names:
+                if (kind := getattr(declaration, 'type', None)) is None:
+                    return ''
+                dimensions = getattr(kind, 'dimensions', None)
+                return str(kind.name) + ('[]' if dimensions else '')
         return None
 
-    def argument_type(self, node: Any, scope: Any) -> str | None:
+    @staticmethod
+    def control_bindings(parent: Any, child: Any) -> list[Any]:
+        """Limit loop, catch and resource bindings to their Java scopes."""
+        result = []
+        if isinstance(parent, TREE.CatchClause):
+            parameter = parent.parameter
+            kind = TREE.ReferenceType(name=parameter.types[0]) if len(parameter.types) == 1 else None
+            result = [TREE.FormalParameter(name=parameter.name, type=kind)]
+        elif isinstance(parent, TREE.ForStatement) and child is parent.body:
+            control = parent.control
+            if isinstance(control, TREE.EnhancedForControl):
+                result = [control.var]
+            elif isinstance(control.init, TREE.VariableDeclaration):
+                result = [control.init]
+        elif isinstance(parent, TREE.ForControl) and child is not parent.init:
+            if isinstance(parent.init, TREE.VariableDeclaration):
+                result = [parent.init]
+        elif isinstance(parent, TREE.TryStatement) and child is parent.block:
+            result = list(parent.resources or [])
+        return result
+
+    @classmethod
+    def visible_bindings(cls, parent: Any, child: Any) -> list[Any]:
+        """Collect only declarations whose lexical scope contains this call."""
+        result = []
+        if isinstance(parent, list):
+            before = parent[:next((index for index, item in enumerate(parent)
+                                   if item is child), len(parent))]
+            statements = [statement for item in before
+                          for statement in (item.statements if isinstance(item, TREE.SwitchStatementCase)
+                                            else [item])]
+            result = [item for item in statements
+                      if isinstance(item, (TREE.LocalVariableDeclaration, TREE.TryResource))]
+        elif isinstance(parent, EXECUTABLES + (TREE.LambdaExpression,)):
+            result = list(parent.parameters)
+        elif isinstance(parent, (TREE.ClassDeclaration, TREE.ClassCreator)) and child is parent.body:
+            result = [item for item in parent.body or [] if isinstance(item, TREE.FieldDeclaration)]
+        elif isinstance(parent, (TREE.LocalVariableDeclaration, TREE.VariableDeclaration)):
+            # A declarator is in scope in its own initializer, but later ones are not.
+            names = []
+            for variable in parent.declarators:
+                names.append(variable)
+                if variable is child:
+                    break
+            result = [TREE.VariableDeclaration(type=parent.type, declarators=names)]
+        else:
+            result = cls.control_bindings(parent, child)
+        return result
+
+    def variable_type(self, name: str) -> str | None:
+        """Resolve from the call outwards, respecting blocks and captured bindings."""
+        children = self.ancestors[1:] + [None]
+        for parent, child in reversed(list(zip(self.ancestors, children))):
+            if (kind := self.binding_type(self.visible_bindings(parent, child), name)) is not None:
+                return kind
+        return None
+
+    def argument_type(self, node: Any) -> str | None:
         """Infer simple argument types to distinguish same-arity overloads."""
         result = None
         if isinstance(node, TREE.MemberReference) and not node.qualifier:
-            result = self.variable_type(node.member, scope)
+            result = self.variable_type(node.member)
         elif isinstance(node, TREE.Literal):
             if node.value in ('true', 'false'):
                 result = 'boolean'
@@ -65,8 +118,8 @@ class Complexity:
             elif node.value != 'null':
                 result = 'int' if node.value.isdigit() else None
         elif isinstance(node, TREE.BinaryOperation):
-            left = self.argument_type(node.operandl, scope)
-            right = self.argument_type(node.operandr, scope)
+            left = self.argument_type(node.operandl)
+            right = self.argument_type(node.operandr)
             result = left if left == right else None
         return result
 
@@ -74,20 +127,31 @@ class Complexity:
         """Resolve unambiguous source-local calls, without guessing external types."""
         if id(node) in self.selected:
             return None
-        for scope in reversed(self.classes):
-            if qualifier := node.qualifier:
-                receiver = self.variable_type(qualifier, scope)
-                if (receiver or qualifier) != scope.name:
-                    continue
-            candidates = [member for member in scope.body
-                          if isinstance(member, TREE.MethodDeclaration)
-                          and member.name == node.member
-                          and len(member.parameters) == len(node.arguments)]
+        scopes = list(reversed(self.classes))
+        receiver = next((parent for parent in reversed(self.ancestors)
+                         if isinstance(parent, TREE.This)
+                         and parent.selectors and parent.selectors[0] is node), None)
+        if receiver is not None:
+            names = {id(scope): '.'.join(item.name for item in self.classes[:index + 1]
+                                         if item.name)
+                     for index, scope in enumerate(self.classes)}
+            scopes = ([scope for scope in scopes
+                       if receiver.qualifier in (scope.name, names[id(scope)])][:1]
+                      if receiver.qualifier else scopes[:1])
+        elif node.qualifier:
+            kind = self.variable_type(node.qualifier)
+            name = node.qualifier if kind is None else kind
+            scopes = [scope for scope in scopes if scope.name == name][:1]
+        for scope in scopes:
+            members = [member for member in scope.body
+                       if isinstance(member, TREE.MethodDeclaration) and member.name == node.member]
+            candidates = [member for member in members
+                          if len(member.parameters) == len(node.arguments)]
             if len(candidates) > 1:
-                types = [self.argument_type(argument, scope) for argument in node.arguments]
+                types = [self.argument_type(argument) for argument in node.arguments]
                 candidates = [member for member in candidates
                               if [parameter.type.name for parameter in member.parameters] == types]
-            if candidates:
+            if members:
                 return candidates[0] if len(candidates) == 1 else None
         return None
 
