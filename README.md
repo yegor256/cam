@@ -109,25 +109,30 @@ make REPO=yegor256/tojos
 
 ## How to Contribute (e.g. by adding a new metric)
 
-For example, you want to add a new metric to the script:
+Contributions to metrics, scripts, and documentation are welcome.
+If you are unsure about a feature or an approach, open an
+[issue](https://github.com/yegor256/cam/issues) before implementing it.
 
-1. Fork a repository.
-2. Ensure dependencies are installed and the upstream master branch works correctly:
+1. Fork this repository and create a descriptive feature branch,
+   such as `feature/add-new-metric` or `bugfix/fix-typo`.
+2. Ensure dependencies are installed and the upstream `master` branch works:
 
     ```bash
     sudo make install
     make env test lint
     ```
 
-    If you discover any errors in the master branch during this step,
-    please create an [issue](https://github.com/yegor256/cam/issues)
-    to report it before proceeding with your changes.
+    If you discover errors on `master`, check existing
+    [issues](https://github.com/yegor256/cam/issues) and report any new ones
+    before proceeding with your changes.
 
-3. Create a new file in the `metrics/` directory,
-using one of the existing files as an example.
-4. Create a test for your metric, in the `tests/metrics/` directory.
-5. Run the entire test suite
-    (this should take a few minutes to complete, without errors):
+3. For a new metric, create an executable file in `metrics/`,
+   using an existing calculator as an example. Follow the input and output
+   contract in [metrics/README.md](metrics/README.md).
+4. Add a test in `tests/metrics/`, using existing tests as examples.
+   Cover typical inputs and edge cases. For other code changes,
+   add regression tests in the appropriate test directory.
+5. Update the relevant documentation and run the entire test suite:
 
     ```bash
     sudo make test lint
@@ -140,17 +145,24 @@ using one of the existing files as an example.
     docker run --rm cam make test
     ```
 
-    There is even a faster way to run all tests, with the help of Docker,
-    if you don't change any installation scripts:
+    If you do not change installation scripts, you can use the existing image:
 
     ```bash
-    docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
+    docker run -v "$(pwd):/c" --rm yegor256/cam:0.9.3 make -C /c test
     ```
 
-6. Send us a
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
-We will review your changes and apply them to the `master` branch shortly,
-provided they don't violate our quality standards.
+6. Open a
+   [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html)
+   against `master`. Describe the change, its purpose, and how you tested it.
+
+Follow the style of the surrounding code. Python checks are configured in
+[flake8.yml](.github/workflows/flake8.yml) and
+[pylint.yml](.github/workflows/pylint.yml). Shell scripts are checked with
+[ShellCheck](.github/workflows/shellcheck.yml) and
+[bashate](.github/workflows/bashate.yml). Documentation is checked by
+[Markdownlint](.github/workflows/markdown-lint.yml).
+Run `make lint` locally for the checks in [steps/lint.sh](steps/lint.sh),
+then check the remaining CI results on your pull request.
 
 ## How to Calculate Additional Metrics
 
@@ -182,7 +194,10 @@ Then, install Docker into it:
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) \
+signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update -y
 sudo apt-cache policy docker-ce
 sudo apt install -y docker-ce
