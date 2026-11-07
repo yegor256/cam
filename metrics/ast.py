@@ -627,7 +627,7 @@ class _LcomFields:
         """Visit expressions within a primary without resolving its selectors."""
         for attribute in node.attrs:
             value = getattr(node, attribute)
-            if attribute == 'body' and isinstance(node, javalang.tree.ClassCreator):
+            if attribute == 'body' and isinstance(node, (javalang.tree.ClassCreator, javalang.tree.InnerClassCreator)):
                 continue
             if attribute == 'selectors':
                 for selector in value or []:
@@ -674,7 +674,7 @@ class _LcomFields:
         """Handle declarations and scopes before traversing ordinary nodes."""
         if isinstance(node, javalang.tree.TypeDeclaration):
             return
-        if isinstance(node, javalang.tree.ClassCreator):
+        if isinstance(node, (javalang.tree.ClassCreator, javalang.tree.InnerClassCreator)):
             self.expression(node, shadowed)
             self.reference(node.qualifier or '', shadowed)
         elif isinstance(node, javalang.tree.VariableDeclaration):

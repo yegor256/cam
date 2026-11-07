@@ -302,6 +302,8 @@ cases = [
     ('anonymous-argument', 'class A { int x; void f(){Object r=new B(x){void p(){}};} void g(){x++;} void h(){} }', 1),
     ('anonymous-selector', 'class A { int x; void f(){Object r=new B().new C(){void p(){x++;}};} void g(){x++;} void h(){} }', 3),
     ('anonymous-selector-arg', 'class A { int x; void f(){Object r=new B().new C(x){void p(){}};} void g(){x++;} void h(){} }', 1),
+    ('inner-creator-receiver', 'class A { B x; void f(){Object r=x.new C(){void p(){}};} void g(){use(x);} void h(){} }', 1),
+    ('anonymous-selector-tail', 'class A { int x; void f(){new B().new C(){void p(){x++;}}.go(x);} void g(){x++;} void h(){} }', 1),
     ('anonymous-shadow', 'class A { int x; void f(){Object r=new B(){int x;}; x++;} void g(){x++;} void h(){} }', 1),
     ('constructors', 'class A { int x; A(){x++;} void f(){x++;} void g(){} }', 1),
     ('static-methods', 'class A { int x; static void p(){} static void q(){} void f(){x++;} }', 0),
