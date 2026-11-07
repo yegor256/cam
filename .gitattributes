@@ -1,4 +1,1 @@
-* text=auto
-*.sh text eol=lf
-*.bat text eol=crlf
-*.py text eol=lf
+* text=auto eol=lf
