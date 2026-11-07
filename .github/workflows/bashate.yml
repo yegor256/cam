@@ -1,22 +1,30 @@
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 name: bashate
 'on':
   push:
     branches:
       - master
+    paths:
+      - '**.sh'
+      - '**.bash'
+      - '.github/workflows/bashate.yml'
   pull_request:
     branches:
       - master
+    paths:
+      - '**.sh'
+      - '**.bash'
+      - '.github/workflows/bashate.yml'
 jobs:
   bashate:
     timeout-minutes: 15
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: 3.11
+          python-version: 3.15
       - run: pip install bashate
       - run: |
           readarray -t files < <(find . -name '*.sh')
