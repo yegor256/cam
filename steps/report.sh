@@ -17,7 +17,8 @@ list=${TARGET}/temp/list-of-metrics.tex
 rm -f "${list}"
 touch "${list}"
 
-java=${TARGET}/temp/Foo.java
+sample=${TARGET}/temp/metric-sample
+java=${sample}/Foo.java
 if [ -f "venv/bin/activate" ]; then
   # shellcheck source=venv/bin/activate disable=SC1091
   . venv/bin/activate
@@ -25,10 +26,12 @@ else
   echo "Error: venv/bin/activate not found. Please make sure the virtual environment is set up."
   exit 1
 fi
-mkdir -p "$(dirname "${java}")"
+mkdir -p "${sample}"
+# The synthetic class must not inherit the surrounding checkout as its source root.
+git init -q "${sample}"
 find "${LOCAL_METRICS}" -type f -exec test -x {} \; -exec basename {} \; | while IFS= read -r m; do
     echo "class Foo {}" > "${java}"
-    metric=${TARGET}/temp/Foo.${m}.m
+    metric=${sample}/Foo.${m}.m
     rm -f "${metric}"
     "${LOCAL_METRICS}/${m}" "${java}" "${metric}"
     awk '{ s= "\\item\\ff{" $1 "}: "; for (i = 3; i <= NF; i++) s = s $i " "; print s; }' < "${metric}" >> "${list}"
