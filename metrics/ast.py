@@ -595,6 +595,134 @@ def deprecated_methods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) 
     return count
 
 
+class _LcomFields:
+    """Collect direct instance-field uses without crossing a class boundary."""
+
+    def __init__(self, fields: set[str], owner: str) -> None:
+        self.fields = fields
+        self.owner = owner
+        self.used: set[str] = set()
+
+    def reference(self, name: str, shadowed: set[str]) -> None:
+        """Resolve the receiver of an unqualified or dotted expression."""
+        root = name.split('.')[0]
+        if root in self.fields and root not in shadowed:
+            self.used.add(root)
+
+    def expression(self, node: Any, shadowed: set[str]) -> None:
+        """Selectors belong to their receiver, not to the current class."""
+        if isinstance(node, javalang.tree.This):
+            if node.qualifier in (None, '', self.owner) and node.selectors:
+                first = node.selectors[0]
+                if isinstance(first, javalang.tree.MemberReference) and first.member in self.fields:
+                    self.used.add(first.member)
+        elif isinstance(node, (javalang.tree.MemberReference, javalang.tree.MethodInvocation)):
+            if node.qualifier:
+                self.reference(node.qualifier, shadowed)
+            elif isinstance(node, javalang.tree.MemberReference):
+                self.reference(node.member, shadowed)
+        self.contents(node, shadowed)
+
+    def contents(self, node: Any, shadowed: set[str]) -> None:
+        """Visit expressions within a primary without resolving its selectors."""
+        for attribute in node.attrs:
+            value = getattr(node, attribute)
+            if attribute == 'body' and isinstance(node, (javalang.tree.ClassCreator, javalang.tree.InnerClassCreator)):
+                continue
+            if attribute == 'selectors':
+                for selector in value or []:
+                    self.contents(selector, shadowed)
+            else:
+                self.walk(value, shadowed)
+
+    def declarations(self, node: Any, shadowed: set[str]) -> None:
+        """A local's scope starts at its declarator, including its initializer."""
+        for declarator in node.declarators:
+            shadowed.add(declarator.name)
+            self.walk(declarator.initializer, shadowed)
+
+    def loop(self, node: Any, shadowed: set[str]) -> None:
+        """Loop variables are visible only in their loop."""
+        scope = shadowed.copy()
+        if isinstance(node.control, javalang.tree.EnhancedForControl):
+            self.walk(node.control.iterable, scope)
+            self.walk(node.control.var, scope)
+        else:
+            self.walk(node.control, scope)
+        self.walk(node.body, scope)
+
+    def guarded(self, node: Any, shadowed: set[str]) -> None:
+        """Resources are visible in the try body, but not catch or finally."""
+        scope = shadowed.copy()
+        for resource in node.resources or []:
+            scope.add(resource.name)
+            self.walk(resource.value, scope)
+        self.walk(node.block, scope)
+        for catch in node.catches or []:
+            self.walk(catch.block, shadowed | {catch.parameter.name})
+        self.walk(node.finally_block, shadowed.copy())
+
+    def walk(self, node: Any, shadowed: set[str]) -> None:
+        """Walk lexical scopes in declaration order, skipping nested types."""
+        if isinstance(node, (list, tuple)):
+            for child in node:
+                self.walk(child, shadowed)
+        elif isinstance(node, javalang.tree.Node):
+            self.visit(node, shadowed)
+
+    def visit(self, node: Any, shadowed: set[str]) -> None:
+        """Handle declarations and scopes before traversing ordinary nodes."""
+        if isinstance(node, javalang.tree.TypeDeclaration):
+            return
+        if isinstance(node, (javalang.tree.ClassCreator, javalang.tree.InnerClassCreator)):
+            self.expression(node, shadowed)
+            self.reference(node.qualifier or '', shadowed)
+        elif isinstance(node, javalang.tree.VariableDeclaration):
+            self.declarations(node, shadowed)
+        elif isinstance(node, (javalang.tree.BlockStatement, javalang.tree.SynchronizedStatement)):
+            self.walk(getattr(node, 'lock', None), shadowed)
+            body = getattr(node, 'statements', getattr(node, 'block', None))
+            self.walk(body, shadowed.copy())
+        elif isinstance(node, javalang.tree.ForStatement):
+            self.loop(node, shadowed)
+        elif isinstance(node, javalang.tree.TryStatement):
+            self.guarded(node, shadowed)
+        elif isinstance(node, javalang.tree.LambdaExpression):
+            names = {param.member if isinstance(param, javalang.tree.MemberReference) else param.name
+                     for param in node.parameters}
+            self.walk(node.body, shadowed | names)
+        elif isinstance(node, javalang.tree.SwitchStatement):
+            self.walk(node.expression, shadowed)
+            self.walk(node.cases, shadowed.copy())
+        elif isinstance(node, javalang.tree.Primary):
+            self.expression(node, shadowed)
+        else:
+            self.walk(node.children, shadowed)
+
+
+def lcom(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """LCOM1: max(disjoint method pairs - shared method pairs, 0).
+
+    Use declared instance methods and instance fields only, excluding
+    constructors, static members, inherited members and nested class bodies.
+    Lambdas retain the enclosing instance. No call or alias analysis is done.
+    """
+    clazz = tlist[0][1]
+    fields = {declarator.name for field in clazz.fields if 'static' not in field.modifiers
+              for declarator in field.declarators}
+    usages = []
+    for method in clazz.methods:
+        if 'static' not in method.modifiers:
+            collector = _LcomFields(fields, clazz.name)
+            collector.walk(method.body, {param.name for param in method.parameters})
+            usages.append(collector.used)
+    difference = 0
+    for index, usage in enumerate(usages):
+        for other in usages[index + 1:]:
+            difference += -1 if usage & other else 1
+    return max(difference, 0)
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -696,6 +824,8 @@ if __name__ == '__main__':
                              f'Number of getter methods in a class\n')
                 metric.write(f'Setters {setters} '
                              f'Number of setter methods in a class\n')
+                metric.write(f'LCOM {lcom(tree_class)} '
+                             f'Lack of Cohesion of Methods (LCOM1)\n')
                 metric.write(f'CC {cc(tree_class)} '
                              f'Cyclomatic Complexity of all methods\n')
                 metric.write(f'JDC {javadoc_coverage(tree_class, lines_from_file)} '
