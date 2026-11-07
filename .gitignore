@@ -1,12 +1,12 @@
-*.pdf
-*.zip
 .DS_Store
 .idea/
-Library/
+*.pdf
+*.zip
 dataset/
 install-tl.log
 install-tl.zip.*
 install-tl/
+Library/
 node_modules/
 pipeline/
 predictions.csv

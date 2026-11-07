@@ -2,15 +2,15 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2403.08488-green.svg)](https://arxiv.org/abs/2403.08488)
 [![make](https://github.com/yegor256/cam/actions/workflows/make.yml/badge.svg?branch=master)](https://github.com/yegor256/cam/actions/workflows/make.yml)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/cam/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yegor256_cam2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=yegor256_cam2)
 
 This is a dataset of open source Java classes and some metrics on them.
 Every now and then I make a new version of it using the scripts
-in this repository. You are welcome to use it in your researches.
-Each release has a fixed version. By referring to it in your research
-you avoid ambiguity and guarantees repeatability of your experiments.
+in this repository. You are welcome to use it in your research.
+Each release has a fixed version. By referring to it in your research,
+you avoid ambiguity and guarantee repeatability of your experiments.
 
 This is a more formal explanation of this project:
 [in PDF](https://arxiv.org/abs/2403.08488).
@@ -32,7 +32,8 @@ number of attributes, constructors, methods;
 number of Git authors;
 and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
-Previous archives (took me a few days to build each of them, using a pretty big machine):
+Previous archives (took me a few days to build each of them,
+using a pretty big machine):
 
 * [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
   (2.22Gb): 1000 repos, 48 metrics, 532K classes
@@ -109,42 +110,64 @@ make REPO=yegor256/tojos
 
 ## How to Contribute (e.g. by adding a new metric)
 
-For example, you want to add a new metric to the script:
+Contributions to metrics, scripts, and documentation are welcome.
+If you are unsure about a feature or an approach, open an
+[issue](https://github.com/yegor256/cam/issues) before implementing it.
 
-1. Fork a repository.
-2. Create a new file in the `metrics/` directory,
-using one of the existing files as an example.
-3. Create a test for your metric, in the `tests/metrics/` directory.
-4. Run the entire test suite
-    (this should take a few minutes to complete, without errors):
+1. Fork this repository and create a descriptive feature branch,
+   such as `feature/add-new-metric` or `bugfix/fix-typo`.
+2. Ensure dependencies are installed and the upstream `master` branch works:
 
     ```bash
     sudo make install
+    make env test lint
+    ```
+
+    If you discover errors on `master`, check existing
+    [issues](https://github.com/yegor256/cam/issues) and report any new ones
+    before proceeding with your changes.
+
+3. For a new metric, create an executable file in `metrics/`,
+   using an existing calculator as an example. Follow the input and output
+   contract in [metrics/README.md](metrics/README.md).
+4. Add a test in `tests/metrics/`, using existing tests as examples.
+   Cover typical inputs and edge cases. For other code changes,
+   add regression tests in the appropriate test directory.
+5. Update the relevant documentation and run the entire test suite:
+
+    ```bash
     sudo make test lint
     ```
 
-    -You can also test it with Docker:
+    You can also test it with Docker:
 
     ```bash
     docker build . -t cam
     docker run --rm cam make test
     ```
 
-    There is even a faster way to run all tests, with the help of Docker,
-    if you don't change any installation scripts:
+    If you do not change installation scripts, you can use the existing image:
 
     ```bash
-    docker run -v $(pwd):/c --rm yegor256/cam:0.9.3 make -C /c test
+    docker run -v "$(pwd):/c" --rm yegor256/cam:0.9.3 make -C /c test
     ```
 
-5. Send us a
-[pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html).
-We will review your changes and apply them to the `master` branch shortly,
-provided they don't violate our quality standards.
+6. Open a
+   [pull request](https://www.yegor256.com/2014/04/15/github-guidelines.html)
+   against `master`. Describe the change, its purpose, and how you tested it.
+
+Follow the style of the surrounding code. Python checks are configured in
+[flake8.yml](.github/workflows/flake8.yml) and
+[pylint.yml](.github/workflows/pylint.yml). Shell scripts are checked with
+[ShellCheck](.github/workflows/shellcheck.yml) and
+[bashate](.github/workflows/bashate.yml). Documentation is checked by
+[Markdownlint](.github/workflows/markdown-lint.yml).
+Run `make lint` locally for the checks in [steps/lint.sh](steps/lint.sh),
+then check the remaining CI results on your pull request.
 
 ## How to Calculate Additional Metrics
 
-You may want to use this dataset as a basis, with an intend of adding your own
+You may want to use this dataset as a basis, with an intent of adding your own
 metrics on top of it. It should be easy:
 
 * Clone this repo into `cam/` directory
@@ -171,8 +194,12 @@ Then, install Docker into it:
 ```bash
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) \
+signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update -y
 sudo apt-cache policy docker-ce
 sudo apt install -y docker-ce
