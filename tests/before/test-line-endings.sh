@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: MIT
 set -e -o pipefail
 
-temp=$1
+temp=$(mktemp -d)
+trap 'rm -r "${temp}"' EXIT
 stdout=$2
 
 {
