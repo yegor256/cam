@@ -23,10 +23,10 @@ stdout=$2
     echo "${log}" | grep "SUCCESS"
     echo "${log}" | grep -v "Failed to collect"
     test -d "${TARGET}"
-    for f in start.txt hashes.csv report.pdf repositories.csv; do
+    for f in start.txt hashes.csv report.pdf repositories.csv metrics.csv; do
         test -f "${TARGET}/${f}"
     done
-    test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 11
+    test "$(find "${TARGET}" -maxdepth 1 | wc -l | xargs)" = 12
     test -f "${TARGET}/data/${repo}/NCSS.csv"
     test -f "${TARGET}/data/${repo}/NHD.csv"
     test -f "${TARGET}/data/${repo}/SCOM-cvc.csv"

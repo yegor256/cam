@@ -108,6 +108,11 @@ make clean
 make REPO=yegor256/tojos
 ```
 
+To list all currently implemented metrics, install the dependencies with
+`make install`, then run `make metrics`. It prints metric names and descriptions
+and saves the shared catalog in `dataset/metrics.csv` (or `$(TARGET)/metrics.csv`
+when overriding `TARGET`). The PDF report uses the same catalog.
+
 ## How to Contribute (e.g. by adding a new metric)
 
 Contributions to metrics, scripts, and documentation are welcome.
