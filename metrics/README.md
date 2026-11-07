@@ -59,3 +59,57 @@ for intermediate results during calculations.
 The files named `{file_name}.m.{metric_name}` store the calculated metrics,
 where `{metric_name}` corresponds to the specific metric
 for the file `{file_name}`.
+
+## Cognitive Complexity from Java source
+
+`cc.py` writes `CoCoJ`, independently of PMD's `CoCo`, `ACoCo`, `CoCoMx`
+and `CoCoMn`. Its description identifies javalang as the implementation.
+The value sums method and constructor scores across the compilation unit.
+Each executable starts at nesting zero. Member classes are scored independently.
+Local and anonymous class bodies increase nesting in their enclosing executable;
+their methods and constructors also receive independent scores, as in PMD's
+executable rule. Lambdas increase nesting but do not themselves add a point.
+Try/resources/finally are transparent; each catch adds one plus nesting.
+Switch adds one plus nesting, regardless of its number of cases.
+Only labeled break/continue add a jump point.
+
+Recursion adds one point per method in a direct or indirect call cycle,
+regardless of the number of recursive call sites. Calls through parameters or
+fields of the same source class can resolve to that method. Lambdas belong to
+the enclosing method; anonymous methods have their own call-graph nodes.
+This source-only implementation resolves unambiguous calls and simple same-arity
+overloads using source argument types. It does not perform classpath resolution,
+inheritance lookup or full Java overload inference. Keep PMD's metric when those
+capabilities are required.
+
+The 82 snippets in `tests/metrics/cc-cases.json` record actual PMD 7.5.0 results
+(the version installed by CAM). `test-cc.sh` runs the installed PMD against all
+snippets in one invocation, checks its XML results against the recorded `pmd`
+values, then checks CoCoJ against the independent `expected` values. It also
+checks that appending CoCoJ preserves an existing CoCo row. Run it with:
+
+```bash
+make test TEST=metrics/test-cc.sh
+```
+
+Eight expectations deliberately differ from PMD 7.5.0 (also reproduced with
+7.22.0). These follow the [Cognitive Complexity specification][cognitive-spec]
+rather than incidental traversal behavior in [PMD's visitor][pmd-visitor]:
+
+| Case | PMD | CoCoJ | Reason |
+| --- | ---: | ---: | --- |
+| `and_or_and` | 2 | 3 | Three logical-operator sequences |
+| `or_and_or` | 2 | 3 | Three logical-operator sequences |
+| `nested_else_chain_body` | 6 | 5 | No extra chain nesting |
+| `recursive_twice` | 2 | 1 | One point per cycle member |
+| `mutual_recursion` | 0 | 2 | Two methods in an indirect cycle |
+| `recursive_anonymous` | 2 | 0 | A call alone forms no cycle |
+| `three_method_cycle` | 0 | 3 | Three methods in an indirect cycle |
+| `repeated_indirect_cycle` | 0 | 2 | Repeated edges count once |
+
+Negated boolean groups start an independent sequence; parentheses alone do not.
+The baseline values stay separate so a PMD change cannot silently redefine
+the source metric's expectations.
+
+[cognitive-spec]: https://www.sonarsource.com/docs/CognitiveComplexity.pdf
+[pmd-visitor]: https://github.com/pmd/pmd/blob/pmd_releases/7.5.0/pmd-java/src/main/java/net/sourceforge/pmd/lang/java/metrics/internal/CognitiveComplexityVisitor.java
