@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
@@ -13,26 +13,26 @@ name: make
 jobs:
   make:
     timeout-minutes: 30
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - run: sudo make install FORCE_INSTALL=true
       - run: make env lint test
   make-macos:
     timeout-minutes: 30
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       PYTORCH_MPS_HIGH_WATERMARK_RATIO: '0.0'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: 21
+          java-version: 25
       - run: sudo chown -R "$(whoami)" /usr/local
       - run: |
           for c in make bash grep; do

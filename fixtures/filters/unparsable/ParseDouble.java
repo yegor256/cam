@@ -1,10 +1,10 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+ * SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
  * SPDX-License-Identifier: MIT
  */
 /*
  [The "BSD license"]
- Copyright (c) 2011-2025 Joel Li (李家智)
+ Copyright (c) 2011-2026 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without

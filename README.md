@@ -2,7 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2403.08488-green.svg)](https://arxiv.org/abs/2403.08488)
 [![make](https://github.com/yegor256/cam/actions/workflows/make.yml/badge.svg?branch=master)](https://github.com/yegor256/cam/actions/workflows/make.yml)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/ctors-vs-size/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/cam/blob/master/LICENSE.txt)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yegor256/cam)](https://hub.docker.com/r/yegor256/cam)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yegor256_cam2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=yegor256_cam2)
 
@@ -32,7 +32,8 @@ number of attributes, constructors, methods;
 number of Git authors;
 and others ([see PDF](http://cam.yegor256.com/cam-2024-03-02.pdf)).
 
-Previous archives (took me a few days to build each of them, using a pretty big machine):
+Previous archives (took me a few days to build each of them,
+using a pretty big machine):
 
 * [cam-2024-03-02.zip](http://cam.yegor256.com/cam-2024-03-02.zip)
   (2.22Gb): 1000 repos, 48 metrics, 532K classes
@@ -193,7 +194,8 @@ Then, install Docker into it:
 ```bash
 sudo apt update -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) \
 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
 https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \

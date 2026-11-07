@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 from astroid import nodes
@@ -8,7 +8,7 @@ from pylint.lint import PyLinter
 
 
 class ConstantChecker(BaseChecker):
-    """Сlass for checking the correct location of constants.
+    """Class for checking the correct location of constants.
     Variables in UPPERCASE should only be declared at the top level of the module
     """
     name = 'constant-checker'
@@ -30,6 +30,6 @@ class ConstantChecker(BaseChecker):
 
 def register(linter: PyLinter) -> None:
     """Function to register extra pylint checkers.
-    If you want to write your own checker dont forget to register it here
+    If you want to write your own checker don't forget to register it here
     """
     linter.register_checker(ConstantChecker(linter))
