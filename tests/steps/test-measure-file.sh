@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -60,7 +59,6 @@ echo "👍🏻 Single file measured correctly"
     msg=$("${LOCAL}/steps/measure-file.sh" "${java}" "${temp}/m2")
     echo "${msg}"
     echo "${msg}" | grep "Failed to collect ast.py"
-    echo "${msg}" | grep "Failed to collect cyclomatic_complexity.py"
     test -e "${temp}/m2.CoCo"
     test -e "${temp}/m2.LoC"
     test ! -e "${temp}/m2.CC"

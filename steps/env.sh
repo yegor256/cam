@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 set -x
 
 echo "TARGET=${TARGET}"
@@ -66,6 +65,9 @@ sed --version
 
 # Part of coreutils (by GNU):
 realpath --version
+
+# If fails on macOS, see this: https://stackoverflow.com/questions/16658333
+echo 'hello' | grep -q --perl-regexp 'e'
 
 bc -v
 

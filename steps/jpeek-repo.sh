@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 repo=$1
 pos=$2
@@ -95,7 +94,7 @@ for type in all cvc; do
         continue
     fi
     find "${dir}" -type f -maxdepth 1 -print | while IFS= read -r report; do
-        if echo "${report}" | grep -qP "${accept}"; then
+        if echo "${report}" | grep -q --perl-regexp "${accept}"; then
             packages=$(xmlstarlet sel -t -v 'count(/metric/app/package/@id)' "${report}")
             name=$(xmlstarlet sel -t -v "/metric/title" "${report}")
             for ((i=1; i <= packages; i++)); do

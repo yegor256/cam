@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 if [ -z "${LOCAL}" ]; then
   LOCAL=$(dirname "$0")/..
@@ -23,7 +22,7 @@ if [ ! -e /usr/local ]; then
 fi
 
 pmd_version=7.5.0
-cd /usr/local || exit 1
+cd /usr/local
 name=pmd-dist-${pmd_version}-bin
 wget --quiet "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${pmd_version}/${name}.zip"
 unzip -qq "${name}.zip"

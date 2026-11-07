@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -34,4 +33,4 @@ echo "👍🏻 PMD tool works correctly"
     "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
     grep "CoCo 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
-echo "👍🏻 Correctly calculated congitive complexity"
+echo "👍🏻 Correctly calculated cognitive complexity"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 import re
@@ -366,7 +366,7 @@ def pvnmx(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
 
 
 def pvnmn(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
-    """Return minimun number of parts in variable names in class.
+    """Return minimum number of parts in variable names in class.
     r:type: int
     """
     min_parts = 0
@@ -420,6 +420,181 @@ def nulls(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
     return null_count
 
 
+def _get_end_line(obj: Any) -> int:
+    """Recursively traverse the given object (AST node or list) and return the maximum line number found.
+    If no line number is found, returns 0.
+    :rtype: int
+    """
+    max_line = 0
+    if hasattr(obj, "position") and obj.position is not None:
+        max_line = obj.position[0]
+    if isinstance(obj, list):
+        for item in obj:
+            if (candidate := _get_end_line(item)) > max_line:
+                max_line = candidate
+    elif hasattr(obj, "__dict__"):
+        for value in obj.__dict__.values():
+            if (candidate := _get_end_line(value)) > max_line:
+                max_line = candidate
+    return max_line
+
+
+def aml(
+    tlist: list[tuple[Any, javalang.tree.ClassDeclaration]],
+) -> float:
+    """Calculate the Average Method Length (AML), which is the average number
+    of lines (including declaration, opening and closing braces, and body) per method in a class.
+    For one-line methods and empty methods, AML is 1.
+    :rtype: float
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0.0
+
+    total_length = 0
+    count = 0
+    for _, method in methods_list:
+        if method.position is None:
+            continue
+        start_line = method.position[0]
+        if method.body is None or not method.body:
+            length = 1
+        elif (end_line := _get_end_line(method.body)) <= start_line:
+            length = 1
+        else:
+            length = (end_line - start_line + 1) + 1
+        total_length += length
+        count += 1
+    return total_length / count if count else 0.0
+
+
+def _is_getter_or_setter(method: javalang.tree.MethodDeclaration) -> str | None:
+    """Figures out whether a method is a getter or a setter.
+    :rtype: str or None
+    """
+    if method.name.startswith("get") and len(method.parameters) == 0:
+        return "getter"
+    if method.name.startswith("set") and len(method.parameters) == 1:
+        return "setter"
+    return None
+
+
+def getset(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> tuple[int, int]:
+    """Counts the number of getter and setter methods in a class.
+    :rtype: tuple[int, int]
+    """
+    methods_list = list(
+        method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    )
+    if not methods_list:
+        return 0, 0
+    getter_count = 0
+    setter_count = 0
+    for _, method in methods_list:
+        result = _is_getter_or_setter(method)
+        if result == "getter":
+            getter_count += 1
+        elif result == "setter":
+            setter_count += 1
+    return getter_count, setter_count
+
+
+def _branches(node: Any) -> int:
+    """Determines the number of branches for a node
+    according to the Extended Cyclomatic Complexity metric.
+    Binary operations (&&, ||) and each case statement
+    are taken into account.
+    :rtype: int
+    """
+    count = 0
+    if isinstance(node, javalang.tree.BinaryOperation):
+        if node.operator in ('&&', '||'):
+            count = 1
+    elif isinstance(
+        node,
+        (
+            javalang.tree.ForStatement,
+            javalang.tree.IfStatement,
+            javalang.tree.WhileStatement,
+            javalang.tree.DoStatement,
+            javalang.tree.TernaryExpression,
+            javalang.tree.MethodDeclaration
+        )
+    ):
+        count = 1
+    elif isinstance(node, javalang.tree.SwitchStatementCase):
+        count = 1
+    elif isinstance(node, javalang.tree.TryStatement):
+        count = 1
+    return count
+
+
+def cc(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Calculate the Cyclomatic Complexity (CC) of a class.
+    :rtype: int
+    """
+    complexity = 0
+    for _, node in tlist[0][1].filter(javalang.tree.Node):
+        complexity += _branches(node)
+    return complexity
+
+
+def _has_javadoc(lines_list: list[str], method_line: int) -> bool:
+    """Check whether a Javadoc comment exists immediately before the method declaration.
+    :rtype: bool
+    """
+    comment_block = []
+    for line in reversed(lines_list[: method_line - 1]):
+        if not (stripped_line := line.strip()):
+            break
+        if (
+            stripped_line.startswith("/*")
+            or stripped_line.startswith("*")
+            or stripped_line.startswith("//")
+        ):
+            comment_block.append(stripped_line)
+        else:
+            break
+    if comment_block:
+        comment_block.reverse()
+        return comment_block[0].startswith("/**")
+    return False
+
+
+def javadoc_coverage(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]], lines_list: list[str]) -> float:
+    """Calculate the Javadoc coverage, which is the ratio of methods
+    documented with Javadoc to total methods in a class.
+    :rtype: float
+    """
+    methods_list = list(method for method in tlist[0][1].filter(javalang.tree.MethodDeclaration))
+    if not methods_list:
+        return 0.0
+    documented = 0
+    total = 0
+    for _, node in methods_list:
+        total += 1
+        if node.position is not None:
+            method_line = node.position[0]
+            if _has_javadoc(lines_list, method_line):
+                documented += 1
+    return round(documented / total, 2)
+
+
+def deprecated_methods(tlist: list[tuple[Any, javalang.tree.ClassDeclaration]]) -> int:
+    """Count the number of methods annotated with @Deprecated.
+    :rtype: int
+    """
+    declaration = tlist[0][1].filter(javalang.tree.MethodDeclaration)
+    count = 0
+    for path, node in declaration:
+        del path
+        if any(annotation.name == "Deprecated" for annotation in node.annotations):
+            count += 1
+    return count
+
+
 class NotClassError(Exception):
     """If it's not a class"""
 
@@ -432,11 +607,13 @@ if __name__ == '__main__':
     java: Final[str] = sys.argv[1]
     metrics: Final[str] = sys.argv[2]
     with open(java, encoding='utf-8', errors='ignore') as file:
+        file_text = file.read()
         try:
-            raw = javalang.parse.parse(file.read())
+            raw = javalang.parse.parse(file_text)
             tree = raw.filter(javalang.tree.ClassDeclaration)
             if not (tree_class := list((value for value in tree))):
                 raise NotClassError('This is not a class')
+            lines_from_file = file_text.splitlines()
             with open(metrics, 'a', encoding='utf-8') as metric:
                 metric.write(f'NoOA {attrs(tree_class)} '
                              f'Number of Non-Static (Object) Attributes\n')
@@ -511,6 +688,21 @@ if __name__ == '__main__':
                              f'attributes that store primitive data types (e.g., int, char, boolean) to the total'
                              f'number of attributes in a class. It provides insight into the balance between simple'
                              f'data storage (primitives) and references to more complex objects (references).\n')
+                metric.write(f'AML {aml(tree_class)} '
+                             f'Average Method Length (AML), which is average number of \
+                             lines per method in a class\n')
+                getters, setters = getset(tree_class)
+                metric.write(f'Getters {getters} '
+                             f'Number of getter methods in a class\n')
+                metric.write(f'Setters {setters} '
+                             f'Number of setter methods in a class\n')
+                metric.write(f'CC {cc(tree_class)} '
+                             f'Cyclomatic Complexity of all methods\n')
+                metric.write(f'JDC {javadoc_coverage(tree_class, lines_from_file)} '
+                             f'Javadoc Coverage, which is ratio of methods documented \
+                             with Javadoc to total methods\n')
+                metric.write(f'Deprecated {deprecated_methods(tree_class)} '
+                             f'Number of methods annotated with @Deprecated\n')
         except FileNotFoundError as exception:
             message = f"{type(exception).__name__} {str(exception)}: {java}"
             sys.exit(message)

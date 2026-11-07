@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
 home=$1
 temp=$2
@@ -39,7 +38,7 @@ else
     if [ "${total}" -eq 0 ]; then
         printf "There were no Java classes with wrong encoding, nothing to delete"
     else
-        printf "All %'d files are with corrent encoding (utf-8/ascii), nothing to delete" \
+        printf "All %'d files are with correct encoding (utf-8/ascii), nothing to delete" \
             "${total}"
     fi
 fi

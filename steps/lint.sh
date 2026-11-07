@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 cffconvert --validate
 
@@ -46,7 +45,7 @@ for mask in *.sh *.py *.rb *.yml *.java Makefile; do
         fi
     done < <(find "$(realpath "${LOCAL}")" -type f -name "${mask}" \
         -not -path "$(realpath "${TARGET}")/**" \
-        -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparseable/**" \
+        -not -path "$(realpath "${LOCAL}")/fixtures/filters/unparsable/**" \
         -not -path "$(realpath "${LOCAL}")/test-zone/**" \
         -not -path "$(realpath "${LOCAL}")/venv/**")
 done

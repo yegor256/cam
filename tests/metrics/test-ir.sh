@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2317
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+# shellcheck disable=SC2317
+set -e -o pipefail
 
 # TODO: #259 ENABLE THIS TESTS RIGHT AFTER IMPLEMENTING ir.sh VIA REMOVING `exit 0` AND REMOVE `shellcheck disable=SC2317` on the top RIGHT AFTER IMPLEMENTING ir.sh
 exit 0
@@ -37,11 +36,11 @@ echo "👍🏻 Failed in non-git directory"
   touch "${file1}"
   git add "${file1}"
   git config commit.gpgsign false
-  git commit --quiet -m "first file"
+  git commit --no-verify --quiet -m "first file"
   "${LOCAL}/metrics/ir.sh" ./ "t1"
   touch "${file2}"
   git add "${file2}"
-  git commit --quiet -m "second file"
+  git commit --no-verify --quiet -m "second file"
   "${LOCAL}/metrics/ir.sh" ./ "t2"
   grep "IR 1" "t1"    # Single file in repo
   grep "IR 0.5 " "t2" # Two files in repo

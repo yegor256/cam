@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
@@ -7,17 +7,19 @@ name: markdown-lint
   push:
     branches:
       - master
+    paths:
+      - '**.md'
+      - '.github/workflows/markdown-lint.yml'
   pull_request:
     branches:
       - master
-    paths-ignore: ['paper/**', 'sandbox/**']
-concurrency:
-  group: markdown-lint-${{ github.ref }}
-  cancel-in-progress: true
+    paths:
+      - '**.md'
+      - '.github/workflows/markdown-lint.yml'
 jobs:
   markdown-lint:
     timeout-minutes: 15
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: articulate/actions-markdownlint@v1
+      - uses: actions/checkout@v7
+      - uses: DavidAnson/markdownlint-cli2-action@v25.0.0

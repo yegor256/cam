@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: Copyright (c) 2021-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
-set -e
-set -o pipefail
+set -e -o pipefail
 
 temp=$1
 stdout=$2
@@ -14,7 +13,7 @@ stdout=$2
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"
     msg=$("${LOCAL}/steps/measure.sh")
-    echo "${msg}" | grep "for Foo.java (1/1)"
+    echo "${msg}" | grep "for: Foo.java (1/1)"
     echo "${msg}" | grep "All metrics calculated in 1 files"
     test -e "${TARGET}/measurements/${repo}/${name}.m"
     test ! -e "${TARGET}/measurements/${repo}/${name}.m.NHD"
