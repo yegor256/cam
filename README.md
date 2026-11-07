@@ -165,6 +165,14 @@ Follow the style of the surrounding code. Python checks are configured in
 Run `make lint` locally for the checks in [steps/lint.sh](steps/lint.sh),
 then check the remaining CI results on your pull request.
 
+The AST metrics include `LCOM` (LCOM1), computed as the number of pairs
+of declared instance methods with no shared instance field minus the number
+with a shared field, clamped to zero. Constructors, static members, inherited
+members and nested class bodies are excluded. Local and parameter shadowing
+is resolved by lexical scope; explicit `this` references and field receivers
+count as uses. Lambdas belong to the enclosing method. Aliases and method calls
+are not followed. This source metric is distinct from jPeek's `LCOM5`.
+
 ## How to Calculate Additional Metrics
 
 You may want to use this dataset as a basis, with an intent of adding your own

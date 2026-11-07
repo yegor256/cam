@@ -47,6 +47,7 @@ EOT
     test "$(cat "${temp}/m1.CoCo")" = "0.000"
     test "$(cat "${temp}/m1.FOut")" = "0.000"
     test "$(cat "${temp}/m1.LCOM5")" = "0.000"
+    test "$(cat "${temp}/m1.LCOM")" = "0.000"
     test "$(cat "${temp}/m1.RAF")" = "0.000"
     test "$(cat "${temp}/m1.NULLs")" = "0.000"
     set +x
