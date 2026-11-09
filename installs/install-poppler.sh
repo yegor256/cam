@@ -14,9 +14,9 @@ tmp=$(mktemp -d)
 mkdir -p "${tmp}"
 cd "${tmp}"
 
-wget --quiet https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz
-tar -xf poppler-data-0.4.9.tar.gz
-cd poppler-data-0.4.9
+wget --quiet https://poppler.freedesktop.org/poppler-data-0.4.12.tar.gz
+tar -xf poppler-data-0.4.12.tar.gz
+cd poppler-data-0.4.12
 make install
 cd ..
 
