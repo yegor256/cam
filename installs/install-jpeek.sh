@@ -12,7 +12,7 @@ if [ -e "${JPEEK}" ]; then
   exit
 fi
 
-jpeek_version=0.32.0
+jpeek_version=0.32.3
 cd /tmp
 wget --quiet https://repo1.maven.org/maven2/org/jpeek/jpeek/${jpeek_version}/jpeek-${jpeek_version}-jar-with-dependencies.jar
 if "${LOCAL}/help/is-macos.sh"; then
