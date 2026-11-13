@@ -24,6 +24,6 @@ fi
 packages=()
 while IFS= read -r p; do
   packages+=( "${p}" )
-done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | uniq )
+done < <( cut -d' ' -f2 "${LOCAL}/DEPENDS.txt" | tr -d '\r' | uniq )
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none install "${packages[@]}"
 "${LOCAL}/help/sudo.sh" tlmgr --verify-repo=none update --no-auto-remove "${packages[@]}" || echo 'Failed to update'
