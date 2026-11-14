@@ -1,0 +1,716 @@
+[
+  {
+    "expected": 0,
+    "name": "empty",
+    "pmd": 0,
+    "source": "class Sample { boolean a,b,c,d,e; void f() {  } }"
+  },
+  {
+    "expected": 1,
+    "name": "if",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "else",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "else_if",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else if(b) {} } }"
+  },
+  {
+    "expected": 3,
+    "name": "else_if_else",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else if(b) {} else {} } }"
+  },
+  {
+    "expected": 4,
+    "name": "else_if_chain",
+    "pmd": 4,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else if(b) {} else if(c) {} else {} } }"
+  },
+  {
+    "expected": 3,
+    "name": "nested_if",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) { if(b) {} } } }"
+  },
+  {
+    "expected": 4,
+    "name": "nested_else",
+    "pmd": 4,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else { if(b) {} } } }"
+  },
+  {
+    "expected": 4,
+    "name": "nested_else_if_body",
+    "pmd": 4,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else if(b) { if(c) {} } } }"
+  },
+  {
+    "expected": 5,
+    "name": "nested_else_chain_body",
+    "pmd": 6,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} else if(b) {} else if(c) { if(d) {} } } }"
+  },
+  {
+    "expected": 2,
+    "name": "independent_if",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) {} if(b) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "for",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { for(int i=0;i<2;i++) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "foreach",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { for(boolean x:new boolean[]{a,b}) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "while",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "do",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { do {} while(a); } }"
+  },
+  {
+    "expected": 6,
+    "name": "loops",
+    "pmd": 6,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { for(int i=0;i<2;i++) { while(a) { do {} while(b); } } } }"
+  },
+  {
+    "expected": 5,
+    "name": "loop_if",
+    "pmd": 5,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) { if(b) {} else if(c) {} else {} } } }"
+  },
+  {
+    "expected": 0,
+    "name": "try",
+    "pmd": 0,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try {} finally {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "try_if",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try { if(a) {} } finally { if(b) {} } } }"
+  },
+  {
+    "expected": 1,
+    "name": "catch",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try {} catch(RuntimeException ex) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "multi_catch",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try {} catch(IllegalArgumentException | IllegalStateException ex) {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "two_catches",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try {} catch(IllegalArgumentException ex) {} catch(RuntimeException ex) {} } }"
+  },
+  {
+    "expected": 3,
+    "name": "catch_if",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try {} catch(RuntimeException ex) { if(a) {} } } }"
+  },
+  {
+    "expected": 8,
+    "name": "nested_try",
+    "pmd": 8,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) { try { if(b) {} } catch(RuntimeException ex) { if(c) {} } } } }"
+  },
+  {
+    "expected": 1,
+    "name": "try_resources",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { try(java.io.StringReader r=new java.io.StringReader(\"\")) { if(a) {} } } }"
+  },
+  {
+    "expected": 1,
+    "name": "switch",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { switch(1) { case 1: break; case 2: break; default: break; } } }"
+  },
+  {
+    "expected": 3,
+    "name": "switch_if",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { switch(1) { case 1: if(a) {} break; default: break; } } }"
+  },
+  {
+    "expected": 3,
+    "name": "nested_switch",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) { switch(1) { case 1: break; default: break; } } } }"
+  },
+  {
+    "expected": 1,
+    "name": "and",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a && b && c; } }"
+  },
+  {
+    "expected": 1,
+    "name": "or",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a || b || c; } }"
+  },
+  {
+    "expected": 2,
+    "name": "and_or",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a && b || c; } }"
+  },
+  {
+    "expected": 3,
+    "name": "or_and_or",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a || b && c || d; } }"
+  },
+  {
+    "expected": 3,
+    "name": "and_or_and",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a && b || c && d; } }"
+  },
+  {
+    "expected": 2,
+    "name": "negated_chain",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a && !(b && c); } }"
+  },
+  {
+    "expected": 1,
+    "name": "parenthesized_chain",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=(a && b) && (c && d); } }"
+  },
+  {
+    "expected": 2,
+    "name": "boolean_statements",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a && b; boolean y=c && d; } }"
+  },
+  {
+    "expected": 4,
+    "name": "boolean_conditions",
+    "pmd": 4,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a && b && c) {} else if(c || d) {} } }"
+  },
+  {
+    "expected": 0,
+    "name": "bitwise",
+    "pmd": 0,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a & b | c ^ d; } }"
+  },
+  {
+    "expected": 1,
+    "name": "ternary",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a ? b : c; } }"
+  },
+  {
+    "expected": 3,
+    "name": "nested_ternary",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a ? (b ? c : d) : e; } }"
+  },
+  {
+    "expected": 3,
+    "name": "ternary_else",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { boolean x=a ? b : (c ? d : e); } }"
+  },
+  {
+    "expected": 2,
+    "name": "lambda",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { Runnable r=() -> { if(a) {} }; } }"
+  },
+  {
+    "expected": 3,
+    "name": "nested_lambda",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { Runnable r=() -> { Runnable s=() -> { if(a) {} }; }; } }"
+  },
+  {
+    "expected": 4,
+    "name": "lambda_in_if",
+    "pmd": 4,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) { Runnable r=() -> { while(b) {} }; } } }"
+  },
+  {
+    "expected": 3,
+    "name": "unlabeled_jumps",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) { if(b) { break; } continue; } } }"
+  },
+  {
+    "expected": 2,
+    "name": "labeled_break",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { outer: while(a) { break outer; } } }"
+  },
+  {
+    "expected": 2,
+    "name": "labeled_continue",
+    "pmd": 2,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { outer: while(a) { continue outer; } } }"
+  },
+  {
+    "expected": 1,
+    "name": "return_throw",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { if(a) { return; } throw new RuntimeException(); } }"
+  },
+  {
+    "expected": 1,
+    "name": "synchronized",
+    "pmd": 1,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { synchronized(this) { if(a) {} } } }"
+  },
+  {
+    "expected": 3,
+    "name": "local_class",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { class Inner { void g() { if(a) {} } } } }"
+  },
+  {
+    "expected": 3,
+    "name": "anonymous_class",
+    "pmd": 3,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { Runnable r=new Runnable() { public void run() { if(a) {} } }; } }"
+  },
+  {
+    "expected": 5,
+    "name": "anonymous_in_loop",
+    "pmd": 5,
+    "source": "class Sample { boolean a,b,c,d,e; void f() { while(a) { Runnable r=new Runnable() { public void run() { if(b) {} } }; } } }"
+  },
+  {
+    "expected": 1,
+    "name": "constructor",
+    "pmd": 1,
+    "source": "class Sample { Sample(boolean a) { if(a) {} } }"
+  },
+  {
+    "expected": 3,
+    "name": "constructor_nested",
+    "pmd": 3,
+    "source": "class Sample { Sample(boolean a, boolean b) { if(a) { while(b) {} } } }"
+  },
+  {
+    "expected": 2,
+    "name": "member_class",
+    "pmd": 2,
+    "source": "class Sample { void f() { if(true) {} } class Inner { void g() { if(true) {} } } }"
+  },
+  {
+    "expected": 2,
+    "name": "static_class",
+    "pmd": 2,
+    "source": "class Sample { static class Inner { Inner() { if(true) {} } void g() { if(true) {} } } }"
+  },
+  {
+    "expected": 3,
+    "name": "local_constructor",
+    "pmd": 3,
+    "source": "class Sample { void f() { class Inner { Inner() { if(true) {} } } } }"
+  },
+  {
+    "expected": 2,
+    "name": "multiple_methods",
+    "pmd": 2,
+    "source": "class Sample { void f() { if(true) {} } void g() { while(true) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "abstract_method",
+    "pmd": 1,
+    "source": "abstract class Sample { abstract void f(); void g() { if(true) {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "second_class",
+    "pmd": 2,
+    "source": "class Sample { void f() { if(true) {} } } class Other { void g() { while(true) {} } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursion",
+    "pmd": 1,
+    "source": "class Sample { void f() { f(); } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_twice",
+    "pmd": 2,
+    "source": "class Sample { void f() { f(); f(); } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_this",
+    "pmd": 1,
+    "source": "class Sample { void f() { this.f(); } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_static",
+    "pmd": 1,
+    "source": "class Sample { static void f() { Sample.f(); } }"
+  },
+  {
+    "expected": 2,
+    "name": "recursive_argument",
+    "pmd": 2,
+    "source": "class Sample { int f(int x) { return x > 0 ? f(x - 1) : 0; } }"
+  },
+  {
+    "expected": 0,
+    "name": "overloaded_method",
+    "pmd": 0,
+    "source": "class Sample { void f() { f(1); } void f(int x) {} }"
+  },
+  {
+    "expected": 0,
+    "name": "other_receiver",
+    "pmd": 0,
+    "source": "class Sample { void f(Other x) { x.f(x); } } class Other { void f(Other x) {} }"
+  },
+  {
+    "expected": 2,
+    "name": "mutual_recursion",
+    "pmd": 0,
+    "source": "class Sample { void f() { g(); } void g() { f(); } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_lambda",
+    "pmd": 1,
+    "source": "class Sample { void f() { Runnable r=() -> f(); } }"
+  },
+  {
+    "expected": 0,
+    "name": "recursive_anonymous",
+    "pmd": 2,
+    "source": "class Sample { void f() { Runnable r=new Runnable() { public void run() { f(); } }; } }"
+  },
+  {
+    "expected": 2,
+    "name": "recursive_overload_same_arity",
+    "pmd": 2,
+    "source": "class Sample { int f(int n) { return n > 0 ? f(n-1) : 0; } String f(String s) { return s; } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_parameter_receiver",
+    "pmd": 1,
+    "source": "class Sample { void f(Sample other) { other.f(other); } }"
+  },
+  {
+    "expected": 1,
+    "name": "recursive_field_receiver",
+    "pmd": 1,
+    "source": "class Sample { Sample other; void f() { other.f(); } }"
+  },
+  {
+    "expected": 0,
+    "name": "chained_other_receiver",
+    "pmd": 0,
+    "source": "class Sample { Other other() { return new Other(); } void f() { other().f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "recursive_anonymous_self",
+    "pmd": 2,
+    "source": "class Sample { void f() { Runnable r=new Runnable() { public void run() { run(); } }; } }"
+  },
+  {
+    "expected": 1,
+    "name": "inner_recursive",
+    "pmd": 1,
+    "source": "class Sample { class Inner { void f() { f(); } } }"
+  },
+  {
+    "expected": 2,
+    "name": "constructor_boolean",
+    "pmd": 2,
+    "source": "class Sample { Sample(boolean a, boolean b, boolean c) { if(a && b && c) {} } }"
+  },
+  {
+    "expected": 2,
+    "name": "initializer_in_local_class",
+    "pmd": 2,
+    "source": "class Sample { void f() { class Inner { boolean b = true ? true : false; void g() {} } } }"
+  },
+  {
+    "expected": 3,
+    "name": "three_method_cycle",
+    "pmd": 0,
+    "source": "class Sample { void f() { g(); } void g() { h(); } void h() { f(); } }"
+  },
+  {
+    "expected": 2,
+    "name": "repeated_indirect_cycle",
+    "pmd": 0,
+    "source": "class Sample { void f() { g(); g(); } void g() { f(); f(); } }"
+  },
+  {
+    "expected": 0,
+    "name": "acyclic_calls",
+    "pmd": 0,
+    "source": "class Sample { void f() { g(); } void g() { h(); } void h() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "constructor_calls_method",
+    "pmd": 1,
+    "source": "class Sample { Sample() { f(); } void f() { if(true) {} } }"
+  },
+  {
+    "expected": 0,
+    "name": "qualified_outer_this",
+    "pmd": 2,
+    "source": "class Sample { void f() { class Inner { void f() { Sample.this.f(); } } } }"
+  },
+  {
+    "expected": 1,
+    "name": "qualified_this_self",
+    "pmd": 1,
+    "source": "class Sample { void f() { Sample.this.f(); } }"
+  },
+  {
+    "expected": 2,
+    "name": "local_this_self",
+    "pmd": 2,
+    "source": "class Sample { void f() { class Inner { void f() { this.f(); } } } }"
+  },
+  {
+    "expected": 0,
+    "name": "qualified_this_chain",
+    "pmd": 0,
+    "source": "class Sample { Other other() { return null; } void f() { class Inner { void f() { Sample.this.other().f(); } } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_after_block",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { { Other x = null; } x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_before_declaration",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { x.f(); Other x = null; } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_inside_block",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() { { Other x = null; x.f(); } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_nested_restore",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { { { Other x = null; x.f(); } } x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_parameter_shadow",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f(Other x) { x.f(x); } } class Other { void f(Other x) {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_local_shadow",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() { Other x = null; x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_for_body",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { for (Other x = null; x != null;) { x.f(); } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_after_for",
+    "pmd": 2,
+    "source": "class Sample { Sample x; void f() { for (Other x = null; x != null;) {} x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_enhanced_for_body",
+    "pmd": 1,
+    "source": "class Sample { Sample x; Other[] items; void f() { for (Other x : items) { x.f(); } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_after_enhanced_for",
+    "pmd": 2,
+    "source": "class Sample { Sample x; Other[] items; void f() { for (Other x : items) {} x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_catch_body",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { try {} catch (Other x) { x.f(); } } } class Other extends RuntimeException { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_after_catch",
+    "pmd": 2,
+    "source": "class Sample { Sample x; void f() { try {} catch (Other x) {} x.f(); } } class Other extends RuntimeException { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_lambda_typed",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() { java.util.function.Consumer<Other> c = (Other x) -> x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_lambda_inferred",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() { java.util.function.Consumer<Other> c = x -> x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_constructor_capture",
+    "pmd": 0,
+    "source": "class Sample { Sample x; Sample(Other x) { class Inner { void f() { x.f(); } } } void f() {} } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_outer_capture",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() { Other x = null; class Inner { void f() { x.f(); } } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_inner_field",
+    "pmd": 2,
+    "source": "class Sample { void f() { Other x = null; class Inner { Inner x; void f() { x.f(); } } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "unknown_receiver_shadow_class",
+    "pmd": 0,
+    "source": "class Sample { void f(External Sample) { Sample.f(Sample); } } class External { void f(External x) {} }"
+  },
+  {
+    "expected": 0,
+    "name": "unknown_overload_argument",
+    "pmd": 1,
+    "source": "class Sample { String value() { return \"\"; } void f(String x) { f(value()); } void f(Integer x) {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_overload_argument",
+    "pmd": 1,
+    "source": "class Sample { String x; void f(String s) { { Integer x = null; } f(x); } void f(Integer n) {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_lambda_overload_argument",
+    "pmd": 0,
+    "source": "class Sample { String x; void f(String s) { java.util.function.Consumer<Integer> c = x -> f(x); } void f(Integer n) {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_resource_body",
+    "pmd": 0,
+    "source": "class Sample { Sample x; void f() throws Exception { try (Other x = new Other()) { x.f(); } } } class Other implements AutoCloseable { void f() {} public void close() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_after_resource",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() throws Exception { try (Other x = new Other()) {} x.f(); } } class Other implements AutoCloseable { void f() {} public void close() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_resource_catch",
+    "pmd": 2,
+    "source": "class Sample { Sample x; void f() { try (Other x = new Other()) {} catch (Exception e) { x.f(); } } } class Other implements AutoCloseable { void f() {} public void close() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "qualified_nested_this",
+    "pmd": 1,
+    "source": "class Sample { class Inner { void f() { Sample.Inner.this.f(); } } }"
+  },
+  {
+    "expected": 0,
+    "name": "qualified_nested_outer_this",
+    "pmd": 2,
+    "source": "class Sample { class Inner { void f() { class Local { void f() { Sample.Inner.this.f(); } } } } }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_for_condition",
+    "pmd": 1,
+    "source": "class Sample { Sample x; boolean f() { for (Other x = null; x.f();) {} return false; } } class Other { boolean f() { return false; } }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_catch_self",
+    "pmd": 2,
+    "source": "class Sample extends RuntimeException { void f() { try {} catch (Sample x) { x.f(); } } }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_resource_self",
+    "pmd": 1,
+    "source": "class Sample implements AutoCloseable { void f() throws Exception { try (Sample x = this) { x.f(); } } public void close() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_unresolved_external",
+    "pmd": 0,
+    "source": "class Sample { External x; void f() { x.f(); } } class External { void f() {} }"
+  },
+  {
+    "expected": 1,
+    "name": "scope_switch_case",
+    "pmd": 1,
+    "source": "class Sample { Sample x; void f() { switch (1) { case 1: Other x = null; break; case 2: x = null; x.f(); break; } } } class Other { void f() {} }"
+  },
+  {
+    "expected": 2,
+    "name": "scope_after_switch",
+    "pmd": 2,
+    "source": "class Sample { Sample x; void f() { switch (1) { case 1: Other x = null; break; } x.f(); } } class Other { void f() {} }"
+  },
+  {
+    "expected": 0,
+    "name": "scope_anonymous_arguments",
+    "pmd": 0,
+    "source": "class Sample { Other x; void f() { Object o = new Parent(x.f()) { Sample x; }; } } class Other { Object f() { return null; } } class Parent { Parent(Object x) {} }"
+  }
+]
