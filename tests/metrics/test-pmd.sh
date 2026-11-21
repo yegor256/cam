@@ -31,6 +31,36 @@ echo "👍🏻 PMD tool works correctly"
     mkdir -p "$(dirname "${java}")"
     echo "class Foo {}" > "${java}"
     "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
-    grep "CoCo 0 " "${temp}/stdout"
+    grep "^CoCo 0 " "${temp}/stdout"
+    grep "^ACoCo 0 " "${temp}/stdout"
+    grep "^CoCoMx 0 " "${temp}/stdout"
+    grep "^CoCoMn 0 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly calculated cognitive complexity"
+
+{
+    cat > "${java}" <<'JAVA'
+class Foo {
+    int simple(int value) {
+        if (value > 0) {
+            return value;
+        }
+        return 0;
+    }
+    int nested(int value) {
+        if (value > 0) {
+            if (value > 1) {
+                return value;
+            }
+        }
+        return 0;
+    }
+}
+JAVA
+    "${LOCAL}/metrics/pmd.sh" "${java}" "${temp}/stdout"
+    grep "^CoCo 4 " "${temp}/stdout"
+    grep "^ACoCo 2 " "${temp}/stdout"
+    grep "^CoCoMx 3 " "${temp}/stdout"
+    grep "^CoCoMn 1 " "${temp}/stdout"
+} > "${stdout}" 2>&1
+echo "👍🏻 Correctly aggregates nonzero cognitive complexity"
