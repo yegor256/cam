@@ -42,3 +42,34 @@ echo "👍🏻 A simple repo analyzed with jpeek correctly"
     echo "${msg}" | grep "Repo ${repo} already analyzed by jPeek"
 } > "${stdout}" 2>&1
 echo "👍🏻 A duplicate analysis didn't happen"
+
+{
+    repo="foo/gradle"
+    project=${TARGET}/github/${repo}
+    mkdir -p "${project}/src/main/java/com/example"
+    echo "rootProject.name = 'gradle-fixture'" > "${project}/settings.gradle"
+    cat > "${project}/src/main/java/com/example/Foo.java" <<EOT
+package com.example;
+public final class Foo {
+    private int value;
+    public int increment() {
+        return ++this.value;
+    }
+}
+EOT
+    cat > "${project}/build.gradle" <<EOT
+apply plugin: 'java'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+EOT
+    msg=$("${LOCAL}/steps/jpeek-repo.sh" "${repo}" 1 1)
+    echo "${msg}" | grep "Compiled ${repo} using Gradle"
+    echo "${msg}" | grep "Analyzed ${repo} through jPeek"
+    echo "${msg}" | grep ", 1 classes"
+    test -e "${project}/build/classes/java/main/com/example/Foo.class"
+    test -s "${TARGET}/measurements/${repo}/src/main/java/com/example/Foo.java.m.NHD"
+    test "$(grep -Ec "Success ${repo} Gradle$" "${TARGET}/temp/jpeek_success.log")" = '1'
+} > "${stdout}" 2>&1
+echo "👍🏻 A Gradle repo compiled and analyzed with jpeek correctly"
