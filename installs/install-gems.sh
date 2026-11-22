@@ -8,7 +8,7 @@ set -e -o pipefail
 "${LOCAL}/help/assert-tool.sh" gem -v
 
 if ! gem list -i rubocop; then
-    gem install --no-document rubocop -v 1.92.2
+    gem install --no-document rubocop -v 1.92.3
 fi
 
 if ! gem list -i octokit; then
