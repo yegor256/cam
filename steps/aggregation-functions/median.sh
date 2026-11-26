@@ -10,7 +10,7 @@ metric_name=$3
 
 mkdir -p "${output_folder}"
 
-values=$(awk -F, 'NR > 1 {print $3}' "${metric_file}")
+values=$(awk -F, 'NR > 1 && $NF != "" && $NF != "NaN" {print $NF}' "${metric_file}")
 
 values_array=()
 while IFS= read -r value; do

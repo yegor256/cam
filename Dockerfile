@@ -22,7 +22,7 @@ RUN apt-get update -y --fix-missing \
     tree=2.* \
     parallel=* \
     bc=1.* \
-    cloc=1.* \
+    cloc=2.* \
     jq=1.* \
     shellcheck=0.* \
     aspell=0.* \
@@ -33,7 +33,7 @@ RUN apt-get update -y --fix-missing \
     git=1:2.* \
     libxml2-utils=2.* \
     build-essential=12.* \
-    cmake=3.* \
+    cmake=4.* \
     libfreetype-dev=* \
     pkg-config=* \
     libfontconfig-dev=2.* \
