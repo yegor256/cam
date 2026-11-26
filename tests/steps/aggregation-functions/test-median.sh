@@ -69,3 +69,17 @@ echo "👍🏻 Mixed metrics aggregated correctly (LCOM5)"
 
 } > "${stdout}" 2>&1
 echo "👍🏻 Edge case with no data handled correctly"
+
+{
+    dir="${TARGET}"
+    mkdir -p "${dir}"
+    {
+      echo "repo,java_file,CAMC"
+      echo "kek,src/main/kek,42.000"
+      echo "kek,src/main/kek,NaN"
+      echo "kek,src/main/kek,50.000"
+    } > "${dir}/CAMC.csv"
+    "${LOCAL}/steps/aggregation-functions/median.sh" "${dir}/CAMC.csv" "${TARGET}/data/aggregation" "CAMC"
+    test "$(cat "${TARGET}/data/aggregation/CAMC.median.csv")" = "46.000"
+} > "${stdout}" 2>&1
+echo "👍🏻 NaN values are skipped"

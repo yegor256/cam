@@ -13,7 +13,7 @@ mkdir -p "${output_folder}"
 sum=0
 count=0
 
-values=$(awk -F, 'NR > 1 {print $3}' "${metric_file}")
+values=$(awk -F, 'NR > 1 && $3 != "" && $3 != "NaN" {print $3}' "${metric_file}")
 
 if [ -n "${values}" ]; then
     while IFS= read -r value; do
