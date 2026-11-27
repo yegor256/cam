@@ -10,7 +10,7 @@ install: |
   pdd --file=/dev/null
 merge:
   script: |
-    sudo make install -f "$(pwd)/Makefile"
+    sudo make install FORCE_INSTALL=true -f "$(pwd)/Makefile"
     make env lint test
 release:
   pre: false
@@ -22,6 +22,6 @@ release:
     repo=yegor256/cam
     sudo docker build --no-cache --tag "${repo}:${tag}" "$(pwd)"
     mkdir /tmp/dataset
-    sudo docker run --rm "${repo}:${tag}" make install env lint test
+    sudo docker run --rm "${repo}:${tag}" make install FORCE_INSTALL=true env lint test
     cat ../pwd | sudo docker login --password-stdin --username yegor256
     sudo docker push "${repo}:${tag}"
