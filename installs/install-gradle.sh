@@ -21,7 +21,7 @@ if [ ! -e /usr/local ]; then
   exit 1
 fi
 
-gradle_version=9.9.2
+gradle_version=9.9.3
 cd /usr/local
 wget --quiet https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip
 unzip -qq gradle-${gradle_version}-bin.zip
