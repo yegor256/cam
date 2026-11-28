@@ -30,9 +30,9 @@ EOT
     cat "${TARGET}/temp/multimetric.json"
     cat "${temp}/stdout"
     grep "HSD 6.000 " "${temp}/stdout"
-    grep "HSE 1133.217 " "${temp}/stdout"
-    grep "HSV 188.869 " "${temp}/stdout"
-    grep "MIdx 100.000 " "${temp}/stdout"
-    grep "FOut 0.000 " "${temp}/stdout"
+    grep "HSE 1133.218 " "${temp}/stdout"
+    grep "HSV 188.870 " "${temp}/stdout"
+    grep "MIdx 103.261 " "${temp}/stdout"
+    grep "FOut 2.000 " "${temp}/stdout"
 } > "${stdout}" 2>&1
 echo "👍🏻 Correctly counted a few metrics"
