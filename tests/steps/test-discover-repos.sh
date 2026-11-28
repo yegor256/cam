@@ -18,6 +18,7 @@ tex=${TARGET}/foo.tex
     test -s "${tex}"
     test "$(wc -l < "${csv}" | xargs)" = '4'
     test "$(head -1 "${csv}" | tr "," "\n" | wc -l | xargs)" = '9'
+    python3 -c 'import csv, sys; rows = list(csv.reader(open(sys.argv[1], newline=""))); assert all(len(r) == 9 for r in rows), rows; assert rows[1][4] == "\"Quoted\" name, with commas and a newline", rows[1][4]' "${csv}"
 } > "${stdout}" 2>&1
 echo "👍🏻 Small repositories discovery test is succeed"
 

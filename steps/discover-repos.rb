@@ -50,6 +50,7 @@ def mock_array(size, licenses)
     {
       full_name: "foo/#{Random.hex(5)}",
       created_at: Time.now,
+      description: "\"Quoted\" name, with commas\nand a newline",
       license: { key: licenses.sample(1)[0] }
     }
   end
@@ -126,13 +127,18 @@ def license_invalid?(repo_data, licenses)
   no_license
 end
 
+# Make a CSV field: collapse line breaks, double the quotes, wrap in quotes.
+def csv_quote(text)
+  "\"#{text.to_s.gsub(/[\r\n]+/, ' ').gsub('"', '""')}\""
+end
+
 def add_repo_to_found(repo_data, found)
   found[repo_data[:full_name]] = {
     full_name: repo_data[:full_name],
     default_branch: repo_data[:default_branch],
     created_at: repo_data[:created_at].iso8601,
     open_issues_count: repo_data[:open_issues_count],
-    description: "\"#{repo_data[:description]}\"",
+    description: csv_quote(repo_data[:description]),
     topics: Array(repo_data[:topics]).join(' '),
     stars: repo_data[:stargazers_count], forks: repo_data[:forks_count], size: repo_data[:size]
   }
