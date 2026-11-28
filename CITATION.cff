@@ -13,7 +13,7 @@ authors:
   given-names: "Yegor"
   orcid: "https://orcid.org/0000-0001-6370-0678"
 title: "CAM: A Collection of Snapshots of GitHub Java Repositories Together with Metrics"
-version: 0.10.0
+version: 0.10.1
 doi: 10.48550/arXiv.2403.08488
-date-released: 2026-11-27
+date-released: 2026-11-28
 url: "https://arxiv.org/abs/2403.08488"
